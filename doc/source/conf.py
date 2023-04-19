@@ -1,9 +1,10 @@
 """Sphinx documentation configuration file."""
 from datetime import datetime
+
 from ansys_sphinx_theme import pyansys_logo_black as logo
 
 # Project information
-project = "ansys-xml-ast"
+project = "ansys-dita-ast"
 copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
 author = "ANSYS, Inc."
 release = version = "0.1.dev0"
@@ -11,11 +12,11 @@ release = version = "0.1.dev0"
 # Select desired logo, theme, and declare the html title
 html_logo = logo
 html_theme = "ansys_sphinx_theme"
-html_short_title = html_title = "pyxml-ast"
+html_short_title = html_title = "pydita-ast"
 
 # specify the location of your github repo
 html_theme_options = {
-    "github_url": "https://github.com/pyansys/pyxml-ast",
+    "github_url": "https://github.com/pyansys/pydita-ast",
     "show_prev_next": False,
     "show_breadcrumbs": True,
     "additional_breadcrumbs": [

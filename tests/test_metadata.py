@@ -1,4 +1,4 @@
-from ansys.xml.ast import __version__
+from ansys.dita.ast import __version__
 
 
 def test_pkg_version():

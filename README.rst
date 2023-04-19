@@ -1,5 +1,5 @@
-PyXML_AST
-=========
+PyDita-AST
+==========
 
 A Python wrapper to convert XML documentation into RST one.
 
@@ -16,12 +16,12 @@ User installation can be performed by running:
 
 .. code:: bash
 
-    python -m pip install ansys-xml-ast
+    python -m pip install ansys-dita-ast
 
 For developers
 ^^^^^^^^^^^^^^
 
-Installing PyXML_AST in developer mode allows
+Installing PyDita-AST in developer mode allows
 you to modify the source and enhance it.
 
 Before contributing to the project, please refer to the `PyAnsys Developer's guide`_. You will 
@@ -31,7 +31,7 @@ need to follow these steps:
 
     .. code:: bash
 
-        git clone https://github.com/pyansys/pyxml-ast
+        git clone https://github.com/pyansys/pydita-ast
 
 #. Create a fresh-clean Python environment and activate it. Refer to the
    official `venv`_ documentation if you require further information:
@@ -60,21 +60,18 @@ need to follow these steps:
 
     .. code:: bash
     
-        python -m pip install --editable ansys-xml-ast
+        python -m pip install -e .
 
 #. Install additional requirements (if needed):
 
      .. code:: bash
 
-        python -m pip install -r requirements/requirements_build.txt
-        python -m pip install -r requirements/requirements_doc.txt
-        python -m pip install -r requirements/requirements_tests.txt
+        python -m pip install .[doc,tests]
 
 #. Finally, verify your development installation by running:
 
     .. code:: bash
         
-        python -m pip install -r requirements/requirements_tests.txt
         pytest tests -v
 
 
@@ -109,7 +106,7 @@ the building requirements:
 
 .. code:: bash
 
-    python -m pip install -r requirements/requirements_build.txt
+    python -m pip install -e .[doc,tests]
 
 Then, you can execute:
 

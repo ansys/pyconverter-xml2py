@@ -1,5 +1,5 @@
 """
-ansys.xml.ast
+ansys.dita.ast
 """
 
 try:

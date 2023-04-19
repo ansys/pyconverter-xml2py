@@ -1,6 +1,6 @@
 [run]
 source =
-    ansys.xml.ast
+    ansys.dita.ast
 
 [report]
 show_missing = true

@@ -1,0 +1,11 @@
+Documentation:
+- doc/source/**/*
+Maintenance:
+- .github/**/*
+- .flake8
+- doc/styles/**/*
+- pyproject.toml
+Dependencies:
+- pyproject.toml
+CI/CD:
+- .github/**/*
