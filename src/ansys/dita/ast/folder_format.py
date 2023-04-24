@@ -26,7 +26,7 @@ import os
 # |   | |
 # |   |
 # |
-# | commands
+# | books
 # |   | .ent files
 # |   | .xml files
 # |   | com_subfolders
@@ -79,7 +79,7 @@ def xml_path(path=None):
     return path
 
 
-def graphic_path(xml_path, path=None):
+def get_paths(xml_path, graph_path=None, link_path=None, term_path=None, book_path=None):
     """Return the path to the folder containing the graphics.
 
     Parameters
@@ -87,101 +87,64 @@ def graphic_path(xml_path, path=None):
     xml_path : strg
     Path to the XML folder that will be converted.
 
-    path : strg
+    graph_path : strg
     If not following the XML pre-defined folder format, specify the path to the folder containing
     the graphics.
 
-    Returns
-    -------
-    graphic_path : str
-    Return the folder containing the graphics.
-    """
-
-    if path is None:
-        graphic_path = os.path.join(xml_path, "graphics")
-
-    else:
-        graphic_path = path
-
-    return graphic_path
-
-
-def link_path(xml_path, path=None):
-    """Return the path to the folder containing the links.
-
-    Parameters
-    ----------
-    xml_path : strg
-    Path to the XML folder that will be converted.
-
-    path : strg
+    link_path : strg
     If not following the XML pre-defined folder format, specify the path to the folder containing
     the links.
 
-    Returns
-    -------
-    link_path : str
-    Return the folder containing the links.
-    """
-
-    if path is None:
-        link_path = os.path.join(xml_path, "links")
-
-    else:
-        link_path = path
-
-    return link_path
-
-
-def term_path(xml_path, path=None):
-    """Return the path to the folder containing the terms.
-
-    Parameters
-    ----------
-    xml_path : strg
-    Path to the XML folder that will be converted.
-
-    path : strg
+    term_path : strg
     If not following the XML pre-defined folder format, specify the path to the folder containing
-    the terms.
+    the terms
 
-    Returns
-    -------
-    term_path : str
-    Return the folder containing the terms.
-    """
-
-    if path is None:
-        term_path = os.path.join(xml_path, "terms")
-
-    else:
-        term_path = path
-
-    return term_path
-
-
-def book_path(xml_path, path=None):
-    """Return the path to the folder containing the books.
-
-    Parameters
-    ----------
-    xml_path : strg
-    Path to the XML folder that will be converted.
-
-    path : strg
+    book_path : strg
     If not following the XML pre-defined folder format, specify the path to the folder containing
     the books.
 
     Returns
     -------
+    graphic_path : str
+    Path of the folder containing the graphics.
+
+    link_path : str
+    Path of the folder containing the links.
+
+    term_path : str
+    Path of the folder containing the terms.
+
     book_path : str
-    Return the folder containing the books.
+    Path of the folder containing the books.
+
     """
 
-    if path is None:
+    if graph_path is None:
+        graph_path = os.path.join(xml_path, "graphics")
+        if not os.path.isdir(graph_path):
+            print(
+                f"WARNING: the path {graph_path} does not exits. Please follow the pre-defined format or enter the graphic path manually."  # noqa : E501
+            )
+
+    if link_path is None:
+        link_path = os.path.join(xml_path, "links")
+        if not os.path.isdir(link_path):
+            print(
+                f"WARNING: the path {link_path} does not exits. Please follow the pre-defined format or enter the link path manually."  # noqa : E501
+            )
+
+    if term_path is None:
+        term_path = os.path.join(xml_path, "terms")
+        if not os.path.isdir(term_path):
+            print(
+                f"WARNING: the path {term_path} does not exits. Please follow the pre-defined format or enter the term path manually."  # noqa : E501
+            )
+
+    if book_path is None:
         book_path = os.path.join(xml_path, "books")
+        if not os.path.isdir(book_path):
+            print(
+                f"WARNING: the path {book_path} does not exits. Please follow the pre-defined format or enter the book path manually."  # noqa : E501
+            )
 
-    else:
-        book_path = path
-
-    return book_path
+    return graph_path, link_path, term_path, book_path

@@ -92,7 +92,7 @@ For building documentation, you can either run the usual rules provided in the
 
 .. code:: bash
 
-    python -m pip install -r requirements/requirements_doc.txt
+    python -m pip install .[doc]
     make -C doc/ html
 
     # subsequently open the documentation with (under Linux):
