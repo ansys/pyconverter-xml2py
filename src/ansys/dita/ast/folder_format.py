@@ -16,7 +16,14 @@ import os
 # |   |
 # |
 # | terms
-# |   | .ent files
+# |   | glb
+# |   | | docu_global.ent
+# |   | | build_variables.ent
+# |   | | manual_name               # this file name can be modified
+# |   | |
+# |   | ent
+# |   | | .ent files
+# |   | |
 # |   |
 # |
 # | commands
@@ -33,7 +40,21 @@ import os
 
 
 def xml_path(path=None):
-    # Declaration
+    """Return the path to the folder containing the XML documentation.
+    It is advised to follow the pre-defined folder structure.
+
+    Parameters
+    ----------
+    path: str
+    If path is None, the path is set with the argument parser `-p` or `--xml-path`,
+    or with the XML_PATH environment variable.
+
+    Return
+    ------
+    path: str
+    Path of the XML documentation to be converted.
+
+    """
     if path is None:
 
         parser = argparse.ArgumentParser()
@@ -46,7 +67,7 @@ def xml_path(path=None):
             path = os.environ.get("XML_PATH")
         if path is None:
             raise RuntimeError(
-                "Missing the XML documentation path. Specify this with either --xml-path or set the XML_PATH environment variable"  # noqa : E501
+                "Missing the XML documentation path. Specify this with either --xml-path, -p, or set the XML_PATH environment variable"  # noqa : E501
             )
 
         path = os.path.abspath(os.path.expanduser(path))
