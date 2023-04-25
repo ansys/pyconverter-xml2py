@@ -103,13 +103,13 @@ jobs:
           restore-keys: |
             Python-v${{ env.RESET_PIP_CACHE }}-${{ runner.os }}
 
-      # The token will expire in 2024.
-      - name: "Checkout pydita-ast repository"
-        uses: actions/checkout@v3
-        with:
-          repository: pyansys/pydita-ast
-          token: ${{ secrets.DITA_AST_DOC_TOKEN }}
-          path: pydita-ast
+      # # The token will expire in 2024.
+      # - name: "Checkout pydita-ast repository"
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: pyansys/pydita-ast
+      #     token: ${{ secrets.DITA_AST_DOC_TOKEN }}
+      #     path: pydita-ast
         
       - name: "Unit testing requirements installation"  
         run: |
