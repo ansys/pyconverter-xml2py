@@ -23,9 +23,9 @@ The pre-defined XML folder format is as follow:
     │   └── character_folder/       #default value is ent/
     │       └── .ent files
     └── books/
-        ├── subfolders
+        ├── subfolders/
         │   ├── .xml files
-        │   └── mathgraphics_folder
+        │   └── mathgraphics_folder/
         │       └── .svg files
         ├── .xml files
         └── .ent files

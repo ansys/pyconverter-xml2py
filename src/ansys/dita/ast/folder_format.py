@@ -3,40 +3,29 @@ import os
 
 # Pre-defined folder format
 
-# XML_folder
+# XML_folder/
+# │
+# ├── graphics/
+# │   ├── .gifs files
+# │   └── images files
 # |
-# | graphics
-# |   | images
-# |   | gifs
-# |   | other format
-# |   |
+# ├── links/
+# │   └── .db files
 # |
-# | links
-# |   | .db files
-# |   |
-# |
-# | terms
-# |   | glb
-# |   | | docu_global.ent
-# |   | | build_variables.ent
-# |   | | manual_name               # this file name can be modified
-# |   | |
-# |   | ent
-# |   | | .ent files
-# |   | |
-# |   |
-# |
-# | books
-# |   | .ent files
-# |   | .xml files
-# |   | com_subfolders
-# |   |   | .xml files
-# |   |   | mathgraphics_folder
-# |   |   |   | .svg files
-# |   |   |   |
-# |   |   |
-# |   |
-# |
+# ├── terms/
+# │   ├── glb/
+# │   │   ├── variable_file       #default value is build_variables.ent
+# │   │   ├── global_terms_file   #default value is terms_global.ent
+# │   │   └── manual_file         #default value is manuals.ent
+# │   └── character_folder/       #default value is ent/
+# │       └── .ent files
+# └── books/
+#     ├── subfolders/
+#     │   ├── .xml files
+#     │   └── mathgraphics_folder/
+#     │       └── .svg files
+#     ├── .xml files
+#     └── .ent files
 
 
 def xml_path(path=None):
