@@ -19,7 +19,7 @@ import os
 # │   │   └── manual_file           #default value is manuals.ent
 # │   └── character_folder/         #default value is ent/
 # │       └── .ent files
-# └── books/
+# └── xml/
 #     ├── subfolders/
 #     │   ├── .xml files
 #     │   └── mathgraphics_folder/   #this is a defalut value
@@ -68,13 +68,13 @@ def xml_path(path=None):
     return path
 
 
-def get_paths(xml_path, graph_path=None, link_path=None, term_path=None, book_path=None):
+def get_paths(path, graph_path=None, link_path=None, term_path=None, xml_path=None):
     """Return the path to the folder containing the graphics.
 
     Parameters
     ----------
-    xml_path : strg
-    Path to the XML folder that will be converted.
+    path : strg
+    Path to the folder with the pre-defined format .
 
     graph_path : strg
     If not following the XML pre-defined folder format, specify the path to the folder containing
@@ -88,9 +88,9 @@ def get_paths(xml_path, graph_path=None, link_path=None, term_path=None, book_pa
     If not following the XML pre-defined folder format, specify the path to the folder containing
     the terms
 
-    book_path : strg
+    xml_path : strg
     If not following the XML pre-defined folder format, specify the path to the folder containing
-    the books.
+    the xml.
 
     Returns
     -------
@@ -103,37 +103,37 @@ def get_paths(xml_path, graph_path=None, link_path=None, term_path=None, book_pa
     term_path : str
     Path of the folder containing the terms.
 
-    book_path : str
-    Path of the folder containing the books.
+    xml_path : str
+    Path of the folder containing the xml.
 
     """
 
     if graph_path is None:
-        graph_path = os.path.join(xml_path, "graphics")
+        graph_path = os.path.join(path, "graphics")
         if not os.path.isdir(graph_path):
             print(
                 f"WARNING: the path {graph_path} does not exits. Please follow the pre-defined format or enter the graphic path manually."  # noqa : E501
             )
 
     if link_path is None:
-        link_path = os.path.join(xml_path, "links")
+        link_path = os.path.join(path, "links")
         if not os.path.isdir(link_path):
             print(
                 f"WARNING: the path {link_path} does not exits. Please follow the pre-defined format or enter the link path manually."  # noqa : E501
             )
 
     if term_path is None:
-        term_path = os.path.join(xml_path, "terms")
+        term_path = os.path.join(path, "terms")
         if not os.path.isdir(term_path):
             print(
                 f"WARNING: the path {term_path} does not exits. Please follow the pre-defined format or enter the term path manually."  # noqa : E501
             )
 
-    if book_path is None:
-        book_path = os.path.join(xml_path, "books")
-        if not os.path.isdir(book_path):
+    if xml_path is None:
+        xml_path = os.path.join(path, "xml")
+        if not os.path.isdir(xml_path):
             print(
-                f"WARNING: the path {book_path} does not exits. Please follow the pre-defined format or enter the book path manually."  # noqa : E501
+                f"WARNING: the path {xml_path} does not exits. Please follow the pre-defined format or enter the xml path manually."  # noqa : E501
             )
 
-    return graph_path, link_path, term_path, book_path
+    return graph_path, link_path, term_path, xml_path

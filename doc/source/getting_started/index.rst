@@ -22,7 +22,7 @@ The pre-defined XML folder format is as follow:
     │   │   └── manual_file         #default value is manuals.ent
     │   └── character_folder/       #default value is ent/
     │       └── .ent files
-    └── books/
+    └── xml/
         ├── subfolders/
         │   ├── .xml files
         │   └── mathgraphics_folder/
