@@ -14,15 +14,15 @@ import os
 # |
 # ├── terms/
 # │   ├── glb/
-# │   │   ├── variable_file       #default value is build_variables.ent
-# │   │   ├── global_terms_file   #default value is terms_global.ent
-# │   │   └── manual_file         #default value is manuals.ent
-# │   └── character_folder/       #default value is ent/
+# │   │   ├── variable_file         #default value is build_variables.ent
+# │   │   ├── global_terms_file     #default value is terms_global.ent
+# │   │   └── manual_file           #default value is manuals.ent
+# │   └── character_folder/         #default value is ent/
 # │       └── .ent files
 # └── books/
 #     ├── subfolders/
 #     │   ├── .xml files
-#     │   └── mathgraphics_folder/
+#     │   └── mathgraphics_folder/   #this is a defalut value
 #     │       └── .svg files
 #     ├── .xml files
 #     └── .ent files
