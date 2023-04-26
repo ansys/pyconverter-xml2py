@@ -1,20 +1,10 @@
-# import argparse
-# import glob
 import logging
-
-# import os
-# from pathlib import Path
 import re
 import textwrap
-
-# import unicodedata
 import warnings
 
-# from lxml.etree import ParserError, tostring
 from lxml.etree import tostring
 from lxml.html import fromstring
-
-# from tqdm import tqdm
 
 CONV_EQN = False
 SUPPORT_TABLES = True
@@ -262,12 +252,12 @@ class Element:
                 items.append(prefix + str(item))
         return " ".join(items)
 
-    def rec_find(self, _type, terms_global=None):
+    def rec_find(self, _type, terms=None):
         """Return the first type matching a given type string recursively."""
         for item in self:
             if type(item).__name__ == _type:
                 if _type == "Refname" or _type == "Refnamediv":
-                    item.terms_global = terms_global
+                    item.terms = terms
                 return item
             if isinstance(item, Element):
                 subitem = item.rec_find(_type)
@@ -275,24 +265,24 @@ class Element:
                     return subitem
         return None
 
-    def find(self, _type, terms_global=None):
+    def find(self, _type, terms=None):
         """Return the first type matching a given type string."""
         for item in self:
             if type(item).__name__ == _type:
                 if _type == "Refname" or _type == "Refnamediv":
-                    if terms_global == None:
-                        print("ERROR: terms_global not defined for a Refname class")
-                    item.terms_global = terms_global
+                    if terms == None:
+                        print("ERROR: terms not defined for a Refname class")
+                    item.terms = terms
                 return item
         return None
 
-    def find_all(self, _type, recursive=False, terms_global=None):
+    def find_all(self, _type, recursive=False, terms=None):
         """Return all types matching a given type string."""
         items = []
         for item in self:
             if type(item).__name__ == _type:
                 if _type == "Refname" or _type == "Refnamediv":
-                    item.terms_global = terms_global
+                    item.terms = terms
                 items.append(item)
             elif recursive and isinstance(item, Element):
                 items.extend(item.find_all(_type))
@@ -1261,7 +1251,7 @@ class Table(Element):
 
             if self.tgroup is not None:
                 a = self.tgroup
-                lines.append(a.to_rst(links=links, base_url=base_url))
+                lines.append(a.to_rst(prefix=prefix, links=links, base_url=base_url))
 
             return "\n".join(lines)
 
@@ -1269,7 +1259,8 @@ class Table(Element):
             return "\nTable redacted."
 
     def __repr__(self):
-        return self.to_rst()
+        # This method is limited as the links and the base_url are skiped.
+        return self.to_rst(links={}, base_url=f"pass")
 
 
 class Refentrytitle(Element):
@@ -1286,22 +1277,22 @@ class Refentrytitle(Element):
 
 
 class Refnamediv(Element):
-    def __init__(self, element, terms_global=None):
+    def __init__(self, element, terms=None):
         self._element = element
-        self._terms_global = terms_global
+        self._terms = terms
         super().__init__(element)
 
     @property
-    def terms_global(self):
-        return self._terms_global
+    def terms(self):
+        return self._terms
 
-    @terms_global.setter
-    def terms_global(self, terms_global):
-        self._terms_global = terms_global
+    @terms.setter
+    def terms(self, terms):
+        self._terms = terms
 
     @property
     def refname(self):
-        return self.find("Refname", self._terms_global)
+        return self.find("Refname", self._terms)
 
     @property
     def purpose(self):
@@ -1309,27 +1300,27 @@ class Refnamediv(Element):
 
 
 class Refname(Element):
-    def __init__(self, element, terms_global=None):
+    def __init__(self, element, terms=None):
         self._element = element
-        self._terms_global = terms_global
+        self._terms = terms
         super().__init__(element)
 
     @property
-    def terms_global(self):
-        return self._terms_global
+    def terms(self):
+        return self._terms
 
-    @terms_global.setter
-    def terms_global(self, terms_global):
-        self._terms_global = terms_global
+    @terms.setter
+    def terms(self, terms):
+        self._terms = terms
 
     @property
     def raw_args(self):
         mapdl_cmd = str(self)
-        mapdl_cmd = mapdl_cmd.replace("&fname_arg;", self._terms_global["fname_arg"])
-        mapdl_cmd = mapdl_cmd.replace("&fname1_arg;", self._terms_global["fname1_arg"])
-        mapdl_cmd = mapdl_cmd.replace("&fname2_arg;", self._terms_global["fname2_arg"])
-        mapdl_cmd = mapdl_cmd.replace("&pn006p;", self._terms_global["pn006p"])
-        mapdl_cmd = mapdl_cmd.replace("&ansysBrand;", self._terms_global["ansysBrand"])
+        mapdl_cmd = mapdl_cmd.replace("&fname_arg;", self._terms["fname_arg"])
+        mapdl_cmd = mapdl_cmd.replace("&fname1_arg;", self._terms["fname1_arg"])
+        mapdl_cmd = mapdl_cmd.replace("&fname2_arg;", self._terms["fname2_arg"])
+        mapdl_cmd = mapdl_cmd.replace("&pn006p;", self._terms["pn006p"])
+        mapdl_cmd = mapdl_cmd.replace("&ansysBrand;", self._terms["ansysBrand"])
         split_args = mapdl_cmd.split(",")[1:]
         return split_args
 
@@ -1810,21 +1801,20 @@ class MAPDLCommand(Element):
     def __init__(
         self,
         filename,
-        terms_global,
+        terms,
         docu_global,
+        version_variables,
         links,
-        base_url,
         fcache,
-        autogenerated_folder_name,
         meta_only=False,
     ):
         """Parse command from xml file."""
         self._xml_filename = filename
-        self._terms_global = terms_global
+        self._terms = terms
         self._docu_global = docu_global
-        self._autogenerated_folder_name = autogenerated_folder_name
+        self._autogenerated_folder_name = version_variables.autogenerated_folder_name
         self._links = links
-        self._base_url = base_url
+        self._base_url = version_variables.base_url
         self._fcache = fcache
         root = fromstring(open(filename, "rb").read())
 
@@ -1905,7 +1895,7 @@ class MAPDLCommand(Element):
     @property
     def py_docstring(self):
         """Return the python docstring of this MAPDL command."""
-        apdl_cmd = f"{self._terms_global['pn006p']} Command: `{self.name} <{self.url}>`_"
+        apdl_cmd = f"{self._terms['pn006p']} Command: `{self.name} <{self.url}>`_"
 
         items = [self.short_desc, "", apdl_cmd]
 
@@ -1996,13 +1986,13 @@ class MAPDLCommand(Element):
                 if key in self._links:
                     root_name, root_title, href, text = self._links[key]
                     link = f"{self._base_url}{root_name}/{href}"
-                    link_text = self._terms_global.get(cite_title, root_title)
+                    link_text = self._terms.get(cite_title, root_title)
                     return f"`{link_text} <{link}>`_"
             else:
-                if term not in self._terms_global:
-                    warnings.warn(f"term {term} not in terms_global")
+                if term not in self._terms:
+                    warnings.warn(f"term {term} not in terms")
                     return ""
-                return self._terms_global[term]
+                return self._terms[term]
 
         docstr = re.sub(r"&[\S]*?;", term_replacer, docstr)
 
@@ -2186,7 +2176,7 @@ class MAPDLCommand(Element):
 
     @property
     def _refname_div(self):
-        return self.rec_find("Refnamediv", self._terms_global)
+        return self.rec_find("Refnamediv", self._terms)
 
     @property
     def _refsynopsis(self):
@@ -2404,294 +2394,3 @@ class OxygenXmlTree(Element):
     def xml_filename(self):
         """Return the source filename of the command."""
         return self._xml_filename
-
-
-# # ############################################################################
-# # # Ansys Documentation path
-# # ############################################################################
-
-# # TODO: generalize the implementation to become an open-source library
-
-
-# def create_doc_path(doc_path=None):
-#     # Declaration
-#     if doc_path is None:
-
-#         parser = argparse.ArgumentParser()
-#         parser.add_argument("--xml-doc-path", help="XML Documentation path")
-
-#         args = parser.parse_args()
-
-#         doc_path = args.xml_doc_path
-#         if doc_path is None:
-#             doc_path = os.environ.get("XML_DOC_PATH")
-#         if doc_path is None:
-#             raise RuntimeError(
-#                 "Missing the XML documentation path. Specify this with either --xml-doc-path or set the XML_DOC_PATH environment variable" # noqa : E501
-#             )
-
-#         doc_path = os.path.abspath(os.path.expanduser(doc_path))
-
-#     # Verification
-#     if not os.path.isdir(doc_path):
-#         raise FileNotFoundError(f"Documentation path at {doc_path} does not exist")
-
-#     return doc_path
-
-
-# def create_glb_cmd_path(doc_path):
-#     glb_path = os.path.join(doc_path, "global")
-#     cmd_path = os.path.join(doc_path, "docu_files/ans_cmd")
-#     if not os.path.isdir(cmd_path):
-#         raise FileNotFoundError(
-#             f'Invalid documentation path. "docu_files" does not appear to '
-#             "be a directory within the documentation path at:"
-#             f"{doc_path}"
-#         )
-#     return glb_path, cmd_path
-
-
-# def load_links(glb_path):
-#     """Load all links."""
-
-#     linkmaps = os.path.join(glb_path, "linkmaps", "db", "*.db")
-#     linkmap_fnames = list(glob.glob(linkmaps, recursive=True))
-#     links = {}
-
-#     for filename in tqdm(linkmap_fnames, desc="Loading links"):
-#         try:
-#             linkmap = Element(fromstring(open(filename, "rb").read()))
-#         except ParserError:
-#             continue
-
-#         # toplevel
-#         root_name = Path(filename).with_suffix("").name
-#         root_title = str(linkmap[0])
-
-#         def grab_links(linkmap):
-#             for item in linkmap:
-#                 if not isinstance(item, Element):
-#                     continue
-
-#                 if item.has_children():
-#                     grab_links(item)
-
-#                 href = item.get("href")
-#                 targetptr = linkmap.get("targetptr")
-#                 if targetptr is not None and href is not None:
-#                     text = ""
-#                     if linkmap[0].tag == "ttl":
-#                         text = str(linkmap[0])
-#                     links[f"{targetptr}"] = (root_name, root_title, href, text)
-
-#         grab_links(linkmap)
-
-#     return links
-
-
-# def create_grph_pth(cmd_path, doc_path):
-#     grph_pth = os.path.join(cmd_path, "graphics")
-#     if not os.path.isdir(cmd_path):
-#         raise FileNotFoundError(
-#             f'Invalid documentation path. "graphics" directory does not appear to '
-#             "be a directory within the documentation path at:"
-#             f"{doc_path}"
-#         )
-#     return grph_pth
-
-# # first, read the internal version
-# def create_GLB_VAL(glb_path):
-#     GLB_VAL = {}
-#     with open(os.path.join(glb_path, "build_variables.ent"), "r") as fid:
-#         lines = fid.read().splitlines()
-
-#     # have to write our own interperter here since this is non-standard lxml
-#     for line in lines:
-#         entity_names = re.findall(r"!ENTITY (\S*) ", line)
-#         if len(entity_names):
-#             matches = re.findall(r"'(\S*)'", line)
-#             if len(matches):
-#                 GLB_VAL[entity_names[0]] = matches[0]
-#     return GLB_VAL
-
-
-# def variables(GLB_VAL):
-
-#     autogenerated_folder_name = "ansys.mapdl.generatedcommands"
-#     ans_version = GLB_VAL["ansys_internal_version"]
-#     base_url = f"https://ansyshelp.ansys.com/Views/Secured/corp/v{ans_version}/en/"
-#     cmd_base_url = f"{base_url}/ans_cmd/"
-
-#     return autogenerated_folder_name, ans_version, base_url, cmd_base_url
-
-
-# def load_graphics_fcache(grph_pth):
-
-#     # load all graphics and cache the basename without extension
-#     filenames = list(glob.glob(os.path.join(grph_pth, "*"), recursive=True))
-#     fcache = {}
-#     for filename in filenames:
-#         basename = Path(filename).with_suffix("").name
-#         if not os.path.isfile(filename):
-#             raise FileNotFoundError(f"Unable to locate {basename}")
-#         fcache[basename] = os.path.split(filename)[-1]
-
-#     return fcache
-
-
-# #################################################################
-# # FUNCTIONS TO CREATE THE DOC ###################################
-# #################################################################
-
-# # globals
-# def create_docu_global(glb_path):
-#     docu_ent = os.path.join(glb_path, "docu_global.ent")
-
-#     docu_global = {}
-#     with open(docu_ent, "r") as fid:
-#         lines = fid.read().splitlines()
-
-#         # have to write our own interperter here since this is non-standard lxml
-#         for line in lines:
-#             entity_names = re.findall(r"!ENTITY (\S*) ", line)
-#             if len(entity_names):
-#                 entity_name = entity_names[0]
-
-#                 targetdocs = re.findall(r'targetdoc="(\S*)"', line)
-#                 targetdoc = targetdocs[0] if len(targetdocs) else None
-
-#                 targetptrs = re.findall(r'targetptr="(\S*)"', line)
-#                 targetptr = targetptrs[0] if len(targetptrs) else None
-
-#                 citetitles = re.findall(r"<citetitle>&(\S*);</citetitle>", line)
-#                 citetitle = citetitles[0] if len(citetitles) else None
-
-#                 docu_global[entity_name] = (targetdoc, targetptr, citetitle)
-
-#     return docu_global
-
-
-# def create_terms_global(GLB_VAL, glb_path):
-#     terms_global = GLB_VAL.copy()
-#     with open(os.path.join(glb_path, "terms_global.ent"), "r") as fid:
-#         lines = fid.read().splitlines()
-
-#         for line in lines:
-#             entity_names = re.findall(r"!ENTITY (\S*) ", line)
-#             if len(entity_names):
-#                 entity_name = entity_names[0]
-
-#                 text = re.findall(r"'(.*)'", line)
-#                 if len(text):
-#                     terms_global[entity_name] = text[0]
-
-#     # Adding manually terms_globals value from warnings.
-#     terms_global["sgr"] = ":math:`\sigma`"
-#     terms_global["gt"] = ":math:`\sigma`"
-#     terms_global["thgr"] = ":math:`<`"
-#     terms_global["phgr"] = ":math:`<`"
-#     terms_global["ngr"] = ":math:`\phi`"
-#     terms_global["agr"] = ":math:`\alpha`"
-#     terms_global["OHgr"] = ":math:`\Omega`"
-#     terms_global["phis"] = ":math:`\phi`"
-#     terms_global["thetas"] = ":math:`\theta`"
-
-#     # These are supposed to be uploaded automatically from the `character.ent` file
-#     terms_global["#13"] = "#13"
-#     terms_global["#160"] = "nbsp"
-#     terms_global["#215"] = "times"
-#     terms_global["#934"] = ":math:`\Phi`"
-
-#     return terms_global
-
-
-# # THIS IS A HACK!
-# def get_links(glb_path):
-#     try:
-#         links
-#     except:
-#         links = load_links(glb_path)
-#     return links
-
-
-# # load ansys manuals as well
-# def load_ansys_manuals(glb_path, docu_global, links, base_url, fcache, terms_global):
-#     # items = []
-#     with open(os.path.join(glb_path, "global_files", "ansys.manuals.ent"), "r") as fid:
-#         text = fid.read()
-#         matches = re.findall(r"ENTITY([\S\s]*?)<!", text)
-#         for match in matches:
-#             item = Element(fromstring(match)).to_rst(
-#                 links=links, base_url=base_url, fcache=fcache
-#             )
-#             key = item.split()[0]
-#             text = item.replace(key, "").strip()
-#             if not text.startswith("'"):
-#                 continue
-
-#             text = text[1:-2].strip()
-
-#             def term_replacer(match):
-#                 term = match.group()[1:-1]
-#                 if term in docu_global:
-#                     _, key, cite_title = docu_global[term]
-#                     if key in links:
-#                         root_name, root_title, href, text = links[key]
-#                         link = f"{base_url}{root_name}/{href}"
-#                         link_text = terms_global.get(cite_title, root_title)
-#                         return f"`{link_text} <{link}>`_"
-#                 else:
-#                     if term not in terms_global:
-#                         return match.group()
-#                     return terms_global[term]
-
-#             # term_replacer_ = term_replacer(match, links)
-#             text = re.sub(r"&[\S]*;", term_replacer, text)
-
-#             terms_global[key] = text
-#     return terms_global
-
-
-# # load special characters
-# def load_special_characters(doc_path, terms_global):
-#     path = os.path.join(
-#         doc_path, "tools/custom_2012/doctypes/ansysdocbook/ent/", "*.ent"
-#     )
-#     isoams_dat = list(glob.glob(path))
-#     for filename in isoams_dat:
-#         with open(filename, "r") as fid:
-#             lines = fid.read().splitlines()
-#             # have to write our own interperter here since this is non-standard lxml
-#             for line in lines:
-#                 entity_names = re.findall(r"!ENTITY (\S*) ", line)
-#                 if len(entity_names):
-#                     matches = re.findall(r"<!--(.*)-->", line)
-#                     if len(matches):
-#                         char_name = matches[0].strip()
-#                         try:
-#                             terms_global[entity_names[0]] = unicodedata.lookup(
-#                                 char_name
-#                             )
-#                         except KeyError:
-#                             continue
-
-#     # This is not working for now, to be improved
-
-#     # filename = os.path.join(
-#     #     doc_path, "DITA-Open-Toolkit/lib/xerces-2_11_0.AnsysCustom/docs/dtd/", "characters.ent"
-#     # )
-#     # with open(filename, "r") as fid:
-#     #     lines = fid.read().splitlines()
-#     #     # have to write our own interperter here since this is non-standard lxml
-#     #     for line in lines:
-#     #         entity_names = re.findall(r"!ENTITY (\S*)", line)
-#     #         if len(entity_names):
-#     #             matches = re.findall(r"#\d\d\d", line)
-#     #             if len(matches):
-#     #                 char_name = matches[0]
-#     #                 try:
-#     #                     terms_global[entity_names[0]] = char_name
-#     #                 except KeyError:
-#     #                     continue
-
-#     return terms_global

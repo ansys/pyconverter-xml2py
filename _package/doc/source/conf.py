@@ -2,8 +2,6 @@ from datetime import datetime
 import os
 import sys
 
-import notfound
-
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 # -- General configuration ------------------------------------------------
@@ -36,8 +34,6 @@ extensions = [
     "linuxdoc.rstFlatTable",
 ]
 
-html_static_path = ["_static"]
-
 # Intersphinx mapping
 intersphinx_mapping = {
     "python": ("https://docs.python.org/dev", None),
@@ -48,14 +44,6 @@ intersphinx_mapping = {
     "pyvista": ("https://docs.pyvista.org/", None),
     "grpc": ("https://grpc.github.io/grpc/python/", None),
 }
-
-
-# Favicon
-html_favicon = "favicon.png"
-
-notfound.extension
-notfound_template = "404.rst"
-notfound_urls_prefix = "/../"
 
 # The suffix(es) of source filenames.
 source_suffix = ".rst"
@@ -89,23 +77,10 @@ numpydoc_validation_checks = {
 
 # -- Options for HTML output -------------------------------------------------
 html_short_title = html_title = "Documentation"
-html_theme = "alabaster"
+html_theme = "sphinxawesome_theme"
 html_theme_options = {
-    "github_url": "https://github.com/pyansys/pydita-ast",
     "show_prev_next": False,
     "show_breadcrumbs": True,
-    "collapse_navigation": True,
-    "use_edit_page_button": False,
-    "additional_breadcrumbs": [
-        ("PyAnsys", "https://docs.pyansys.com/"),
-    ],
-    "icon_links": [
-        {
-            "name": "Support",
-            "url": "https://github.com/pyansys/pydita-ast/discussions",
-            "icon": "fa fa-comment fa-fw",
-        },
-    ],
 }
 
 html_context = {

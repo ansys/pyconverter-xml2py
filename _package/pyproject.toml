@@ -4,17 +4,17 @@ build-backend = "flit_core.buildapi"
 
 [project]
 # Check https://flit.readthedocs.io/en/latest/pyproject_toml.html for all available sections
-name = "converted-xml"
+name = "ansys-dita-generatedcommands"
 version = "0.1.dev0"
 description = "Documentation."
 readme = "README.rst"
 requires-python = ">=3.7"
 license = {file = "LICENSE"}
 authors = [
-    {name = To be completed", email = "email@email.com"},
+    {name = "To be completed", email = "email@email.com"},
 ]
 maintainers = [
-    {name = To be completed", email = "email@email.com"},
+    {name = "To be completed", email = "email@email.com"},
 ]
 
 classifiers = [
@@ -48,7 +48,7 @@ tests = [
 
 doc = [
     "Sphinx==5.3.0",
-    "ansys-sphinx-theme==0.9.7",
+    "sphinxawesome-theme",
     "jupyter_sphinx==0.4.0",
     "numpydoc==1.5.0",
     "pandas==1.5.3",
@@ -62,7 +62,7 @@ doc = [
 ]
 
 [tool.flit.module]
-name = "ansys.mapdl.generatedcommands"
+name = "ansys.dita.generatedcommands"
 
 [project.urls]
 Source = "https://github.com/pyansys/pydita-ast/"

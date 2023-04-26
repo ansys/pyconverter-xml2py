@@ -1,0 +1,279 @@
+import glob
+import os
+import shutil
+
+from ansys.dita.ast import ast_tree as ast
+from ansys.dita.ast import folder_format as path
+from ansys.dita.ast import load_xml_doc as load
+from tqdm import tqdm
+
+generated_src_code = os.path.join("src", "ansys", "dita", "generatedcommands")
+
+# map APDL command to pymapdl function
+CMD_MAP = {}
+
+# common statements used within the docs to avoid duplication
+CONST = {
+    "Dtl?": "",
+    "Caret?": "",
+    "Caret1?": "",
+    "Caret 40?": "",
+    '``"``': "``",
+}
+
+# APDL commands to skip
+SKIP_APDL = {"*IF", "*ELSE", "C***", "*RETURN", "*DEL"}
+SKIP_PYMAPDL = {"if", "else", "c", "return", "del"}
+
+
+def nested_exec(text):
+    """Nested execute."""
+    exec(text)
+
+
+def convert(folder_path, command=None):
+    """Covert an XML folder into an RST one."""
+
+    graph_path, link_path, term_path, xml_path = path.get_paths(folder_path)
+    links = load.load_links(link_path)
+    fcache = load.load_fcache(graph_path)
+    docu_global = load.load_docu_global(term_path)
+    terms, version_variables = load.load_terms(term_path, docu_global, links, fcache)
+
+    def load_commands(
+        xml_path,
+        meta_only=False,
+    ):
+        """Scrape the command info from the MAPDL XML command reference.
+
+        Parameters
+        ----------
+        xml_path : str
+            Path to the folder containing the XML files to be converted.
+
+        Examples
+        --------
+        >>> from convert import load_commands
+        >>> commands = load_commands(
+        ...     '/home/user/source/mapdl-cmd-doc/docu_files/ans_cmd/'
+        ... )
+
+        """
+        if not os.path.isdir(xml_path):
+            raise FileNotFoundError(f'Invalid path "{xml_path}"')
+
+        filenames = list(glob.glob(os.path.join(xml_path, "**", "*.xml"), recursive=True))
+
+        if meta_only:
+            desc = "Loading command metadata"
+        else:
+            desc = "Loading commands"
+
+        mapdl_commands = []
+        for filename in tqdm(filenames, desc=desc):
+            try:
+                mapdl_commands.append(
+                    ast.MAPDLCommand(
+                        filename,
+                        terms,
+                        docu_global,
+                        version_variables,
+                        links,
+                        fcache,
+                        meta_only=meta_only,
+                    )
+                )
+            except RuntimeError:
+                continue
+
+        return {cmd.name: cmd for cmd in mapdl_commands}
+
+    command_meta = load_commands(
+        os.path.expanduser(xml_path),
+        meta_only=True,
+    )
+    command_names = command_meta.keys()
+
+    # create command mapping between the ansys command name and the pymapdl method.
+    # remove the start and slash whenever possible, for example, /GCOLUMN can simply
+    # be gcolumn since it's the only command, but VGET and *VGET must be vget and star_vget
+
+    # convert all to flat and determine number of occurances
+    proc_names = []
+    for cmd_name in command_names:
+        cmd_name = cmd_name.lower()
+        if not cmd_name[0].isalnum():
+            cmd_name = cmd_name[1:]
+        proc_names.append(cmd_name)
+
+    # reserved command mapping
+    COMMAND_MAPPING = {"*DEL": "stardel"}
+
+    # second pass for each name
+    for ans_name in command_names:
+        if ans_name in COMMAND_MAPPING:
+            py_name = COMMAND_MAPPING[ans_name]
+        else:
+            lower_name = ans_name.lower()
+            if not lower_name[0].isalnum():
+                alpha_name = lower_name[1:]
+            else:
+                alpha_name = lower_name
+
+            if proc_names.count(alpha_name) != 1:
+                py_name = lower_name.replace("/", "slash").replace("*", "star")
+            else:
+                py_name = alpha_name
+
+        CMD_MAP[ans_name] = py_name
+
+    # TODO : accept conversion of a single command
+
+    # convert a single command
+    # if command is not None:
+    #     if command not in command_meta:
+    #         raise ValueError(f"Invalid command {command}")
+    #     fname = command_meta[command].xml_filename
+    #     cmd = ast.MAPDLCommand(os.path.expanduser(fname), )
+    #     commands = {to_py_name(cmd.name): cmd}
+    # else:  # convert all commands
+
+    commands = load_commands(xml_path)
+
+    return commands
+
+
+def copy_package(template_path, new_path, clean=False):
+    """Add files and folder from a template folder path to a new path.
+
+    Parameters
+    ----------
+    template_path : str
+        Path containing the directory to be copied.
+
+    new_path : str
+        Path containing the directory where the new files and folders will be added to.
+
+    clean : Bool
+        Whether the folders in new_path need to be cleared before adding new files or not.
+        Default to False.
+
+    Returns
+    -------
+    str
+        Path containing the source files of the created
+        ``ansys-mapdl-commands`` package.
+
+    """
+
+    for filename in glob.glob(os.path.join(template_path, "*"), recursive=True):
+        split_name_dir = filename.split(os.path.sep)
+        new_path_dir = os.path.join(new_path, split_name_dir[-1])
+
+        if os.path.isdir(filename):
+            if not os.path.isdir(new_path_dir):
+                os.makedirs(new_path_dir, exist_ok=True)
+            elif os.path.isdir(new_path_dir) and clean:
+                shutil.rmtree(new_path_dir)
+                os.makedirs(new_path_dir)
+            copy_package(filename, new_path_dir, clean)
+
+        else:
+            shutil.copy(filename, new_path)
+
+
+def write_source(commands, path, clean=True):
+    """Write out MAPDL commands as Python source files.
+
+    Parameters
+    ----------
+    commands : list[MAPDLCommand]
+        List of MAPDLCommand.
+
+    path : str
+        Path containing ``_package`` directory.
+
+    Returns
+    -------
+    str
+        Path containing the source files of the created
+        ``ansys-mapdl-commands`` package.
+
+    """
+    template_path = os.path.join(path, "_package")
+    if not os.path.isdir(template_path):
+        raise FileNotFoundError(
+            f"Unable to locate the package templates path at '{template_path}'. "
+            f"Expected the _package directory at '{path}'."
+        )
+
+    package_path = os.path.join(path, "package")
+
+    if clean:
+        if os.path.isdir(package_path):
+            shutil.rmtree(package_path)
+
+    cmd_path = os.path.join(package_path, generated_src_code)
+    if not os.path.isdir(cmd_path):
+        os.makedirs(cmd_path)
+
+    for ans_name, cmd_obj in tqdm(commands.items(), desc="Writing commands"):
+        if ans_name in SKIP_APDL:
+            continue
+        cmd_name = ast.to_py_name(ans_name)
+        path = os.path.join(cmd_path, f"{cmd_name}.py")
+        with open(path, "w", encoding="utf-8") as fid:
+            fid.write(cmd_obj.to_python())
+
+        try:
+            nested_exec(cmd_obj.to_python())
+        except:
+            raise RuntimeError(f"Failed to execute {cmd_name}.py") from None
+
+    mod_file = os.path.join(cmd_path, "__init__.py")
+    with open(mod_file, "w") as fid:
+        for ans_name in commands:
+            if ans_name in SKIP_APDL:
+                continue
+            cmd_name = ast.to_py_name(ans_name)
+            fid.write(f"from .{cmd_name} import *\n")
+
+    print(f"Commands written to {cmd_path}")
+
+    # copy package files to the package directory
+    copy_package(template_path, package_path, clean)
+
+    return cmd_path
+
+
+def write_docs(commands, path):
+    """Output to the tinypages directory.
+
+    Parameters
+    ----------
+    path : str
+        Path to the new doc pages directory.
+
+    """
+
+    package_path = os.path.join(path, "package")
+    doc_package_path = os.path.join(package_path, "doc/source")
+    if not os.path.isdir(doc_package_path):
+        os.makedirs(doc_package_path)
+
+    doc_src = os.path.join(doc_package_path, "docs.rst")
+    with open(doc_src, "w") as fid:
+        fid.write("###########\n")
+        fid.write("Autosummary\n")
+        fid.write("###########\n")
+
+        fid.write(".. currentmodule:: ansys.dita.generatedcommands\n\n")
+        fid.write(".. autosummary::\n")
+        fid.write("   :toctree: _autosummary/\n\n")
+        for ans_name in commands:
+            if ans_name in SKIP_APDL:
+                continue
+            cmd_name = ast.to_py_name(ans_name)
+            fid.write(f"   {cmd_name}\n")
+
+    return doc_src

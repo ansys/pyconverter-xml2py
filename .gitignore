@@ -159,3 +159,5 @@ cython_debug/
 
 
 helper/
+
+package/
