@@ -102,6 +102,15 @@ jobs:
           key: Python-v${{ env.RESET_PIP_CACHE }}-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
             Python-v${{ env.RESET_PIP_CACHE }}-${{ runner.os }}
+    
+      # The token will expire in 2024.
+      - name: "Checkout mapdl-cmd-doc repository"
+        uses: actions/checkout@v3
+        with:
+          repository: pyansys/mapdl-cmd-doc
+          ref: feat/pydita-ast-predined-format
+          token: ${{ secrets.MAPDL_CMD_DOC_TOKEN }}
+          path: mapdl-cmd-doc
 
       - name: "Unit testing requirements installation"  
         run: |
