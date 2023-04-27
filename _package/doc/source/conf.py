@@ -34,16 +34,16 @@ extensions = [
     "linuxdoc.rstFlatTable",
 ]
 
-# Intersphinx mapping
-intersphinx_mapping = {
-    "python": ("https://docs.python.org/dev", None),
-    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
-    "numpy": ("https://numpy.org/devdocs", None),
-    "matplotlib": ("https://matplotlib.org/stable", None),
-    "pandas": ("https://pandas.pydata.org/pandas-docs/stable", None),
-    "pyvista": ("https://docs.pyvista.org/", None),
-    "grpc": ("https://grpc.github.io/grpc/python/", None),
-}
+# # Intersphinx mapping
+# intersphinx_mapping = {
+#     "python": ("https://docs.python.org/dev", None),
+#     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
+#     "numpy": ("https://numpy.org/devdocs", None),
+#     "matplotlib": ("https://matplotlib.org/stable", None),
+#     "pandas": ("https://pandas.pydata.org/pandas-docs/stable", None),
+#     "pyvista": ("https://docs.pyvista.org/", None),
+#     "grpc": ("https://grpc.github.io/grpc/python/", None),
+# }
 
 # The suffix(es) of source filenames.
 source_suffix = ".rst"
@@ -77,10 +77,9 @@ numpydoc_validation_checks = {
 
 # -- Options for HTML output -------------------------------------------------
 html_short_title = html_title = "Documentation"
-html_theme = "sphinxawesome_theme"
+html_theme ="pydata_sphinx_theme"
 html_theme_options = {
     "show_prev_next": False,
-    "show_breadcrumbs": True,
 }
 
 html_context = {

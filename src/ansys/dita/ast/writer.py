@@ -269,6 +269,7 @@ def write_docs(commands, path):
 
         fid.write(".. currentmodule:: ansys.dita.generatedcommands\n\n")
         fid.write(".. autosummary::\n")
+        fid.write("   :template: base.rst\n")
         fid.write("   :toctree: _autosummary/\n\n")
         for ans_name in commands:
             if ans_name in SKIP_APDL:
