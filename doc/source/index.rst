@@ -1,11 +1,12 @@
-..
-   Just reuse the root readme to avoid duplicating the documentation.
-   Provide any documentation specific to your online documentation
-   here.
 
-.. include:: ../../README.rst
+PyDita-AST
+==========
+
+A Python wrapper to convert XML documentation into an RST one.
 
 
 .. toctree::
+   :hidden:
 
    getting_started/index.rst
+   user_guide/index.rst

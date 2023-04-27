@@ -77,7 +77,7 @@ numpydoc_validation_checks = {
 
 # -- Options for HTML output -------------------------------------------------
 html_short_title = html_title = "Documentation"
-html_theme ="pydata_sphinx_theme"
+html_theme = "pydata_sphinx_theme"
 html_theme_options = {
     "show_prev_next": False,
 }

@@ -1,6 +1,8 @@
 Getting Started
 ===============
 
+Pre-defined format
+------------------
 
 The pre-defined XML folder format is as follow:
 
@@ -29,3 +31,24 @@ The pre-defined XML folder format is as follow:
         │       └── .svg files
         ├── .xml files
         └── .ent files
+
+
+Converting an `XML-folder`
+--------------------------
+
+Once the `XML_folder` is correctly organized, the converter can be used.
+
+.. code:: bash
+
+    python xml2rst.py -p XML_folder_path
+
+Once the folder is converted, the Sphinx documentation can be generated.
+The generated documentation is by default contained in the `package` folder.
+
+The following code is to render the documentation as an HTML one from Windows:
+
+.. code:: bash
+
+    cd package
+    pip install -e .[doc,tests] # Using a virtual environment is recommended.
+    .\doc\make.bat html 
