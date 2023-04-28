@@ -119,7 +119,7 @@ jobs:
       - name: "Unit testing"
         run: |
           pytest -v --durations=10 --maxfail=10 \
-            --reruns 7 --reruns-delay 3 \
+            --reruns 7 --reruns-delay 3 --ghdir ${{ github.workspace }}\
             --cov=ansys.dita.ast --cov-report=xml:centos-remote.xml --cov-report=html
 
       - name: "Upload coverage to Codecov"
