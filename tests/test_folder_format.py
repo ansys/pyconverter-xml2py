@@ -4,28 +4,6 @@ import ansys.dita.ast.folder_format as ff
 import pytest
 
 
-@pytest.fixture
-def folder_path(ghdir):
-    folder_path = os.path.join(ghdir, "mapdl-cmd-doc")
-    return folder_path
-
-
-# ##########################################################+
-# ##########################################################
-# # To run the Unit Tests locally
-# ##########################################################
-# ##########################################################
-
-
-# @pytest.fixture
-# def folder_path():
-#     return "D:/repos/pyansys/mapdl-cmd-doc-generalized"
-
-
-# ##########################################################
-# ##########################################################
-
-
 def test_xml_path(folder_path):
     assert os.path.abspath(os.path.expanduser(folder_path)) == ff.xml_path(folder_path)
 

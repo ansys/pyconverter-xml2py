@@ -182,7 +182,7 @@ def copy_package(template_path, new_path, clean=False):
             shutil.copy(filename, new_path)
 
 
-def write_source(commands, path, clean=True):
+def write_source(commands, path, new_package_path=None, clean=True):
     """Write out MAPDL commands as Python source files.
 
     Parameters
@@ -192,6 +192,9 @@ def write_source(commands, path, clean=True):
 
     path : str
         Path containing ``_package`` directory.
+
+    new_package_path : str
+        Path where to copy the ``_package`` directory. Default is ``./package``.
 
     Returns
     -------
@@ -207,13 +210,14 @@ def write_source(commands, path, clean=True):
             f"Expected the _package directory at '{path}'."
         )
 
-    package_path = os.path.join(path, "package")
+    if new_package_path is None:
+        new_package_path = os.path.join(path, "package")
 
     if clean:
-        if os.path.isdir(package_path):
-            shutil.rmtree(package_path)
+        if os.path.isdir(new_package_path):
+            shutil.rmtree(new_package_path)
 
-    cmd_path = os.path.join(package_path, generated_src_code)
+    cmd_path = os.path.join(new_package_path, generated_src_code)
     if not os.path.isdir(cmd_path):
         os.makedirs(cmd_path)
 
@@ -241,7 +245,7 @@ def write_source(commands, path, clean=True):
     print(f"Commands written to {cmd_path}")
 
     # copy package files to the package directory
-    copy_package(template_path, package_path, clean)
+    copy_package(template_path, new_package_path, clean)
 
     return cmd_path
 
