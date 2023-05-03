@@ -143,7 +143,7 @@ def convert(folder_path, command=None):
     return commands
 
 
-def copy_package(template_path, new_path, clean=False):
+def copy_package(template_path, new_package_path, clean=False):
     """Add files and folder from a template folder path to a new path.
 
     Parameters
@@ -151,11 +151,11 @@ def copy_package(template_path, new_path, clean=False):
     template_path : str
         Path containing the directory to be copied.
 
-    new_path : str
+    new_package_path : str
         Path containing the directory where the new files and folders will be added to.
 
     clean : Bool
-        Whether the folders in new_path need to be cleared before adding new files or not.
+        Whether the folders in new_package_path need to be cleared before adding new files or not.
         Default to False.
 
     Returns
@@ -168,7 +168,7 @@ def copy_package(template_path, new_path, clean=False):
 
     for filename in glob.glob(os.path.join(template_path, "*"), recursive=True):
         split_name_dir = filename.split(os.path.sep)
-        new_path_dir = os.path.join(new_path, split_name_dir[-1])
+        new_path_dir = os.path.join(new_package_path, split_name_dir[-1])
 
         if os.path.isdir(filename):
             if not os.path.isdir(new_path_dir):
@@ -179,7 +179,7 @@ def copy_package(template_path, new_path, clean=False):
             copy_package(filename, new_path_dir, clean)
 
         else:
-            shutil.copy(filename, new_path)
+            shutil.copy(filename, new_package_path)
 
 
 def write_source(commands, path, new_package_path=None, clean=True):

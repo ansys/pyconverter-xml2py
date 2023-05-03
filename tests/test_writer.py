@@ -2,6 +2,7 @@ import os
 import shutil
 
 import ansys.dita.ast.writer as wrt
+import pytest
 
 
 def test_convert(commands):
@@ -34,6 +35,22 @@ def test_copy_package():
         is True
     )
     shutil.rmtree(new_package_path)
+
+
+@pytest.fixture
+def cwd():
+    return os.getcwd()
+
+
+@pytest.fixture
+def package_path(cwd):
+    return os.path.join(cwd, "package")
+
+
+def test_write_source(commands, cwd, package_path):
+    cmd_path = wrt.write_source(commands, cwd)
+    assert cmd_path == os.path.join(package_path, wrt.generated_src_code)
+    assert os.path.isfile(os.path.join(cmd_path, "acel.py"))
 
 
 def test_write_docs(commands):
