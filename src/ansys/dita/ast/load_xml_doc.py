@@ -56,12 +56,12 @@ def load_fcache(graph_path):
     Parameters
     ----------
     graph_path: strg
-    Path to the graphic folder.
+        Path to the graphic folder.
 
     Return
     ------
     fcache: dic
-    Dictionary containing the basenames of the graphics and their path.
+        Dictionary containing the basenames of the graphics and their path.
 
     """
 

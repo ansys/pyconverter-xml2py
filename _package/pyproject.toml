@@ -16,7 +16,6 @@ authors = [
 maintainers = [
     {name = "PyAnsys developers", email = "pyansys.maintainers@ansys.com"},
 ]
-]
 
 classifiers = [
     "Development Status :: 4 - Beta",
