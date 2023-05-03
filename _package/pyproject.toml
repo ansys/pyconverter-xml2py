@@ -11,10 +11,11 @@ readme = "README.rst"
 requires-python = ">=3.7"
 license = {file = "LICENSE"}
 authors = [
-    {name = "To be completed", email = "email@email.com"},
+    {name = "Ansys, Inc.", email = "pyansys.maintainers@ansys.com"},
 ]
 maintainers = [
-    {name = "To be completed", email = "email@email.com"},
+    {name = "PyAnsys developers", email = "pyansys.maintainers@ansys.com"},
+]
 ]
 
 classifiers = [
