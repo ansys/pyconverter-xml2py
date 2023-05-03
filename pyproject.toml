@@ -79,7 +79,7 @@ default_section = "THIRDPARTY"
 src_paths = ["src"]
 
 [tool.coverage.run]
-source = ["pyansys/pydita-ast"]
+source = ["scr"]
 
 [tool.coverage.report]
 show_missing = true
