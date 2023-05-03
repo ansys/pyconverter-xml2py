@@ -3,10 +3,12 @@ import os
 import ansys.dita.ast.folder_format as ff
 import pytest
 
-# @pytest.fixture
-# def folder_path(ghdir):
-#     folder_path = os.path.join(ghdir, "mapdl-cmd-doc")
-#     return folder_path
+
+@pytest.fixture
+def folder_path(ghdir):
+    folder_path = os.path.join(ghdir, "mapdl-cmd-doc")
+    return folder_path
+
 
 # ##########################################################+
 # ##########################################################
@@ -15,9 +17,9 @@ import pytest
 # ##########################################################
 
 
-@pytest.fixture
-def folder_path():
-    return "D:/repos/pyansys/mapdl-cmd-doc-generalized"
+# @pytest.fixture
+# def folder_path():
+#     return "D:/repos/pyansys/mapdl-cmd-doc-generalized"
 
 
 # ##########################################################
@@ -25,11 +27,11 @@ def folder_path():
 
 
 def test_xml_path(folder_path):
-    assert folder_path == ff.xml_path(folder_path)
+    assert os.path.abspath(os.path.expanduser(folder_path)) == ff.xml_path(folder_path)
 
 
 def test_missing_xml_path():
-    with pytest.raises(FileNotFoundError, match="Documentation path at  does not exist"):
+    with pytest.raises(RuntimeError):
         ff.xml_path()
 
 

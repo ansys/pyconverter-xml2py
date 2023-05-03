@@ -45,21 +45,23 @@ def xml_path(path=None):
 
     """
     if path is None:
+        try:
+            parser = argparse.ArgumentParser()
+            parser.add_argument("--xml-path", "-p", help="XML Documentation path")
+            args = parser.parse_args()
+            path = args.xml_path
+        except:
+            try:
+                path = os.environ.get("XML_PATH")
+            except:
+                pass
 
-        parser = argparse.ArgumentParser()
-        parser.add_argument("--xml-path", "-p", help="XML Documentation path")
+    if path is None:
+        raise RuntimeError(
+            "Missing the XML documentation path. Specify this with either --xml-path, -p, or set the XML_PATH environment variable"  # noqa : E501
+        )
 
-        args = parser.parse_args()
-
-        path = args.xml_path
-        if path is None:
-            path = os.environ.get("XML_PATH")
-        if path is None:
-            raise RuntimeError(
-                "Missing the XML documentation path. Specify this with either --xml-path, -p, or set the XML_PATH environment variable"  # noqa : E501
-            )
-
-        path = os.path.abspath(os.path.expanduser(path))
+    path = os.path.abspath(os.path.expanduser(path))
 
     # Verification
     if not os.path.isdir(path):
