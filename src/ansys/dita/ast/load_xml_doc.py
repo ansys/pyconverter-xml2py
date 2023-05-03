@@ -4,16 +4,27 @@ from pathlib import Path
 import re
 import unicodedata
 
+import ansys.dita.ast.ast_tree as ast
+import ansys.dita.ast.version_variables as var
 from lxml.etree import ParserError
 from lxml.html import fromstring
 from tqdm import tqdm
 
-import ansys.dita.ast.ast_tree as ast
-import ansys.dita.ast.version_variables as var
-
 
 def load_links(link_path):
-    """Load all links."""
+    """Load all links.
+
+    Parameters
+    ----------
+    link_path: strg
+        Path to the links folder.
+
+    Return
+    ------
+    links: dic
+        Dictionary containing the link names and the needed information to render the links.
+
+    """
 
     db_path = os.path.join(link_path, "*.db")
     linkmap_fnames = list(glob.glob(db_path, recursive=True))
@@ -82,12 +93,12 @@ def load_docu_global(term_path):
     Parameters
     ----------
     term_path: strg
-    Path to the terms folder.
+        Path to the terms folder.
 
     Return
     ------
     docu_global: dic
-    Dictionary containing the entity names and their path.
+        Dictionary containing the entity names from the documentation and their path.
 
     """
 
@@ -133,36 +144,37 @@ def load_terms(
     Parameters
     ----------
     term_path: strg
-    Path to the terms folder.
+        Path to the terms folder.
 
     docu_global: dic
+        Dictionary containing the entity names from the documentation and their path.
 
     links: dic
-
-    base_url: dic
+        Dictionary containing the link names and the needed information to render the links.
 
     fcache: dic
+        Dictionary containing the basenames of the graphics and their path.
 
     variable_file: str
-    Name of the file containing the variable terms to be imported.
-    The default value is "build_variables.ent".
+        Name of the file containing the variable terms to be imported.
+        The default value is "build_variables.ent".
 
     global_terms_file: str
-    Name of the file containing the global terms to be imported.
-    The default value is "terms_global.ent".
+        Name of the file containing the global terms to be imported.
+        The default value is "terms_global.ent".
 
     manual_file: strg
-    Name of the file containing the manual entities to be imported.
-    The default value is "manuals.ent".
+        Name of the file containing the manual entities to be imported.
+        The default value is "manuals.ent".
 
     character_folder: str
-    Name of the folder containg the entities for the special characters.
-    The default value is "ent.
+        Name of the folder containg the entities for the special characters.
+        The default value is "ent.
 
     Return
     ------
     terms: dic
-    Dictionary containing the entity names and their values.
+        Dictionary containing the entity names and their values.
 
     """
 

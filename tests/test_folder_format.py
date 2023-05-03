@@ -1,8 +1,7 @@
 import os
 
-import pytest
-
 import ansys.dita.ast.folder_format as ff
+import pytest
 
 
 def test_xml_path(folder_path):

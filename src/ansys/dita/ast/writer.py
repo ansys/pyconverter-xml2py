@@ -2,11 +2,10 @@ import glob
 import os
 import shutil
 
-from tqdm import tqdm
-
 from ansys.dita.ast import ast_tree as ast
 from ansys.dita.ast import folder_format as path
 from ansys.dita.ast import load_xml_doc as load
+from tqdm import tqdm
 
 generated_src_code = os.path.join("src", "ansys", "dita", "generatedcommands")
 

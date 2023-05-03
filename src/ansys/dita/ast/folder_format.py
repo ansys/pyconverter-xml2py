@@ -35,13 +35,13 @@ def xml_path(path=None):
     Parameters
     ----------
     path: str
-    If path is None, the path is set with the argument parser `-p` or `--xml-path`,
-    or with the XML_PATH environment variable.
+        If path is None, the path is set with the argument parser `-p` or `--xml-path`,
+        or with the XML_PATH environment variable.
 
     Return
     ------
     path: str
-    Path of the XML documentation to be converted.
+        Path of the XML documentation to be converted.
 
     """
     if path is None:
@@ -76,37 +76,37 @@ def get_paths(path, graph_path=None, link_path=None, term_path=None, xml_path=No
     Parameters
     ----------
     path : strg
-    Path to the folder with the pre-defined format .
+        Path to the folder with the pre-defined format .
 
     graph_path : strg
-    If not following the XML pre-defined folder format, specify the path to the folder containing
-    the graphics.
+        If not following the XML pre-defined folder format, specify the path to the folder
+        containing the graphics.
 
     link_path : strg
-    If not following the XML pre-defined folder format, specify the path to the folder containing
-    the links.
+        If not following the XML pre-defined folder format, specify the path to the folder
+        containing the links.
 
     term_path : strg
-    If not following the XML pre-defined folder format, specify the path to the folder containing
-    the terms
+        If not following the XML pre-defined folder format, specify the path to the folder
+        containing the terms
 
     xml_path : strg
-    If not following the XML pre-defined folder format, specify the path to the folder containing
-    the xml.
+        If not following the XML pre-defined folder format, specify the path to the folder
+        containing the xml.
 
     Returns
     -------
     graphic_path : str
-    Path of the folder containing the graphics.
+        Path of the folder containing the graphics.
 
     link_path : str
-    Path of the folder containing the links.
+        Path of the folder containing the links.
 
     term_path : str
-    Path of the folder containing the terms.
+        Path of the folder containing the terms.
 
     xml_path : str
-    Path of the folder containing the xml.
+        Path of the folder containing the xml.
 
     """
 
