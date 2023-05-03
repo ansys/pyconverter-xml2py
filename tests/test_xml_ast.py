@@ -6,19 +6,12 @@ import pytest
 
 
 @pytest.mark.parametrize(
-    "command",
-    ["/PREP7", "*DMAT", "SORT"],
+    "command,expected_ouput",
+    (["/PREP7", "*DMAT", "SORT"],
+    ["prep7", "dmat", "sort"])
 )
-def test_py_name(command):
-    pycommand = ast.to_py_name(command)
-    if command == "/PREP7":
-        assert pycommand == "prep7"
-    elif command == "*DMAT":
-        assert pycommand == "dmat"
-    elif command == "SORT":
-        assert pycommand == "sort"
-    else:
-        raise ValueError("Invalid pytest command parameter.")
+def test_py_name(command, expected_output):
+    assert ast.to_py_name(command) == expected_output
 
 
 @pytest.fixture
@@ -27,25 +20,17 @@ def alpha_text():
 
 
 def test_trail_alpha(alpha_text):
-    alpha = "This is a test."
     split_alpha = ast.split_trail_alpha(alpha_text)
     assert split_alpha == ("This ", "is a test.")
 
 
 @pytest.mark.parametrize(
-    "numeric_string",
-    ["2804", "28.04", "TEA"],
+    "numeric_string,expected_output",
+    (["2804", "28.04", "TEA"],
+    [True, True, False])
 )
-def test_is_numeric(numeric_string):
-    is_num = ast.is_numeric(numeric_string)
-    if numeric_string == "2804":
-        assert is_num is True
-    elif numeric_string == "28.04":
-        assert is_num is True
-    elif numeric_string == "TEA":
-        assert is_num is False
-    else:
-        raise ValueError("Invalid pytest command parameter.")
+def test_is_numeric(numeric_string, expected_output):
+    assert ast.is_numeric(numeric_string) == expected_output
 
 
 @pytest.fixture
@@ -81,8 +66,7 @@ def str_element_with_children():
 
 @pytest.fixture
 def element_with_children(str_element_with_children):
-    element_with_children = fromstring(str_element_with_children)
-    return element_with_children
+    return fromstring(str_element_with_children)
 
 
 @pytest.fixture
@@ -91,9 +75,9 @@ def Element_with_children(element_with_children):
 
 
 def test_parse_children(element_with_children):
-    parser = ast.parse_children(element_with_children)
-    from_string = element_with_children.getchildren()
-    assert parser == from_string
+    children_fromparse= ast.parse_children(element_with_children)
+    children_fromget = element_with_children.getchildren()
+    assert children_fromparse == children_fromget
 
 
 def test_init_Element_with_children(element_with_children, Element_with_children):
