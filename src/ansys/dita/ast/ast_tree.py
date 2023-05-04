@@ -46,7 +46,6 @@ CMD_MAP = {}
 SKIP = {"*IF", "*ELSE", "C***", "*RETURN"}
 
 
-
 def to_py_name(name):
     """Convert to a python compatible name."""
     name = CMD_MAP.get(name, name.lower())

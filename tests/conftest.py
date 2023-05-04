@@ -21,14 +21,14 @@ def pytest_generate_tests(metafunc):
 
 
 @pytest.fixture
-def folder_path(ghdir):
+def directory_path(ghdir):
     import ansys.dita.ast as ast
-    if os.environ.get("ON_CI", "").lower() == "true":
-        folder_path = os.path.join(ghdir, "mapdl-cmd-doc")
-    else:
-        folder_path = os.path.abspath(ast.__file__)
-    return folder_path
 
+    if os.environ.get("ON_CI", "").lower() == "true":
+        directory_path = os.path.join(ghdir, "mapdl-cmd-doc")
+    else:
+        directory_path = os.path.abspath(ast.__file__)
+    return directory_path
 
 
 @pytest.fixture
