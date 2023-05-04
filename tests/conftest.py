@@ -22,12 +22,12 @@ def pytest_generate_tests(metafunc):
 
 @pytest.fixture
 def directory_path(ghdir):
-    import ansys.dita.ast as ast
-
     if os.environ.get("ON_CI", "").lower() == "true":
         directory_path = os.path.join(ghdir, "mapdl-cmd-doc")
     else:
-        directory_path = os.path.abspath(ast.__file__)
+        directory_path = os.path.abspath(
+            "D:/repos/pyansys/mapdl-cmd-doc-generalized"
+        )  # This is to be modified in the next PRs.
     return directory_path
 
 
