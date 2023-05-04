@@ -46,10 +46,6 @@ CMD_MAP = {}
 SKIP = {"*IF", "*ELSE", "C***", "*RETURN"}
 
 
-# def nested_exec(text):
-#     """Nested execute."""
-#     exec(text)
-
 
 def to_py_name(name):
     """Convert to a python compatible name."""
