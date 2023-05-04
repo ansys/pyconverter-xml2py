@@ -67,6 +67,11 @@ numpydoc_validation_checks = {
     # type, unless multiple values are being returned"
 }
 
+# make rst_epilog a variable, so you can add other epilog parts to it
+rst_epilog = ""
+# Read link all targets from file
+with open("links.rst") as f:
+    rst_epilog += f.read()
 
 # static path
 html_static_path = ["_static"]

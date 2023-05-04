@@ -156,3 +156,11 @@ cython_debug/
 #.idea/
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+
+#VSCode environment
+.vscode
+
+
+helper/
+package/
+_autosummary/
