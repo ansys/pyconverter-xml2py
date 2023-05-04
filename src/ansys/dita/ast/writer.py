@@ -3,7 +3,7 @@ import os
 import shutil
 
 from ansys.dita.ast import ast_tree as ast
-from ansys.dita.ast import folder_format as path
+from ansys.dita.ast import directory_format as path
 from ansys.dita.ast import load_xml_doc as load
 from tqdm import tqdm
 
@@ -31,10 +31,10 @@ def nested_exec(text):
     exec(text)
 
 
-def convert(folder_path, command=None):
-    """Covert an XML folder into an RST one."""
+def convert(directory_path, command=None):
+    """Covert an XML directory into an RST one."""
 
-    graph_path, link_path, term_path, xml_path = path.get_paths(folder_path)
+    graph_path, link_path, term_path, xml_path = path.get_paths(directory_path)
     links = load.load_links(link_path)
     fcache = load.load_fcache(graph_path)
     docu_global = load.load_docu_global(term_path)
@@ -49,7 +49,7 @@ def convert(folder_path, command=None):
         Parameters
         ----------
         xml_path : str
-            Path to the folder containing the XML files to be converted.
+            Path to the directory containing the XML files to be converted.
 
         Examples
         --------
@@ -144,7 +144,7 @@ def convert(folder_path, command=None):
 
 
 def copy_package(template_path, new_package_path, clean=False):
-    """Add files and folder from a template folder path to a new path.
+    """Add files and directory from a template directory path to a new path.
 
     Parameters
     ----------
@@ -152,11 +152,11 @@ def copy_package(template_path, new_package_path, clean=False):
         Path containing the directory to be copied.
 
     new_package_path : str
-        Path containing the directory where the new files and folders will be added to.
+        Path containing the directory where the new files and directorys will be added to.
 
     clean : Bool
-        Whether the folders in new_package_path need to be cleared before adding new files or not.
-        Default to False.
+        Whether the directorys in new_package_path need to be cleared before adding new files
+        or not. Default to False.
 
     Returns
     -------

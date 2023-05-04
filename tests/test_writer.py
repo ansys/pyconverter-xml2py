@@ -20,7 +20,7 @@ def test_convert(commands):
 
 def test_copy_package():
     cwd = os.getcwd()
-    new_package_path = os.path.join(cwd, "tmp_folder")
+    new_package_path = os.path.join(cwd, "tmp_directory")
     if os.path.isdir(new_package_path):
         shutil.rmtree(new_package_path)
     os.makedirs(new_package_path)

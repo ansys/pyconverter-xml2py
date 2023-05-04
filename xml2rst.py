@@ -18,23 +18,23 @@ if __name__ == "__main__":
     parser.add_argument("--no_docs", action="store_true", help="Do not write to tinypages")
     args = parser.parse_args()
 
-    folder_path = args.xml_path
-    if folder_path is None:
-        folder_path = os.environ.get("XML_PATH")
-    if folder_path is None:
+    directory_path = args.xml_path
+    if directory_path is None:
+        directory_path = os.environ.get("XML_PATH")
+    if directory_path is None:
         raise RuntimeError(
             "Missing the XML documentation path. Specify this with either --xml-path, -p, or set the XML_PATH environment variable"  # noqa : E501
         )
 
-    folder_path = os.path.abspath(os.path.expanduser(folder_path))
+    directory_path = os.path.abspath(os.path.expanduser(directory_path))
     cur_path = os.getcwd()
 
     # Verification
-    if not os.path.isdir(folder_path):
-        raise FileNotFoundError(f"Documentation path at {folder_path} does not exist")
+    if not os.path.isdir(directory_path):
+        raise FileNotFoundError(f"Documentation path at {directory_path} does not exist")
 
     # chap2.write_chapt2(doc_path, conv_path, links, base_url)
 
-    commands = wr.convert(folder_path)
+    commands = wr.convert(directory_path)
     cmd_path = wr.write_source(commands, cur_path)
     doc_src = wr.write_docs(commands, cur_path)

@@ -1,9 +1,9 @@
 import argparse
 import os
 
-# Pre-defined folder format
+# Pre-defined directory format
 
-# XML_folder/
+# XML_directory/
 # │
 # ├── graphics/
 # │   ├── .gifs files
@@ -17,20 +17,20 @@ import os
 # │   │   ├── variable_file         #default value is build_variables.ent
 # │   │   ├── global_terms_file     #default value is terms_global.ent
 # │   │   └── manual_file           #default value is manuals.ent
-# │   └── character_folder/         #default value is ent/
+# │   └── character_directory/         #default value is ent/
 # │       └── .ent files
 # └── xml/
-#     ├── subfolders/
+#     ├── subdirectorys/
 #     │   ├── .xml files
-#     │   └── mathgraphics_folder/   #this is a defalut value
+#     │   └── mathgraphics_directory/   #this is a defalut value
 #     │       └── .svg files
 #     ├── .xml files
 #     └── .ent files
 
 
 def xml_path(path=None):
-    """Return the path to the folder containing the XML documentation.
-    It is advised to follow the pre-defined folder structure.
+    """Return the path to the directory containing the XML documentation.
+    It is advised to follow the pre-defined directory structure.
 
     Parameters
     ----------
@@ -71,42 +71,42 @@ def xml_path(path=None):
 
 
 def get_paths(path, graph_path=None, link_path=None, term_path=None, xml_path=None):
-    """Return the path to the folder containing the graphics.
+    """Return the path to the directory containing the graphics.
 
     Parameters
     ----------
     path : strg
-        Path to the folder with the pre-defined format .
+        Path to the directory with the pre-defined format .
 
     graph_path : strg
-        If not following the XML pre-defined folder format, specify the path to the folder
+        If not following the XML pre-defined directory format, specify the path to the directory
         containing the graphics.
 
     link_path : strg
-        If not following the XML pre-defined folder format, specify the path to the folder
+        If not following the XML pre-defined directory format, specify the path to the directory
         containing the links.
 
     term_path : strg
-        If not following the XML pre-defined folder format, specify the path to the folder
+        If not following the XML pre-defined directory format, specify the path to the directory
         containing the terms
 
     xml_path : strg
-        If not following the XML pre-defined folder format, specify the path to the folder
+        If not following the XML pre-defined directory format, specify the path to the directory
         containing the xml.
 
     Returns
     -------
     graphic_path : str
-        Path of the folder containing the graphics.
+        Path of the directory containing the graphics.
 
     link_path : str
-        Path of the folder containing the links.
+        Path of the directory containing the links.
 
     term_path : str
-        Path of the folder containing the terms.
+        Path of the directory containing the terms.
 
     xml_path : str
-        Path of the folder containing the xml.
+        Path of the directory containing the xml.
 
     """
 

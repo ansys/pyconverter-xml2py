@@ -1,6 +1,6 @@
 import os
 
-import ansys.dita.ast.folder_format as ff
+import ansys.dita.ast.directory_format as ff
 import ansys.dita.ast.load_xml_doc as lxd
 import ansys.dita.ast.writer as wrt
 import pytest
@@ -28,9 +28,9 @@ def pytest_generate_tests(metafunc):
 
 
 @pytest.fixture
-def folder_path(ghdir):
-    folder_path = os.path.join(ghdir, "mapdl-cmd-doc")
-    return folder_path
+def directory_path(ghdir):
+    directory_path = os.path.join(ghdir, "mapdl-cmd-doc")
+    return directory_path
 
 
 # ##########################################################+
@@ -41,7 +41,7 @@ def folder_path(ghdir):
 
 
 # @pytest.fixture
-# def folder_path():
+# def directory_path():
 #     return "D:/repos/pyansys/mapdl-cmd-doc-generalized"
 
 
@@ -50,23 +50,23 @@ def folder_path(ghdir):
 
 
 @pytest.fixture
-def graph_path(folder_path):
-    return ff.get_paths(folder_path)[0]
+def graph_path(directory_path):
+    return ff.get_paths(directory_path)[0]
 
 
 @pytest.fixture
-def link_path(folder_path):
-    return ff.get_paths(folder_path)[1]
+def link_path(directory_path):
+    return ff.get_paths(directory_path)[1]
 
 
 @pytest.fixture
-def term_path(folder_path):
-    return ff.get_paths(folder_path)[2]
+def term_path(directory_path):
+    return ff.get_paths(directory_path)[2]
 
 
 @pytest.fixture
-def xml_path(folder_path):
-    return ff.get_paths(folder_path)[3]
+def xml_path(directory_path):
+    return ff.get_paths(directory_path)[3]
 
 
 @pytest.fixture
@@ -100,5 +100,5 @@ def version_variables(load_terms):
 
 
 @pytest.fixture
-def commands(folder_path):
-    return wrt.convert(folder_path)
+def commands(directory_path):
+    return wrt.convert(directory_path)
