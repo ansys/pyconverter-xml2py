@@ -20,33 +20,14 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("ghdir", [option_value])
 
 
-########################################################+
-#########################################################
-# To run the Unit Tests with GitHub actions
-#########################################################
-#########################################################
-
-
 @pytest.fixture
 def folder_path(ghdir):
-    folder_path = os.path.join(ghdir, "mapdl-cmd-doc")
+   import ansys.dita.ast as ast
+    if os.environ.get("ON_CI", "").lower() == "true":
+        folder_path = os.path.join(ghdir, "mapdl-cmd-doc")
+    else:
+        folder_path = os.path.abspath(ast.__file__)
     return folder_path
-
-
-# ##########################################################+
-# ##########################################################
-# # To run the Unit Tests locally
-# ##########################################################
-# ##########################################################
-
-
-# @pytest.fixture
-# def folder_path():
-#     return "D:/repos/pyansys/mapdl-cmd-doc-generalized"
-
-
-# ##########################################################
-# ##########################################################
 
 
 @pytest.fixture
