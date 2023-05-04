@@ -6,7 +6,7 @@ import pytest
 
 
 @pytest.mark.parametrize(
-    "command,expected_ouput", (["/PREP7", "*DMAT", "SORT"], ["prep7", "dmat", "sort"])
+    "command,expected_ouput", [("/PREP7", "prep7"), ("*DMAT", "dmat"), ("SORT", "sort")]
 )
 def test_py_name(command, expected_output):
     assert ast.to_py_name(command) == expected_output
@@ -23,7 +23,7 @@ def test_trail_alpha(alpha_text):
 
 
 @pytest.mark.parametrize(
-    "numeric_string,expected_output", (["2804", "28.04", "TEA"], [True, True, False])
+    "numeric_string,expected_output", [("2804", True), ("28.04", True), ("TEA", False)]
 )
 def test_is_numeric(numeric_string, expected_output):
     assert ast.is_numeric(numeric_string) == expected_output
