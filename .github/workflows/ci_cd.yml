@@ -18,6 +18,7 @@ env:
   PACKAGE_NAME: 'ansys-dita-ast'
   PACKAGE_NAMESPACE: 'ansys.dita.ast'
   RESET_PIP_CACHE: 0
+  ON_CI: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

@@ -6,7 +6,7 @@ Pre-defined format
 
 The pre-defined XML directory format is as follow:
 
-.. code:: bash
+.. code:: text
 
     XML_directory/
     │
