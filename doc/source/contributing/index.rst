@@ -13,7 +13,9 @@ The following contribution information is specific to PyDita-AST.
 Clone the repository
 --------------------
 
-Run this code to clone and install the latest version of PyDita-AST in development mode::
+Run this code to clone and install the latest version of PyDita-AST in development mode:
+
+.. code:: console
 
     git clone https://github.com/pyansys/pydita-ast
     cd pydita-ast
