@@ -25,9 +25,7 @@ def directory_path(ghdir):
     if os.environ.get("ON_CI", "").lower() == "true":
         directory_path = os.path.join(ghdir, "mapdl-cmd-doc")
     else:
-        directory_path = os.path.abspath(
-            "D:/repos/pyansys/mapdl-cmd-doc-generalized"
-        )  # This is to be modified in the next PRs.
+        directory_path = os.path.abspath(os.path.join(os.getcwd(),"../mapdl-cmd-doc-generalized"))
     return directory_path
 
 
