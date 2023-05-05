@@ -276,9 +276,8 @@ def write_docs(commands, path):
         fid.write("   :template: base.rst\n")
         fid.write("   :toctree: _autosummary/\n\n")
         for ans_name in commands:
-            if ans_name in SKIP_APDL:
-                continue
-            cmd_name = ast.to_py_name(ans_name)
-            fid.write(f"   {cmd_name}\n")
+            if ans_name not in SKIP_APDL:
+                cmd_name = ast.to_py_name(ans_name)
+                fid.write(f"   {cmd_name}\n")
 
     return doc_src
