@@ -35,13 +35,13 @@ dependencies = [
     "flit>=3.8.0",
     "sphinx-notfound-page==0.8.3",
     "numpydoc==1.5.0",
-    "sphinx-copybutton==0.5.1",
+    "sphinx-copybutton==0.5.2",
     "build>= 0.10.0",
 ]
 
 [project.optional-dependencies]
 tests = [
-    "pytest==7.3.0",
+    "pytest==7.3.1",
     "pytest-cov==4.0.0",
     "pytest-rerunfailures==11.1.2",
 ]
@@ -54,10 +54,10 @@ doc = [
     "pypandoc==1.11",
     "pytest-sphinx==0.5.0",
     "sphinx-autobuild==2021.3.14",
-    "sphinx-autodoc-typehints==1.22",
-    "sphinx-copybutton==0.5.1",
+    "sphinx-autodoc-typehints==1.23.0",
+    "sphinx-copybutton==0.5.2",
     "sphinx-notfound-page==0.8.3",
-    "sphinx-gallery==0.12.2",
+    "sphinx-gallery==0.13.0",
 ]
 
 [tool.flit.module]
