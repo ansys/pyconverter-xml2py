@@ -1,9 +1,8 @@
 """Sphinx documentation configuration file."""
 from datetime import datetime
 
-from ansys_sphinx_theme import ansys_favicon, pyansys_logo_black
-
 from ansys.dita.ast import __version__
+from ansys_sphinx_theme import ansys_favicon, pyansys_logo_black
 
 # Project information
 project = "ansys-dita-ast"
