@@ -1,9 +1,10 @@
 import os
 
+import pytest
+
 import ansys.dita.ast.directory_format as ff
 import ansys.dita.ast.load_xml_doc as lxd
 import ansys.dita.ast.writer as wrt
-import pytest
 
 pytest_plugins = ["pytester"]
 

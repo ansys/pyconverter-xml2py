@@ -38,8 +38,8 @@ def xml_path(path=None):
         If path is None, the path is set with the argument parser `-p` or `--xml-path`,
         or with the XML_PATH environment variable.
 
-    Return
-    ------
+    Returns
+    -------
     path: str
         Path of the XML documentation to be converted.
 

@@ -30,7 +30,7 @@ dependencies = [
     "lxml==4.9.2",
     "py-asciimath==0.3.0",
     "pylatexenc==2.10",
-    "ansys-sphinx-theme>=0.8.2",
+    "ansys-sphinx-theme==0.9.7",
     "tqdm>=4.64.1",
     "flit>=3.8.0",
     "sphinx-notfound-page==0.8.3",
@@ -47,7 +47,6 @@ tests = [
 ]
 doc = [
     "Sphinx==7.0.0",
-    "ansys-sphinx-theme==0.9.7",
     "jupyter_sphinx==0.4.0",
     "numpydoc==1.5.0",
     "pandas==2.0.0",

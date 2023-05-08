@@ -33,6 +33,8 @@ The pre-defined XML directory format is as follow:
         └── .ent files
 
 
+.. include:: ./diags/diag_directory.rst
+
 Converting an `XML-directory`
 -----------------------------
 

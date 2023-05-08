@@ -1,13 +1,8 @@
 API reference
 =============
 
-.. currentmodule:: ansys.dita.ast
-
-.. autosummary::
-    :toctree: _autosummary
+.. toctree::
+   :maxdepth: 2
     
-    ast_tree
-    folder_format
-    load_xml_doc
-    version_variables
-    writer
+   ast_class
+
