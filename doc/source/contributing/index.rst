@@ -13,7 +13,10 @@ The following contribution information is specific to PyDita-AST.
 Clone the repository
 --------------------
 
-Run this code to clone and install the latest version of PyDita-AST in development mode::
+
+Run this code to clone and install the latest version of PyDita-AST in development mode:
+
+.. code:: console
 
     git clone https://github.com/pyansys/pydita-ast
     cd pydita-ast
@@ -35,6 +38,7 @@ If your issue does not fit into one of these categories, create your own issue.
 To reach the PyAnsys support team, email `PyAnsys Core <pyansys_core>`_.
 
 
+
 Build documentation
 -------------------
 
@@ -42,16 +46,6 @@ To build the PyDita-AST documentation locally, in the root directory of the repo
     
     pip install .[doc]
     .\doc\make.bat html 
-
-Documentation for the latest stable release of PyDita-AST is hosted at
-`PyDita-AST Documentation <pydita_ast_docs_>`_.
-
-You can access to
-
-Documentation for the latest development version, which tracks the
-``main`` branch, is hosted at 
-`Development PyDita-AST Documentation <pydita_ast_dev_docs_>`_.
-This version is automatically kept up to date via GitHub actions.
 
 
 Adhere to code style
@@ -61,18 +55,24 @@ PyDita-AST follows the PEP8 standard as outlined in the `PyAnsys Development Gui
 <dev_guide_pyansys_>`_ and implements style checking using
 `pre-commit <precommit_>`_.
 
-To ensure your code meets minimum code styling standards, run this code::
+To ensure your code meets minimum code styling standards, run this code:
+
+.. code:: console
 
   pip install pre-commit
   pre-commit run --all-files
 
-You can also install this as a pre-commit hook by running this code::
+You can also install this as a pre-commit hook by running this code:
+
+.. code:: console
 
   pre-commit install
 
-This way, it's not possible for you to push code that fails the style checks::
 
-  $ pre-commit install
+This way, it's not possible for you to push code that fails the style checks
+
+.. code:: text
+
   $ git commit -am "added my cool feature"
   black....................................................................Passed
   blacken-docs.............................................................Passed

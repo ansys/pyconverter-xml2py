@@ -4,53 +4,54 @@ build-backend = "flit_core.buildapi"
 
 [project]
 # Check https://flit.readthedocs.io/en/latest/pyproject_toml.html for all available sections
-name = "ansys-dita-ast"
+name = "ansys-dita-generatedcommands"
 version = "0.1.dev0"
-description = "PyDita AST converter."
+description = "Documentation."
 readme = "README.rst"
-requires-python = ">=3.8"
+requires-python = ">=3.7"
 license = {file = "LICENSE"}
 authors = [
-    {name = "ANSYS, Inc.", email = "pyansys.core@ansys.com"},
+    {name = "Ansys, Inc.", email = "pyansys.maintainers@ansys.com"},
 ]
 maintainers = [
     {name = "PyAnsys developers", email = "pyansys.maintainers@ansys.com"},
 ]
+
 classifiers = [
     "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
     "importlib-metadata >=4.0",
     "lxml==4.9.2",
     "py-asciimath==0.3.0",
     "pylatexenc==2.10",
-    "ansys-sphinx-theme>=0.8.2",
     "tqdm>=4.64.1",
     "flit>=3.8.0",
     "sphinx-notfound-page==0.8.3",
     "numpydoc==1.5.0",
     "sphinx-copybutton==0.5.1",
     "build>= 0.10.0",
+    "linuxdoc",
 ]
+
+
 
 [project.optional-dependencies]
 tests = [
-    "pytest==7.3.0",
+    "pytest==7.2.2",
     "pytest-cov==4.0.0",
     "pytest-rerunfailures==11.1.2",
 ]
+
 doc = [
-    "Sphinx==5.3.0",
-    "ansys-sphinx-theme==0.9.7",
+    "Sphinx==6.2.1",
+    "pydata_sphinx_theme==0.13.3",
     "jupyter_sphinx==0.4.0",
     "numpydoc==1.5.0",
-    "pandas==2.0.0",
+    "pandas==1.5.3",
     "pypandoc==1.11",
     "pytest-sphinx==0.5.0",
     "sphinx-autobuild==2021.3.14",
@@ -61,12 +62,13 @@ doc = [
 ]
 
 [tool.flit.module]
-name = "ansys.dita.ast"
+name = "ansys.dita.generatedcommands"
 
 [project.urls]
 Source = "https://github.com/pyansys/pydita-ast/"
 Tracker = "https://github.com/pyansys/pydita-ast/issues"
-Homepage = "https://github.com/pyansys/pydita-ast"
+Homepage = "https://github.com/pyansyspydita-ast"
+
 
 [tool.black]
 line-length = 100
@@ -77,9 +79,6 @@ force_sort_within_sections = true
 line_length = 100
 default_section = "THIRDPARTY"
 src_paths = ["src"]
-
-[tool.coverage.run]
-source = ["scr"]
 
 [tool.coverage.report]
 show_missing = true

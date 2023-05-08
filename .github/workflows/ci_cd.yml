@@ -18,6 +18,7 @@ env:
   PACKAGE_NAME: 'ansys-dita-ast'
   PACKAGE_NAMESPACE: 'ansys.dita.ast'
   RESET_PIP_CACHE: 0
+  ON_CI: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -102,15 +103,16 @@ jobs:
           key: Python-v${{ env.RESET_PIP_CACHE }}-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
             Python-v${{ env.RESET_PIP_CACHE }}-${{ runner.os }}
-
+    
       # The token will expire in 2024.
-      - name: "Checkout pydita-ast repository"
+      - name: "Checkout mapdl-cmd-doc repository"
         uses: actions/checkout@v3
         with:
-          repository: pyansys/pydita-ast
-          token: ${{ secrets.DITA_AST_DOC_TOKEN }}
-          path: pydita-ast
-        
+          repository: pyansys/mapdl-cmd-doc
+          ref: feat/pydita-ast-predined-format
+          token: ${{ secrets.MAPDL_CMD_DOC_TOKEN }}
+          path: mapdl-cmd-doc
+
       - name: "Unit testing requirements installation"  
         run: |
           python -m pip install .[tests]
@@ -118,8 +120,9 @@ jobs:
       - name: "Unit testing"
         run: |
           pytest -v --durations=10 --maxfail=10 \
-            --reruns 7 --reruns-delay 3 --ghdir ${{ github.workspace }} \
-            --cov=ansys.dita.ast --cov-report=xml:centos-remote.xml --cov-report=html
+            --reruns 7 --reruns-delay 3 --ghdir ${{ github.workspace }}\
+            --cov=ansys.dita.ast --cov-report=xml:coverage.xml --cov-report=html\
+            --cov-report term
 
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v3
