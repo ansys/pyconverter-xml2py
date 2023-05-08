@@ -10,6 +10,10 @@ copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
 author = "ANSYS, Inc."
 release = version = __version__
 
+REPOSITORY_NAME = "pydita-ast"
+USERNAME = "pyansys"
+BRANCH = "main"
+
 # Select desired logo, theme, and declare the html title
 html_logo = pyansys_logo_black
 html_theme = "ansys_sphinx_theme"
@@ -19,13 +23,16 @@ html_short_title = html_title = "pydita-ast"
 html_favicon = ansys_favicon
 
 # specify the location of your github repo
+# -- Options for HTML output -------------------------------------------------
+html_short_title = html_title = "PyMAPDL"
+html_theme = "ansys_sphinx_theme"
+html_logo = pyansys_logo_black
 html_theme_options = {
-    "github_url": "https://github.com/pyansys/pydita-ast",
+    "analytics": {"google_analytics_id": "G-JQJKPV6ZVB"},
+    "github_url": f"https://github.com/{USERNAME}/{REPOSITORY_NAME}",
     "show_prev_next": False,
     "show_breadcrumbs": True,
-    "additional_breadcrumbs": [
-        ("PyAnsys", "https://docs.pyansys.com/"),
-    ],
+    "collapse_navigation": True,
 }
 
 # Sphinx extensions
@@ -43,14 +50,13 @@ extensions = [
 
 # Intersphinx mapping
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/dev", None),
-    # kept here as an example
-    # "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
-    # "numpy": ("https://numpy.org/devdocs", None),
-    # "matplotlib": ("https://matplotlib.org/stable", None),
-    # "pandas": ("https://pandas.pydata.org/pandas-docs/stable", None),
-    # "pyvista": ("https://docs.pyvista.org/", None),
-    # "grpc": ("https://grpc.github.io/grpc/python/", None),
+    "python": ("https://docs.python.org/3", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
+    "numpy": ("https://numpy.org/devdocs", None),
+    "matplotlib": ("https://matplotlib.org/stable", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/stable", None),
+    "pyvista": ("https://docs.pyvista.org/version/stable/", None),
+    "grpc": ("https://grpc.github.io/grpc/python/", None),
 }
 
 # numpydoc configuration

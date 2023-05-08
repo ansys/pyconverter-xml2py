@@ -7,7 +7,6 @@ from lxml.etree import tostring
 from lxml.html import fromstring
 
 CONV_EQN = False
-SUPPORT_TABLES = True
 
 if CONV_EQN:
     from py_asciimath.translator.translator import MathML2Tex
@@ -63,13 +62,13 @@ def multireplace(string, replacements, ignore_case=False):
     Parameters
     ----------
     string : str
-        String to execute replacements on
+        String to execute replacements on.
 
     replacements : dict
         Replacement dictionary {value to find: value to replace}.
 
     ignore_case : bool
-        Whether the match should be case insensitive
+        Whether the match should be case insensitive.
 
     Returns
     -------

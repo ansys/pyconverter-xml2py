@@ -3,10 +3,10 @@ AST tree
 
 .. currentmodule:: ansys.dita.ast.ast_tree
 
-The following class are used to create the adequate AST Tree:
+The following classes are used to create the adequate AST Tree:
 
 .. autosummary::
-   :toctree: _autosummary/
+   :toctree: _autosummary/ast_class
 
    Element
    ItemizedList
