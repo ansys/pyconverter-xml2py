@@ -35,7 +35,7 @@ dependencies = [
     "flit>=3.8.0",
     "sphinx-notfound-page==0.8.3",
     "numpydoc==1.5.0",
-    "sphinx-copybutton==0.5.1",
+    "sphinx-copybutton==0.5.2",
     "build>= 0.10.0",
 ]
 
@@ -55,7 +55,7 @@ doc = [
     "pytest-sphinx==0.5.0",
     "sphinx-autobuild==2021.3.14",
     "sphinx-autodoc-typehints==1.22",
-    "sphinx-copybutton==0.5.1",
+    "sphinx-copybutton==0.5.2",
     "sphinx-notfound-page==0.8.3",
     "sphinx-gallery==0.12.2",
 ]
