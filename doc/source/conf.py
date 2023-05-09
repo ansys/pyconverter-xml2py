@@ -28,7 +28,6 @@ html_short_title = html_title = "PyMAPDL"
 html_theme = "ansys_sphinx_theme"
 html_logo = pyansys_logo_black
 html_theme_options = {
-    "analytics": {"google_analytics_id": "G-JQJKPV6ZVB"},
     "github_url": f"https://github.com/{USERNAME}/{REPOSITORY_NAME}",
     "show_prev_next": False,
     "show_breadcrumbs": True,
