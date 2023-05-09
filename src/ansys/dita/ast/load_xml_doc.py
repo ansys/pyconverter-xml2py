@@ -19,8 +19,8 @@ def load_links(link_path):
     link_path: strg
         Path to the links directory.
 
-    Return
-    ------
+    Returns
+    -------
     links: dic
         Dictionary containing the link names and the needed information to render the links.
 
@@ -69,8 +69,8 @@ def load_fcache(graph_path):
     graph_path: strg
         Path to the graphic directory.
 
-    Return
-    ------
+    Returns
+    -------
     fcache: dic
         Dictionary containing the basenames of the graphics and their path.
 
@@ -95,8 +95,8 @@ def load_docu_global(term_path):
     term_path: strg
         Path to the terms directory.
 
-    Return
-    ------
+    Returns
+    -------
     docu_global: dic
         Dictionary containing the entity names from the documentation and their path.
 
@@ -171,8 +171,8 @@ def load_terms(
         Name of the directory containg the entities for the special characters.
         The default value is "ent.
 
-    Return
-    ------
+    Returns
+    -------
     terms: dic
         Dictionary containing the entity names and their values.
 

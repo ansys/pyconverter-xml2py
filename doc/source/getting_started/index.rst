@@ -6,32 +6,7 @@ Pre-defined format
 
 The pre-defined XML directory format is as follow:
 
-.. code:: text
-
-    XML_directory/
-    │
-    ├── graphics/
-    │   ├── .gifs files
-    │   └── images files
-    |
-    ├── links/
-    │   └── .db files
-    |
-    ├── terms/
-    │   ├── glb/
-    │   │   ├── variable_file       #default value is build_variables.ent
-    │   │   ├── global_terms_file   #default value is terms_global.ent
-    │   │   └── manual_file         #default value is manuals.ent
-    │   └── character_directory/       #default value is ent/
-    │       └── .ent files
-    └── xml/
-        ├── subdirectorys/
-        │   ├── .xml files
-        │   └── mathgraphics_directory/
-        │       └── .svg files
-        ├── .xml files
-        └── .ent files
-
+.. include:: ./diags/diag_directory.rst
 
 Converting an `XML-directory`
 -----------------------------

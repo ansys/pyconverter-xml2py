@@ -162,5 +162,5 @@ cython_debug/
 
 
 helper/
-
 package/
+_autosummary/

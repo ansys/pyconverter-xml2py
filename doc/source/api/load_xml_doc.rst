@@ -1,0 +1,14 @@
+Load XML documentation
+======================
+
+.. currentmodule:: ansys.dita.ast.load_xml_doc
+
+The following functions load the XML documentation.
+
+.. autosummary::
+   :toctree: _autosummary/load_xml_doc
+
+   load_links
+   load_fcache
+   load_docu_global
+   load_terms

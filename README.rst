@@ -1,7 +1,7 @@
 PyDita-AST
 ==========
 
-A Python wrapper to convert XML documentation into RST one.
+A Python wrapper to convert XML documentation into RST files and the Sphinx documentation.
 
 
 How to install
