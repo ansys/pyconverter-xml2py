@@ -9,6 +9,15 @@ updates:
       - "maintenance"
       - "dependencies"
 
+  - package-ecosystem: "pip" # See documentation for possible values
+    directory: "/_package/" # Location of package manifests
+    insecure-external-code-execution: allow
+    schedule:
+      interval: "weekly"
+    labels:
+      - "maintenance"
+      - "dependencies"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
