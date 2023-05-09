@@ -1443,7 +1443,7 @@ class Command(Element):
     def has_args(self):
         """Return wether the element has arguments or not."""
         # return self.tail.startswith(",")
-        return False  # This is to be modified
+        return False  # TODO: This is to be modified
 
     @property
     def args(self):
