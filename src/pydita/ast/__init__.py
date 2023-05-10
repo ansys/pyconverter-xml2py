@@ -1,5 +1,5 @@
 """
-ansys.dita.ast
+pydita.ast
 """
 
 try:

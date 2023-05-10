@@ -1,8 +1,9 @@
 # import os
 
-import ansys.dita.ast.ast_tree as ast
 from lxml.html import fromstring
 import pytest
+
+import pydita.ast.ast_tree as ast
 
 
 @pytest.mark.parametrize(

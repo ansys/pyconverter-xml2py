@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 # Check https://flit.readthedocs.io/en/latest/pyproject_toml.html for all available sections
-name = "ansys-dita-generatedcommands"
+name = "dita-generatedcommands"
 version = "0.1.dev0"
 description = "Documentation."
 readme = "README.rst"
@@ -58,7 +58,7 @@ doc = [
 ]
 
 [tool.flit.module]
-name = "ansys.dita.generatedcommands"
+name = "pydita.generatedcommands"
 
 [project.urls]
 Source = "https://github.com/pyansys/pydita-ast/"

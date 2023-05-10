@@ -1,7 +1,7 @@
 Writer
 ======
 
-.. currentmodule:: ansys.dita.ast.writer
+.. currentmodule:: pydita.ast.writer
 
 The following functions convert the AST tree into a Sphinx documentation.
 

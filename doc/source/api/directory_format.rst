@@ -1,7 +1,7 @@
 Directory format
 ================
 
-.. currentmodule:: ansys.dita.ast.directory_format
+.. currentmodule:: pydita.ast.directory_format
 
 The following functions return the paths needed when the XML directory
 follows the pre-defined format.

@@ -4,11 +4,12 @@ from pathlib import Path
 import re
 import unicodedata
 
-import ansys.dita.ast.ast_tree as ast
-import ansys.dita.ast.version_variables as var
 from lxml.etree import ParserError
 from lxml.html import fromstring
 from tqdm import tqdm
+
+import pydita.ast.ast_tree as ast
+import pydita.ast.version_variables as var
 
 
 def load_links(link_path):

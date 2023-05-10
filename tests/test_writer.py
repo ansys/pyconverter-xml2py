@@ -1,8 +1,9 @@
 import os
 import shutil
 
-import ansys.dita.ast.writer as wrt
 import pytest
+
+import pydita.ast.writer as wrt
 
 
 def test_convert(commands):

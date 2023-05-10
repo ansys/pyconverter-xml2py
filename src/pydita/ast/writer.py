@@ -2,12 +2,13 @@ import glob
 import os
 import shutil
 
-from ansys.dita.ast import ast_tree as ast
-from ansys.dita.ast import directory_format as path
-from ansys.dita.ast import load_xml_doc as load
 from tqdm import tqdm
 
-generated_src_code = os.path.join("src", "ansys", "dita", "generatedcommands")
+from pydita.ast import ast_tree as ast
+from pydita.ast import directory_format as path
+from pydita.ast import load_xml_doc as load
+
+generated_src_code = os.path.join("src", "pydita", "generatedcommands")
 
 # map APDL command to pymapdl function
 CMD_MAP = {}
@@ -271,7 +272,7 @@ def write_docs(commands, path):
         fid.write("Autosummary\n")
         fid.write("###########\n")
 
-        fid.write(".. currentmodule:: ansys.dita.generatedcommands\n\n")
+        fid.write(".. currentmodule:: pydita.generatedcommands\n\n")
         fid.write(".. autosummary::\n")
         fid.write("   :template: base.rst\n")
         fid.write("   :toctree: _autosummary/\n\n")
