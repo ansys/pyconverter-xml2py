@@ -1,6 +1,6 @@
 [run]
 source =
-    ansys.dita.ast
+    pydita.ast
 
 [report]
 show_missing = true

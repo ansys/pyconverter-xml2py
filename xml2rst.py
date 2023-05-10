@@ -1,4 +1,4 @@
-from ansys.dita.ast import writer as wr
+from pydita.ast import writer as wr
 
 """
 Parse MAPDL command XML documentation.

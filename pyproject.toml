@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 # Check https://flit.readthedocs.io/en/latest/pyproject_toml.html for all available sections
-name = "ansys-dita-ast"
+name = "pydita-ast"
 version = "0.1.dev0"
 description = "PyDita AST converter."
 readme = "README.rst"
@@ -30,7 +30,7 @@ dependencies = [
     "lxml==4.9.2",
     "py-asciimath==0.3.0",
     "pylatexenc==2.10",
-    "ansys-sphinx-theme==0.9.7",
+    "ansys-sphinx-theme==0.9.8",
     "tqdm>=4.64.1",
     "flit>=3.8.0",
     "sphinx-notfound-page==0.8.3",
@@ -46,7 +46,7 @@ tests = [
     "pytest-rerunfailures==11.1.2",
 ]
 doc = [
-    "Sphinx==7.0.0",
+    "Sphinx==6.2.1",
     "jupyter_sphinx==0.4.0",
     "numpydoc==1.5.0",
     "pandas==2.0.1",
@@ -60,7 +60,7 @@ doc = [
 ]
 
 [tool.flit.module]
-name = "ansys.dita.ast"
+name = "pydita.ast"
 
 [project.urls]
 Source = "https://github.com/pyansys/pydita-ast/"

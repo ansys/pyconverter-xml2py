@@ -4,10 +4,10 @@ from pathlib import Path
 import re
 import unicodedata
 
-import ansys.dita.ast.ast_tree as ast
-import ansys.dita.ast.version_variables as var
 from lxml.etree import ParserError
 from lxml.html import fromstring
+import pydita.ast.ast_tree as ast
+import pydita.ast.version_variables as var
 from tqdm import tqdm
 
 

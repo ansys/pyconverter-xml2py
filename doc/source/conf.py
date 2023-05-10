@@ -1,11 +1,11 @@
 """Sphinx documentation configuration file."""
 from datetime import datetime
 
-from ansys.dita.ast import __version__
 from ansys_sphinx_theme import ansys_favicon, pyansys_logo_black
+from pydita.ast import __version__
 
 # Project information
-project = "ansys-dita-ast"
+project = "pydita-ast"
 copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
 author = "ANSYS, Inc."
 release = version = __version__

@@ -1,7 +1,7 @@
 import os
 import shutil
 
-import ansys.dita.ast.writer as wrt
+import pydita.ast.writer as wrt
 import pytest
 
 

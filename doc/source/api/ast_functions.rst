@@ -1,7 +1,7 @@
 AST functions
 =============
 
-.. currentmodule:: ansys.dita.ast.ast_tree
+.. currentmodule:: pydita.ast.ast_tree
 
 The following functions are used to create the adequate AST Tree:
 

@@ -1,6 +1,6 @@
 import os
 
-import ansys.dita.ast.directory_format as ff
+import pydita.ast.directory_format as ff
 import pytest
 
 

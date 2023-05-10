@@ -15,8 +15,8 @@ on:
 
 env:
   MAIN_PYTHON_VERSION: '3.9'
-  PACKAGE_NAME: 'ansys-dita-ast'
-  PACKAGE_NAMESPACE: 'ansys.dita.ast'
+  PACKAGE_NAME: 'pydita-ast'
+  PACKAGE_NAMESPACE: 'pydita.ast'
   RESET_PIP_CACHE: 0
   ON_CI: true
 
@@ -121,7 +121,7 @@ jobs:
         run: |
           pytest -v --durations=10 --maxfail=10 \
             --reruns 7 --reruns-delay 3 --ghdir ${{ github.workspace }}\
-            --cov=ansys.dita.ast --cov-report=xml:coverage.xml --cov-report=html\
+            --cov=pydita.ast --cov-report=xml:coverage.xml --cov-report=html\
             --cov-report term
 
       - name: "Upload coverage to Codecov"
@@ -167,7 +167,7 @@ jobs:
     # - name: "Release to the public PyPI repository"
     #   uses: pyansys/actions/release-pypi-public@v3
     #   with:
-    #     library-name: "ansys-dita-ast"
+    #     library-name: "pydita-ast"
     #     twine-username: "__token__"
     #     twine-token: ${{ secrets.PYPI_TOKEN }}
 

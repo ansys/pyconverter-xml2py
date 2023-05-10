@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 # Check https://flit.readthedocs.io/en/latest/pyproject_toml.html for all available sections
-name = "ansys-dita-generatedcommands"
+name = "pydita-generatedcommands"
 version = "0.1.dev0"
 description = "Documentation."
 readme = "README.rst"
@@ -46,10 +46,12 @@ tests = [
 doc = [
     "Sphinx==7.0.0",
     "jupyter_sphinx==0.4.0",
+    "linuxdoc==20230506",
     "numpydoc==1.5.0",
     "pandas==2.0.1",
     "pypandoc==1.11",
     "pytest-sphinx==0.5.0",
+    "pydata_sphinx_theme==0.13.3",
     "sphinx-autobuild==2021.3.14",
     "sphinx-autodoc-typehints==1.23.0",
     "sphinx-copybutton==0.5.2",
@@ -58,7 +60,7 @@ doc = [
 ]
 
 [tool.flit.module]
-name = "ansys.dita.generatedcommands"
+name = "pydita.generatedcommands"
 
 [project.urls]
 Source = "https://github.com/pyansys/pydita-ast/"
