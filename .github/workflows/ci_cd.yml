@@ -139,14 +139,14 @@ jobs:
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v3
         with:
-          name: centos-remote.xml
+          name: coverage.xml
           flags: centos,remote
 
       - name: Upload coverage artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: centos-remote.xml
-          path: ./centos-remote.xml
+          name: coverage.xml
+          path: ./coverage.xml
 
 
   doc-build:
