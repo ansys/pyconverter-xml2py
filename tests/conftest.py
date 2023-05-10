@@ -1,10 +1,9 @@
 import os
 
-import pytest
-
 import pydita.ast.directory_format as ff
 import pydita.ast.load_xml_doc as lxd
 import pydita.ast.writer as wrt
+import pytest
 
 pytest_plugins = ["pytester"]
 

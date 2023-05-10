@@ -2,11 +2,10 @@ import glob
 import os
 import shutil
 
-from tqdm import tqdm
-
 from pydita.ast import ast_tree as ast
 from pydita.ast import directory_format as path
 from pydita.ast import load_xml_doc as load
+from tqdm import tqdm
 
 generated_src_code = os.path.join("src", "pydita", "generatedcommands")
 
