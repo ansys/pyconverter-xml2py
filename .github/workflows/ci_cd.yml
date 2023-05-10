@@ -162,12 +162,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
-      
-      - name: "Install os packages"
-        run: |
-          sudo apt update
-          sudo apt install graphviz
-      
+
       - name: "Cache pip"
         uses: actions/cache@v3
         with:
@@ -212,6 +207,7 @@ jobs:
           checkout: false
           skip-install: true
           sphinxopts: -j auto
+          dependencies: "graphviz"
 
 
   package:
