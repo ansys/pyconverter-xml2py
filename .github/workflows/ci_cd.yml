@@ -268,7 +268,7 @@ jobs:
 
       - name: Rearrangement folder
         run: |
-          mv package/* . && rm -rf package
+          mv ./package/* . && rm -rf ./package
 
       - name: "Run Ansys documentation building action"
         uses: pyansys/actions/doc-build@v4
