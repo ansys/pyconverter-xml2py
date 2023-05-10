@@ -1,5 +1,6 @@
 """Sphinx documentation configuration file."""
 from datetime import datetime
+import os
 
 from ansys_sphinx_theme import ansys_favicon, pyansys_logo_black
 from pydita.ast import __version__
@@ -9,6 +10,7 @@ project = "pydita-ast"
 copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
 author = "ANSYS, Inc."
 release = version = __version__
+cname = os.getenv("DOCUMENTATION_CNAME", "<DEFAULT_CNAME>")
 
 REPOSITORY_NAME = "pydita-ast"
 USERNAME = "pyansys"

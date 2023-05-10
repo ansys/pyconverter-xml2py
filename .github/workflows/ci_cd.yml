@@ -17,7 +17,10 @@ env:
   MAIN_PYTHON_VERSION: '3.9'
   PACKAGE_NAME: 'pydita-ast'
   PACKAGE_NAMESPACE: 'pydita.ast'
+  DOCUMENTATION_CNAME: 'pydita-ast.docs.pyansys.com'
   RESET_PIP_CACHE: 0
+  RESET_AUTOSUMMARY_CACHE: 0
+  RESET_DOC_BUILD_CACHE: 0
   ON_CI: true
 
 concurrency:
@@ -35,6 +38,15 @@ jobs:
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
+
+  doc-style:
+    name: "Documentation Style Check"
+    runs-on: ubuntu-latest
+    steps:
+      - name: PyAnsys documentation style checks
+        uses: pyansys/actions/doc-style@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
 
   smoke-tests:
@@ -137,9 +149,61 @@ jobs:
           path: ./centos-remote.xml
 
 
+  doc-build:
+    name: Documentation building
+    runs-on: ubuntu-latest
+    needs: [doc-style]
+    steps:
+        # This checkout is repeated later at the 'doc-build' action. This could be avoided by copything the sh file here, but introduces some code duplicity.
+      - name: "Install Git and checkout project"
+        uses: actions/checkout@v3
+
+      - name: "Setup Python"
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.MAIN_PYTHON_VERSION }}
+      
+      - name: "Install pydita-ast"
+        run: |
+          pip install .
+      
+      - name: "Retrieve PyDita-AST version"
+        run: |
+          echo "PYDITA_VERSION=$(python -c 'from pydita.ast import __version__; print(__version__)')" >> $GITHUB_ENV
+          echo "PyDita-AST version is: $(python -c 'from pydita.ast import __version__; print(__version__)')"
+    
+      - name: "Cache docs build directory"
+        uses: actions/cache@v3
+        with:
+          path: doc/_build
+          key: doc-build-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYDITA_VERSION }}-${{ github.sha }}
+          restore-keys: |
+            doc-build-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYDITA_VERSION }}
+
+      - name: "Cache autosummary"
+        uses: actions/cache@v3
+        with:
+          path: doc/source/**/_autosummary/*.rst
+          key: autosummary-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYDITA_VERSION }}-${{ github.sha }}
+          restore-keys: |
+            autosummary-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYDITA_VERSION }}
+    
+      - name: "Install docs build requirements"
+        run: |
+          pip install .[doc]
+
+      - name: "Run Ansys documentation building action"
+        uses: pyansys/actions/doc-build@v4
+        with:
+          python-version: ${{ env.MAIN_PYTHON_VERSION }}
+          checkout: false
+          skip-install: true
+          sphinxopts: -j auto
+
+
   package:
     name: Package library
-    needs: [build-test]
+    needs: [doc-build, build-test]
     runs-on: ubuntu-latest
     steps:
       - name: Build library source and wheel artifacts
@@ -149,20 +213,32 @@ jobs:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
 
+  doc-deploy-dev:
+    name: "Deploy development documentation"
+    # Deploy development only when merging to main
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [package]
+    steps:
+      - name: "Deploy the latest documentation"
+        uses: pyansys/actions/doc-deploy-dev@v4
+        with:
+            cname: ${{ env.DOCUMENTATION_CNAME }}
+            token: ${{ secrets.GITHUB_TOKEN }}
+
+
   release:
     name: "Release project to private PyPI and GitHub"
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags')
     needs:  [package, smoke-tests-macos-windows]
     runs-on: ubuntu-latest
     steps:
-
     - name: "Release to the private PyPI repository"
       uses: pyansys/actions/release-pypi-private@v4
       with:
         library-name: ${{ env.PACKAGE_NAME }}
         twine-username: "__token__"
         twine-token: ${{ secrets.PYANSYS_PYPI_PRIVATE_PAT }}
-
 
     # - name: "Release to the public PyPI repository"
     #   uses: pyansys/actions/release-pypi-public@v3
@@ -176,3 +252,17 @@ jobs:
       with:
         library-name: ${{ env.PACKAGE_NAME }}
 
+
+  doc-deploy-stable:
+    name: "Deploy stable documentation"
+    # Deploy release documentation when creating a new tag
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags')
+    runs-on: ubuntu-latest
+    needs: [release]
+    steps:
+      - name: "Deploy the stable documentation"
+        uses: pyansys/actions/doc-deploy-stable@v4
+        with:
+            cname: ${{ env.DOCUMENTATION_CNAME }}
+            token: ${{ secrets.GITHUB_TOKEN }}
+            python-version: ${{ env.MAIN_PYTHON_VERSION }}
