@@ -105,8 +105,8 @@ jobs:
 
       - name: "Install os packages"
         run: |
-          sudo apt update
-          sudo apt-get install pandoc
+          sudo apt-get update
+          sudo apt-get install graphviz
 
       - name: "Cache pip"
         uses: actions/cache@v3
