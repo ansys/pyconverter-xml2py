@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 # Check https://flit.readthedocs.io/en/latest/pyproject_toml.html for all available sections
-name = "dita-generatedcommands"
+name = "pydita-generatedcommands"
 version = "0.1.dev0"
 description = "Documentation."
 readme = "README.rst"
