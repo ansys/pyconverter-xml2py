@@ -251,12 +251,12 @@ jobs:
 
       - name: "Run Ansys documentation building action"
         uses: pyansys/actions/doc-build@v4
+        working-directory: ./package
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
           checkout: false
           skip-install: true
           sphinxopts: -j auto
-          working-directory: ./package
 
 
   package:
