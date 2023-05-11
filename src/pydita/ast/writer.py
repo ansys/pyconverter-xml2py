@@ -143,7 +143,7 @@ def convert(directory_path, command=None):
     return commands
 
 
-def copy_package(template_path, new_package_path, clean=False):
+def copy_package(template_path, new_package_path, clean=False, include_hidden=False):
     """Add files and directory from a template directory path to a new path.
 
     Parameters
@@ -156,7 +156,11 @@ def copy_package(template_path, new_package_path, clean=False):
 
     clean : Bool
         Whether the directorys in new_package_path need to be cleared before adding new files
-        or not. Default to False.
+        or not. The default value is False.
+
+    include_hidden : Bool
+        When Python version >= 3.11, the hidden files can be handled automatically when True.
+        The default value is False.
 
     Returns
     -------
@@ -165,8 +169,16 @@ def copy_package(template_path, new_package_path, clean=False):
         ``ansys-mapdl-commands`` package.
 
     """
+    # For Python version >= 3.11, glob.glob() handles it if include_hidden=True.
+    if include_hidden is True:
+        filename_list = glob.glob(
+            os.path.join(template_path, "*"), recursive=True, include_hidden=True
+        )
 
-    for filename in glob.glob(os.path.join(template_path, "*"), recursive=True):
+    else:
+        filename_list = glob.glob(os.path.join(template_path, "*"), recursive=True)
+
+    for filename in filename_list:
         split_name_dir = filename.split(os.path.sep)
         new_path_dir = os.path.join(new_package_path, split_name_dir[-1])
 
@@ -180,6 +192,13 @@ def copy_package(template_path, new_package_path, clean=False):
 
         else:
             shutil.copy(filename, new_package_path)
+
+    if include_hidden is False:
+        # .vale.ini is considered as a hidden file.
+        vale_template = os.path.join(template_path, "doc", ".vale.ini")
+        vale_new_path = os.path.join(new_package_path, "doc", ".vale.ini")
+        if os.path.isfile(vale_template) and not os.path.isfile(vale_new_path):
+            shutil.copy(vale_template, vale_new_path)
 
 
 def write_source(commands, path, new_package_path=None, clean=True):
