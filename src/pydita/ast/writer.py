@@ -3,8 +3,8 @@ import os
 import shutil
 
 from pydita.ast import ast_tree as ast
-from pydita.ast import directory_format as path
 from pydita.ast import load_xml_doc as load
+from pydita.ast.directory_format import get_paths
 from tqdm import tqdm
 
 generated_src_code = os.path.join("src", "pydita", "generatedcommands")
@@ -34,7 +34,7 @@ def nested_exec(text):
 def convert(directory_path, command=None):
     """Covert an XML directory into an RST one."""
 
-    graph_path, link_path, term_path, xml_path = path.get_paths(directory_path)
+    graph_path, link_path, term_path, xml_path = get_paths(directory_path)
     links = load.load_links(link_path)
     fcache = load.load_fcache(graph_path)
     docu_global = load.load_docu_global(term_path)
@@ -205,7 +205,7 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
                 shutil.copy(hidden_template, hidden_new_path)
 
 
-def write_source(commands, path, new_package_path=None, clean=True):
+def write_source(commands, xml_doc_path, template_path, new_package_path=None, clean=True):
     """Write out MAPDL commands as Python source files.
 
     Parameters
@@ -213,7 +213,10 @@ def write_source(commands, path, new_package_path=None, clean=True):
     commands : list[MAPDLCommand]
         List of MAPDLCommand.
 
-    path : str
+    xml_doc_path : str
+        Path containing the XML directory to be converted.
+
+    template_path : str
         Path containing ``_package`` directory.
 
     new_package_path : str
@@ -226,15 +229,15 @@ def write_source(commands, path, new_package_path=None, clean=True):
         ``ansys-mapdl-commands`` package.
 
     """
-    template_path = os.path.join(path, "_package")
-    if not os.path.isdir(template_path):
+    _package_path = os.path.join(template_path, "_package")
+    if not os.path.isdir(_package_path):
         raise FileNotFoundError(
-            f"Unable to locate the package templates path at '{template_path}'. "
-            f"Expected the _package directory at '{path}'."
+            f"Unable to locate the package templates path at '{_package_path}'. "
+            f"Expected the _package directory in '{path}'."
         )
 
     if new_package_path is None:
-        new_package_path = os.path.join(path, "package")
+        new_package_path = os.path.join(template_path, "package")
 
     if clean:
         if os.path.isdir(new_package_path):
@@ -274,7 +277,9 @@ def write_source(commands, path, new_package_path=None, clean=True):
     print(f"Commands written to {cmd_path}")
 
     # copy package files to the package directory
-    copy_package(template_path, new_package_path, clean)
+    copy_package(_package_path, new_package_path, clean)
+    graph_path = get_paths(xml_doc_path)[0]
+    shutil.copytree(graph_path, os.path.join(new_package_path, "doc", "source", "images"))
 
     return cmd_path
 
