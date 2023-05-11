@@ -265,6 +265,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: package
+      
+      - name: Test artifact download
+        run: ls -R
 
       - name: Rearrangement folder
         run: |
