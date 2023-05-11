@@ -4,7 +4,7 @@ import shutil
 
 from pydita.ast import ast_tree as ast
 from pydita.ast import load_xml_doc as load
-from pydita.ast.directory_format import df_path
+from pydita.ast.directory_format import get_paths
 from tqdm import tqdm
 
 generated_src_code = os.path.join("src", "pydita", "generatedcommands")
@@ -34,7 +34,7 @@ def nested_exec(text):
 def convert(directory_path, command=None):
     """Covert an XML directory into an RST one."""
 
-    graph_path, link_path, term_path, xml_path = df_path.get_paths(directory_path)
+    graph_path, link_path, term_path, xml_path = get_paths(directory_path)
     links = load.load_links(link_path)
     fcache = load.load_fcache(graph_path)
     docu_global = load.load_docu_global(term_path)
@@ -249,7 +249,7 @@ def write_source(commands, xml_doc_path, template_path, new_package_path=None, c
 
     # copy package files to the package directory
     copy_package(_package_path, new_package_path, clean)
-    graph_path = df_path.get_paths(xml_doc_path)[0]
+    graph_path = get_paths(xml_doc_path)[0]
     shutil.copytree(graph_path, os.path.join(new_package_path, "doc", "source", "images"))
 
     return cmd_path
