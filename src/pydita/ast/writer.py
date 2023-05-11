@@ -182,7 +182,7 @@ def copy_package(template_path, new_package_path, clean=False):
             shutil.copy(filename, new_package_path)
 
 
-def write_source(commands, doc_path, template_path, new_package_path=None, clean=True):
+def write_source(commands, xml_doc_path, template_path, new_package_path=None, clean=True):
     """Write out MAPDL commands as Python source files.
 
     Parameters
@@ -190,8 +190,8 @@ def write_source(commands, doc_path, template_path, new_package_path=None, clean
     commands : list[MAPDLCommand]
         List of MAPDLCommand.
 
-    doc_path : str
-        Path containing the directory to be copied.
+    xml_doc_path : str
+        Path containing the XML directory to be converted.
 
     template_path : str
         Path containing ``_package`` directory.
@@ -249,7 +249,7 @@ def write_source(commands, doc_path, template_path, new_package_path=None, clean
 
     # copy package files to the package directory
     copy_package(_package_path, new_package_path, clean)
-    graph_path = df_path.get_paths(doc_path)[0]
+    graph_path = df_path.get_paths(xml_doc_path)[0]
     shutil.copytree(graph_path, os.path.join(new_package_path, "doc", "source", "images"))
 
     return cmd_path
