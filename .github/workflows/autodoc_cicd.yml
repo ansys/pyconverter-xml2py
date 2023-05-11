@@ -84,7 +84,7 @@ jobs:
           name: package
       
       - name: Test download artifacts
-        run: ls -R
+        run: ls -R-a
 
       - name: PyAnsys code style checks
         uses: pyansys/actions/code-style@v4
@@ -104,7 +104,7 @@ jobs:
           name: package
       
       - name: Test download artifacts
-        run: ls -R
+        run: ls -R -a
 
       - name: PyAnsys documentation style checks
         uses: pyansys/actions/doc-style@v4
