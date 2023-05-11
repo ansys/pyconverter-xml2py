@@ -194,11 +194,15 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
             shutil.copy(filename, new_package_path)
 
     if include_hidden is False:
-        # .vale.ini is considered as a hidden file.
-        vale_template = os.path.join(template_path, "doc", ".vale.ini")
-        vale_new_path = os.path.join(new_package_path, "doc", ".vale.ini")
-        if os.path.isfile(vale_template) and not os.path.isfile(vale_new_path):
-            shutil.copy(vale_template, vale_new_path)
+        # .vale.ini and .gitignore are hidden files.
+        vale_path = ["doc", ".vale.ini"]
+        gitignore_path = ["doc", "styles", ".gitignore"]
+        hidden_path = [vale_path, gitignore_path]
+        for hpath in hidden_path:
+            hidden_template = os.path.join(template_path, *hpath)
+            hidden_new_path = os.path.join(new_package_path, *hpath)
+            if os.path.isfile(hidden_template) and not os.path.isfile(hidden_new_path):
+                shutil.copy(hidden_template, hidden_new_path)
 
 
 def write_source(commands, path, new_package_path=None, clean=True):
