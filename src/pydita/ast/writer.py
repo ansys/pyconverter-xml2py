@@ -241,6 +241,12 @@ def write_source(commands, path, new_package_path=None, clean=True):
                 continue
             cmd_name = ast.to_py_name(ans_name)
             fid.write(f"from .{cmd_name} import *\n")
+        fid.write("try:\n")
+        fid.write("    import importlib.metadata as importlib_metadata\n")
+        fid.write("except ModuleNotFoundError:\n")
+        fid.write("    import importlib_metadata\n\n")
+        fid.write("__version__ = importlib_metadata.version(__name__.replace('.', '-'))\n")
+        fid.write('"""PyDita-Generatedcommands version."""\n')
 
     print(f"Commands written to {cmd_path}")
 
