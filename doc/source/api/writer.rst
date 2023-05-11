@@ -11,5 +11,6 @@ The following functions convert the AST tree into a Sphinx documentation.
    nested_exec
    convert
    copy_package
+   copy_files
    write_source
    write_docs

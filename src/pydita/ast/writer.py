@@ -182,13 +182,40 @@ def copy_package(template_path, new_package_path, clean=False):
             shutil.copy(filename, new_package_path)
 
 
-def copy_doc_images(graph_path, new_package_path):
-    new_image_path = os.path.join(new_package_path, "doc", "source", "images")
-    if not os.path.isdir(new_image_path):
-        os.makedirs(new_image_path, exist_ok=True)
-    for filename in glob.glob(os.path.join(graph_path, "*"), recursive=True):
-        print("filename: ", filename)
-        shutil.copy(filename, new_image_path)
+def copy_files(initial_path, new_root_path, subfolders=None, complete_new_path=None):
+    """Copy files from one directory to another.
+
+    Parameters
+    ----------
+    initial_path : str
+        Path containing the files to be copied.
+
+    new_root_path : str
+        Path containing the root directory where the files will be added to.
+    
+    subfolders : list[str]
+        List containing the subdirectories to get the complete_new_path from
+        the new_root_path. The default value is ["doc", "source", "images"].
+    
+    complete_new_path : str
+        Path containing the complete directory where the files will be added to.
+        The default value is None.
+        
+
+    """
+    if complete_new_path is not None:
+        new_path = complete_new_path
+    
+    elif subfolders is not None:
+        new_path = os.path.join(new_root_path, *subfolders)
+    
+    else:
+        raise(ValueError, "One of the parameter `complete_new_path`and `subfolders` needs to be input.")
+    
+    if not os.path.isdir(new_path):
+        os.makedirs(new_path, exist_ok=True)
+    for filename in glob.glob(os.path.join(initial_path, "*"), recursive=True):
+        shutil.copy(filename, new_path)
 
 
 def write_source(commands, doc_path, template_path, new_package_path=None, clean=True):
@@ -259,7 +286,7 @@ def write_source(commands, doc_path, template_path, new_package_path=None, clean
     # copy package files to the package directory
     copy_package(_package_path, new_package_path, clean)
     graph_path = df_path.get_paths(doc_path)[0]
-    copy_doc_images(graph_path, new_package_path)
+    copy_files(graph_path, new_package_path, subfolders=["doc", "source", "images"])
 
     return cmd_path
 
