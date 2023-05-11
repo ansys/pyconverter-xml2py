@@ -192,26 +192,29 @@ def copy_files(initial_path, new_root_path, subfolders=None, complete_new_path=N
 
     new_root_path : str
         Path containing the root directory where the files will be added to.
-    
+
     subfolders : list[str]
         List containing the subdirectories to get the complete_new_path from
         the new_root_path. The default value is ["doc", "source", "images"].
-    
+
     complete_new_path : str
         Path containing the complete directory where the files will be added to.
         The default value is None.
-        
+
 
     """
     if complete_new_path is not None:
         new_path = complete_new_path
-    
+
     elif subfolders is not None:
         new_path = os.path.join(new_root_path, *subfolders)
-    
+
     else:
-        raise(ValueError, "One of the parameter `complete_new_path`and `subfolders` needs to be input.")
-    
+        raise (
+            ValueError,
+            "One of the parameter `complete_new_path`and `subfolders` needs to be input.",
+        )
+
     if not os.path.isdir(new_path):
         os.makedirs(new_path, exist_ok=True)
     for filename in glob.glob(os.path.join(initial_path, "*"), recursive=True):
