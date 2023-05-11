@@ -19,9 +19,9 @@ env:
   MAIN_PYTHON_VERSION: '3.9'
   PACKAGE_NAME: 'pydita-generatedcommands'
   PACKAGE_NAMESPACE: 'pydita.generatedcommands'
-  RESET_PIP_CACHE: 0
-  RESET_AUTOSUMMARY_CACHE: 0
-  RESET_DOC_BUILD_CACHE: 0
+  RESET_PIP_CACHE_2: 0
+  RESET_AUTOSUMMARY_CACHE_2: 0
+  RESET_DOC_BUILD_CACHE_2: 0
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -46,9 +46,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE }}-Linux-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
+          key: Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-Linux-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
-            Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE }}-Linux-${{ env.MAIN_PYTHON_VERSION }}
+            Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-Linux-${{ env.MAIN_PYTHON_VERSION }}
       
       # The token will expire in 2024.
       - name: "Checkout mapdl-cmd-doc repository"
@@ -87,6 +87,7 @@ jobs:
         uses: pyansys/actions/code-style@v4
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
+          use-python-cache: false
 
 
   doc-style:
@@ -103,6 +104,7 @@ jobs:
         uses: pyansys/actions/doc-style@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          checkout: false
 
 
   auto-doc-build:
@@ -119,9 +121,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE }}-Linux-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
+          key: Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-Linux-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
-            Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE }}-Linux-${{ env.MAIN_PYTHON_VERSION }}
+            Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-Linux-${{ env.MAIN_PYTHON_VERSION }}
       
       - name: "Install pydita-generatedcommands"
         run: |
@@ -136,17 +138,17 @@ jobs:
         uses: actions/cache@v3
         with:
           path: doc/_build
-          key: doc-build-pydita-generatedcommands-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYDITA_GENERATED_VERSION }}-${{ github.sha }}
+          key: doc-build-pydita-generatedcommands-v${{ env.RESET_DOC_BUILD_CACHE_2 }}-${{ env.PYDITA_GENERATED_VERSION }}-${{ github.sha }}
           restore-keys: |
-            doc-build-pydita-generatedcommands-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYDITA_GENERATED_VERSION }}
+            doc-build-pydita-generatedcommands-v${{ env.RESET_DOC_BUILD_CACHE_2 }}-${{ env.PYDITA_GENERATED_VERSION }}
 
       - name: "Cache autosummary"
         uses: actions/cache@v3
         with:
           path: doc/source/_autosummary/*.rst
-          key: autosummary-pydita-generatedcommands-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYDITA_GENERATED_VERSION }}-${{ github.sha }}
+          key: autosummary-pydita-generatedcommands-v${{ env.RESET_AUTOSUMMARY_CACHE_2 }}-${{ env.PYDITA_GENERATED_VERSION }}-${{ github.sha }}
           restore-keys: |
-            autosummary-pydita-generatedcommands-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYDITA_GENERATED_VERSION }}
+            autosummary-pydita-generatedcommands-v${{ env.RESET_AUTOSUMMARY_CACHE_2 }}-${{ env.PYDITA_GENERATED_VERSION }}
 
       - name: "Run Ansys documentation building action"
         uses: pyansys/actions/doc-build@v4
