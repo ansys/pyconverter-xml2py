@@ -176,7 +176,7 @@ jobs:
       
       - name: "Install pydita-ast"
         run: |
-          pip install .
+          pip install .[doc]
       
       - name: "Retrieve PyDita-AST version"
         run: |
@@ -198,10 +198,6 @@ jobs:
           key: autosummary-pydita-ast-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYDITA_VERSION }}-${{ github.sha }}
           restore-keys: |
             autosummary-pydita-ast-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYDITA_VERSION }}
-    
-      - name: "Install docs build requirements"
-        run: |
-          pip install .[doc]
 
       - name: "Run Ansys documentation building action"
         uses: pyansys/actions/doc-build@v4
