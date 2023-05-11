@@ -292,9 +292,8 @@ def write_docs(commands, path):
 
     doc_src = os.path.join(doc_package_path, "docs.rst")
     with open(doc_src, "w") as fid:
-        fid.write("###########\n")
         fid.write("Autosummary\n")
-        fid.write("###########\n")
+        fid.write("===========\n\n")
 
         fid.write(".. currentmodule:: pydita.generatedcommands\n\n")
         fid.write(".. autosummary::\n")
