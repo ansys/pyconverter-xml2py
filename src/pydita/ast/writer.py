@@ -3,8 +3,8 @@ import os
 import shutil
 
 from pydita.ast import ast_tree as ast
-from pydita.ast.directory_format import df_path
 from pydita.ast import load_xml_doc as load
+from pydita.ast.directory_format import df_path
 from tqdm import tqdm
 
 generated_src_code = os.path.join("src", "pydita", "generatedcommands")

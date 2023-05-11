@@ -52,9 +52,7 @@ def test_write_source(commands, cwd, directory_path, package_path):
     assert cmd_path == os.path.join(package_path, wrt.generated_src_code)
     assert os.path.isfile(os.path.join(cmd_path, "acel.py"))
     assert os.path.isdir(os.path.join(package_path, "doc", "source", "images"))
-    assert os.path.isfile(
-        os.path.join(package_path, "doc", "source", "images", "gcmdrsymm1.png")
-    )
+    assert os.path.isfile(os.path.join(package_path, "doc", "source", "images", "gcmdrsymm1.png"))
 
 
 def test_write_docs(commands):
