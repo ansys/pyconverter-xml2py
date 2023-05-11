@@ -195,7 +195,7 @@ def copy_files(initial_path, new_root_path, subfolders=None, complete_new_path=N
 
     subfolders : list[str]
         List containing the subdirectories to get the complete_new_path from
-        the new_root_path. The default value is ["doc", "source", "images"].
+        the new_root_path. The default value is None.
 
     complete_new_path : str
         Path containing the complete directory where the files will be added to.
