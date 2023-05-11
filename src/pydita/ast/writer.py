@@ -181,11 +181,12 @@ def copy_package(template_path, new_package_path, clean=False):
         else:
             shutil.copy(filename, new_package_path)
 
+
 def copy_doc_images(graph_path, new_package_path):
     new_image_path = os.path.join(new_package_path, "doc", "source", "images")
     if not os.path.isdir(new_image_path):
         os.makedirs(new_image_path, exist_ok=True)
-    for filename in glob.glob(os.path.join(graph_path,"*"), recursive=True):
+    for filename in glob.glob(os.path.join(graph_path, "*"), recursive=True):
         print("filename: ", filename)
         shutil.copy(filename, new_image_path)
 
@@ -197,7 +198,7 @@ def write_source(commands, doc_path, template_path, new_package_path=None, clean
     ----------
     commands : list[MAPDLCommand]
         List of MAPDLCommand.
-    
+
     doc_path : str
         Path containing the directory to be copied.
 
