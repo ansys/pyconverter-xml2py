@@ -269,10 +269,6 @@ jobs:
       - name: Test artifact download
         run: ls -R
 
-      - name: Rearrangement folder
-        run: |
-          mv "./package/"* . && rm -rf "./package"
-
       - name: "Run Ansys documentation building action"
         uses: pyansys/actions/doc-build@v4
         with:
