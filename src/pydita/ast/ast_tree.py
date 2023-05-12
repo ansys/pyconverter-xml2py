@@ -1946,7 +1946,7 @@ class MAPDLCommand(Element):
         args = ["self"]
         kwargs = [f'{arg}=""' for arg in self.py_args if "--" not in arg]
         arg_sig = ", ".join(args + kwargs)
-        return f"def {self.py_name}({arg_sig}):"
+        return f"def {self.py_name}({arg_sig}, **kwargs):"
 
     @property
     def py_docstring(self):
@@ -2263,7 +2263,15 @@ class MAPDLCommand(Element):
     @property
     def py_source(self):
         """Return the python source"""
-        return textwrap.indent("pass\n", prefix=" " * 4)
+        # return textwrap.indent("pass\n", prefix=" " * 4)
+        
+        if len(self.py_args)>0:
+            command = 'command = f"'+self.name+",{"+'},{'.join(self.py_args)+'}"\n'
+        else:
+            command = 'command = f"'+self.name+'"\n'
+        return_command = "return self.run(command, **kwargs)\n"
+        print(textwrap.indent("".join([command, return_command]), prefix=" " * 4))
+        return textwrap.indent("".join([command, return_command]), prefix=" " * 4)
 
     def to_python(self, prefix=""):
         """Return the complete python definition of the command."""
