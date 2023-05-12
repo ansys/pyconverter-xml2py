@@ -1,5 +1,6 @@
 """Sphinx documentation configuration file."""
 from datetime import datetime
+import os
 
 from ansys_sphinx_theme import ansys_favicon, pyansys_logo_black
 from pydita.ast import __version__
@@ -9,6 +10,7 @@ project = "pydita-ast"
 copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
 author = "ANSYS, Inc."
 release = version = __version__
+cname = os.getenv("DOCUMENTATION_CNAME", "<DEFAULT_CNAME>")
 
 REPOSITORY_NAME = "pydita-ast"
 USERNAME = "pyansys"
@@ -117,3 +119,19 @@ pygments_style = "sphinx"
 
 # Graphviz diagrams configuration
 graphviz_output_format = "png"
+
+# -- Options for LaTeX output ------------------------------------------------
+latex_elements = {}
+
+# Grouping the document tree into LaTeX files. List of tuples
+# (source start file, target name, title,
+#  author, documentclass [howto, manual, or own class]).
+latex_documents = [
+    (
+        master_doc,
+        f"{project}-Documentation-{__version__}.tex",
+        f"{project} Documentation",
+        author,
+        "manual",
+    ),
+]

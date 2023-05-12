@@ -143,7 +143,7 @@ def convert(directory_path, command=None):
     return commands
 
 
-def copy_package(template_path, new_package_path, clean=False):
+def copy_package(template_path, new_package_path, clean=False, include_hidden=False):
     """Add files and directory from a template directory path to a new path.
 
     Parameters
@@ -156,7 +156,11 @@ def copy_package(template_path, new_package_path, clean=False):
 
     clean : Bool
         Whether the directorys in new_package_path need to be cleared before adding new files
-        or not. Default to False.
+        or not. The default value is False.
+
+    include_hidden : Bool
+        When Python version >= 3.11, the hidden files can be handled automatically when True.
+        The default value is False.
 
     Returns
     -------
@@ -165,8 +169,16 @@ def copy_package(template_path, new_package_path, clean=False):
         ``ansys-mapdl-commands`` package.
 
     """
+    # For Python version >= 3.11, glob.glob() handles it if include_hidden=True.
+    if include_hidden is True:
+        filename_list = glob.glob(
+            os.path.join(template_path, "*"), recursive=True, include_hidden=True
+        )
 
-    for filename in glob.glob(os.path.join(template_path, "*"), recursive=True):
+    else:
+        filename_list = glob.glob(os.path.join(template_path, "*"), recursive=True)
+
+    for filename in filename_list:
         split_name_dir = filename.split(os.path.sep)
         new_path_dir = os.path.join(new_package_path, split_name_dir[-1])
 
@@ -180,6 +192,17 @@ def copy_package(template_path, new_package_path, clean=False):
 
         else:
             shutil.copy(filename, new_package_path)
+
+    if include_hidden is False:
+        # .vale.ini and .gitignore are hidden files.
+        vale_path = ["doc", ".vale.ini"]
+        gitignore_path = ["doc", "styles", ".gitignore"]
+        hidden_path = [vale_path, gitignore_path]
+        for hpath in hidden_path:
+            hidden_template = os.path.join(template_path, *hpath)
+            hidden_new_path = os.path.join(new_package_path, *hpath)
+            if os.path.isfile(hidden_template) and not os.path.isfile(hidden_new_path):
+                shutil.copy(hidden_template, hidden_new_path)
 
 
 def write_source(commands, xml_doc_path, template_path, new_package_path=None, clean=True):
@@ -244,6 +267,12 @@ def write_source(commands, xml_doc_path, template_path, new_package_path=None, c
                 continue
             cmd_name = ast.to_py_name(ans_name)
             fid.write(f"from .{cmd_name} import *\n")
+        fid.write("try:\n")
+        fid.write("    import importlib.metadata as importlib_metadata\n")
+        fid.write("except ModuleNotFoundError:\n")
+        fid.write("    import importlib_metadata\n\n")
+        fid.write("__version__ = importlib_metadata.version(__name__.replace('.', '-'))\n")
+        fid.write('"""PyDita-Generatedcommands version."""\n')
 
     print(f"Commands written to {cmd_path}")
 
@@ -272,9 +301,8 @@ def write_docs(commands, path):
 
     doc_src = os.path.join(doc_package_path, "docs.rst")
     with open(doc_src, "w") as fid:
-        fid.write("###########\n")
         fid.write("Autosummary\n")
-        fid.write("###########\n")
+        fid.write("===========\n\n")
 
         fid.write(".. currentmodule:: pydita.generatedcommands\n\n")
         fid.write(".. autosummary::\n")
