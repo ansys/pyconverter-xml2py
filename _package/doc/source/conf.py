@@ -3,12 +3,12 @@ from datetime import datetime
 from pydita.generatedcommands import __version__
 
 # Project information
-project = "pydita-ast"
+project = "pydita-generatedcommands"
 copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
 author = "ANSYS, Inc."
 release = version = __version__
 
-REPOSITORY_NAME = "pydita-ast"
+REPOSITORY_NAME = "pydita-generatedcommands"
 USERNAME = "pyansys"
 BRANCH = "main"
 
