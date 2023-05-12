@@ -14,7 +14,7 @@ on:
       - main
 
 env:
-  MAIN_PYTHON_VERSION: '3.9'
+  MAIN_PYTHON_VERSION: '3.10'
   PACKAGE_NAME: 'pydita-ast'
   PACKAGE_NAMESPACE: 'pydita.ast'
   DOCUMENTATION_CNAME: 'pydita-ast.docs.pyansys.com'
@@ -154,7 +154,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [doc-style]
     steps:
-        # This checkout is repeated later at the 'doc-build' action. This could be avoided by copything the sh file here, but introduces some code duplicity.
       - name: "Install Git and checkout project"
         uses: actions/checkout@v3
 
