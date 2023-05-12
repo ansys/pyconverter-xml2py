@@ -49,7 +49,6 @@ extensions = [
     "sphinx_copybutton",
     "sphinx.ext.mathjax",
     "linuxdoc.rstFlatTable",
-    "pyvista.ext.plot_directive",
 ]
 
 # # Intersphinx mapping
