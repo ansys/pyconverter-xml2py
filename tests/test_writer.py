@@ -12,12 +12,13 @@ def test_convert(commands):
         in commands["WRITE"].__repr__()
     )
     assert (
-        commands["E"].py_source
+        commands["E"].py_source(list_custom_functions)
         == '    command = f"E,{i},{j},{k},{l},{m},{n},{o},{p}"\n    return self.run(command, **kwargs)\n'  # noqa : E501
     )
-    assert (
-        'def zoom(self, wn="", lab="", x1="", y1="", x2="", y2="", **kwargs):\n    r"""Zooms a region of a display window.\n\n'  # noqa : E501
-        in commands["/ZOOM"].to_python()
+    assert 'def zoom(self, wn="", lab="", x1="", y1="", x2="", y2="", **kwargs):\n    r"""Zooms a region of a display window.\n\n' in commands[  # noqa : E501
+        "/ZOOM"
+    ].to_python(
+        list_custom_functions
     )
 
 
