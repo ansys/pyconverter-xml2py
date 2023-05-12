@@ -1,4 +1,4 @@
-Command Generator
+Command generator
 =================
 
 .. toctree::

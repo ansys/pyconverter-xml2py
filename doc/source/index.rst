@@ -1,7 +1,7 @@
 PyDita-AST
 ==========
 
-A Python libray to convert DITA XML documentation to RST.
+A Python library to convert DITA XML documentation to RST.
 
 
 .. toctree::
