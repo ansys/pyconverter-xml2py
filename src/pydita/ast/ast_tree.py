@@ -2264,11 +2264,11 @@ class MAPDLCommand(Element):
     def py_source(self):
         """Return the python source"""
         # return textwrap.indent("pass\n", prefix=" " * 4)
-        
-        if len(self.py_args)>0:
-            command = 'command = f"'+self.name+",{"+'},{'.join(self.py_args)+'}"\n'
+
+        if len(self.py_args) > 0:
+            command = 'command = f"' + self.name + ",{" + "},{".join(self.py_args) + '}"\n'
         else:
-            command = 'command = f"'+self.name+'"\n'
+            command = 'command = f"' + self.name + '"\n'
         return_command = "return self.run(command, **kwargs)\n"
         print(textwrap.indent("".join([command, return_command]), prefix=" " * 4))
         return textwrap.indent("".join([command, return_command]), prefix=" " * 4)
