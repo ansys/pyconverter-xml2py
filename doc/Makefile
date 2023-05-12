@@ -18,9 +18,11 @@ help:
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-
-# Customized clean due to examples gallery
 clean:
 	rm -rf $(BUILDDIR)/*
-	rm -rf $(SOURCEDIR)/examples
 	find . -type d -name "_autosummary" -exec rm -rf {} +
+
+pdf:
+	@$(SPHINXBUILD) -M latex "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	cd $(BUILDDIR)/latex && latexmk -r latexmkrc -pdf *.tex -interaction=nonstopmode || true
+	(test -f $(BUILDDIR)/latex/pydita-ast-Documentation-*.pdf && echo pdf exists) || exit 1
