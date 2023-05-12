@@ -106,9 +106,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-Linux-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
+          key: Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
-            Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-Linux-${{ env.MAIN_PYTHON_VERSION }}
+            Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ env.MAIN_PYTHON_VERSION }}
       
       - name: "Install pydita-generatedcommands"
         run: |
