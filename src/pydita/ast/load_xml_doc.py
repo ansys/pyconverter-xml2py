@@ -294,7 +294,8 @@ def load_terms(
     else:
         print("WARNING: No entitiy directory.")
 
-    # This is not working for now, to be improved
+    # This is not working for now
+    # TODO
 
     # filename = os.path.join(
     #     doc_path, "DITA-Open-Toolkit/lib/xerces-2_11_0.AnsysCustom/docs/dtd/", "characters.ent"

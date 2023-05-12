@@ -33,8 +33,6 @@ if __name__ == "__main__":
     if not os.path.isdir(directory_path):
         raise FileNotFoundError(f"Documentation path at {directory_path} does not exist")
 
-    # chap2.write_chapt2(doc_path, conv_path, links, base_url)
-
     commands = wr.convert(directory_path)
-    cmd_path = wr.write_source(commands, cur_path)
+    cmd_path = wr.write_source(commands, directory_path, cur_path)
     doc_src = wr.write_docs(commands, cur_path)

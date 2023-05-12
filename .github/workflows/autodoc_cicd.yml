@@ -44,16 +44,16 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-Linux-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
+          key: Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
-            Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-Linux-${{ env.MAIN_PYTHON_VERSION }}
+            Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}
       
       # The token will expire in 2024.
       - name: "Checkout mapdl-cmd-doc repository"
         uses: actions/checkout@v3
         with:
           repository: pyansys/mapdl-cmd-doc
-          ref: feat/pydita-ast-predined-format
+          ref: feat/pydita-ast-predifined-format
           token: ${{ secrets.MAPDL_CMD_DOC_TOKEN }}
           path: mapdl-cmd-doc
       
