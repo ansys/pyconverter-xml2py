@@ -1,17 +1,38 @@
 from datetime import datetime
 
-# -- General configuration ------------------------------------------------
+from pydita.generatedcommands import __version__
 
-extensions = ["pyvista.ext.plot_directive"]
+# Project information
+project = "pydita-ast"
+copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
+author = "ANSYS, Inc."
+release = version = __version__
+
+REPOSITORY_NAME = "pydita-ast"
+USERNAME = "pyansys"
+BRANCH = "main"
+
+# Options for HTML output
+html_short_title = html_title = "Documentation"
+html_theme = "pydata_sphinx_theme"
+html_theme_options = {
+    "show_prev_next": False,
+}
+
+html_context = {
+    "display_github": True,  # Integrate GitHub
+    "github_user": f"{USERNAME}",
+    "github_repo": f"{REPOSITORY_NAME}",
+    "github_version": f"{BRANCH}",
+}
+
+# General configuration
+
 templates_path = ["_templates"]
 source_suffix = ".rst"
 master_doc = "index"
+language = "en"
 
-project = "Documentation"
-copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
-author = "ANSYS Inc."
-
-release = version = "0.1.dev"
 exclude_patterns = ["_build"]
 pygments_style = "sphinx"
 
@@ -28,6 +49,7 @@ extensions = [
     "sphinx_copybutton",
     "sphinx.ext.mathjax",
     "linuxdoc.rstFlatTable",
+    "pyvista.ext.plot_directive",
 ]
 
 # # Intersphinx mapping
@@ -40,10 +62,6 @@ extensions = [
 #     "pyvista": ("https://docs.pyvista.org/", None),
 #     "grpc": ("https://grpc.github.io/grpc/python/", None),
 # }
-
-# The suffix(es) of source filenames.
-source_suffix = ".rst"
-language = "en"
 
 # Copy button customization ---------------------------------------------------
 # exclude traditional Python prompts from the copied code
@@ -70,18 +88,18 @@ numpydoc_validation_checks = {
     # type, unless multiple values are being returned"
 }
 
+# -- Options for LaTeX output ------------------------------------------------
+latex_elements = {}
 
-# -- Options for HTML output -------------------------------------------------
-html_short_title = html_title = "Documentation"
-html_theme = "pydata_sphinx_theme"
-html_theme_options = {
-    "show_prev_next": False,
-}
-
-html_context = {
-    "display_github": True,  # Integrate GitHub
-    "github_user": "pyansys",
-    "github_repo": "pydita-ast",
-    "github_version": "main",
-}
-# -- Options for HTMLHelp output ---------------------------------------------
+# Grouping the document tree into LaTeX files. List of tuples
+# (source start file, target name, title,
+#  author, documentclass [howto, manual, or own class]).
+latex_documents = [
+    (
+        master_doc,
+        f"{project}-Documentation-{__version__}.tex",
+        f"{project} Documentation",
+        author,
+        "manual",
+    ),
+]

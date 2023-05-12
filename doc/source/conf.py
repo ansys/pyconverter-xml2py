@@ -129,8 +129,8 @@ latex_elements = {}
 latex_documents = [
     (
         master_doc,
-        f"pydita-Documentation-{__version__}.tex",
-        "pydita-ast Documentation",
+        f"{project}-Documentation-{__version__}.tex",
+        f"{project} Documentation",
         author,
         "manual",
     ),
