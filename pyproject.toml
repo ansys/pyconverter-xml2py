@@ -30,7 +30,7 @@ dependencies = [
     "lxml==4.9.2",
     "py-asciimath==0.3.0",
     "pylatexenc==2.10",
-    "ansys-sphinx-theme==0.9.8",
+    "ansys-sphinx-theme==0.9.9",
     "tqdm>=4.64.1",
     "flit>=3.8.0",
     "sphinx-notfound-page==0.8.3",
