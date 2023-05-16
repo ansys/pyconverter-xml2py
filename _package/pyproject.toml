@@ -44,7 +44,7 @@ tests = [
     "pytest-rerunfailures==11.1.2",
 ]
 doc = [
-    "Sphinx==7.0.0",
+    "Sphinx==7.0.1",
     "jupyter_sphinx==0.4.0",
     "linuxdoc==20230506",
     "numpydoc==1.5.0",
