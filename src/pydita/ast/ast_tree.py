@@ -2296,7 +2296,11 @@ class MAPDLCommand(Element):
         docstr = textwrap.indent(
             f'\nr"""{self.py_docstring(custom_functions)}\n"""', prefix=prefix + " " * 4
         )
-        return f"{self.py_signature}{docstr}\n{self.py_source(custom_functions)}"
+        if self.py_name in custom_functions.lib_import:
+            out = f"{''.join(custom_functions.lib_import[self.py_name])}\n{self.py_signature}{docstr}\n{self.py_source(custom_functions)}"
+        else:
+            out = f"{self.py_signature}{docstr}\n{self.py_source(custom_functions)}"
+        return out
 
 
 class InformalTable(Element):

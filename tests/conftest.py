@@ -5,6 +5,8 @@ import pydita.ast.load_xml_doc as lxd
 import pydita.ast.writer as wrt
 import pytest
 
+from pydita.ast.custom_functions import CustomFunctions
+
 pytest_plugins = ["pytester"]
 
 # This is to run in the GH actions.
@@ -82,3 +84,15 @@ def version_variables(load_terms):
 @pytest.fixture
 def commands(directory_path):
     return wrt.convert(directory_path)
+
+
+@pytest.fixture
+def cwd():
+    return os.getcwd()
+
+
+@pytest.fixture
+def custom_functions(cwd):
+    _package_path = os.path.join(cwd, "_package")
+    path_custom_functions = os.path.join(_package_path, "customized_functions")
+    return CustomFunctions(path_custom_functions)

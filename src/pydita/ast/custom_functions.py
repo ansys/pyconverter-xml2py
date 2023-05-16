@@ -13,9 +13,11 @@ def get_docstring_list(filename):
     list_py_returns = []
     list_py_examples = []
     list_py_code = []
+    list_import = []
     for line in lines:
-        print(line)
-        if "Returns" in line and bool_return is False:
+        if "import" in line:
+            list_import.append(line)
+        elif "Returns" in line and bool_return is False:
             print("There is a return")
             bool_return = True
             list_py_returns.append(line[4:-1])
@@ -38,7 +40,7 @@ def get_docstring_list(filename):
         elif end_docstring is True:
             list_py_code.append(line[4:])
     
-    return list_py_returns, list_py_examples, list_py_code
+    return list_py_returns, list_py_examples, list_py_code, list_import
 
 # ############################################################################
 # CustomFunctions class
@@ -53,6 +55,7 @@ class CustomFunctions:
         self._py_returns = {}
         self._py_examples = {}
         self._py_code = {}
+        self._lib_import = {}
 
     def __init__(self, path):
         print(path)
@@ -65,16 +68,19 @@ class CustomFunctions:
         self._py_returns = {}
         self._py_examples = {}
         self._py_code = {}
+        self._lib_import = {}
         for filename in list(glob.glob(os.path.join(path, "*.py"))):
             py_name = os.path.split(filename)[-1][:-3]
             self._py_names.append(py_name)
-            list_py_returns, list_py_examples, list_py_code = get_docstring_list(filename)
+            list_py_returns, list_py_examples, list_py_code, list_import = get_docstring_list(filename)
             if len(list_py_returns)>0:
                 self._py_returns[py_name] = list_py_returns
             if len(list_py_examples)>0:
                 self._py_examples[py_name] = list_py_examples
             if len(list_py_code)>0:
                 self._py_code[py_name] = list_py_code
+            if len(list_import)>0:
+                self._lib_import[py_name] = list_import
 
     @property
     def path(self):
@@ -91,14 +97,15 @@ class CustomFunctions:
         for filename in list(glob.glob(os.path.join(path, "*.py"))):
             py_name = os.path.split(filename)[-1][:-3]
             self._py_names.append(py_name)
-            list_py_returns, list_py_examples, list_py_code = get_docstring_list(filename)
+            list_py_returns, list_py_examples, list_py_code, list_import = get_docstring_list(filename)
             if len(list_py_returns)>0:
                 self._py_returns[py_name] = list_py_returns
             if len(list_py_examples)>0:
                 self._py_examples[py_name] = list_py_examples
             if len(list_py_code)>0:
                 self._py_code[py_name] = list_py_code
-
+            if len(list_import)>0:
+                self._lib_import[py_name] = list_import
 
     @property
     def py_names(self):
@@ -115,3 +122,7 @@ class CustomFunctions:
     @property
     def py_code(self):
         return self._py_code
+    
+    @property
+    def lib_import(self):
+        return self._lib_import

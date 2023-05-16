@@ -5,25 +5,25 @@ import pydita.ast.writer as wrt
 import pytest
 
 
-def test_convert(commands):
+def test_convert(commands, custom_functions):
     assert commands["/XFRM"].name == "/XFRM"
     assert (
         "APDL Command: WRITE\n\nShort Description:\nWrites the radiation matrix file.\n\nFunction signature:\nWRITE,"  # noqa : E501
         in commands["WRITE"].__repr__()
     )
     assert (
-        commands["E"].py_source(list_custom_functions)
+        commands["E"].py_source(custom_functions)
         == '    command = f"E,{i},{j},{k},{l},{m},{n},{o},{p}"\n    return self.run(command, **kwargs)\n'  # noqa : E501
     )
     assert 'def zoom(self, wn="", lab="", x1="", y1="", x2="", y2="", **kwargs):\n    r"""Zooms a region of a display window.\n\n' in commands[  # noqa : E501
         "/ZOOM"
     ].to_python(
-        list_custom_functions
+        custom_functions
     )
+    assert 'import re' in commands['K'].to_python(custom_functions)
 
 
-def test_copy_package():
-    cwd = os.getcwd()
+def test_copy_package(cwd):
     new_package_path = os.path.join(cwd, "tmp_directory")
     if os.path.isdir(new_package_path):
         shutil.rmtree(new_package_path)
