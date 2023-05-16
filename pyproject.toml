@@ -41,6 +41,7 @@ dependencies = [
 
 [project.optional-dependencies]
 tests = [
+    "numpy==1.24.3",
     "pytest==7.3.1",
     "pytest-cov==4.0.0",
     "pytest-rerunfailures==11.1.2",
@@ -50,6 +51,7 @@ doc = [
     "jupyter_sphinx==0.4.0",
     "numpydoc==1.5.0",
     "pandas==2.0.1",
+    "parse==1.19.0",
     "pypandoc==1.11",
     "pytest-sphinx==0.5.0",
     "sphinx-autobuild==2021.3.14",
