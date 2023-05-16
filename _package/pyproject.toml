@@ -44,7 +44,7 @@ tests = [
     "pytest-rerunfailures==11.1.2",
 ]
 doc = [
-    "Sphinx==7.0.0",
+    "Sphinx==7.0.1",
     "jupyter_sphinx==0.4.0",
     "linuxdoc==20230506",
     "numpydoc==1.5.0",
@@ -63,9 +63,9 @@ doc = [
 name = "pydita.generatedcommands"
 
 [project.urls]
-Source = "https://github.com/pyansys/pydita-ast/"
-Tracker = "https://github.com/pyansys/pydita-ast/issues"
-Homepage = "https://github.com/pyansyspydita-ast"
+Source = "https://github.com/ansys/pydita-ast/"
+Tracker = "https://github.com/ansys/pydita-ast/issues"
+Homepage = "https://github.com/ansyspydita-ast"
 
 
 [tool.black]

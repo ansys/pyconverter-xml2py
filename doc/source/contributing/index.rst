@@ -18,7 +18,7 @@ Run this code to clone and install the latest version of PyDita-AST in developme
 
 .. code:: console
 
-    git clone https://github.com/pyansys/pydita-ast
+    git clone https://github.com/ansys/pydita-ast
     cd pydita-ast
     python -m pip install --upgrade pip
     pip install -e .
