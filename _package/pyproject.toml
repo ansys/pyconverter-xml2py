@@ -27,8 +27,6 @@ classifiers = [
 dependencies = [
     "importlib-metadata >=4.0",
     "flit>=3.8.0",
-    "numpydoc==1.5.0",
-    "sphinx-copybutton==0.5.2",
 ]
 
 [project.optional-dependencies]
