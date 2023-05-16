@@ -71,7 +71,7 @@ jobs:
         run: ls -R -a
 
       - name: PyAnsys code style checks
-        uses: pyansys/actions/code-style@v4
+        uses: ansys/actions/code-style@v4
         with:
           python-version: ${{ inputs.MAIN_PYTHON_VERSION }}
           use-python-cache: false
@@ -121,7 +121,7 @@ jobs:
             autosummary-pydita-generatedcommands-v${{ env.RESET_AUTOSUMMARY_CACHE_2 }}-${{ inputs.PYDITA_GENERATED_VERSION }}
 
       - name: "Run Ansys documentation building action"
-        uses: pyansys/actions/doc-build@v4
+        uses: ansys/actions/doc-build@v4
         with:
           python-version: ${{ inputs.MAIN_PYTHON_VERSION }}
           checkout: false
