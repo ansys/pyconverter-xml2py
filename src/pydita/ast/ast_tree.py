@@ -2287,7 +2287,7 @@ class MAPDLCommand(Element):
             source = textwrap.indent("".join([command, return_command]), prefix=" " * 4)
 
         else:
-            source = textwrap.indent(custom_functions.py_source, prefix=" " * 4)
+            source = textwrap.indent("".join(custom_functions.py_code[self.py_name]), prefix=" " * 4)
 
         return source
 
