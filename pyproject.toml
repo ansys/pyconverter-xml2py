@@ -43,7 +43,7 @@ tests = [
 ]
 doc = [
     "Sphinx==6.2.1",
-    "ansys-sphinx-theme==0.9.8",
+    "ansys-sphinx-theme==0.9.9",
     "build>= 0.10.0",
     "flit>=3.8.0",
     "jupyter_sphinx==0.4.0",
