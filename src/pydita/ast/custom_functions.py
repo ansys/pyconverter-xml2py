@@ -1,7 +1,63 @@
 import glob
 import os
-
 import numpy as np
+
+def get_docstring_lists(filename):
+    """
+    Return lists of string depending on the python file sections.
+    Parameters
+    ----------
+    filename : str
+        Path containing the python file.
+    Returns
+    -------
+    list_py_returns : List[str]
+        List containing the docstring returns section.
+    list_py_examples : List[str]
+        List containing the docstring examples section.
+    list_py_code : List[str]
+        List containing the source code.
+    list_import : List[str]
+        List containing the library import section.
+    """
+    pyfile = open(filename, "r")
+    lines = pyfile.readlines()
+    bool_return = False
+    bool_notes = False
+    bool_examples = False
+    begin_docstring = False
+    end_docstring = False
+    list_py_returns = []
+    list_py_examples = []
+    list_py_code = []
+    list_import = []
+    for line in lines:
+        if "import" in line:
+            list_import.append(line)
+        elif "Returns" in line and bool_return is False:
+            print("There is a return")
+            bool_return = True
+            list_py_returns.append(line[4:-1])
+        elif "Notes" in line and bool_notes is False:
+            bool_notes = True
+        elif "Examples" in line and bool_examples is False:
+            bool_examples = True
+            list_py_examples.append(line[4:-1])
+        elif '"""' in line and ([begin_docstring, begin_docstring] == [False, False]):
+            begin_docstring = True
+        elif '"""' in line and begin_docstring is True:
+            end_docstring = True
+        elif bool_return is True and np.all(
+            np.array([bool_notes, bool_examples, end_docstring]) == False
+        ):
+            list_py_returns.append(line[4:-1])
+        elif bool_examples is True and end_docstring is False:
+            list_py_examples.append(line[4:-1])
+        elif end_docstring is True:
+            list_py_code.append(line[4:])
+    pyfile.close()
+    return list_py_returns, list_py_examples, list_py_code, list_import
+
 
 # ############################################################################
 # CustomFunctions class
@@ -98,68 +154,3 @@ class CustomFunctions:
     def lib_import(self):
         """Return a dictionary containing the needed libraries if any."""
         return self._lib_import
-
-    def get_docstring_lists(filename):
-        """
-        Return lists of string depending on the python file sections.
-
-        Parameters
-        ----------
-        filename : str
-            Path containing the python file.
-
-        Returns
-        -------
-        list_py_returns : List[str]
-            List containing the docstring returns section.
-
-        list_py_examples : List[str]
-            List containing the docstring examples section.
-
-        list_py_code : List[str]
-            List containing the source code.
-
-        list_import : List[str]
-            List containing the library import section.
-        """
-
-        pyfile = open(filename, "r")
-        lines = pyfile.readlines()
-        bool_return = False
-        bool_notes = False
-        bool_examples = False
-        begin_docstring = False
-        end_docstring = False
-        list_py_returns = []
-        list_py_examples = []
-        list_py_code = []
-        list_import = []
-        for line in lines:
-            if "import" in line:
-                list_import.append(line)
-            elif "Returns" in line and bool_return is False:
-                print("There is a return")
-                bool_return = True
-                list_py_returns.append(line[4:-1])
-            elif "Notes" in line and bool_notes is False:
-                bool_notes = True
-            elif "Examples" in line and bool_examples is False:
-                bool_examples = True
-                list_py_examples.append(line[4:-1])
-            elif '"""' in line and ([begin_docstring, begin_docstring] == [False, False]):
-                begin_docstring = True
-            elif '"""' in line and begin_docstring is True:
-                end_docstring = True
-
-            elif bool_return is True and np.all(
-                np.array([bool_notes, bool_examples, end_docstring]) == False
-            ):
-                list_py_returns.append(line[4:-1])
-
-            elif bool_examples is True and end_docstring is False:
-                list_py_examples.append(line[4:-1])
-
-            elif end_docstring is True:
-                list_py_code.append(line[4:])
-
-        return list_py_returns, list_py_examples, list_py_code, list_import
