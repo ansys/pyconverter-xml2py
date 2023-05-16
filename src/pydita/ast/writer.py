@@ -4,8 +4,8 @@ import shutil
 
 from pydita.ast import ast_tree as ast
 from pydita.ast import load_xml_doc as load
-from pydita.ast.directory_format import get_paths
 from pydita.ast.custom_functions import CustomFunctions
+from pydita.ast.directory_format import get_paths
 from tqdm import tqdm
 
 generated_src_code = os.path.join("src", "pydita", "generatedcommands")
@@ -234,7 +234,7 @@ def write_source(commands, xml_doc_path, template_path, new_package_path=None, c
     path_custom_functions = os.path.join(_package_path, "customized_functions")
     custom_functions = CustomFunctions(path_custom_functions)
     print("code : ", custom_functions.py_code)
-    
+
     if not os.path.isdir(_package_path):
         raise FileNotFoundError(
             f"Unable to locate the package templates path at '{_package_path}'. "

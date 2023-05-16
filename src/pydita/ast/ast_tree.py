@@ -2287,7 +2287,9 @@ class MAPDLCommand(Element):
             source = textwrap.indent("".join([command, return_command]), prefix=" " * 4)
 
         else:
-            source = textwrap.indent("".join(custom_functions.py_code[self.py_name]), prefix=" " * 4)
+            source = textwrap.indent(
+                "".join(custom_functions.py_code[self.py_name]), prefix=" " * 4
+            )
 
         return source
 
@@ -2297,7 +2299,7 @@ class MAPDLCommand(Element):
             f'\nr"""{self.py_docstring(custom_functions)}\n"""', prefix=prefix + " " * 4
         )
         if self.py_name in custom_functions.lib_import:
-            out = f"{''.join(custom_functions.lib_import[self.py_name])}\n{self.py_signature}{docstr}\n{self.py_source(custom_functions)}"
+            out = f"{''.join(custom_functions.lib_import[self.py_name])}\n{self.py_signature}{docstr}\n{self.py_source(custom_functions)}"  # noqa : E501
         else:
             out = f"{self.py_signature}{docstr}\n{self.py_source(custom_functions)}"
         return out

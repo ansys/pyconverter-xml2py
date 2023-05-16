@@ -20,7 +20,7 @@ def test_convert(commands, custom_functions):
     ].to_python(
         custom_functions
     )
-    assert 'import re' in commands['K'].to_python(custom_functions)
+    assert "import re" in commands["K"].to_python(custom_functions)
 
 
 def test_copy_package(cwd):
