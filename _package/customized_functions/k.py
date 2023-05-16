@@ -1,5 +1,6 @@
 import re
 
+
 def k(self, npt="", x="", y="", z="", **kwargs) -> int:
     """Define a keypoint.
 
