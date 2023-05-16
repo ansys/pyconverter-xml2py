@@ -63,9 +63,9 @@ doc = [
 name = "pydita.ast"
 
 [project.urls]
-Source = "https://github.com/pyansys/pydita-ast/"
-Tracker = "https://github.com/pyansys/pydita-ast/issues"
-Homepage = "https://github.com/pyansys/pydita-ast"
+Source = "https://github.com/ansys/pydita-ast/"
+Tracker = "https://github.com/ansys/pydita-ast/issues"
+Homepage = "https://github.com/ansys/pydita-ast"
 
 [tool.black]
 line-length = 100
