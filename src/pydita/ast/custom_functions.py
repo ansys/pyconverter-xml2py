@@ -1,6 +1,8 @@
 import glob
 import os
+
 import numpy as np
+
 
 def get_docstring_lists(filename):
     """

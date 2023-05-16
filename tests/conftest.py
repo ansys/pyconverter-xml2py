@@ -89,10 +89,12 @@ def commands(directory_path):
 def cwd():
     return os.getcwd()
 
+
 @pytest.fixture
 def path_custom_functions(cwd):
     _package_path = os.path.join(cwd, "_package")
     return os.path.join(_package_path, "customized_functions")
+
 
 @pytest.fixture
 def custom_functions(path_custom_functions):
