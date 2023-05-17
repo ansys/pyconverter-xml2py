@@ -13,7 +13,7 @@ release = version = __version__
 cname = os.getenv("DOCUMENTATION_CNAME", "<DEFAULT_CNAME>")
 
 REPOSITORY_NAME = "pydita-ast"
-USERNAME = "pyansys"
+USERNAME = "ansys"
 BRANCH = "main"
 
 # Select desired logo, theme, and declare the html title
