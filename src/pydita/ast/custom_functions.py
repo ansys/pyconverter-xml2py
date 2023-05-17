@@ -37,26 +37,25 @@ def get_docstring_lists(filename):
         if "import" in line:
             list_import.append(line)
         elif "Returns" in line and bool_return is False:
-            print("There is a return")
             bool_return = True
-            list_py_returns.append(line[4:-1])
+            list_py_returns.append(line.strip())
         elif "Notes" in line and bool_notes is False:
             bool_notes = True
         elif "Examples" in line and bool_examples is False:
             bool_examples = True
-            list_py_examples.append(line[4:-1])
-        elif '"""' in line and ([begin_docstring, begin_docstring] == [False, False]):
+            list_py_examples.append(line.strip())
+        elif '"""' in line and begin_docstring is False:
             begin_docstring = True
         elif '"""' in line and begin_docstring is True:
             end_docstring = True
         elif bool_return is True and np.all(
             np.array([bool_notes, bool_examples, end_docstring]) == False
         ):
-            list_py_returns.append(line[4:-1])
+            list_py_returns.append(line.strip())
         elif bool_examples is True and end_docstring is False:
-            list_py_examples.append(line[4:-1])
+            list_py_examples.append(line.strip())
         elif end_docstring is True:
-            list_py_code.append(line[4:])
+            list_py_code.append(line)
     pyfile.close()
     return list_py_returns, list_py_examples, list_py_code, list_import
 

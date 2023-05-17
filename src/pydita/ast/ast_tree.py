@@ -2287,10 +2287,7 @@ class MAPDLCommand(Element):
             source = textwrap.indent("".join([command, return_command]), prefix=" " * 4)
 
         else:
-            source = textwrap.indent(
-                "".join(custom_functions.py_code[self.py_name]), prefix=" " * 4
-            )
-
+            source = "".join(custom_functions.py_code[self.py_name])
         return source
 
     def to_python(self, custom_functions, prefix=""):
