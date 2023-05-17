@@ -7,10 +7,12 @@ import numpy as np
 def get_docstring_lists(filename):
     """
     Return lists of string depending on the python file sections.
+
     Parameters
     ----------
     filename : str
         Path containing the python file.
+
     Returns
     -------
     list_py_returns : List[str]
