@@ -72,11 +72,11 @@ need to follow these steps:
         pytest tests -v
 
 
-Style and Testing
+Style and testing
 -----------------
 
 If required, you can always call the style commands (`black`_, `isort`_,
-`flake8`_...) or unit testing ones (`pytest`_) from the command line. However,
+`flake8`_, etc) or unit testing ones (`pytest`_) from the command line. However,
 this does not guarantee that your project is being tested in an isolated
 environment, which is another reason to consider using `tox`_.
 
@@ -85,7 +85,7 @@ Documentation
 -------------
 
 For building documentation, you can either run the usual rules provided in the
-`Sphinx`_ Makefile, such us:
+`Sphinx`_ Makefile, such as:
 
 .. code:: bash
 
