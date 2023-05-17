@@ -233,7 +233,6 @@ def write_source(commands, xml_doc_path, template_path, new_package_path=None, c
     _package_path = os.path.join(template_path, "_package")
     path_custom_functions = os.path.join(_package_path, "customized_functions")
     custom_functions = CustomFunctions(path_custom_functions)
-    print("code : ", custom_functions.py_code)
 
     if not os.path.isdir(_package_path):
         raise FileNotFoundError(

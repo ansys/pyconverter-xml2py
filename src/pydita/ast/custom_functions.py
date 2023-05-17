@@ -77,7 +77,6 @@ class CustomFunctions:
         self._lib_import = {}
 
     def __init__(self, path):
-        print(path)
         self._path = path
         try:
             os.path.isdir(path)
