@@ -46,6 +46,7 @@ extensions = [
     "sphinx.ext.extlinks",
     "sphinx.ext.graphviz",
     "sphinx_copybutton",
+    "sphinx_design",
 ]
 
 # Intersphinx mapping

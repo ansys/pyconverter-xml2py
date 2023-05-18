@@ -49,18 +49,19 @@ extensions = [
     "sphinx_copybutton",
     "sphinx.ext.mathjax",
     "linuxdoc.rstFlatTable",
+    
 ]
 
-# # Intersphinx mapping
-# intersphinx_mapping = {
-#     "python": ("https://docs.python.org/dev", None),
+# Intersphinx mapping
+intersphinx_mapping = {
+     "python": ("https://docs.python.org/dev", None),
 #     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 #     "numpy": ("https://numpy.org/devdocs", None),
 #     "matplotlib": ("https://matplotlib.org/stable", None),
 #     "pandas": ("https://pandas.pydata.org/pandas-docs/stable", None),
 #     "pyvista": ("https://docs.pyvista.org/", None),
 #     "grpc": ("https://grpc.github.io/grpc/python/", None),
-# }
+}
 
 # Copy button customization ---------------------------------------------------
 # exclude traditional Python prompts from the copied code
