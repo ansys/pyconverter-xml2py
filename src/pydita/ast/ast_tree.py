@@ -132,6 +132,11 @@ def is_numeric(text):
         return False
 
 
+# ############################################################################
+# Element class
+# ############################################################################
+
+
 class Element:
     """Base element."""
 
@@ -1946,10 +1951,9 @@ class MAPDLCommand(Element):
         args = ["self"]
         kwargs = [f'{arg}=""' for arg in self.py_args if "--" not in arg]
         arg_sig = ", ".join(args + kwargs)
-        return f"def {self.py_name}({arg_sig}):"
+        return f"def {self.py_name}({arg_sig}, **kwargs):"
 
-    @property
-    def py_docstring(self):
+    def py_docstring(self, custom_functions):
         """Return the python docstring of the command."""
         apdl_cmd = f"{self._terms['pn006p']} Command: `{self.name} <{self.url}>`_"
 
@@ -1964,8 +1968,18 @@ class MAPDLCommand(Element):
                 items += [""] + textwrap.wrap("Default: " + self.default.to_rst())
         if self.args is not None:
             items += [""] + self.py_parm
+        if (
+            self.py_name in custom_functions.py_names
+            and self.py_name in custom_functions.py_returns
+        ):
+            items += [""] + custom_functions.py_returns[self.py_name]
         if self.notes is not None:
             items += [""] + self.py_notes
+        if (
+            self.py_name in custom_functions.py_names
+            and self.py_name in custom_functions.py_examples
+        ):
+            items += [""] + custom_functions.py_examples[self.py_name]
         docstr = "\n".join(items)
 
         # final post-processing
@@ -2260,15 +2274,32 @@ class MAPDLCommand(Element):
 
         return "\n".join(lines)
 
-    @property
-    def py_source(self):
+    def py_source(self, custom_functions):
         """Return the python source"""
-        return textwrap.indent("pass\n", prefix=" " * 4)
 
-    def to_python(self, prefix=""):
+        if self.py_name not in custom_functions.py_names:
+
+            if len(self.py_args) > 0:
+                command = 'command = f"' + self.name + ",{" + "},{".join(self.py_args) + '}"\n'
+            else:
+                command = 'command = f"' + self.name + '"\n'
+            return_command = "return self.run(command, **kwargs)\n"
+            source = textwrap.indent("".join([command, return_command]), prefix=" " * 4)
+
+        else:
+            source = "".join(custom_functions.py_code[self.py_name])
+        return source
+
+    def to_python(self, custom_functions, prefix=""):
         """Return the complete python definition of the command."""
-        docstr = textwrap.indent(f'\nr"""{self.py_docstring}\n"""', prefix=prefix + " " * 4)
-        return f"{self.py_signature}{docstr}\n{self.py_source}"
+        docstr = textwrap.indent(
+            f'\nr"""{self.py_docstring(custom_functions)}\n"""', prefix=prefix + " " * 4
+        )
+        if self.py_name in custom_functions.lib_import:
+            out = f"{''.join(custom_functions.lib_import[self.py_name])}\n{self.py_signature}{docstr}\n{self.py_source(custom_functions)}"  # noqa : E501
+        else:
+            out = f"{self.py_signature}{docstr}\n{self.py_source(custom_functions)}"
+        return out
 
 
 class InformalTable(Element):
