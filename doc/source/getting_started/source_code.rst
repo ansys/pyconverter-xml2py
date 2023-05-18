@@ -28,13 +28,13 @@ Customized functions
 --------------------
 
 The converter can also handled the code generation for functions that
-need a customized code. The latters need to be added to the directory
+need a customized code. These need to be added to the directory
 ``_package/customized_functions``.
 
 The provided code will then be the one used during the conversion.
 
-Furthermore, the **Returns** and **Examples** sections will also be added
-to the docstring.
+Furthermore, the **Returns** and **Examples** sections, if any, will be added
+to the Python docstring.
 
 
 .. tab-set::
