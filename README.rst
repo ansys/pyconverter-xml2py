@@ -77,4 +77,3 @@ The following code is to render the documentation as an HTML one from Windows:
     cd package
     pip install -e .[doc,tests] # Using a virtual environment is recommended.
     .\doc\make.bat html 
-

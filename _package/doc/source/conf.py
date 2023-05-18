@@ -33,7 +33,10 @@ source_suffix = ".rst"
 master_doc = "index"
 language = "en"
 
-exclude_patterns = ["_build"]
+exclude_patterns = [
+    "_build",
+    "links.rst",
+]
 pygments_style = "sphinx"
 
 extensions = [
@@ -68,7 +71,6 @@ copybutton_prompt_text = r">>> ?|\.\.\. "
 copybutton_prompt_is_regexp = True
 
 # numpydoc configuration ------------------------------------------------------
-numpydoc_use_plots = True
 numpydoc_show_class_members = False
 numpydoc_xref_param_type = True
 numpydoc_validate = True
