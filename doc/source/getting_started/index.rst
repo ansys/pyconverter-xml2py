@@ -74,7 +74,6 @@ to the docstring.
     .. tab-item:: Added customized function
 
         .. code:: python
-            
             import parse
 
 
