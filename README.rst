@@ -54,5 +54,3 @@ The XML documentation needs to be organized as follow:
 
 .. image:: ./doc/source/getting_started/images/diags/graphviz-diag_directory.png
 
-
-For further explanations, please refer to :ref:`ref_user_guide`
