@@ -50,9 +50,6 @@ Install the ``pydita-ast`` package with:
    python -m pip install pydita-ast``
 
 
-The XML documentation needs to be organized as follow:
+It is recommended to organize the XML documentation as follow:
 
 .. image:: ./doc/source/getting_started/images/diags/graphviz-diag_directory.png
-
-
-For further explanations, please refer to :ref:`ref_user_guide`
