@@ -40,7 +40,7 @@ def element(str_element):
     return element
 
 
-def test_init_Element(element):
+def test_init_element(element):
     elem = ast.Element(element)
     assert elem._element == element
     assert elem._content == ["element test"]
@@ -76,16 +76,16 @@ def test_parse_children(element_with_children):
     assert children_fromparse == children_fromget
 
 
-def test_init_Element_with_children(element_with_children, Element_with_children):
+def test_init_element_with_children(element_with_children, Element_with_children):
     assert Element_with_children._element == element_with_children
     assert len(Element_with_children._content) == 4
 
 
-def test_Element_text_content(Element_with_children):
+def test_element_text_content(Element_with_children):
     content = Element_with_children.text_content
     assert content == "element test with children child 1 child 2 child 3"
 
 
-def test_Element_raw(str_element_with_children, Element_with_children):
+def test_element_raw(str_element_with_children, Element_with_children):
     raw = Element_with_children.raw
     assert raw == str_element_with_children
