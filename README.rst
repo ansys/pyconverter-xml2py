@@ -47,5 +47,5 @@ Getting started
 
 The XML documentation needs to be organized as follow:
 
-.. image:: ./doc/source/getting_started/diags/graphviz-diag_directory.png
+.. image:: ./doc/source/getting_started/images/diags/graphviz-diag_directory.png
 

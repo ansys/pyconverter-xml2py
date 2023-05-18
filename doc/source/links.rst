@@ -13,3 +13,7 @@
 
 .. # Other tools
 .. _precommit: https://pre-commit.com/
+
+.. # Linuxdoc
+.. _flat_tables: https://return42.github.io/linuxdoc/linuxdoc-howto/table-markup.html#flat-table
+
