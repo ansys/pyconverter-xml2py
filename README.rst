@@ -53,4 +53,6 @@ Install the ``pydita-ast`` package with:
 The XML documentation needs to be organized as follow:
 
 .. image:: ./doc/source/getting_started/images/diags/graphviz-diag_directory.png
+   :width: 450
+   :align: center
 
