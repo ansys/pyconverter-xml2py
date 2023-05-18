@@ -22,7 +22,7 @@ correctly. This is due to an incompatibility with Python docstring.
 Tables
 ------
 
-The tables are accepted in the documentation. They don't need to have
+The tables are accepted in the documentation. They do not need to have
 a specific format as the converter uses `flat-tables <flat_tables_>`_.
 
 .. figure:: ./images/tables_doc.png
