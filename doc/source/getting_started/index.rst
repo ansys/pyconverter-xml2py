@@ -2,7 +2,7 @@ Getting started
 ===============
 
 Here are some guidelines to use the ``pydita-ast`` package.
-One can keep in mind that each steps can be modified to fit
+One can keep in mind that each step can be modified to fit
 with its own project.
 
 
@@ -11,7 +11,7 @@ Pre-defined format
 
 The conversion is based on a pre-defined XML directory format and 
 it is recommended to comply with it. 
-The expected format is as follow:
+The expected format is as follows:
 
 .. include:: ./images/diags/diag_directory.rst
 

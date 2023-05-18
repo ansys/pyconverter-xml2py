@@ -1,7 +1,7 @@
 Source code generation
 ======================
 
-A source code will be automatically generated from the name of the commands
+Source code will be automatically generated from the name of the commands
 and the parameters defined in the documentation.
 
 The default code is as follow.
@@ -27,7 +27,7 @@ The default code is as follow.
 Customized functions
 --------------------
 
-The converter can also handled the code generation for functions that
+The converter can also handle the code generation for functions that
 need a customized code. These need to be added to the directory
 ``_package/customized_functions``.
 
