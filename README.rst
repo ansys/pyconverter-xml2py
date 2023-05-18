@@ -36,16 +36,23 @@ Sphinx documentation from an XML documentation.
 Documentation and issues
 ------------------------
 
-For more information, see the `Documentation <https://pydita-ast.docs.pyansys.com>`_ page.
-
-Feel free to post issues and other questions at `PyDita-AST Issues
-<https://github.com/ansys/pydita-ast/issues>`_.  This is the best place
-to post questions and code.
+On the `PyDita-AST Issues <https://github.com/ansys/pydita-ast/issues>`_ for this repository,
+you can create issues to submit questions, report bugs, and request new features. 
+To reach the PyAnsys support team, email `pyansys.core@ansys.com <pyansys.core@ansys.com>`_.
 
 Getting started
 ---------------
+
+Install the ``pydita-ast`` package with:
+
+.. code:: bash
+
+   python -m pip install pydita-ast``
+
 
 The XML documentation needs to be organized as follow:
 
 .. image:: ./doc/source/getting_started/images/diags/graphviz-diag_directory.png
 
+
+For further explanations, please refer to `<ref_user_guide_>`_
