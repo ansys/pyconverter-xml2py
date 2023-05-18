@@ -40,6 +40,7 @@ On the `PyDita-AST Issues <https://github.com/ansys/pydita-ast/issues>`_ for thi
 you can create issues to submit questions, report bugs, and request new features. 
 To reach the PyAnsys support team, email `pyansys.core@ansys.com <pyansys.core@ansys.com>`_.
 
+
 Getting started
 ---------------
 
@@ -47,10 +48,33 @@ Install the ``pydita-ast`` package with:
 
 .. code:: bash
 
-   python -m pip install pydita-ast``
+   python -m pip install pydita-ast
 
 
 It is recommended to organize the XML documentation as follow:
 
 .. image:: ./doc/source/getting_started/images/diags/graphviz-diag_directory.png
+   :width: 450
+   :align: center
+
+
+Converting an XML-directory
+---------------------------
+
+Once the ``XML_directory`` is correctly organized, the converter can be run.
+
+.. code:: bash
+
+    python xml2rst.py -p XML_directory_path
+
+After that, the Sphinx documentation can be generated. By default, it is
+contained in the ``package`` directory.
+
+The following code is to render the documentation as an HTML one from Windows:
+
+.. code:: bash
+
+    cd package
+    pip install -e .[doc,tests] # Using a virtual environment is recommended.
+    .\doc\make.bat html 
 
