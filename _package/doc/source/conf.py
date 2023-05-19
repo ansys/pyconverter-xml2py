@@ -33,7 +33,10 @@ source_suffix = ".rst"
 master_doc = "index"
 language = "en"
 
-exclude_patterns = ["_build"]
+exclude_patterns = [
+    "_build",
+    "links.rst",
+]
 pygments_style = "sphinx"
 
 extensions = [
@@ -51,16 +54,16 @@ extensions = [
     "linuxdoc.rstFlatTable",
 ]
 
-# # Intersphinx mapping
-# intersphinx_mapping = {
-#     "python": ("https://docs.python.org/dev", None),
-#     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
-#     "numpy": ("https://numpy.org/devdocs", None),
-#     "matplotlib": ("https://matplotlib.org/stable", None),
-#     "pandas": ("https://pandas.pydata.org/pandas-docs/stable", None),
-#     "pyvista": ("https://docs.pyvista.org/", None),
-#     "grpc": ("https://grpc.github.io/grpc/python/", None),
-# }
+# Intersphinx mapping
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/dev", None),
+    #     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
+    #     "numpy": ("https://numpy.org/devdocs", None),
+    #     "matplotlib": ("https://matplotlib.org/stable", None),
+    #     "pandas": ("https://pandas.pydata.org/pandas-docs/stable", None),
+    #     "pyvista": ("https://docs.pyvista.org/", None),
+    #     "grpc": ("https://grpc.github.io/grpc/python/", None),
+}
 
 # Copy button customization ---------------------------------------------------
 # exclude traditional Python prompts from the copied code
@@ -68,7 +71,6 @@ copybutton_prompt_text = r">>> ?|\.\.\. "
 copybutton_prompt_is_regexp = True
 
 # numpydoc configuration ------------------------------------------------------
-numpydoc_use_plots = True
 numpydoc_show_class_members = False
 numpydoc_xref_param_type = True
 numpydoc_validate = True
