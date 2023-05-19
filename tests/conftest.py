@@ -1,9 +1,9 @@
 import os
 
-from pydita.ast.custom_functions import CustomFunctions
-import pydita.ast.directory_format as ff
-import pydita.ast.load_xml_doc as lxd
-import pydita.ast.writer as wrt
+from pydita_ast.custom_functions import CustomFunctions
+import pydita_ast.directory_format as ff
+import pydita_ast.load_xml_doc as lxd
+import pydita_ast.writer as wrt
 import pytest
 
 pytest_plugins = ["pytester"]

@@ -1,5 +1,5 @@
 """
-pydita.ast
+pydita_ast
 """
 
 try:

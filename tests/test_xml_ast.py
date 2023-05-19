@@ -1,7 +1,7 @@
 # import os
 
 from lxml.html import fromstring
-import pydita.ast.ast_tree as ast
+import pydita_ast.ast_tree as ast
 import pytest
 
 

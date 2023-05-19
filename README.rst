@@ -16,7 +16,7 @@ User installation can be performed by running:
 
 .. code:: bash
 
-    python -m pip install pydita-ast
+    python -m pip install pydita_ast
 
 For developers
 ^^^^^^^^^^^^^^

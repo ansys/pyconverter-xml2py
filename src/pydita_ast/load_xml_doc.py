@@ -6,8 +6,8 @@ import unicodedata
 
 from lxml.etree import ParserError
 from lxml.html import fromstring
-import pydita.ast.ast_tree as ast
-import pydita.ast.version_variables as var
+import pydita_ast.ast_tree as ast
+import pydita_ast.version_variables as var
 from tqdm import tqdm
 
 

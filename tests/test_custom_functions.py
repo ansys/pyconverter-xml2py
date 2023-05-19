@@ -1,6 +1,6 @@
 import os
 
-import pydita.ast.custom_functions as cf
+import pydita_ast.custom_functions as cf
 
 
 def test_customfunctions(custom_functions):

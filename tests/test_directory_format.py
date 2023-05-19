@@ -1,6 +1,6 @@
 import os
 
-import pydita.ast.directory_format as ff
+import pydita_ast.directory_format as ff
 import pytest
 
 

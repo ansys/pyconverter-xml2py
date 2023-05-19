@@ -15,8 +15,8 @@ on:
 
 env:
   MAIN_PYTHON_VERSION: '3.10'
-  PACKAGE_NAME: 'pydita-ast'
-  PACKAGE_NAMESPACE: 'pydita.ast'
+  PACKAGE_NAME: 'pydita_ast'
+  PACKAGE_NAMESPACE: 'pydita_ast'
   DOCUMENTATION_CNAME: 'pydita-ast.docs.pyansys.com'
   RESET_PIP_CACHE: 0
   RESET_AUTOSUMMARY_CACHE: 0
@@ -133,7 +133,7 @@ jobs:
         run: |
           pytest -v --durations=10 --maxfail=10 \
             --reruns 7 --reruns-delay 3 --ghdir ${{ github.workspace }}\
-            --cov=pydita.ast --cov-report=xml:coverage.xml --cov-report=html\
+            --cov=pydita_ast --cov-report=xml:coverage.xml --cov-report=html\
             --cov-report term
 
       - name: "Upload coverage to Codecov"
@@ -170,14 +170,14 @@ jobs:
           restore-keys: |
             Python-pydita-ast-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}
       
-      - name: "Install pydita-ast"
+      - name: "Install pydita_ast"
         run: |
           pip install .[doc]
       
       - name: "Retrieve PyDita-AST version"
         run: |
-          echo "PYDITA_VERSION=$(python -c 'from pydita.ast import __version__; print(__version__)')" >> $GITHUB_ENV
-          echo "PyDita-AST version is: $(python -c 'from pydita.ast import __version__; print(__version__)')"
+          echo "PYDITA_VERSION=$(python -c 'from pydita_ast import __version__; print(__version__)')" >> $GITHUB_ENV
+          echo "PyDita-AST version is: $(python -c 'from pydita_ast import __version__; print(__version__)')"
     
       - name: "Cache docs build directory"
         uses: actions/cache@v3

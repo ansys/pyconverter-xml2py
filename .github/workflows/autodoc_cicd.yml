@@ -48,7 +48,7 @@ jobs:
           token: ${{ secrets.MAPDL_CMD_DOC_TOKEN }}
           path: mapdl-cmd-doc
       
-      - name: "Install pydita-ast"
+      - name: "Install pydita_ast"
         run: |
           pip install .[doc]
       
