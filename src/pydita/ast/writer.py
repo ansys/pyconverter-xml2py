@@ -206,13 +206,18 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
                 shutil.copy(hidden_template, hidden_new_path)
 
 
-def write_source(commands, xml_doc_path, template_path, new_package_path=None, clean=True):
+def write_source(
+    commands, path_custom_functions, xml_doc_path, template_path, new_package_path=None, clean=True
+):
     """Write out MAPDL commands as Python source files.
 
     Parameters
     ----------
     commands : list[MAPDLCommand]
         List of MAPDLCommand.
+
+    path_custom_functions : str
+        Path containing the customized functions.
 
     xml_doc_path : str
         Path containing the XML directory to be converted.
@@ -231,7 +236,6 @@ def write_source(commands, xml_doc_path, template_path, new_package_path=None, c
 
     """
     _package_path = os.path.join(template_path, "_package")
-    path_custom_functions = os.path.join(_package_path, "customized_functions")
     custom_functions = CustomFunctions(path_custom_functions)
 
     if not os.path.isdir(_package_path):
