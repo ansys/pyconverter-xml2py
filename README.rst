@@ -10,7 +10,7 @@ A Python wrapper to convert XML documentation into RST files and the Sphinx docu
    :alt: PyAnsys
 
 .. |pypi| image:: https://img.shields.io/pypi/v/pydita-ast.svg?logo=python&logoColor=white
-   :target: https://pypi.org/project/pydita_ast/
+   :target: https://pypi.org/project/pydita-ast/
 
 .. |codecov| image:: https://codecov.io/gh/ansys/pydita-ast/branch/main/graph/badge.svg
    :target: https://codecov.io/gh/ansys/pydita-ast
