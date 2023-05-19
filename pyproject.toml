@@ -58,6 +58,7 @@ doc = [
     "sphinx-copybutton==0.5.2",
     "sphinx-notfound-page==0.8.3",
     "sphinx-gallery==0.13.0",
+    "sphinx-design==0.4.1",
 ]
 
 [tool.flit.module]

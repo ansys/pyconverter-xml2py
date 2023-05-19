@@ -3,7 +3,7 @@
     :alt: Pre-defined XML directory format.
     :align: center
 
-     digraph "sphinx-ext-graphviz" {
+      digraph "sphinx-ext-graphviz" {
          size="8,6";
          rankdir="LR";
          bgcolor="white";

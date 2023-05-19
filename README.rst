@@ -3,127 +3,80 @@ PyDita-AST
 
 A Python wrapper to convert XML documentation into RST files and the Sphinx documentation.
 
+|pyansys| |pypi| |GH-CI| |codecov| |MIT| |black|
 
-How to install
---------------
+.. |pyansys| image:: https://img.shields.io/badge/Py-Ansys-ffc107.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABDklEQVQ4jWNgoDfg5mD8vE7q/3bpVyskbW0sMRUwofHD7Dh5OBkZGBgW7/3W2tZpa2tLQEOyOzeEsfumlK2tbVpaGj4N6jIs1lpsDAwMJ278sveMY2BgCA0NFRISwqkhyQ1q/Nyd3zg4OBgYGNjZ2ePi4rB5loGBhZnhxTLJ/9ulv26Q4uVk1NXV/f///////69du4Zdg78lx//t0v+3S88rFISInD59GqIH2esIJ8G9O2/XVwhjzpw5EAam1xkkBJn/bJX+v1365hxxuCAfH9+3b9/+////48cPuNehNsS7cDEzMTAwMMzb+Q2u4dOnT2vWrMHu9ZtzxP9vl/69RVpCkBlZ3N7enoDXBwEAAA+YYitOilMVAAAAAElFTkSuQmCC
+   :target: https://docs.pyansys.com/
+   :alt: PyAnsys
 
-At least two installation modes are provided: user and developer.
+.. |pypi| image:: https://img.shields.io/pypi/v/pydita-ast.svg?logo=python&logoColor=white
+   :target: https://pypi.org/project/pydita-ast/
 
-For users
-^^^^^^^^^
+.. |codecov| image:: https://codecov.io/gh/ansys/pydita-ast/branch/main/graph/badge.svg
+   :target: https://codecov.io/gh/ansys/pydita-ast
 
-User installation can be performed by running:
+.. |GH-CI| image:: https://github.com/ansys/pydita-ast/actions/workflows/ci_cd.yml/badge.svg
+   :target: https://github.com/ansys/pydita-ast/actions/workflows/ci_cd.yml
+
+.. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg?style=flat
+  :target: https://github.com/psf/black
+  :alt: black
+
+
+Overview
+--------
+
+The PyDita-AST project aims to automatically generate a Python library and a related 
+Sphinx documentation from an XML documentation.
+
+
+Documentation and issues
+------------------------
+
+On the `PyDita-AST Issues <https://github.com/ansys/pydita-ast/issues>`_ for this repository,
+you can create issues to submit questions, report bugs, and request new features. 
+To reach the PyAnsys support team, email `pyansys.core@ansys.com <pyansys.core@ansys.com>`_.
+
+
+Getting started
+---------------
+
+Install the ``pydita-ast`` package with:
 
 .. code:: bash
 
-    python -m pip install pydita_ast
+   python -m pip install pydita-ast
 
-For developers
-^^^^^^^^^^^^^^
 
-Installing PyDita-AST in developer mode allows
-you to modify the source and enhance it.
+It is recommended to organize the XML documentation as follow:
 
-Before contributing to the project, please refer to the `PyAnsys Developer's guide`_. You will 
-need to follow these steps:
+.. image:: ./doc/source/getting_started/images/diags/graphviz-diag_directory.png
+   :width: 450
+   :align: center
 
-#. Start by cloning this repository:
 
-    .. code:: bash
+Converting an XML-directory
+---------------------------
 
-        git clone https://github.com/ansys/pydita-ast
+Once the ``XML_directory`` is correctly organized, the converter can be run.
 
-#. Create a fresh-clean Python environment and activate it. Refer to the
-   official `venv`_ documentation if you require further information:
+.. code:: bash
 
-    .. code:: bash
-
-        # Create a virtual environment
-        python -m venv .venv
-
-        # Activate it in a POSIX system
-        source .venv/bin/activate
-
-        # Activate it in Windows CMD environment
-        .venv\Scripts\activate.bat
-
-        # Activate it in Windows Powershell
-        .venv\Scripts\Activate.ps1
-
-#. Make sure you have the latest version of `pip`_:
-
-    .. code:: bash
-
-        python -m pip install -U pip
-
-#. Install the project in editable mode:
-
-    .. code:: bash
+    python xml2rst.py -p XML_directory_path
     
-        python -m pip install -e .
+A new package will then be automatically generated. Its default name is ``package``.
+It is organized as follow:
 
-#. Install additional requirements (if needed):
-
-     .. code:: bash
-
-        python -m pip install .[doc,tests]
-
-#. Finally, verify your development installation by running:
-
-    .. code:: bash
-        
-        pytest tests -v
-
-
-Style and Testing
------------------
-
-If required, you can always call the style commands (`black`_, `isort`_,
-`flake8`_...) or unit testing ones (`pytest`_) from the command line. However,
-this does not guarantee that your project is being tested in an isolated
-environment, which is another reason to consider using `tox`_.
-
-
-Documentation
--------------
-
-For building documentation, you can either run the usual rules provided in the
-`Sphinx`_ Makefile, such us:
+.. image:: ./doc/source/getting_started/images/diags/graphviz-diag_package.png
+   :width: 450
+   :align: center
+   
+Then, the Sphinx documentation can be generated from this package.
+The following code is to render the documentation as an HTML one from Windows:
 
 .. code:: bash
 
-    python -m pip install .[doc]
-    make -C doc/ html
-
-    # subsequently open the documentation with (under Linux):
-    your_browser_name doc/html/index.html
-
-Distributing
-------------
-
-If you would like to create either source or wheel files, start by installing
-the building requirements:
-
-.. code:: bash
-
-    python -m pip install -e .[doc,tests]
-
-Then, you can execute:
-
-    .. code:: bash
-
-        python -m build
-        python -m twine check dist/*
-
-
-.. LINKS AND REFERENCES
-.. _black: https://github.com/psf/black
-.. _flake8: https://flake8.pycqa.org/en/latest/
-.. _isort: https://github.com/PyCQA/isort
-.. _PyAnsys Developer's guide: https://dev.docs.pyansys.com/
-.. _pre-commit: https://pre-commit.com/
-.. _pytest: https://docs.pytest.org/en/stable/
-.. _Sphinx: https://www.sphinx-doc.org/en/master/
-.. _pip: https://pypi.org/project/pip/
-.. _tox: https://tox.wiki/
-.. _venv: https://docs.python.org/3/library/venv.html
+    cd package
+    pip install -e .[doc,tests] # Using a virtual environment is recommended.
+    .\doc\make.bat html 
+    
