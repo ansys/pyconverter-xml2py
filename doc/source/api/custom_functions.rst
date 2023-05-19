@@ -1,7 +1,7 @@
 Customized functions
 ====================
 
-.. currentmodule:: pydita.ast.custom_functions
+.. currentmodule:: pydita_ast.custom_functions
 
 The following class and functions enable to handle customization of functions.
 

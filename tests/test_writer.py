@@ -1,7 +1,7 @@
 import os
 import shutil
 
-import pydita.ast.writer as wrt
+import pydita_ast.writer as wrt
 import pytest
 
 
