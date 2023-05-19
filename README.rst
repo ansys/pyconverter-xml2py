@@ -66,10 +66,15 @@ Once the ``XML_directory`` is correctly organized, the converter can be run.
 .. code:: bash
 
     python xml2rst.py -p XML_directory_path
+    
+A new package will then be automatically generated. Its default name is ``package``.
+It is organized as follow:
 
-After that, the Sphinx documentation can be generated. By default, it is
-contained in the ``package`` directory.
-
+.. image:: ./doc/source/getting_started/images/diags/graphviz-diag_package.png
+   :width: 450
+   :align: center
+   
+Then, the Sphinx documentation can be generated from this package.
 The following code is to render the documentation as an HTML one from Windows:
 
 .. code:: bash
@@ -77,3 +82,4 @@ The following code is to render the documentation as an HTML one from Windows:
     cd package
     pip install -e .[doc,tests] # Using a virtual environment is recommended.
     .\doc\make.bat html 
+    
