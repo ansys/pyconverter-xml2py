@@ -32,9 +32,11 @@ if __name__ == "__main__":
             "No customized functions path was entered. The default code generation will be applied to all the commands.",  # noqa : E501
             "You can specify the customized functions by adding a path to the --func-path argument.",  # noqa : E501
         )
+    
+    else:
+        functions_path = os.path.abspath(os.path.expanduser(functions_path))
 
     directory_path = os.path.abspath(os.path.expanduser(directory_path))
-    functions_path = os.path.abspath(os.path.expanduser(functions_path))
     cur_path = os.getcwd()
 
     # Verification
@@ -42,5 +44,6 @@ if __name__ == "__main__":
         raise FileNotFoundError(f"Documentation path at {directory_path} does not exist")
 
     commands = wr.convert(directory_path)
-    cmd_path = wr.write_source(commands, functions_path, directory_path, cur_path)
-    doc_src = wr.write_docs(commands, cur_path)
+    cmd_path = wr.write_source(commands, directory_path, cur_path, functions_path)
+    package_path = os.path.join(cur_path, "package")
+    doc_src = wr.write_docs(commands, package_path)

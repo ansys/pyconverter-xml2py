@@ -155,11 +155,11 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
     new_package_path : str
         Path containing the directory where the new files and directorys will be added to.
 
-    clean : Bool
+    clean : bool, optional
         Whether the directorys in new_package_path need to be cleared before adding new files
         or not. The default value is False.
 
-    include_hidden : Bool
+    include_hidden : bool, optional
         When Python version >= 3.11, the hidden files can be handled automatically when True.
         The default value is False.
 
@@ -207,7 +207,7 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
 
 
 def write_source(
-    commands, path_custom_functions, xml_doc_path, template_path, new_package_path=None, clean=True
+    commands, xml_doc_path, template_path, path_custom_functions=None, new_package_path=None, clean=True
 ):
     """Write out MAPDL commands as Python source files.
 
@@ -216,17 +216,21 @@ def write_source(
     commands : list[MAPDLCommand]
         List of MAPDLCommand.
 
-    path_custom_functions : str
-        Path containing the customized functions.
-
     xml_doc_path : str
         Path containing the XML directory to be converted.
 
     template_path : str
         Path containing ``_package`` directory.
+    
+    path_custom_functions : str, optional
+        Path containing the customized functions.
 
-    new_package_path : str
+    new_package_path : str, optional
         Path where to copy the ``_package`` directory. Default is ``./package``.
+    
+    clean : bool, optional
+        Whether the directorys in new_package_path need to be cleared before adding new files
+        or not. The default value is True.
 
     Returns
     -------
@@ -292,8 +296,16 @@ def write_source(
     return cmd_path
 
 
-def write_docs(commands, path):
+def write_docs(commands, package_path):
     """Output to the tinypages directory.
+    
+    Parameters
+    ----------
+    commands : list[MAPDLCommand]
+        List of MAPDLCommand.
+    
+    path : str
+        Path to the new package folder.
 
     Parameters
     ----------
@@ -301,8 +313,7 @@ def write_docs(commands, path):
         Path to the new doc pages directory.
 
     """
-
-    package_path = os.path.join(path, "package")
+    
     doc_package_path = os.path.join(package_path, "doc/source")
     if not os.path.isdir(doc_package_path):
         os.makedirs(doc_package_path)
