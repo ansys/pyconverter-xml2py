@@ -314,7 +314,7 @@ def write_docs(commands, package_path):
 
     Parameters
     ----------
-    path : str
+    str
         Path to the new doc page.
 
     """
