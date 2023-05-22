@@ -228,10 +228,10 @@ def write_source(
         Path containing ``_package`` directory.
 
     path_custom_functions : str, optional
-        Path containing the customized functions.
+        Path containing the customized functions. The default value is None.
 
     new_package_path : str, optional
-        Path where to copy the ``_package`` directory. Default is ``./package``.
+        Path where to copy the ``_package`` directory. The default value is ``./package``.
 
     clean : bool, optional
         Whether the directorys in new_package_path need to be cleared before adding new files
@@ -315,7 +315,7 @@ def write_docs(commands, package_path):
     Parameters
     ----------
     path : str
-        Path to the new doc pages directory.
+        Path to the new doc page.
 
     """
 
