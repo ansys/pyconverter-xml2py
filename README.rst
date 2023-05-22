@@ -67,7 +67,15 @@ Once the ``XML_directory`` is correctly organized, the converter can be run.
 .. code:: bash
 
     python xml2rst.py -p XML_directory_path
-    
+
+If some functions need to be customized, the path containing the python 
+files can be specified.
+
+.. code:: bash
+
+    python xml2rst.py -p XML_directory_path -f customized_function_directory_path
+
+
 A new package will then be automatically generated. Its default name is ``package``.
 It is organized as follow:
 
@@ -83,4 +91,4 @@ The following code is to render the documentation as an HTML one from Windows:
     cd package
     pip install -e .[doc,tests] # Using a virtual environment is recommended.
     .\doc\make.bat html 
-    
+   
