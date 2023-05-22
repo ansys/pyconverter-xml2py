@@ -92,7 +92,7 @@ def cwd():
 
 @pytest.fixture
 def path_custom_functions(cwd):
-    return os.path.join(cwd, "customized_functions")
+    return os.path.join(cwd, "tests", "customized_functions")
 
 
 @pytest.fixture
