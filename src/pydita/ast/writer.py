@@ -312,8 +312,8 @@ def write_docs(commands, package_path):
     path : str
         Path to the new package folder.
 
-    Parameters
-    ----------
+    Returns
+    -------
     str
         Path to the new doc page.
 
