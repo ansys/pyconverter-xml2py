@@ -1968,14 +1968,14 @@ class MAPDLCommand(Element):
                 items += [""] + textwrap.wrap("Default: " + self.default.to_rst())
         if self.args is not None:
             items += [""] + self.py_parm
-        if (
+        if custom_functions is not None and (
             self.py_name in custom_functions.py_names
             and self.py_name in custom_functions.py_returns
         ):
             items += [""] + custom_functions.py_returns[self.py_name]
         if self.notes is not None:
             items += [""] + self.py_notes
-        if (
+        if custom_functions is not None and (
             self.py_name in custom_functions.py_names
             and self.py_name in custom_functions.py_examples
         ):
@@ -2274,10 +2274,10 @@ class MAPDLCommand(Element):
 
         return "\n".join(lines)
 
-    def py_source(self, custom_functions):
+    def py_source(self, custom_functions=None):
         """Return the python source"""
 
-        if self.py_name not in custom_functions.py_names:
+        if custom_functions is None or self.py_name not in custom_functions.py_names:
 
             if len(self.py_args) > 0:
                 command = 'command = f"' + self.name + ",{" + "},{".join(self.py_args) + '}"\n'
@@ -2290,12 +2290,12 @@ class MAPDLCommand(Element):
             source = "".join(custom_functions.py_code[self.py_name])
         return source
 
-    def to_python(self, custom_functions, prefix=""):
+    def to_python(self, custom_functions=None, prefix=""):
         """Return the complete python definition of the command."""
         docstr = textwrap.indent(
             f'\nr"""{self.py_docstring(custom_functions)}\n"""', prefix=prefix + " " * 4
         )
-        if self.py_name in custom_functions.lib_import:
+        if custom_functions is not None and self.py_name in custom_functions.lib_import:
             out = f"{''.join(custom_functions.lib_import[self.py_name])}\n{self.py_signature}{docstr}\n{self.py_source(custom_functions)}"  # noqa : E501
         else:
             out = f"{self.py_signature}{docstr}\n{self.py_source(custom_functions)}"
