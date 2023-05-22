@@ -245,7 +245,10 @@ def write_source(
 
     """
     _package_path = os.path.join(template_path, "_package")
-    custom_functions = CustomFunctions(path_custom_functions)
+    if path_custom_functions is not None:
+        custom_functions = CustomFunctions(path_custom_functions)
+    else:
+        custom_functions = None
 
     if not os.path.isdir(_package_path):
         raise FileNotFoundError(

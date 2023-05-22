@@ -61,9 +61,6 @@ doc = [
     "sphinx-design==0.4.1",
 ]
 
-[tool.flit.module]
-name = "pydita_ast"
-
 [project.urls]
 Source = "https://github.com/ansys/pydita-ast/"
 Tracker = "https://github.com/ansys/pydita-ast/issues"
