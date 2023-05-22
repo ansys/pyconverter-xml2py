@@ -155,11 +155,11 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
     new_package_path : str
         Path containing the directory where the new files and directorys will be added to.
 
-    clean : Bool
+    clean : bool, optional
         Whether the directorys in new_package_path need to be cleared before adding new files
         or not. The default value is False.
 
-    include_hidden : Bool
+    include_hidden : bool, optional
         When Python version >= 3.11, the hidden files can be handled automatically when True.
         The default value is False.
 
@@ -206,7 +206,14 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
                 shutil.copy(hidden_template, hidden_new_path)
 
 
-def write_source(commands, xml_doc_path, template_path, new_package_path=None, clean=True):
+def write_source(
+    commands,
+    xml_doc_path,
+    template_path,
+    path_custom_functions=None,
+    new_package_path=None,
+    clean=True,
+):
     """Write out MAPDL commands as Python source files.
 
     Parameters
@@ -220,8 +227,15 @@ def write_source(commands, xml_doc_path, template_path, new_package_path=None, c
     template_path : str
         Path containing ``_package`` directory.
 
-    new_package_path : str
-        Path where to copy the ``_package`` directory. Default is ``./package``.
+    path_custom_functions : str, optional
+        Path containing the customized functions. The default value is None.
+
+    new_package_path : str, optional
+        Path where to copy the ``_package`` directory. The default value is ``./package``.
+
+    clean : bool, optional
+        Whether the directorys in new_package_path need to be cleared before adding new files
+        or not. The default value is True.
 
     Returns
     -------
@@ -231,7 +245,6 @@ def write_source(commands, xml_doc_path, template_path, new_package_path=None, c
 
     """
     _package_path = os.path.join(template_path, "_package")
-    path_custom_functions = os.path.join(_package_path, "customized_functions")
     custom_functions = CustomFunctions(path_custom_functions)
 
     if not os.path.isdir(_package_path):
@@ -288,17 +301,24 @@ def write_source(commands, xml_doc_path, template_path, new_package_path=None, c
     return cmd_path
 
 
-def write_docs(commands, path):
+def write_docs(commands, package_path):
     """Output to the tinypages directory.
 
     Parameters
     ----------
+    commands : list[MAPDLCommand]
+        List of MAPDLCommand.
+
     path : str
-        Path to the new doc pages directory.
+        Path to the new package folder.
+
+    Returns
+    -------
+    str
+        Path to the new doc page.
 
     """
 
-    package_path = os.path.join(path, "package")
     doc_package_path = os.path.join(package_path, "doc/source")
     if not os.path.isdir(doc_package_path):
         os.makedirs(doc_package_path)

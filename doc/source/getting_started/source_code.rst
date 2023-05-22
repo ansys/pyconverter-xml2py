@@ -1,3 +1,5 @@
+.. _ref_source_code:
+
 Source code generation
 ======================
 
@@ -28,8 +30,13 @@ Customized functions
 --------------------
 
 The converter can also handle the code generation for functions that
-need a customized code. These need to be added to the directory
-``_package/customized_functions``.
+need a customized code. The folder containing those files need to be specified in
+the code generation with the ``-f`` or ``--func-path`` arguments.
+
+.. code:: bash
+
+    python xml2rst.py -p XML_directory_path -f customized_function_directory_path
+
 
 The provided code will then be the one used during the conversion.
 

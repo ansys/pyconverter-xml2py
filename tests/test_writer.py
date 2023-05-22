@@ -51,17 +51,16 @@ def package_path(cwd):
     return os.path.join(cwd, "package")
 
 
-def test_write_source(commands, cwd, directory_path, package_path):
-    cmd_path = wrt.write_source(commands, directory_path, cwd)
+def test_write_source(commands, path_custom_functions, cwd, directory_path, package_path):
+    cmd_path = wrt.write_source(commands, directory_path, cwd, path_custom_functions)
     assert cmd_path == os.path.join(package_path, wrt.generated_src_code)
     assert os.path.isfile(os.path.join(cmd_path, "acel.py"))
     assert os.path.isdir(os.path.join(package_path, "doc", "source", "images"))
     assert os.path.isfile(os.path.join(package_path, "doc", "source", "images", "gcmdrsymm1.png"))
 
 
-def test_write_docs(commands):
-    cwd = os.getcwd()
-    doc_src = wrt.write_docs(commands, cwd)
+def test_write_docs(commands, package_path):
+    doc_src = wrt.write_docs(commands, package_path)
     file = open(doc_src, "r")
     content = file.read()
     file.close()
