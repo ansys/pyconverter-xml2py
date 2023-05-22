@@ -32,7 +32,7 @@ if __name__ == "__main__":
             "No customized functions path was entered. The default code generation will be applied to all the commands.",  # noqa : E501
             "You can specify the customized functions by adding a path to the --func-path argument.",  # noqa : E501
         )
-    
+
     else:
         functions_path = os.path.abspath(os.path.expanduser(functions_path))
 

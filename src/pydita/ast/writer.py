@@ -207,7 +207,12 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
 
 
 def write_source(
-    commands, xml_doc_path, template_path, path_custom_functions=None, new_package_path=None, clean=True
+    commands,
+    xml_doc_path,
+    template_path,
+    path_custom_functions=None,
+    new_package_path=None,
+    clean=True,
 ):
     """Write out MAPDL commands as Python source files.
 
@@ -221,13 +226,13 @@ def write_source(
 
     template_path : str
         Path containing ``_package`` directory.
-    
+
     path_custom_functions : str, optional
         Path containing the customized functions.
 
     new_package_path : str, optional
         Path where to copy the ``_package`` directory. Default is ``./package``.
-    
+
     clean : bool, optional
         Whether the directorys in new_package_path need to be cleared before adding new files
         or not. The default value is True.
@@ -298,12 +303,12 @@ def write_source(
 
 def write_docs(commands, package_path):
     """Output to the tinypages directory.
-    
+
     Parameters
     ----------
     commands : list[MAPDLCommand]
         List of MAPDLCommand.
-    
+
     path : str
         Path to the new package folder.
 
@@ -313,7 +318,7 @@ def write_docs(commands, package_path):
         Path to the new doc pages directory.
 
     """
-    
+
     doc_package_path = os.path.join(package_path, "doc/source")
     if not os.path.isdir(doc_package_path):
         os.makedirs(doc_package_path)
