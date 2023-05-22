@@ -18,6 +18,9 @@ A Python wrapper to convert XML documentation into RST files and the Sphinx docu
 .. |GH-CI| image:: https://github.com/ansys/pydita-ast/actions/workflows/ci_cd.yml/badge.svg
    :target: https://github.com/ansys/pydita-ast/actions/workflows/ci_cd.yml
 
+.. |MIT| image:: https://img.shields.io/badge/License-MIT-yellow.svg
+   :target: https://opensource.org/licenses/MIT
+
 .. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg?style=flat
   :target: https://github.com/psf/black
   :alt: black

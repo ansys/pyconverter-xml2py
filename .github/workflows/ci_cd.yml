@@ -172,6 +172,7 @@ jobs:
       
       - name: "Install pydita_ast"
         run: |
+          pip install --upgrade pip
           pip install .[doc]
       
       - name: "Retrieve pydita_ast version"
