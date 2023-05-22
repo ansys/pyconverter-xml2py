@@ -35,9 +35,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ hashFiles('pyproject.toml') }}
+          key: Python-pydita_ast-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
-            Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}
+            Python-pydita_ast-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}
       
       # The token will expire in 2024.
       - name: "Checkout mapdl-cmd-doc repository"
@@ -97,9 +97,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ inputs.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
+          key: Python-pydita_ast-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ inputs.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
-            Python-pydita-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ inputs.MAIN_PYTHON_VERSION }}
+            Python-pydita_ast-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ inputs.MAIN_PYTHON_VERSION }}
       
       - name: "Install pydita-generatedcommands"
         run: |
