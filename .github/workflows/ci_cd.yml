@@ -166,7 +166,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: Python-pydita_ast_ast-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
+          key: Python-pydita_ast-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
             Python-pydita_ast-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}
       

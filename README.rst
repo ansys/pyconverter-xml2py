@@ -45,11 +45,7 @@ Install the ``pydita-ast`` package with:
 
 .. code:: bash
 
-<<<<<<< HEAD
-   python -m pip install pydita-ast
-=======
     python -m pip install pydita_ast
->>>>>>> main
 
 
 It is recommended to organize the XML documentation as follow:
