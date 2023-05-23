@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 # Check https://flit.readthedocs.io/en/latest/pyproject_toml.html for all available sections
-name = "pydita-ast"
+name = "pydita_ast"
 version = "0.1.dev0"
 description = "PyDita AST converter."
 readme = "README.rst"
@@ -60,9 +60,6 @@ doc = [
     "sphinx-gallery==0.13.0",
     "sphinx-design==0.4.1",
 ]
-
-[tool.flit.module]
-name = "pydita.ast"
 
 [project.urls]
 Source = "https://github.com/ansys/pydita-ast/"

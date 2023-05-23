@@ -1,6 +1,6 @@
 [run]
 source =
-    pydita.ast
+    pydita_ast
 
 [report]
 show_missing = true

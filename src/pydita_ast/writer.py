@@ -2,10 +2,10 @@ import glob
 import os
 import shutil
 
-from pydita.ast import ast_tree as ast
-from pydita.ast import load_xml_doc as load
-from pydita.ast.custom_functions import CustomFunctions
-from pydita.ast.directory_format import get_paths
+from pydita_ast import ast_tree as ast
+from pydita_ast import load_xml_doc as load
+from pydita_ast.custom_functions import CustomFunctions
+from pydita_ast.directory_format import get_paths
 from tqdm import tqdm
 
 generated_src_code = os.path.join("src", "pydita", "generatedcommands")
@@ -245,7 +245,10 @@ def write_source(
 
     """
     _package_path = os.path.join(template_path, "_package")
-    custom_functions = CustomFunctions(path_custom_functions)
+    if path_custom_functions is not None:
+        custom_functions = CustomFunctions(path_custom_functions)
+    else:
+        custom_functions = None
 
     if not os.path.isdir(_package_path):
         raise FileNotFoundError(
