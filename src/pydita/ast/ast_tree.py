@@ -1734,6 +1734,7 @@ class Entry(Element):
                 else:
                     items.append(item.to_rst(prefix))
             else:
+                print(item)
                 items.append(str(item))
 
         if self.morerows is not None:
