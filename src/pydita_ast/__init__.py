@@ -1,5 +1,5 @@
 """
-pydita.ast
+pydita_ast
 """
 
 try:
@@ -8,4 +8,4 @@ except ModuleNotFoundError:
     import importlib_metadata
 
 __version__ = importlib_metadata.version(__name__.replace(".", "-"))
-"""PyDita-AST version."""
+"""pydita_ast version."""

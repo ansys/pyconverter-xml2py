@@ -1,4 +1,4 @@
-import pydita.ast.load_xml_doc as lxd
+import pydita_ast.load_xml_doc as lxd
 
 
 def test_load_links(link_path):

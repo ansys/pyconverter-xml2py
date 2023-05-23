@@ -1,4 +1,4 @@
-from pydita.ast import writer as wr
+from pydita_ast import writer as wr
 
 """
 Parse MAPDL command XML documentation.
