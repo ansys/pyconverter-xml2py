@@ -141,7 +141,7 @@ def convert(directory_path, command=None):
 
     commands = load_commands(xml_path)
 
-    return commands
+    return commands, links, version_variables
 
 
 def copy_package(template_path, new_package_path, clean=False, include_hidden=False):
