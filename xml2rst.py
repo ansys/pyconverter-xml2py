@@ -1,7 +1,7 @@
 from pydita_ast import writer as wr
 
 """
-Parse MAPDL command XML documentation.
+Parse XML command documentation.
 
 """
 import argparse
