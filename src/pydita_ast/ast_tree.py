@@ -2260,7 +2260,7 @@ class XMLCommand(Element):
                 return item
 
     def __repr__(self):
-        lines = [f"XML Command: {self.name}"]
+        lines = [f"Original command: {self.name}"]
         lines.append("")
         lines.append("Short Description:")
         lines.append(f"{self.short_desc}")

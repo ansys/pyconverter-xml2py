@@ -8,7 +8,7 @@ import pytest
 def test_convert(commands, custom_functions):
     assert commands["/XFRM"].name == "/XFRM"
     assert (
-        "APDL Command: WRITE\n\nShort Description:\nWrites the radiation matrix file.\n\nFunction signature:\nWRITE,"  # noqa : E501
+        "Original command: WRITE\n\nShort Description:\nWrites the radiation matrix file.\n\nFunction signature:\nWRITE,"  # noqa : E501
         in commands["WRITE"].__repr__()
     )
     assert (
