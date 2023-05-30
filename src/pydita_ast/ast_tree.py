@@ -38,10 +38,10 @@ CLEANUP = {
     "`` %": "%``",  # same
 }
 
-# map APDL command to pymapdl function
+# map XML command to pycommand function
 CMD_MAP = {}
 
-# APDL commands to skip
+# XML commands to skip
 SKIP = {"*IF", "*ELSE", "C***", "*RETURN"}
 
 
@@ -1358,13 +1358,13 @@ class Refname(Element):
 
     @property
     def raw_args(self):
-        mapdl_cmd = str(self)
-        mapdl_cmd = mapdl_cmd.replace("&fname_arg;", self._terms["fname_arg"])
-        mapdl_cmd = mapdl_cmd.replace("&fname1_arg;", self._terms["fname1_arg"])
-        mapdl_cmd = mapdl_cmd.replace("&fname2_arg;", self._terms["fname2_arg"])
-        mapdl_cmd = mapdl_cmd.replace("&pn006p;", self._terms["pn006p"])
-        mapdl_cmd = mapdl_cmd.replace("&ansysBrand;", self._terms["ansysBrand"])
-        split_args = mapdl_cmd.split(",")[1:]
+        cmd = str(self)
+        cmd = cmd.replace("&fname_arg;", self._terms["fname_arg"])
+        cmd = cmd.replace("&fname1_arg;", self._terms["fname1_arg"])
+        cmd = cmd.replace("&fname2_arg;", self._terms["fname2_arg"])
+        cmd = cmd.replace("&pn006p;", self._terms["pn006p"])
+        cmd = cmd.replace("&ansysBrand;", self._terms["ansysBrand"])
+        split_args = cmd.split(",")[1:]
         return split_args
 
     @property
@@ -1853,8 +1853,8 @@ class ProductName(Element):
     pass
 
 
-class MAPDLCommand(Element):
-    """MAPDL command from documentation."""
+class XMLCommand(Element):
+    """XML command from documentation."""
 
     def __init__(
         self,
@@ -1933,7 +1933,7 @@ class MAPDLCommand(Element):
 
     @property
     def name(self):
-        """Return the name of the MAPDL command."""
+        """Return the name of the XML command."""
         return self._metadata.refentry_title
 
     @property
@@ -1955,9 +1955,9 @@ class MAPDLCommand(Element):
 
     def py_docstring(self, custom_functions):
         """Return the python docstring of the command."""
-        apdl_cmd = f"{self._terms['pn006p']} Command: `{self.name} <{self.url}>`_"
+        xml_cmd = f"{self._terms['pn006p']} Command: `{self.name} <{self.url}>`_"
 
-        items = [self.short_desc, "", apdl_cmd]
+        items = [self.short_desc, "", xml_cmd]
 
         if self.default is not None:
             if self.default.tag in item_needing_links_base_url:
@@ -1997,7 +1997,7 @@ class MAPDLCommand(Element):
         # delete trailing whitespace for each line
         docstr = "\n".join(line.rstrip() for line in docstr.splitlines())
 
-        # sub MAPDL command args
+        # sub XML command args
         def arg_replacer(match):
             text = match.group().replace("`", "")
             func = re.findall(r"<CMD>(.*)</CMD>", text)[0]
@@ -2260,7 +2260,7 @@ class MAPDLCommand(Element):
                 return item
 
     def __repr__(self):
-        lines = [f"APDL Command: {self.name}"]
+        lines = [f"Original command: {self.name}"]
         lines.append("")
         lines.append("Short Description:")
         lines.append(f"{self.short_desc}")

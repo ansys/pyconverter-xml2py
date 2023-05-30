@@ -3,7 +3,7 @@
 Source code generation
 ======================
 
-Source code will be automatically generated from the name of the commands
+Source code is automatically generated from the name of the commands
 and the parameters defined in the documentation.
 
 The default code is as follow.
@@ -38,10 +38,10 @@ the code generation with the ``-f`` or ``--func-path`` arguments.
     python xml2rst.py -p XML_directory_path -f customized_function_directory_path
 
 
-The provided code will then be the one used during the conversion.
+In this configuration, the provided code is the one used for the conversion.
 
-Furthermore, the **Returns** and **Examples** sections, if any, will be added
-to the Python docstring.
+Furthermore, the **Returns** and **Examples** sections, if any, are also taken
+into account and added to the Python docstring.
 
 
 .. tab-set::
