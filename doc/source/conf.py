@@ -12,7 +12,7 @@ author = "ANSYS, Inc."
 release = version = __version__
 cname = os.getenv("DOCUMENTATION_CNAME", "<DEFAULT_CNAME>")
 
-REPOSITORY_NAME = "pydita-ast"
+REPOSITORY_NAME = "PyDita-AST"
 USERNAME = "ansys"
 BRANCH = "main"
 
