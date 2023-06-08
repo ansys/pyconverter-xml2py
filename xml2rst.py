@@ -1,10 +1,11 @@
+# Copyright (c) 2023 ANSYS, Inc. All rights reserved.
+
 from pydita_ast import writer as wr
 
 """
 Parse XML command documentation.
 
 """
-# Copyright (c) 2023 ANSYS, Inc. All rights reserved.
 
 import argparse
 import os
