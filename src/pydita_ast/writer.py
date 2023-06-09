@@ -1,5 +1,3 @@
-# Copyright (c) 2023 ANSYS, Inc. All rights reserved.
-
 import glob
 import os
 import shutil
@@ -11,9 +9,6 @@ from pydita_ast.directory_format import get_paths
 from tqdm import tqdm
 
 generated_src_code = os.path.join("src", "pydita", "generatedcommands")
-
-# map command to pycommand function
-CMD_MAP = {}
 
 # common statements used within the docs to avoid duplication
 CONST = {
@@ -112,6 +107,9 @@ def convert(directory_path, command=None):
     # reserved command mapping
     COMMAND_MAPPING = {"*DEL": "stardel"}
 
+    # map command to pycommand function
+    cmd_map = {}
+
     # second pass for each name
     for ans_name in command_names:
         if ans_name in COMMAND_MAPPING:
@@ -128,7 +126,7 @@ def convert(directory_path, command=None):
             else:
                 py_name = alpha_name
 
-        CMD_MAP[ans_name] = py_name
+        cmd_map[ans_name] = py_name
 
     # TODO : accept conversion of a single command
 
@@ -142,8 +140,9 @@ def convert(directory_path, command=None):
     # else:  # convert all commands
 
     commands = load_commands(xml_path)
+    print(cmd_map)
 
-    return commands, links, version_variables
+    return commands, cmd_map, links, version_variables
 
 
 def copy_package(template_path, new_package_path, clean=False, include_hidden=False):
@@ -210,6 +209,7 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
 
 def write_source(
     commands,
+    cmd_map,
     xml_doc_path,
     template_path,
     path_custom_functions=None,
@@ -222,6 +222,9 @@ def write_source(
     ----------
     commands : list[XMLCommand]
         List of XMLCommand.
+
+    cmd_map : dict
+        Dictionnary with the following format {"command_name": "python_name"}.
 
     xml_doc_path : str
         Path containing the XML directory to be converted.
@@ -272,13 +275,13 @@ def write_source(
     for ans_name, cmd_obj in tqdm(commands.items(), desc="Writing commands"):
         if ans_name in SKIP_XML:
             continue
-        cmd_name = ast.to_py_name(ans_name)
+        cmd_name = cmd_map[ans_name]
         path = os.path.join(cmd_path, f"{cmd_name}.py")
         with open(path, "w", encoding="utf-8") as fid:
-            fid.write(cmd_obj.to_python(custom_functions))
+            fid.write(cmd_obj.to_python(cmd_map, custom_functions))
 
         try:
-            nested_exec(cmd_obj.to_python(custom_functions))
+            nested_exec(cmd_obj.to_python(cmd_map, custom_functions))
         except:
             raise RuntimeError(f"Failed to execute {cmd_name}.py") from None
 
@@ -287,7 +290,7 @@ def write_source(
         for ans_name in commands:
             if ans_name in SKIP_XML:
                 continue
-            cmd_name = ast.to_py_name(ans_name)
+            cmd_name = cmd_map[ans_name]
             fid.write(f"from .{cmd_name} import *\n")
         fid.write("try:\n")
         fid.write("    import importlib.metadata as importlib_metadata\n")
@@ -306,13 +309,16 @@ def write_source(
     return cmd_path
 
 
-def write_docs(commands, package_path):
+def write_docs(commands, cmd_map, package_path):
     """Output to the tinypages directory.
 
     Parameters
     ----------
     commands : list[XMLCommand]
         List of XMLCommand.
+
+    cmd_map : dict
+        Dictionnary with the following format {"command_name": "python_name"}.
 
     path : str
         Path to the new package folder.
@@ -339,7 +345,7 @@ def write_docs(commands, package_path):
         fid.write("   :toctree: _autosummary/\n\n")
         for ans_name in commands:
             if ans_name not in SKIP_XML:
-                cmd_name = ast.to_py_name(ans_name)
+                cmd_name = cmd_map[ans_name]
                 fid.write(f"   {cmd_name}\n")
 
     return doc_src
