@@ -8,6 +8,8 @@ from pydita_ast.custom_functions import CustomFunctions
 from pydita_ast.directory_format import get_paths
 from tqdm import tqdm
 
+RULES = {"/": "slash", "*": "star"}
+
 generated_src_code = os.path.join("src", "pydita", "generatedcommands")
 
 # common statements used within the docs to avoid duplication
@@ -122,7 +124,20 @@ def convert(directory_path, command=None):
                 alpha_name = lower_name
 
             if proc_names.count(alpha_name) != 1:
-                py_name = lower_name.replace("/", "slash").replace("*", "star")
+                if RULES is not None:
+                    key_rules = RULES.keys()
+                    py_name = lower_name
+                    for key in key_rules:
+                        py_name = py_name.replace(key, RULES[key])
+                    if py_name == lower_name and not (py_name[0].isalnum()):
+                        raise ValueError(
+                            f"Additional rules need to be defined. The {ans_name} function name is in conflict with another function."  # noqa : E501
+                        )
+                else:
+                    raise ValueError(
+                        "Some functions have identical names. You need to provide RULES."
+                    )
+
             else:
                 py_name = alpha_name
 

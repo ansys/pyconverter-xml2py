@@ -43,9 +43,6 @@ CLEANUP = {
 # XML commands to skip
 SKIP = {"*IF", "*ELSE", "C***", "*RETURN"}
 
-command_rules = {"*": "star", "/": "slash"}
-list_commands = {}
-
 
 def to_py_name(name, cmd_map=None):
     """Convert to a python compatible name."""
@@ -804,12 +801,8 @@ class VarlistEntry(Element):
                 return f"{arg} : {ptype_str}"
             return f"{arg}"
 
-        # if self.term.tag in item_needing_all:
-        #     arg = self.term.to_rst(links=links, base_url=base_url, fcache=fcache).replace("--", "").strip() # noqa : E501
         if self.term.tag in item_needing_links_base_url:
             arg = self.term.to_rst(links=links, base_url=base_url).replace("--", "").strip()
-        # elif self.term.tag in item_needing_fcache:
-        #     arg = self.term.to_rst(fcache=fcache).replace("--", "").strip()
         else:
             arg = self.term.to_rst().replace("--", "").strip()
 
@@ -1718,7 +1711,7 @@ class TBody(Element):
                     rst_rows.append(f"   * - {row_rst}")
             elif len(row[1]) > 0:
                 if type(row[1][0]) == Command:
-                    command = f"   * - :ref:`{row[1][0]}`"
+                    command = f"   * - :ref:`{row[1][0].py_cmd}`"
                     rst_rows.append(command)
                     strg = "     - " + str(row[2][0])
                     rst_rows.append(strg)
