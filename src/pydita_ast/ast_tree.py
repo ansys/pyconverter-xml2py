@@ -1139,7 +1139,7 @@ class Graphic(Element):
 
 
 class Function(Element):
-    """Provies the function element."""
+    """Provides the function element."""
 
     pass
 
@@ -1950,7 +1950,7 @@ class XMLCommand(Element):
 
     @property
     def py_signature(self):
-        """Begining of the Python command's definition."""
+        """Beginning of the Python command's definition."""
         args = ["self"]
         kwargs = [f'{arg}=""' for arg in self.py_args if "--" not in arg]
         arg_sig = ", ".join(args + kwargs)
@@ -2209,7 +2209,7 @@ class XMLCommand(Element):
 
     @property
     def py_parm(self):
-        """Python parameters string."""
+        """Python parameter's string."""
         if self.arg_desc is not None:
             lines = ["Parameters", "-" * 10]
             for item in self.arg_desc:
