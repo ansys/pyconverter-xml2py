@@ -124,12 +124,11 @@ def convert(directory_path, command=None):
                 alpha_name = lower_name
 
             if proc_names.count(alpha_name) != 1:
-                if RULES is not None:
-                    key_rules = RULES.keys()
-                    py_name = lower_name
-                    for key in key_rules:
-                        py_name = py_name.replace(key, RULES[key])
-                    if py_name == lower_name and not (py_name[0].isalnum()):
+                if RULES:
+                    py_name = lower_name.copy()
+                    for rule_name, rule in RULES.items():
+                        py_name = py_name.replace(rule_name, rule)
+                    if py_name == lower_name and not py_name[0].isalnum():
                         raise ValueError(
                             f"Additional rules need to be defined. The {ans_name} function name is in conflict with another function."  # noqa : E501
                         )
