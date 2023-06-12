@@ -125,7 +125,7 @@ def convert(directory_path, command=None):
 
             if proc_names.count(alpha_name) != 1:
                 if RULES:
-                    py_name = lower_name.copy()
+                    py_name = lower_name
                     for rule_name, rule in RULES.items():
                         py_name = py_name.replace(rule_name, rule)
                     if py_name == lower_name and not py_name[0].isalnum():
