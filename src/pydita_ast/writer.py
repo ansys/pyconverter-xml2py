@@ -1,3 +1,5 @@
+# Copyright (c) 2023 ANSYS, Inc. All rights reserved.
+
 import glob
 import os
 import shutil
@@ -10,7 +12,7 @@ from tqdm import tqdm
 
 generated_src_code = os.path.join("src", "pydita", "generatedcommands")
 
-# map APDL command to pymapdl function
+# map command to pycommand function
 CMD_MAP = {}
 
 # common statements used within the docs to avoid duplication
@@ -22,9 +24,9 @@ CONST = {
     '``"``': "``",
 }
 
-# APDL commands to skip
-SKIP_APDL = {"*IF", "*ELSE", "C***", "*RETURN", "*DEL"}
-SKIP_PYMAPDL = {"if", "else", "c", "return", "del"}
+# XML commands to skip
+SKIP_XML = {"*IF", "*ELSE", "C***", "*RETURN", "*DEL"}
+SKIP_PYCOMMAND = {"if", "else", "c", "return", "del"}
 
 
 def nested_exec(text):
@@ -45,7 +47,7 @@ def convert(directory_path, command=None):
         xml_path,
         meta_only=False,
     ):
-        """Scrape the command info from the MAPDL XML command reference.
+        """Scrape the command info from the XML command reference.
 
         Parameters
         ----------
@@ -56,7 +58,7 @@ def convert(directory_path, command=None):
         --------
         >>> from convert import load_commands
         >>> commands = load_commands(
-        ...     '/home/user/source/mapdl-cmd-doc/docu_files/ans_cmd/'
+        ...     '/home/user/source/xml-cmd-doc/docu_files/ans_cmd/'
         ... )
 
         """
@@ -70,11 +72,11 @@ def convert(directory_path, command=None):
         else:
             desc = "Loading commands"
 
-        mapdl_commands = []
+        xml_commands = []
         for filename in tqdm(filenames, desc=desc):
             try:
-                mapdl_commands.append(
-                    ast.MAPDLCommand(
+                xml_commands.append(
+                    ast.XMLCommand(
                         filename,
                         terms,
                         docu_global,
@@ -87,7 +89,7 @@ def convert(directory_path, command=None):
             except RuntimeError:
                 continue
 
-        return {cmd.name: cmd for cmd in mapdl_commands}
+        return {cmd.name: cmd for cmd in xml_commands}
 
     command_meta = load_commands(
         os.path.expanduser(xml_path),
@@ -95,7 +97,7 @@ def convert(directory_path, command=None):
     )
     command_names = command_meta.keys()
 
-    # create command mapping between the ansys command name and the pymapdl method.
+    # create command mapping between the ansys command name and the pycommand method.
     # remove the start and slash whenever possible, for example, /GCOLUMN can simply
     # be gcolumn since it's the only command, but VGET and *VGET must be vget and star_vget
 
@@ -135,13 +137,13 @@ def convert(directory_path, command=None):
     #     if command not in command_meta:
     #         raise ValueError(f"Invalid command {command}")
     #     fname = command_meta[command].xml_filename
-    #     cmd = ast.MAPDLCommand(os.path.expanduser(fname), )
+    #     cmd = ast.XMLCommand(os.path.expanduser(fname), )
     #     commands = {to_py_name(cmd.name): cmd}
     # else:  # convert all commands
 
     commands = load_commands(xml_path)
 
-    return commands
+    return commands, links, version_variables
 
 
 def copy_package(template_path, new_package_path, clean=False, include_hidden=False):
@@ -167,7 +169,7 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
     -------
     str
         Path containing the source files of the created
-        ``ansys-mapdl-commands`` package.
+        ``xml-commands`` package.
 
     """
     # For Python version >= 3.11, glob.glob() handles it if include_hidden=True.
@@ -214,12 +216,12 @@ def write_source(
     new_package_path=None,
     clean=True,
 ):
-    """Write out MAPDL commands as Python source files.
+    """Write out XML commands as Python source files.
 
     Parameters
     ----------
-    commands : list[MAPDLCommand]
-        List of MAPDLCommand.
+    commands : list[XMLCommand]
+        List of XMLCommand.
 
     xml_doc_path : str
         Path containing the XML directory to be converted.
@@ -241,7 +243,7 @@ def write_source(
     -------
     str
         Path containing the source files of the created
-        ``ansys-mapdl-commands`` package.
+        ``xml-commands`` package.
 
     """
     _package_path = os.path.join(template_path, "_package")
@@ -268,7 +270,7 @@ def write_source(
         os.makedirs(cmd_path)
 
     for ans_name, cmd_obj in tqdm(commands.items(), desc="Writing commands"):
-        if ans_name in SKIP_APDL:
+        if ans_name in SKIP_XML:
             continue
         cmd_name = ast.to_py_name(ans_name)
         path = os.path.join(cmd_path, f"{cmd_name}.py")
@@ -283,7 +285,7 @@ def write_source(
     mod_file = os.path.join(cmd_path, "__init__.py")
     with open(mod_file, "w") as fid:
         for ans_name in commands:
-            if ans_name in SKIP_APDL:
+            if ans_name in SKIP_XML:
                 continue
             cmd_name = ast.to_py_name(ans_name)
             fid.write(f"from .{cmd_name} import *\n")
@@ -309,8 +311,8 @@ def write_docs(commands, package_path):
 
     Parameters
     ----------
-    commands : list[MAPDLCommand]
-        List of MAPDLCommand.
+    commands : list[XMLCommand]
+        List of XMLCommand.
 
     path : str
         Path to the new package folder.
@@ -336,7 +338,7 @@ def write_docs(commands, package_path):
         fid.write("   :template: base.rst\n")
         fid.write("   :toctree: _autosummary/\n\n")
         for ans_name in commands:
-            if ans_name not in SKIP_APDL:
+            if ans_name not in SKIP_XML:
                 cmd_name = ast.to_py_name(ans_name)
                 fid.write(f"   {cmd_name}\n")
 

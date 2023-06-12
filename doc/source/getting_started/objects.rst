@@ -15,8 +15,8 @@ The images are then included in the RST files with the following command:
     .. image:: image_path
 
 
-Please note that the images present in the ``Parameters`` section will not render
-correctly. This is due to an incompatibility with Python docstring.
+Please note that the images present in the ``Parameters`` section don't correctly
+render. This is due to an incompatibility with Python docstring.
 
 
 Tables

@@ -19,7 +19,7 @@ BRANCH = "main"
 # Select desired logo, theme, and declare the html title
 html_logo = pyansys_logo_black
 html_theme = "ansys_sphinx_theme"
-html_short_title = html_title = "pydita-ast"
+html_short_title = html_title = "PyDita-AST"
 
 # Favicon
 html_favicon = ansys_favicon
@@ -33,6 +33,9 @@ html_theme_options = {
     "show_prev_next": False,
     "show_breadcrumbs": True,
     "collapse_navigation": True,
+    "additional_breadcrumbs": [
+        ("PyAnsys", "https://docs.pyansys.com/"),
+    ],
 }
 
 # Sphinx extensions

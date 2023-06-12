@@ -75,7 +75,7 @@ files can be specified.
     python xml2rst.py -p XML_directory_path -f customized_function_directory_path
 
 
-A new package will then be automatically generated. Its default name is ``package``.
+A new package is then automatically generated. Its default name is ``package``.
 It is organized as follow:
 
 .. image:: ./doc/source/getting_started/images/diags/graphviz-diag_package.png
