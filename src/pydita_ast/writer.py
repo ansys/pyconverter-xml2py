@@ -155,7 +155,6 @@ def convert(directory_path, command=None):
     # else:  # convert all commands
 
     commands = load_commands(xml_path)
-    print(cmd_map)
 
     return commands, cmd_map, links, version_variables
 

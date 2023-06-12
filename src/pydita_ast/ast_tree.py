@@ -9,7 +9,7 @@ from lxml.etree import tostring
 from lxml.html import fromstring
 
 CONV_EQN = False
-cmd_map_glob = {}
+CMD_MAP_GLOB = {}
 
 if CONV_EQN:
     from py_asciimath.translator.translator import MathML2Tex
@@ -48,9 +48,10 @@ SKIP = {"*IF", "*ELSE", "C***", "*RETURN"}
 def to_py_name(name, cmd_map=None):
     """Convert to a python compatible name."""
     if cmd_map is not None:
-        cmd_map_glob = cmd_map
+        global CMD_MAP_GLOB
+        CMD_MAP_GLOB = cmd_map
     try:
-        py_name = cmd_map[name]
+        py_name = CMD_MAP_GLOB[name]
     except:
         py_name = name
         print("not documented : ", name)
@@ -2283,7 +2284,8 @@ class XMLCommand(Element):
         """Return the python source"""
 
         if cmd_map is not None:
-            cmd_map_glob = cmd_map
+            global CMD_MAP_GLOB
+            CMD_MAP_GLOB = cmd_map
 
         if custom_functions is None or self.py_name not in custom_functions.py_names:
 
@@ -2301,7 +2303,8 @@ class XMLCommand(Element):
     def to_python(self, cmd_map, custom_functions=None, prefix=""):
         """Return the complete python definition of the command."""
 
-        cmd_map_glob = cmd_map
+        global CMD_MAP_GLOB
+        CMD_MAP_GLOB = cmd_map
 
         docstr = textwrap.indent(
             f'\nr"""{self.py_docstring(custom_functions)}\n"""', prefix=prefix + " " * 4
