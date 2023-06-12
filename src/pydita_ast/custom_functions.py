@@ -8,19 +8,19 @@ import numpy as np
 
 def get_docstring_lists(filename):
     """
-    Return lists of string depending on the python file sections.
+    Get lists of strings depending on Python file sections.
 
     Parameters
     ----------
     filename : str
-        Path containing the python file.
+        Path containing the Python file.
 
     Returns
     -------
     list_py_returns : List[str]
-        List containing the docstring returns section.
+        List containing the docstring ``Returns`` section.
     list_py_examples : List[str]
-        List containing the docstring examples section.
+        List containing the docstring ``Examples`` section.
     list_py_code : List[str]
         List containing the source code.
     list_import : List[str]
@@ -70,7 +70,7 @@ def get_docstring_lists(filename):
 
 
 class CustomFunctions:
-    """Functions that need to be customized."""
+    """Provides for creating customized functions."""
 
     def __init__(self):
         self._path = ""
@@ -108,7 +108,7 @@ class CustomFunctions:
 
     @property
     def path(self):
-        """Return the path where the customized function files are located."""
+        """Path where the customized function files are located."""
         return self._path
 
     @path.setter
@@ -136,25 +136,25 @@ class CustomFunctions:
 
     @property
     def py_names(self):
-        """Return a list with all the customized functions located in the given folder."""
+        """List with all customized functions located in the folder."""
         return self._py_names
 
     @property
     def py_returns(self):
-        """Return a dictionary containing the returns section if any."""
+        """Dictionary containing the ``Returns`` section if any."""
         return self._py_returns
 
     @property
     def py_examples(self):
-        """Return a dictionary containing the examples section if any."""
+        """Dictionary containing the ``Examples`` section if any."""
         return self._py_examples
 
     @property
     def py_code(self):
-        """Return a dictionary containing the customized source code."""
+        """Dictionary containing the customized source code."""
         return self._py_code
 
     @property
     def lib_import(self):
-        """Return a dictionary containing the needed libraries if any."""
+        """Dictionary containing the needed libraries if any."""
         return self._lib_import

@@ -1,8 +1,8 @@
 PyDita-AST
 ==========
 
-A Python library to convert technical DITA XML documentation into
-Python source code with its related Sphinx documentation.
+PyDita-AST is a Python library for converting technical DITA XML documentation into
+Python source code so that Sphinx documentation can be generated.
 
 .. grid:: 2
 
@@ -11,8 +11,7 @@ Python source code with its related Sphinx documentation.
             
             :material-regular:`start;48px`
 
-            New to *PyDita-AST*? Check out the getting started
-            guide.
+            Explains how to start using PyDita-AST.
 
             +++
             .. button-link:: getting_started/index.html
@@ -24,13 +23,13 @@ Python source code with its related Sphinx documentation.
                   Getting started
 
 
-   .. grid-item-card:: User Guide
+   .. grid-item-card:: User guide
             :text-align: center
             
             :material-regular:`book;48px`
 
-            The user guide provides in-depth information on the
-            key concepts of *PyDita-AST*.
+            Presents in-depth information on the
+            key concepts of PyDita-AST.
 
             +++
             .. button-link:: user_guide/index.html
@@ -48,8 +47,7 @@ Python source code with its related Sphinx documentation.
             
             :material-regular:`code;48px`
 
-            The reference guide contains a detailed description of
-            *PyDita-AST*'s API.
+            Describes members of the the PyDita-AST API.
 
             +++
             .. button-link:: api/index.html
@@ -66,8 +64,8 @@ Python source code with its related Sphinx documentation.
             
             :material-regular:`people;48px`
 
-            Read our specific contribution guide before collaborating to the
-            codebase or helping us in documentation.
+            Provides guidelines for contributing to the
+            codebase and documentation.
 
             +++
             .. button-link:: contributing/index.html

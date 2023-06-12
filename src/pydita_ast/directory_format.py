@@ -3,7 +3,7 @@
 import argparse
 import os
 
-# Pre-defined directory format
+# Predefined directory format
 
 # XML_directory/
 # │
@@ -32,18 +32,19 @@ import os
 
 def xml_path(path=None):
     """Return the path to the directory containing the XML documentation.
-    It is advised to follow the pre-defined directory structure.
+    You should follow the predefined directory structure.
 
     Parameters
     ----------
-    path: str
-        If path is None, the path is set with the argument parser `-p` or `--xml-path`,
-        or with the XML_PATH environment variable.
+    path: str, optional
+        Path of the XML documentation to convert. The default is ``None``, 
+        in which case the path is set with either the argument parser `-p` or `--xml-path`,
+        or with the ``XML_PATH`` environment variable.
 
     Returns
     -------
     path: str
-        Path of the XML documentation to be converted.
+        Path of the XML documentation to convert.
 
     """
     if path is None:
@@ -73,28 +74,28 @@ def xml_path(path=None):
 
 
 def get_paths(path, graph_path=None, link_path=None, term_path=None, xml_path=None):
-    """Return the path to the directory containing the graphics.
+    """Get the paths to the directories needed for the conversion.
 
     Parameters
     ----------
-    path : strg
-        Path to the directory with the pre-defined format .
+    path : str
+        Path to the directory with the predefined format.
 
-    graph_path : strg
-        If not following the XML pre-defined directory format, specify the path to the directory
-        containing the graphics.
+    graph_path : str, optional
+        Path to the directory containing the graphics. The default is ``None``,
+        in which case the XML predefined directory format is used.
 
-    link_path : strg
-        If not following the XML pre-defined directory format, specify the path to the directory
-        containing the links.
+    link_path : str, optional
+        Pth to the directory containing the links. The default is ``None``,
+        in which case the XML predefined directory format is used.
 
-    term_path : strg
-        If not following the XML pre-defined directory format, specify the path to the directory
-        containing the terms
+    term_path : str, optional
+        Path to the directory containing the terms. The default is ``None``,
+        in which case the XML predefined directory format is used.
 
-    xml_path : strg
-        If not following the XML pre-defined directory format, specify the path to the directory
-        containing the xml.
+    xml_path : str
+        The path to the directory containing the XML files. The default is ``None``,
+        in which case the XML predefined directory format is used.
 
     Returns
     -------
@@ -108,7 +109,7 @@ def get_paths(path, graph_path=None, link_path=None, term_path=None, xml_path=No
         Path of the directory containing the terms.
 
     xml_path : str
-        Path of the directory containing the xml.
+        Path of the directory containing the XML files.
 
     """
 
@@ -116,28 +117,28 @@ def get_paths(path, graph_path=None, link_path=None, term_path=None, xml_path=No
         graph_path = os.path.join(path, "graphics")
         if not os.path.isdir(graph_path):
             print(
-                f"WARNING: the path {graph_path} does not exits. Please follow the pre-defined format or enter the graphic path manually."  # noqa : E501
+                f"WARNING: the path {graph_path} does not exist. Follow the predefined format or enter the graphic path manually."  # noqa : E501
             )
 
     if link_path is None:
         link_path = os.path.join(path, "links")
         if not os.path.isdir(link_path):
             print(
-                f"WARNING: the path {link_path} does not exits. Please follow the pre-defined format or enter the link path manually."  # noqa : E501
+                f"WARNING: the path {link_path} does not exist. Follow the predefined format or enter the link path manually."  # noqa : E501
             )
 
     if term_path is None:
         term_path = os.path.join(path, "terms")
         if not os.path.isdir(term_path):
             print(
-                f"WARNING: the path {term_path} does not exits. Please follow the pre-defined format or enter the term path manually."  # noqa : E501
+                f"WARNING: the path {term_path} does not exist. Follow the predefined format or enter the term path manually."  # noqa : E501
             )
 
     if xml_path is None:
         xml_path = os.path.join(path, "xml")
         if not os.path.isdir(xml_path):
             print(
-                f"WARNING: the path {xml_path} does not exits. Please follow the pre-defined format or enter the xml path manually."  # noqa : E501
+                f"WARNING: the path {xml_path} does not exist. Follow the predefined format or enter the XML path manually."  # noqa : E501
             )
 
     return graph_path, link_path, term_path, xml_path

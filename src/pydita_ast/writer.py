@@ -35,7 +35,7 @@ def nested_exec(text):
 
 
 def convert(directory_path, command=None):
-    """Covert an XML directory into an RST one."""
+    """Convert an XML directory into an RST dictionary."""
 
     graph_path, link_path, term_path, xml_path = get_paths(directory_path)
     links = load.load_links(link_path)
@@ -47,12 +47,12 @@ def convert(directory_path, command=None):
         xml_path,
         meta_only=False,
     ):
-        """Scrape the command info from the XML command reference.
+        """Scrape the command information from the XML command reference.
 
         Parameters
         ----------
         xml_path : str
-            Path to the directory containing the XML files to be converted.
+            Path to the directory containing the XML files to convert.
 
         Examples
         --------
@@ -97,7 +97,7 @@ def convert(directory_path, command=None):
     )
     command_names = command_meta.keys()
 
-    # create command mapping between the ansys command name and the pycommand method.
+    # create command mapping between the ansys command name and the pycommand method
     # remove the start and slash whenever possible, for example, /GCOLUMN can simply
     # be gcolumn since it's the only command, but VGET and *VGET must be vget and star_vget
 
@@ -152,18 +152,18 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
     Parameters
     ----------
     template_path : str
-        Path containing the directory to be copied.
+        Path containing the directory to copy.
 
     new_package_path : str
-        Path containing the directory where the new files and directorys will be added to.
+        Path containing the directory where the new files and directorys are to be added.
 
     clean : bool, optional
-        Whether the directorys in new_package_path need to be cleared before adding new files
-        or not. The default value is False.
+        Whether the directories in the path for the new package must be cleared before adding
+        new files. The default is ``False``.
 
     include_hidden : bool, optional
-        When Python version >= 3.11, the hidden files can be handled automatically when True.
-        The default value is False.
+        Whether to handle hidden files automatically when the Python version is 3.11 or later.
+        The default is ``False``.
 
     Returns
     -------
@@ -221,23 +221,23 @@ def write_source(
     Parameters
     ----------
     commands : list[XMLCommand]
-        List of XMLCommand.
+        List of XML commands
 
     xml_doc_path : str
-        Path containing the XML directory to be converted.
+        Path containing the XML directory to convert.
 
     template_path : str
-        Path containing ``_package`` directory.
+        Path containing the ``_package`` directory.
 
     path_custom_functions : str, optional
-        Path containing the customized functions. The default value is None.
+        Path containing the customized functions. The default is ``None``.
 
     new_package_path : str, optional
-        Path where to copy the ``_package`` directory. The default value is ``./package``.
+        Path to copy the ``_package`` directory to. The default is ``./package``.
 
     clean : bool, optional
-        Whether the directorys in new_package_path need to be cleared before adding new files
-        or not. The default value is True.
+        Whether the directories in the newp ackage path must be cleared before adding
+        new files. The default is ``True``.
 
     Returns
     -------
@@ -307,7 +307,7 @@ def write_source(
 
 
 def write_docs(commands, package_path):
-    """Output to the tinypages directory.
+    """Output to the ``tinypages`` directory.
 
     Parameters
     ----------
@@ -320,7 +320,7 @@ def write_docs(commands, package_path):
     Returns
     -------
     str
-        Path to the new doc page.
+        Path to the new document page.
 
     """
 
