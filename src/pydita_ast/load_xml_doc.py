@@ -8,9 +8,10 @@ import unicodedata
 
 from lxml.etree import ParserError
 from lxml.html import fromstring
+from tqdm import tqdm
+
 import pydita_ast.ast_tree as ast
 import pydita_ast.version_variables as var
-from tqdm import tqdm
 
 
 def load_links(link_path):

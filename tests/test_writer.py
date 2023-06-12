@@ -1,8 +1,9 @@
 import os
 import shutil
 
-import pydita_ast.writer as wrt
 import pytest
+
+import pydita_ast.writer as wrt
 
 
 def test_convert(commands, custom_functions):

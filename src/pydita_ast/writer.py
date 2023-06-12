@@ -4,11 +4,12 @@ import glob
 import os
 import shutil
 
+from tqdm import tqdm
+
 from pydita_ast import ast_tree as ast
 from pydita_ast import load_xml_doc as load
 from pydita_ast.custom_functions import CustomFunctions
 from pydita_ast.directory_format import get_paths
-from tqdm import tqdm
 
 generated_src_code = os.path.join("src", "pydita", "generatedcommands")
 

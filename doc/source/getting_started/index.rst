@@ -42,7 +42,7 @@ Python files:
 
 For more information, see :ref:`ref_source_code`.
 
-Afer the converter runs, you can generate Sphinx documentation. This code renders
+After the converter runs, you can generate Sphinx documentation. This code renders
 the documentation as HTML from Windows:
 
 .. code:: bash

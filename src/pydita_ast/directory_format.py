@@ -37,7 +37,7 @@ def xml_path(path=None):
     Parameters
     ----------
     path: str, optional
-        Path of the XML documentation to convert. The default is ``None``, 
+        Path of the XML documentation to convert. The default is ``None``,
         in which case the path is set with either the argument parser `-p` or `--xml-path`,
         or with the ``XML_PATH`` environment variable.
 

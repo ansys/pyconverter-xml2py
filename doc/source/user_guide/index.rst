@@ -35,7 +35,7 @@ Follow these steps to install the package in developer mode:
         git clone https://github.com/ansys/pydita-ast
 
 #. Create a fresh-clean Python environment and activate it. If you require
-   additional information on creation of a virutal environment, see the
+   additional information on creation of a virtual environment, see the
    official Python `venv`_ documentation.
 
     .. code:: bash
