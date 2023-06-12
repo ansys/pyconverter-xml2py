@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 RULES = {"/": "slash", "*": "star"}
 
-generated_src_code = os.path.join("src", "pydita", "generatedcommands")
+GENERATED_SRC_CODE = os.path.join("src", "pydita", "generatedcommands")
 
 # common statements used within the docs to avoid duplication
 CONST = {
@@ -282,7 +282,7 @@ def write_source(
         if os.path.isdir(new_package_path):
             shutil.rmtree(new_package_path)
 
-    cmd_path = os.path.join(new_package_path, generated_src_code)
+    cmd_path = os.path.join(new_package_path, GENERATED_SRC_CODE)
     if not os.path.isdir(cmd_path):
         os.makedirs(cmd_path)
 
