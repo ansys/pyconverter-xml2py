@@ -8,80 +8,51 @@ The following classes are used to create the AST tree:
 .. autosummary::
    :toctree: _autosummary/ast_class
 
-   Application 
    BlockQuote
    Caution
    Chapter
-   CiteTitle
-   ClassName
    Code
-   ColSpec
    Command
    ComputerOutput
    Element
    Emphasis
    Entry
-   Envar
    Example
    Figure
    FileName
-   Footnote
-   Footnoteref
-   Formalpara
    Function
-   Glossterm
    Graphic
-   GuiButton
-   GuiIcon
    GuiLabel
    GuiMenu
    GuiMenuItem
-   Highlights
-   ImageData
-   Imageobject
-   Important
    IndexTerm
-   InformalEquation
    InformalExample
-   InformalFigure
    InformalTable
    InlineEquation
    InlineGraphic
-   Interface
    ItemizedList
    Link
    ListItem
    Literal
-   LiteralLayout
-   Markup
    Math
-   Mediaobject
    Member
    Note
    OLink
-   Option
    OrderedList
    Paragraph
    Phrase
    Primary
-   ProductName
    ProgramListing
    Quote
-   Refclass
    Refentrytitle
    RefMeta
    Refname
    Refnamediv
    Refpurpose
    RefSection
-   Refsynopsisdiv
-   Remark
    Replaceable
    Row
    Screen
-   Section1
-   SegTitle
-   Sidebar
    SimpleList
    Structname
    SubScript
@@ -92,10 +63,7 @@ The following classes are used to create the AST tree:
    TGroup
    THead
    Title
-   ULink
    UserInput
    Variablelist
    VarlistEntry
-   XMLType
-   XMLWarning
    XRef

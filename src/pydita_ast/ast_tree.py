@@ -541,6 +541,8 @@ class Phrase(Element):
 
 class Structname(Element):
     """Provides the structure name element."""
+    
+    pass
 
 
 class Title(Element):
@@ -936,7 +938,7 @@ class SuperScript(Element):
 
 
 class Code(Element):
-    """Provdies the code element."""
+    """Provides the code element."""
 
     pass
 
@@ -1236,8 +1238,10 @@ def parse_text(element):
 
 
 class TGroup(Element):
+    """Provides the tgroup element which contains the header and body rows of a table."""
     @property
     def n_col(self):
+        """Number of columns."""
         return self._element.get("cols")
 
     @property
@@ -1275,6 +1279,7 @@ class TGroup(Element):
 
 
 class Table(Element):
+    """Provides the table element"""
     @property
     def title(self):
         """Table title."""
@@ -1318,6 +1323,8 @@ class Refentrytitle(Element):
 
 
 class Refnamediv(Element):
+    """Provides the refnamediv element which contains the name,
+    purpose and classification of a reference."""
     def __init__(self, element, terms=None):
         self._element = element
         self._terms = terms
@@ -1335,14 +1342,18 @@ class Refnamediv(Element):
 
     @property
     def refname(self):
+        """Refname of the element."""
         return self.find("Refname", self._terms)
 
     @property
     def purpose(self):
+        "Refpurpose of the element."
         return self.find("Refpurpose")
 
 
 class Refname(Element):
+    """Provides the refname element which contains
+    the name of a reference."""
     def __init__(self, element, terms=None):
         self._element = element
         self._terms = terms
@@ -1350,14 +1361,17 @@ class Refname(Element):
 
     @property
     def terms(self):
+        """Terms of the element."""
         return self._terms
 
     @terms.setter
     def terms(self, terms):
+        """Set the terms of the element."""
         self._terms = terms
 
     @property
     def raw_args(self):
+        """Raws containing the command arguments."""
         cmd = str(self)
         cmd = cmd.replace("&fname_arg;", self._terms["fname_arg"])
         cmd = cmd.replace("&fname1_arg;", self._terms["fname1_arg"])
@@ -1369,6 +1383,7 @@ class Refname(Element):
 
     @property
     def args(self):
+        """Command arguments."""
         args = []
         for item in self.raw_args:
             orig_arg = str(item).replace(",", "")
@@ -1406,6 +1421,8 @@ class Refname(Element):
 
 
 class Refpurpose(Element):
+    """Provides the refpurpose element which contains
+    a short synopsis of a reference."""
     def __repr__(self):
         return " ".join([str(item) for item in self._content])
 
@@ -1515,6 +1532,7 @@ class Command(Element):
 
 
 class ComputerOutput(Element):
+    """Provides the computer output element."""
     def to_rst(self, prefix=""):
         """Return a string to enable converting the element to an RST format."""
         return f"``{self[0]}`` {self[1]}"
@@ -1677,6 +1695,7 @@ class ColSpec(Element):
 
 
 class TBody(Element):
+    """Provides the tbody element."""
     @property
     def rows(self):
         """ "Return all the row elements found in the TBody element."""
@@ -1715,6 +1734,7 @@ class TBody(Element):
 
 
 class Entry(Element):
+    """Provides the entry element."""
     @property
     def morerows(self):
         """Value for the ``morerows`` parameter contained in the entry element."""
@@ -1746,6 +1766,7 @@ class Entry(Element):
 
 
 class Row(Element):
+    """Provides the row element."""
     @property
     def entry(self):
         """Return all entry elements found in the row element."""
@@ -1763,6 +1784,7 @@ class Row(Element):
 
 
 class THead(Element):
+    """Provides the thead element."""
     @property
     def rows(self):
         """Return all row elements found in the THead element."""
@@ -1832,6 +1854,7 @@ class SegTitle(Element):
 
 
 class Chapter(Element):
+    """Provides the chapter element."""
     @property
     def helpstring(self):
         """Return the value for the ``helpstring`` parameter contained in the chapter element."""
@@ -2302,6 +2325,7 @@ class XMLCommand(Element):
 
 
 class InformalTable(Element):
+    """Provides the informal table element."""
     def to_rst(self, prefix=""):
         """Return a string to enable converting the element to an RST format."""
         return "InformalTables need to be added"
