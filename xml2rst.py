@@ -46,7 +46,7 @@ if __name__ == "__main__":
     if not os.path.isdir(directory_path):
         raise FileNotFoundError(f"Documentation path at {directory_path} does not exist")
 
-    commands, *_ = wr.convert(directory_path)
-    cmd_path = wr.write_source(commands, directory_path, cur_path, functions_path)
+    commands, cmd_map, *_ = wr.convert(directory_path)
+    cmd_path = wr.write_source(commands, cmd_map, directory_path, cur_path, functions_path)
     package_path = os.path.join(cur_path, "package")
-    doc_src = wr.write_docs(commands, package_path)
+    doc_src = wr.write_docs(commands, cmd_map, package_path)

@@ -9,6 +9,7 @@ from lxml.etree import tostring
 from lxml.html import fromstring
 
 CONV_EQN = False
+CMD_MAP_GLOB = {}
 
 if CONV_EQN:
     from py_asciimath.translator.translator import MathML2Tex
@@ -40,17 +41,21 @@ CLEANUP = {
     "`` %": "%``",  # same
 }
 
-# map XML command to pycommand function
-CMD_MAP = {}
-
 # XML commands to skip
 SKIP = {"*IF", "*ELSE", "C***", "*RETURN"}
 
 
-def to_py_name(name):
+def to_py_name(name, cmd_map=None):
     """Convert to a python compatible name."""
-    name = CMD_MAP.get(name, name.lower())
-    return re.sub(r"[^a-z0-9]", "", name)
+    if cmd_map is not None:
+        global CMD_MAP_GLOB
+        CMD_MAP_GLOB = cmd_map
+    try:
+        py_name = CMD_MAP_GLOB[name]
+    except:
+        py_name = name
+        print("not documented : ", name)
+    return py_name
 
 
 # ############################################################################
@@ -798,12 +803,8 @@ class VarlistEntry(Element):
                 return f"{arg} : {ptype_str}"
             return f"{arg}"
 
-        # if self.term.tag in item_needing_all:
-        #     arg = self.term.to_rst(links=links, base_url=base_url, fcache=fcache).replace("--", "").strip() # noqa : E501
         if self.term.tag in item_needing_links_base_url:
             arg = self.term.to_rst(links=links, base_url=base_url).replace("--", "").strip()
-        # elif self.term.tag in item_needing_fcache:
-        #     arg = self.term.to_rst(fcache=fcache).replace("--", "").strip()
         else:
             arg = self.term.to_rst().replace("--", "").strip()
 
@@ -1506,7 +1507,11 @@ class Command(Element):
     @property
     def sphinx_cmd(self):
         """Return the string to refer to the python command with Sphinx."""
-        return f":ref:`{self.py_cmd}`"
+        if self.py_cmd == self.command:
+            ref = f"``self.py_cmd``"
+        else:
+            ref = f":ref:`{self.py_cmd}`"
+        return ref
 
     def to_rst(self, prefix=""):
         """Return a string that will enable to convert the element to an RST format."""
@@ -2171,7 +2176,6 @@ class XMLCommand(Element):
                                     if first == 0:
                                         first = 1
                                     else:
-                                        print("REPLACE", lines[i])
                                         lines[i] = lines[i].replace(l, name_link)
 
         docstr = "\n".join(lines)
@@ -2276,8 +2280,12 @@ class XMLCommand(Element):
 
         return "\n".join(lines)
 
-    def py_source(self, custom_functions=None):
+    def py_source(self, custom_functions=None, cmd_map=None):
         """Return the python source"""
+
+        if cmd_map is not None:
+            global CMD_MAP_GLOB
+            CMD_MAP_GLOB = cmd_map
 
         if custom_functions is None or self.py_name not in custom_functions.py_names:
 
@@ -2292,8 +2300,12 @@ class XMLCommand(Element):
             source = "".join(custom_functions.py_code[self.py_name])
         return source
 
-    def to_python(self, custom_functions=None, prefix=""):
+    def to_python(self, cmd_map, custom_functions=None, prefix=""):
         """Return the complete python definition of the command."""
+
+        global CMD_MAP_GLOB
+        CMD_MAP_GLOB = cmd_map
+
         docstr = textwrap.indent(
             f'\nr"""{self.py_docstring(custom_functions)}\n"""', prefix=prefix + " " * 4
         )
