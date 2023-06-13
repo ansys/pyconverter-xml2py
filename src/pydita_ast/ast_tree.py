@@ -1084,13 +1084,13 @@ class UserInput(Element):
 
 
 class Screen(Element):
-    """Provides the screen output (effectively literal output) element."""
+    """Provides the screen element."""
 
     pass
 
 
 class Literal(Element):
-    """Provides the screen output (effectively literal output) element."""
+    """Provides the literal output element."""
 
     def to_rst(self, prefix=""):
         """Return a string to enable converting the element to an RST format."""
@@ -1202,9 +1202,6 @@ class Primary(Element):
     """Provides the primary element."""
 
     pass
-
-
-unsup_elem = set()
 
 
 def parse_element(element):
@@ -2172,7 +2169,6 @@ class XMLCommand(Element):
                                     if first == 0:
                                         first = 1
                                     else:
-                                        print("REPLACE", lines[i])
                                         lines[i] = lines[i].replace(l, name_link)
 
         docstr = "\n".join(lines)
