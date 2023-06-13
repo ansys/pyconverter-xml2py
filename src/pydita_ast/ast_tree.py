@@ -541,7 +541,7 @@ class Phrase(Element):
 
 class Structname(Element):
     """Provides the structure name element."""
-    
+
     pass
 
 
@@ -1239,6 +1239,7 @@ def parse_text(element):
 
 class TGroup(Element):
     """Provides the tgroup element which contains the header and body rows of a table."""
+
     @property
     def n_col(self):
         """Number of columns."""
@@ -1280,6 +1281,7 @@ class TGroup(Element):
 
 class Table(Element):
     """Provides the table element"""
+
     @property
     def title(self):
         """Table title."""
@@ -1325,6 +1327,7 @@ class Refentrytitle(Element):
 class Refnamediv(Element):
     """Provides the refnamediv element which contains the name,
     purpose and classification of a reference."""
+
     def __init__(self, element, terms=None):
         self._element = element
         self._terms = terms
@@ -1354,6 +1357,7 @@ class Refnamediv(Element):
 class Refname(Element):
     """Provides the refname element which contains
     the name of a reference."""
+
     def __init__(self, element, terms=None):
         self._element = element
         self._terms = terms
@@ -1423,6 +1427,7 @@ class Refname(Element):
 class Refpurpose(Element):
     """Provides the refpurpose element which contains
     a short synopsis of a reference."""
+
     def __repr__(self):
         return " ".join([str(item) for item in self._content])
 
@@ -1533,6 +1538,7 @@ class Command(Element):
 
 class ComputerOutput(Element):
     """Provides the computer output element."""
+
     def to_rst(self, prefix=""):
         """Return a string to enable converting the element to an RST format."""
         return f"``{self[0]}`` {self[1]}"
@@ -1696,6 +1702,7 @@ class ColSpec(Element):
 
 class TBody(Element):
     """Provides the tbody element."""
+
     @property
     def rows(self):
         """ "Return all the row elements found in the TBody element."""
@@ -1735,6 +1742,7 @@ class TBody(Element):
 
 class Entry(Element):
     """Provides the entry element."""
+
     @property
     def morerows(self):
         """Value for the ``morerows`` parameter contained in the entry element."""
@@ -1767,6 +1775,7 @@ class Entry(Element):
 
 class Row(Element):
     """Provides the row element."""
+
     @property
     def entry(self):
         """Return all entry elements found in the row element."""
@@ -1785,6 +1794,7 @@ class Row(Element):
 
 class THead(Element):
     """Provides the thead element."""
+
     @property
     def rows(self):
         """Return all row elements found in the THead element."""
@@ -1855,6 +1865,7 @@ class SegTitle(Element):
 
 class Chapter(Element):
     """Provides the chapter element."""
+
     @property
     def helpstring(self):
         """Return the value for the ``helpstring`` parameter contained in the chapter element."""
@@ -2326,6 +2337,7 @@ class XMLCommand(Element):
 
 class InformalTable(Element):
     """Provides the informal table element."""
+
     def to_rst(self, prefix=""):
         """Return a string to enable converting the element to an RST format."""
         return "InformalTables need to be added"
