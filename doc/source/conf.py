@@ -3,7 +3,6 @@ from datetime import datetime
 import os
 
 from ansys_sphinx_theme import ansys_favicon, pyansys_logo_black
-
 from pydita_ast import __version__
 
 # Project information

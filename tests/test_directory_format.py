@@ -1,8 +1,7 @@
 import os
 
-import pytest
-
 import pydita_ast.directory_format as ff
+import pytest
 
 
 def test_xml_path(directory_path):
