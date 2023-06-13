@@ -53,7 +53,7 @@ Install the ``pydita-ast`` package with:
 
 It is recommended to organize the XML documentation as follow:
 
-.. image:: ./doc/source/getting_started/images/diags/graphviz-diag_directory.png
+.. image:: ./doc/source/user_guide/images/diags/graphviz-diag_directory.png
    :width: 450
    :align: center
 
@@ -78,7 +78,7 @@ files can be specified.
 A new package is then automatically generated. Its default name is ``package``.
 It is organized as follow:
 
-.. image:: ./doc/source/getting_started/images/diags/graphviz-diag_package.png
+.. image:: ./doc/source/user_guide/images/diags/graphviz-diag_package.png
    :width: 450
    :align: center
    
