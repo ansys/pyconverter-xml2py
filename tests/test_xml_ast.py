@@ -6,10 +6,11 @@ import pytest
 
 
 @pytest.mark.parametrize(
-    "command,expected_output", [("/PREP7", "prep7"), ("*DMAT", "dmat"), ("SORT", "sort")]
+    "command,expected_output",
+    [("/PREP7", "prep7"), ("*DMAT", "dmat"), ("SORT", "sort"), ("*GO", "stargo")],
 )
-def test_py_name(command, expected_output):
-    assert ast.to_py_name(command) == expected_output
+def test_py_name(command, expected_output, cmd_map):
+    assert ast.to_py_name(command, cmd_map) == expected_output
 
 
 @pytest.fixture

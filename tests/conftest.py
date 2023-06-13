@@ -86,6 +86,11 @@ def commands(directory_path):
 
 
 @pytest.fixture
+def cmd_map(directory_path):
+    return wrt.convert(directory_path)[1]
+
+
+@pytest.fixture
 def cwd():
     return os.getcwd()
 
