@@ -42,10 +42,10 @@ html_theme_options = {
             "icon": "fa fa-comment fa-fw",
         },
     ],
-    "switcher": {
-        "json_url": f"https://{cname}/versions.json",
-        "version_match": switcher_version,
-    },
+    # "switcher": {
+    #     "json_url": f"https://{cname}/versions.json",
+    #     "version_match": switcher_version,
+    # },
 }
 
 html_context = {
