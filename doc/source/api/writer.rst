@@ -10,5 +10,5 @@ The following functions convert the AST tree into Sphinx documentation.
 
    convert
    copy_package
-   write_source
    write_docs
+   write_source

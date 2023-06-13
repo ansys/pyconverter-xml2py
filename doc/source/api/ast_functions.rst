@@ -8,7 +8,7 @@ The following functions are used to create the AST tree:
 .. autosummary::
    :toctree: _autosummary/ast_functions
 
-   to_py_name
+   is_numeric
    multireplace
    split_trail_alpha
-   is_numeric
+   to_py_name

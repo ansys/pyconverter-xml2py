@@ -9,5 +9,5 @@ follows the predefined format.
 .. autosummary::
    :toctree: _autosummary/directory_format
 
-   xml_path
    get_paths
+   xml_path

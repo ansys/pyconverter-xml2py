@@ -1576,12 +1576,12 @@ class Glossterm(Element):
     pass
 
 
-class Guibutton(Element):
+class GuiButton(Element):
 
     pass
 
 
-class Guiicon(Element):
+class GuiIcon(Element):
 
     pass
 
@@ -1596,7 +1596,7 @@ class Important(Element):
     pass
 
 
-class Informalequation(Element):
+class InformalEquation(Element):
 
     pass
 
@@ -1656,7 +1656,7 @@ class Imageobject(Element):
     pass
 
 
-class Informalfigure(Element):
+class InformalFigure(Element):
 
     pass
 
@@ -2327,8 +2327,7 @@ parsers = {
     "varlistentry": VarlistEntry,
     "imagedata": ImageData,
     "imageobject": Imageobject,
-    "informalfigure": Informalfigure,
-    "classname": ClassName,
+    "informalfigure": InformalFigure,
     "classname": ClassName,
     "computeroutput": ComputerOutput,
     "figure": Figure,
@@ -2336,11 +2335,11 @@ parsers = {
     "footnoteref": Footnoteref,
     "formalpara": Formalpara,
     "glossterm": Glossterm,
-    "guibutton": Guibutton,
-    "guiicon": Guiicon,
+    "guibutton": GuiButton,
+    "guiicon": GuiIcon,
     "highlights": Highlights,
     "important": Important,
-    "informalequation": Informalequation,
+    "informalequation": InformalEquation,
     "interface": Interface,
     "markup": Markup,
     "mediaobject": Mediaobject,
@@ -2443,10 +2442,10 @@ item_needing_fcache = {
     "simplelist": SimpleList,
     "itemizedlist": ItemizedList,
     "listitem": ListItem,
-    "informalfigure": Informalfigure,
+    "informalfigure": InformalFigure,
     "variablelist": Variablelist,
     "blockquote": BlockQuote,
-    "informalequation": Informalequation,
+    "informalequation": InformalEquation,
 }
 
 item_needing_all = {

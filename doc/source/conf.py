@@ -2,7 +2,7 @@
 from datetime import datetime
 import os
 
-from ansys_sphinx_theme import ansys_favicon, pyansys_logo_black
+from ansys_sphinx_theme import ansys_favicon, get_version_match, pyansys_logo_black
 from pydita_ast import __version__
 
 # Project information
@@ -11,6 +11,7 @@ copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
 author = "ANSYS, Inc."
 release = version = __version__
 cname = os.getenv("DOCUMENTATION_CNAME", "<DEFAULT_CNAME>")
+switcher_version = get_version_match(__version__)
 
 REPOSITORY_NAME = "pydita-ast"
 USERNAME = "ansys"
@@ -25,17 +26,34 @@ html_short_title = html_title = "PyDita-AST"
 html_favicon = ansys_favicon
 
 # specify the location of your github repo
-# -- Options for HTML output -------------------------------------------------
-html_theme = "ansys_sphinx_theme"
-html_logo = pyansys_logo_black
 html_theme_options = {
     "github_url": f"https://github.com/{USERNAME}/{REPOSITORY_NAME}",
     "show_prev_next": False,
     "show_breadcrumbs": True,
     "collapse_navigation": True,
+    "use_edit_page_button": True,
     "additional_breadcrumbs": [
         ("PyAnsys", "https://docs.pyansys.com/"),
     ],
+    "icon_links": [
+        {
+            "name": "Support",
+            "url": "https://github.com/ansys/pydita-ast/discussions",
+            "icon": "fa fa-comment fa-fw",
+        },
+    ],
+    "switcher": {
+        "json_url": f"https://{cname}/versions.json",
+        "version_match": switcher_version,
+    },
+}
+
+html_context = {
+    "display_github": True,  # Integrate GitHub
+    "github_user": "pyansys",
+    "github_repo": REPOSITORY_NAME,
+    "github_version": "main",
+    "doc_path": "doc/source",
 }
 
 # Sphinx extensions
