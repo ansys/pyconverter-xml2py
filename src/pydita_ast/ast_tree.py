@@ -47,6 +47,7 @@ CMD_MAP = {}
 # XML commands to skip
 SKIP = {"*IF", "*ELSE", "C***", "*RETURN"}
 
+
 def to_py_name(name, cmd_map=None):
     """Convert to a python compatible name."""
     if cmd_map is not None:
