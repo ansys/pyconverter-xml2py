@@ -8,7 +8,7 @@ The following functions load the XML documentation.
 .. autosummary::
    :toctree: _autosummary/load_xml_doc
 
-   load_links
-   load_fcache
    load_docu_global
+   load_fcache
+   load_links
    load_terms
