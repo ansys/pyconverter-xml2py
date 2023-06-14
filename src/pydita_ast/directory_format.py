@@ -36,14 +36,14 @@ def xml_path(path=None):
 
     Parameters
     ----------
-    path: str, optional
+    path : str, optional
         Path of the XML documentation to convert. The default is ``None``,
-        in which case the path is set with either the argument parser `-p` or `--xml-path`,
-        or with the ``XML_PATH`` environment variable.
+        in which case the path is set with either the argument parser ``-p`` or
+        ``--xml-path``, or with the ``XML_PATH`` environment variable.
 
     Returns
     -------
-    path: str
+    path : str
         Path of the XML documentation to convert.
 
     """
@@ -86,7 +86,7 @@ def get_paths(path, graph_path=None, link_path=None, term_path=None, xml_path=No
         in which case the XML predefined directory format is used.
 
     link_path : str, optional
-        Pth to the directory containing the links. The default is ``None``,
+        Path to the directory containing the links. The default is ``None``,
         in which case the XML predefined directory format is used.
 
     term_path : str, optional
@@ -94,7 +94,7 @@ def get_paths(path, graph_path=None, link_path=None, term_path=None, xml_path=No
         in which case the XML predefined directory format is used.
 
     xml_path : str
-        The path to the directory containing the XML files. The default is ``None``,
+        Path to the directory containing the XML files. The default is ``None``,
         in which case the XML predefined directory format is used.
 
     Returns

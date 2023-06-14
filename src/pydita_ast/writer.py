@@ -232,7 +232,7 @@ def write_source(
         List of XML commands
 
     cmd_map : dict
-        Dictionnary with the following format {"command_name": "python_name"}.
+        Dictionary with this format: ``{"command_name": "python_name"}``.
 
     xml_doc_path : str
         Path containing the XML directory to convert.
@@ -247,7 +247,7 @@ def write_source(
         Path to copy the ``_package`` directory to. The default is ``./package``.
 
     clean : bool, optional
-        Whether the directories in the newp ackage path must be cleared before adding
+        Whether the directories in the new package path must be cleared before adding
         new files. The default is ``True``.
 
     Returns
@@ -323,10 +323,10 @@ def write_docs(commands, cmd_map, package_path):
     Parameters
     ----------
     commands : list[XMLCommand]
-        List of XMLCommand.
+        List of XML commands.
 
     cmd_map : dict
-        Dictionnary with the following format {"command_name": "python_name"}.
+        Dictionary with this format: ``{"command_name": "python_name"}``.
 
     path : str
         Path to the new package folder.
