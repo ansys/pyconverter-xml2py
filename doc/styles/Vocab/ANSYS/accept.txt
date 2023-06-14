@@ -7,6 +7,8 @@ docstring
 isort
 Makefile
 PyDita-AST
+Py-Dita
+AST
 pytest
 venv
 XML_directory

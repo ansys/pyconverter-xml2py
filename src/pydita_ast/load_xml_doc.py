@@ -18,12 +18,12 @@ def load_links(link_path):
 
     Parameters
     ----------
-    link_path: strg
+    link_path: str
         Path to the links directory.
 
     Returns
     -------
-    links: dic
+    links: dict
         Dictionary containing the link names and the needed information to render the links.
 
     """
@@ -64,17 +64,17 @@ def load_links(link_path):
 
 
 def load_fcache(graph_path):
-    """Load all graphics and cache the basename without extension.
+    """Load all graphics and cache the base name without the extension.
 
     Parameters
     ----------
-    graph_path: strg
+    graph_path: str
         Path to the graphic directory.
 
     Returns
     -------
-    fcache: dic
-        Dictionary containing the basenames of the graphics and their path.
+    fcache: dict
+        Dictionary containing the base names of the graphics and their path.
 
     """
 
@@ -90,16 +90,16 @@ def load_fcache(graph_path):
 
 
 def load_docu_global(term_path):
-    """Load all the global documents.
+    """Load all global documents.
 
     Parameters
     ----------
-    term_path: strg
+    term_path: str
         Path to the terms directory.
 
     Returns
     -------
-    docu_global: dic
+    docu_global: dict
         Dictionary containing the entity names from the documentation and their path.
 
     """
@@ -141,41 +141,41 @@ def load_terms(
     character_directory="ent",
 ):
 
-    """Load all the needed terms.
+    """Load all needed terms.
 
     Parameters
     ----------
-    term_path: strg
+    term_path: str
         Path to the terms directory.
 
-    docu_global: dic
+    docu_global: dict
         Dictionary containing the entity names from the documentation and their path.
 
-    links: dic
+    links: dict
         Dictionary containing the link names and the needed information to render the links.
 
-    fcache: dic
-        Dictionary containing the basenames of the graphics and their path.
+    fcache: dict
+        Dictionary containing the base names of the graphics and their path.
 
-    variable_file: str
-        Name of the file containing the variable terms to be imported.
-        The default value is "build_variables.ent".
+    variable_file: str, optional
+        Name of the file containing the variable terms to import.
+        The default value is ``"build_variables.ent"``.
 
-    global_terms_file: str
-        Name of the file containing the global terms to be imported.
-        The default value is "terms_global.ent".
+    global_terms_file: str, optional
+        Name of the file containing the global terms to import.
+        The default is ``"terms_global.ent"``.
 
-    manual_file: strg
-        Name of the file containing the manual entities to be imported.
-        The default value is "manuals.ent".
+    manual_file: str, optional
+        Name of the file containing the manual entities to import.
+        The default is ``"manuals.ent"``.
 
-    character_directory: str
+    character_directory: str, optional
         Name of the directory containg the entities for the special characters.
-        The default value is "ent.
+        The default is ``"ent"``.
 
     Returns
     -------
-    terms: dic
+    terms: dict
         Dictionary containing the entity names and their values.
 
     """
@@ -196,7 +196,7 @@ def load_terms(
                     terms[entity_names[0]] = matches[0]
 
     else:
-        print("WARNING: No file founded to define the variable terms.")
+        print("WARNING: No file found for defining variable terms.")
         # This is done manually. To be improved.
         terms["ansys_internal_version"] = "23.2"
 
@@ -217,7 +217,7 @@ def load_terms(
                     if len(text):
                         terms[entity_name] = text[0]
     else:
-        print("WARNING: No file founded to define the global terms.")
+        print("WARNING: No file found for defining global terms.")
 
     # Manually adding terms value from warnings.
     terms["sgr"] = ":math:`\sigma`"
@@ -272,7 +272,7 @@ def load_terms(
 
                 terms[key] = text
     else:
-        print("WARNING: No file founded to define the terms from the manual.")
+        print("WARNING: No file found for defining terms.")
 
     # load special characters
     ent_dir = os.path.join(term_path, "ent")

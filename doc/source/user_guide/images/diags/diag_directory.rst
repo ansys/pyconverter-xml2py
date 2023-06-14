@@ -1,6 +1,6 @@
 .. graphviz::
-    :caption: Pre-defined XML directory format.
-    :alt: Pre-defined XML directory format.
+    :caption: Predefined XML directory format
+    :alt: Predefined XML directory format
     :align: center
 
       digraph "sphinx-ext-graphviz" {

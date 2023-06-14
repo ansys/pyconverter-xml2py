@@ -9,6 +9,7 @@ from lxml.etree import tostring
 from lxml.html import fromstring
 
 CONV_EQN = False
+CMD_MAP_GLOB = {}
 
 if CONV_EQN:
     from py_asciimath.translator.translator import MathML2Tex
@@ -40,17 +41,24 @@ CLEANUP = {
     "`` %": "%``",  # same
 }
 
-# map XML command to pycommand function
+# Map XML command to pycommand function
 CMD_MAP = {}
 
 # XML commands to skip
 SKIP = {"*IF", "*ELSE", "C***", "*RETURN"}
 
 
-def to_py_name(name):
+def to_py_name(name, cmd_map=None):
     """Convert to a python compatible name."""
-    name = CMD_MAP.get(name, name.lower())
-    return re.sub(r"[^a-z0-9]", "", name)
+    if cmd_map is not None:
+        global CMD_MAP_GLOB
+        CMD_MAP_GLOB = cmd_map
+    try:
+        py_name = CMD_MAP_GLOB[name]
+    except:
+        py_name = name
+        print("not documented : ", name)
+    return py_name
 
 
 # ############################################################################
@@ -59,7 +67,7 @@ def to_py_name(name):
 
 
 def multireplace(string, replacements, ignore_case=False):
-    """Given a string and a replacement map, it returns the replaced string.
+    """Given a string and a replacement map, return the replaced string.
 
     Parameters
     ----------
@@ -69,12 +77,13 @@ def multireplace(string, replacements, ignore_case=False):
     replacements : dict
         Replacement dictionary {value to find: value to replace}.
 
-    ignore_case : bool
-        Whether the match should be case insensitive.
+    ignore_case : bool, optional
+        Whether the match should be case insensitive. The default is ``False``.
 
     Returns
     -------
     str
+        Replaced string.
     """
     if not replacements:
         # Edge case that'd produce a funny regex and cause a KeyError
@@ -100,17 +109,17 @@ def multireplace(string, replacements, ignore_case=False):
     replacements = {normalize_old(key): val for key, val in replacements.items()}
 
     # Place longer ones first to keep shorter substrings from matching where the longer ones
-    # should take place
+    # should take place.
     # For instance given the replacements {'ab': 'AB', 'abc': 'ABC'} against the string 'hey abc',
     # it should produce 'hey ABC' and not 'hey ABc'
     rep_sorted = sorted(replacements, key=len, reverse=True)
     rep_escaped = map(re.escape, rep_sorted)
 
-    # Create a big OR regex that matches any of the substrings to replace
+    # Create a big OR regex that matches any of the substrings to replace.
     pattern = re.compile("|".join(rep_escaped), re_mode)
 
     # For each match, look up the new string in the replacements, being the key the normalized
-    # old string
+    # old string.
     return pattern.sub(lambda match: replacements[normalize_old(match.group(0))], string)
 
 
@@ -140,7 +149,7 @@ def is_numeric(text):
 
 
 class Element:
-    """Base element."""
+    """Provides the base element."""
 
     def __init__(self, element, parse_children=True):
         self._element = element
@@ -160,17 +169,17 @@ class Element:
 
     @property
     def text_content(self):
-        """Return the text content."""
+        """Text content."""
         return self._element.text_content()
 
     @property
     def raw(self):
-        """Return the raw string of the element."""
+        """Raw string of the element."""
         return tostring(self._element).decode()
 
     @property
     def tostring(self):
-        """Return the attributes of the element as a dictionnary."""
+        """Attributes of the element as a dictionnary."""
         return tostring(self._element)
 
     def has_children(self):
@@ -183,17 +192,17 @@ class Element:
 
     @property
     def added(self):
-        """Has the revision flag "added"."""
+        """Has the revision flag ``added``."""
         return self.get("revisionflag") == "added"
 
     @property
     def any_isalnum(self):
-        """Return True if any characters are alpha numeric."""
+        """Return ``True`` if any characters are alphanumeric."""
         return any([char.isalnum() for char in str(self)])
 
     @property
     def tail(self):
-        """Return the tail of the element as a string."""
+        """Tail of the element as a string."""
         return " ".join([str(item) for item in self._content[1:]])
 
     def print_tree(self):
@@ -217,12 +226,12 @@ class Element:
 
     @property
     def title(self):
-        """Return the element title."""
+        """Element title."""
         return self.find("Title")
 
     @property
     def content(self):
-        """Return text content."""
+        """Text content."""
         return self._content
 
     def __repr__(self):
@@ -230,11 +239,11 @@ class Element:
 
     @property
     def id(self):
-        """Return the id of the element."""
+        """ID of the element."""
         return self._element.get("id")
 
     def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
             if isinstance(item, Element):
@@ -258,7 +267,7 @@ class Element:
         return " ".join(items)
 
     def rec_find(self, _type, terms=None):
-        """Return the first type matching a given type string recursively."""
+        """Find the first type matching a given type string recursively."""
         for item in self:
             if type(item).__name__ == _type:
                 if _type == "Refname" or _type == "Refnamediv":
@@ -271,7 +280,7 @@ class Element:
         return None
 
     def find(self, _type, terms=None):
-        """Return the first type matching a given type string."""
+        """Find the first type matching a given type string."""
         for item in self:
             if type(item).__name__ == _type:
                 if _type == "Refname" or _type == "Refnamediv":
@@ -282,7 +291,7 @@ class Element:
         return None
 
     def find_all(self, _type, recursive=False, terms=None):
-        """Return all types matching a given type string."""
+        """Find all types matching a given type string."""
         items = []
         for item in self:
             if type(item).__name__ == _type:
@@ -296,13 +305,13 @@ class Element:
 
     @property
     def next_elem(self):
-        """Return the next element."""
+        """Next element."""
         elem = self._element.getnext()
         return parse_element(elem) if elem is not None else elem
 
     @property
     def prev_elem(self):
-        """Return the previous element."""
+        """Previous element."""
         elem = self._element.getprevious()
         return parse_element(elem) if elem is not None else elem
 
@@ -313,13 +322,13 @@ class Element:
 
 
 class ItemizedList(Element):
-    """ItemizedList element."""
+    """Provides the itemized list element."""
 
     def __repr__(self):
         return "\n".join([f"* {str(item).strip()}" for item in self])
 
     def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         lines = []
         for item in self:
             if isinstance(item, Element):
@@ -355,14 +364,14 @@ class ItemizedList(Element):
 
 
 class SimpleList(ItemizedList):
-    """ItemizedList element."""
+    """Provides the simple itemized list element."""
 
     def __repr__(self):
         return "\n".join([f"* {str(item).strip()}" for item in self])
 
 
 class Member(Element):
-    """Simple list member element."""
+    """Provides the member element for a simple itemized list."""
 
     pass
 
@@ -381,10 +390,10 @@ class Member(Element):
 
 
 class OrderedList(Element):
-    """Ordered list element."""
+    """Provides the ordered list element."""
 
     def to_rst(self, prefix="", links=None, base_url=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         prefix += "    "
         ordered_list = []
         for item in self:
@@ -397,10 +406,10 @@ class OrderedList(Element):
 
 
 class ListItem(Element):
-    """List item element."""
+    """Provides the list item element."""
 
     def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
             if isinstance(item, Element):
@@ -425,31 +434,31 @@ class ListItem(Element):
 
 
 class FileName(Element):
-    """Filename element."""
+    """Provides the filename element."""
 
     def to_rst(self, prefix=""):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         return f"``{self[0]}`` {self.tail}"
 
 
 class OLink(Element):
-    """External link element."""
+    """Provides the external link element."""
 
     def __init__(self, element):
         super().__init__(element)
 
     @property
     def targetptr(self):
-        """Return the targetptr parameter value contained in the OLink element."""
+        """Value for the ``targetptr`` contained in the OLink element."""
         return self.get("targetptr")
 
     @property
     def targetdoc(self):
-        """Return the targetdoc parameter value contained in the OLink element."""
+        """Value for the ``targetdoc`` parameter contained in the OLink element."""
         return self.get("targetdoc")
 
     def to_rst(self, prefix="", links=None, base_url=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         key = f"{self.targetptr}"
         if (links or base_url) is None:
             print("ERROR in the links or the base_url definitions - OLink class.")
@@ -476,7 +485,7 @@ class OLink(Element):
 
 
 class Paragraph(Element):
-    """Paragraph element."""
+    """Provides the paragraph element."""
 
     def __repr__(self):
         lines = [""]
@@ -485,7 +494,7 @@ class Paragraph(Element):
         return "".join(lines)
 
     def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
             if isinstance(item, Element):
@@ -532,25 +541,27 @@ class Paragraph(Element):
 
 
 class Phrase(Element):
-    """Phrase element."""
+    """Provides the phrase element."""
 
     def __repr__(self):
         return " ".join([str(item) for item in self._content])
 
 
 class Structname(Element):
-    """Structname element."""
+    """Provides the structure name element."""
+
+    pass
 
 
 class Title(Element):
-    """Title element."""
+    """Provides the title element."""
 
     def __repr__(self):
         return " ".join([str(item) for item in self._content]) + "\n"
 
 
 class Emphasis(Element):
-    """Emphasis element."""
+    """Provides the emphasis element."""
 
     @property
     def role(self):
@@ -558,7 +569,7 @@ class Emphasis(Element):
         return self._element.get("role")
 
     def to_rst(self, prefix="", links=None, base_url=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
 
         if self.role == "bold":
             # TODO: this isn't the correct way of making text bold
@@ -585,7 +596,7 @@ class Emphasis(Element):
 
 
 class Example(Element):
-    """Example element."""
+    """Provides the example element."""
 
     # def source(self):
     #     """The program listing of the documentation."""
@@ -597,7 +608,7 @@ class Example(Element):
 
 
 class InformalExample(Element):
-    """Informal example element."""
+    """Provides the informal example element."""
 
     def __repr__(self):
         lines = ["\n"]
@@ -610,13 +621,13 @@ class InformalExample(Element):
 
 
 class GuiMenu(Element):
-    """GUI Menu element."""
+    """Provides the GUI menu element."""
 
     pass
 
 
 class Replaceable(Element):
-    """Replaceable element."""
+    """Provides the replaceable element."""
 
     @property
     def is_equals(self):
@@ -626,7 +637,7 @@ class Replaceable(Element):
 
     @property
     def content_equals(self):
-        """Return the content of the element after handling the '=' sign."""
+        """Content of the element after handling the '=' sign."""
         words = self.tail.split("=")[1].split()
         if not words:
             # probably a literal
@@ -654,7 +665,7 @@ class Replaceable(Element):
         return f"``{self.content[0].lower()}={parm}`` {tail}"
 
     def to_rst(self, prefix=""):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         if isinstance(self.prev_elem, Command):
             if any([self.content[0] in arg for arg in self.prev_elem.args]):
                 return f"{self.tail}"
@@ -664,7 +675,7 @@ class Replaceable(Element):
 
 
 class ProgramListing(Element):
-    """Program listing element."""
+    """Provides the program listing element."""
 
     @property
     def source(self):
@@ -674,16 +685,16 @@ class ProgramListing(Element):
         return self._element.text
 
     def to_rst(self, prefix=""):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         header = f"\n\n{prefix}.. code::\n\n"
         return header + textwrap.indent(self.source, prefix + " " * 3) + "\n"
 
 
 class Variablelist(Element):
-    """Variable list."""
+    """Provides the variable list."""
 
     def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         active_items = []
         for item in self:
             if isinstance(item, VarlistEntry) and not item.active:
@@ -710,15 +721,15 @@ class Variablelist(Element):
 
     @property
     def terms(self):
-        """Return a list containing the terms of the element."""
+        """List containing the terms of the element."""
         return [str(item.term) for item in self if isinstance(item, VarlistEntry)]
 
 
 class RefSection(Element):
-    """Reference section element."""
+    """Provides the reference section element."""
 
     def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self[1:]:
             if isinstance(item, Element):
@@ -743,16 +754,16 @@ class RefSection(Element):
 
 
 class VarlistEntry(Element):
-    """Variable list entry element."""
+    """Provides the variable list entry element."""
 
     @property
     def parm_types(self):
-        """Return the parameter type(s).
+        """One or more parameter types.
 
         This is guessed from any subvarlists. If unavailable, then it's guessed
         from the description of the variable.
 
-        This is either a string, float, or int (or some combination thereof).
+        This is either a string, float, or integer (or some combination thereof).
 
         """
         varlist = self.rec_find("Variablelist")
@@ -776,16 +787,16 @@ class VarlistEntry(Element):
 
     @property
     def term(self):
-        """Return the term of the element."""
+        """Term of the element."""
         return self.content[0]
 
     @property
     def text(self):
-        """Return the text of the element."""
+        """Text of the element."""
         return self.content[1]
 
     def py_term(self, links=None, base_url=None):
-        """Python compatible term."""
+        """Python-compatible term."""
         if self.is_arg:
             arg = str(self.term).lower()
 
@@ -798,12 +809,8 @@ class VarlistEntry(Element):
                 return f"{arg} : {ptype_str}"
             return f"{arg}"
 
-        # if self.term.tag in item_needing_all:
-        #     arg = self.term.to_rst(links=links, base_url=base_url, fcache=fcache).replace("--", "").strip() # noqa : E501
         if self.term.tag in item_needing_links_base_url:
             arg = self.term.to_rst(links=links, base_url=base_url).replace("--", "").strip()
-        # elif self.term.tag in item_needing_fcache:
-        #     arg = self.term.to_rst(fcache=fcache).replace("--", "").strip()
         else:
             arg = self.term.to_rst().replace("--", "").strip()
 
@@ -820,17 +827,17 @@ class VarlistEntry(Element):
 
     @property
     def active(self):
-        """Return if this arg is active."""
+        """Return if this argument is active."""
         if not self.is_arg:
             return True
 
-        # otherwise, simply check for any alphanumeric characters in the
+        # Otherwise, simply check for any alphanumeric characters in the
         # term. Normally these terms are just '--' or '--,--'
         return self.term.any_isalnum
 
     @property
     def is_arg(self):
-        """Return True when this variable list is for an argument."""
+        """Return ``True`` when this variable list is for an argument."""
         anc = list(self._element.iterancestors())
         if not anc:
             return False
@@ -861,7 +868,7 @@ class VarlistEntry(Element):
         return rst
 
     def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         prefix += "    "
         # if this is a parameter arg
         if self.is_arg:
@@ -887,10 +894,10 @@ class VarlistEntry(Element):
 
 
 class Term(Element):
-    """Term element."""
+    """Provides the term element."""
 
     def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
 
         items = []
         for item in self:
@@ -915,27 +922,27 @@ class Term(Element):
 
 
 class GuiLabel(Element):
-    """GuiLabel element."""
+    """Provides the GUI label element."""
 
     pass
 
 
 class GuiMenuItem(Element):
-    """GuiMenuItem element."""
+    """Provides the GUI menu item element."""
 
     pass
 
 
 class SuperScript(Element):
-    """Superscript element."""
+    """Provides the superscript element."""
 
     def to_rst(self, prefix=""):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         return f":sup:`{self.content[0]}` {self.tail}"
 
 
 class Code(Element):
-    """Code element."""
+    """Provides the code element."""
 
     pass
 
@@ -966,15 +973,15 @@ class _Math(Element):
 
     @property
     def equation(self):
-        """Return the equation related to the _Math element."""
+        """Return the equation related to the math element."""
         return self.content[0][1:-1]
 
 
 class Math(_Math):
-    """Math element."""
+    """Provides the math element."""
 
     def to_rst(self, prefix=""):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         lines = ["", "", f"{prefix}.. math::\n"]
         lines.append(textwrap.indent(self.equation, prefix=prefix + " " * 4))
         lines.append("")
@@ -982,7 +989,7 @@ class Math(_Math):
 
 
 class InlineEquation(_Math):
-    """Inline equation element."""
+    """Provides the inline equation element."""
 
     def __init__(self, element):
         self._element = element
@@ -995,19 +1002,19 @@ class InlineEquation(_Math):
         return self.raw.split("</inlineequation>")[-1].replace("\n", "")
 
     def to_rst(self, prefix=""):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         return f":math:`{self.equation.strip()}` {self.tail}"
 
 
 class SubScript(Element):
-    """Inline equation element."""
+    """Provides the subscript element."""
 
     def __init__(self, element):
         super().__init__(element)
 
 
 class InlineGraphic(Element):
-    """Inline graphic element."""
+    """Provides the inline graphic element."""
 
     def fileref(self):
         """File reference."""
@@ -1015,7 +1022,7 @@ class InlineGraphic(Element):
 
 
 class Quote(Element):
-    """Quote element."""
+    """Provides the quote element."""
 
     def __init__(self, element):
         super().__init__(element)
@@ -1023,7 +1030,7 @@ class Quote(Element):
 
     @property
     def quote(self):
-        """Return the quote value."""
+        """Quote value."""
         return self[0]
 
     def __repr__(self):
@@ -1031,7 +1038,7 @@ class Quote(Element):
 
 
 class Link(Element):
-    """Link element."""
+    """Provides the link element."""
 
     def __init__(self, element):
         super().__init__(element)
@@ -1039,14 +1046,14 @@ class Link(Element):
 
     @property
     def linkend(self):
-        """Return Link."""
+        """Link."""
         return self._linkend
 
     def __repr__(self):
         return str(self.linkend)
 
     def to_rst(self, prefix="", links=None, base_url=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         if (links or base_url) is None:
             print("ERROR in the links or the base_url definitions - Link class.")
         tail = " ".join([str(item) for item in self])
@@ -1062,63 +1069,63 @@ class Link(Element):
 
 
 class XRef(Link):
-    """XRef element."""
+    """Provides the cross reference element."""
 
     @property
     def tail(self):
-        """Return the tail of the element as a string."""
+        """Tail of the element as a string."""
         return " ".join([str(item) for item in self._content])
 
     def to_rst(self, prefix=""):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         # disabled at the moment
         # return f':ref:`{self.linkend}`{self.tail}'
         return self.tail
 
 
 class UserInput(Element):
-    """UserInput."""
+    """Provides the user input element."""
 
     pass
 
 
 class Screen(Element):
-    """Screen output (effectively literal output)."""
+    """Provides the screen element."""
 
     pass
 
 
 class Literal(Element):
-    """Screen output (effectively literal output)."""
+    """Provides the literal output element."""
 
     def to_rst(self, prefix=""):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         return f"``{self.content[0]}`` {self.tail}"
 
 
 class Caution(Element):
-    """Screen output (effectively literal output)."""
+    """Provides the caution element."""
 
     def to_rst(self, prefix=""):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         lines = ["", "", ".. warning::"]
         lines.append(textwrap.indent(str(self), prefix=prefix + "   "))
         return "\n".join(lines)
 
 
 class Graphic(Element):
-    """Graphic element."""
+    """Provides the graphic element."""
 
     @property
     def entityref(self):
-        """Return the entityref parameter value contained in the Graphic element."""
+        """Value of the ``entityref`` parameter contained in the graphic element."""
         entityref = self.get("entityref")
         if entityref is not None:
             entityref = entityref.strip()
         return entityref
 
     def to_rst(self, fcache, prefix=""):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
 
         if self.entityref is None:
             # probably a math graphics
@@ -1138,22 +1145,22 @@ class Graphic(Element):
 
 
 class Function(Element):
-    """Function element."""
+    """Provides the function element."""
 
     pass
 
 
 class Note(Element):
-    """Note element."""
+    """Provides the note element."""
 
     pass
 
 
 class BlockQuote(Element):
-    """Note element."""
+    """Provides the block quote element."""
 
     def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
             if isinstance(item, Element):
@@ -1178,11 +1185,11 @@ class BlockQuote(Element):
 
 
 class RefMeta(Element):
-    """Reference metadata element."""
+    """Provides the reference metadata element."""
 
     @property
     def refentry_title(self):
-        """Return the refentry title."""
+        """Title of the referency entry."""
         title = self.rec_find("Refentrytitle")
         if title is not None:
             title = str(title).strip()
@@ -1192,18 +1199,15 @@ class RefMeta(Element):
 
 
 class IndexTerm(Element):
-    """Index term element."""
+    """Provides the index term element."""
 
     pass
 
 
 class Primary(Element):
-    """Primary element."""
+    """Provides the primary element."""
 
     pass
-
-
-unsup_elem = set()
 
 
 def parse_element(element):
@@ -1238,8 +1242,11 @@ def parse_text(element):
 
 
 class TGroup(Element):
+    """Provides the tgroup element which contains the header and body rows of a table."""
+
     @property
     def n_col(self):
+        """Number of columns."""
         return self._element.get("cols")
 
     @property
@@ -1254,11 +1261,11 @@ class TGroup(Element):
 
     @property
     def row_in_tbody(self):
-        """List of the rows in TBody."""
+        """List of the rows in the TBody."""
         return self.find("TBody").find_all("Row")
 
     def to_rst(self, prefix="", links=None, base_url=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         l_head = 0
 
         if self.thead is not None:
@@ -1277,6 +1284,8 @@ class TGroup(Element):
 
 
 class Table(Element):
+    """Provides the table element"""
+
     @property
     def title(self):
         """Table title."""
@@ -1288,7 +1297,7 @@ class Table(Element):
         return self.find("TGroup")
 
     def to_rst(self, prefix="", links=None, base_url=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         lines = []
         if self.title is not None:
             lines.append(f"{self.title}".strip())
@@ -1307,7 +1316,7 @@ class Table(Element):
 
 
 class Refentrytitle(Element):
-    """Title."""
+    """Provides the title of the reference entry."""
 
     def __repr__(self):
         items = []
@@ -1320,6 +1329,9 @@ class Refentrytitle(Element):
 
 
 class Refnamediv(Element):
+    """Provides the refnamediv element which contains the name,
+    purpose and classification of a reference."""
+
     def __init__(self, element, terms=None):
         self._element = element
         self._terms = terms
@@ -1327,7 +1339,7 @@ class Refnamediv(Element):
 
     @property
     def terms(self):
-        """Return the terms of the element."""
+        """Terms of the element."""
         return self._terms
 
     @terms.setter
@@ -1337,14 +1349,19 @@ class Refnamediv(Element):
 
     @property
     def refname(self):
+        """Refname of the element."""
         return self.find("Refname", self._terms)
 
     @property
     def purpose(self):
+        "Refpurpose of the element."
         return self.find("Refpurpose")
 
 
 class Refname(Element):
+    """Provides the refname element which contains
+    the name of a reference."""
+
     def __init__(self, element, terms=None):
         self._element = element
         self._terms = terms
@@ -1352,14 +1369,17 @@ class Refname(Element):
 
     @property
     def terms(self):
+        """Terms of the element."""
         return self._terms
 
     @terms.setter
     def terms(self, terms):
+        """Set the terms of the element."""
         self._terms = terms
 
     @property
     def raw_args(self):
+        """Raws containing the command arguments."""
         cmd = str(self)
         cmd = cmd.replace("&fname_arg;", self._terms["fname_arg"])
         cmd = cmd.replace("&fname1_arg;", self._terms["fname1_arg"])
@@ -1371,6 +1391,7 @@ class Refname(Element):
 
     @property
     def args(self):
+        """Command arguments."""
         args = []
         for item in self.raw_args:
             orig_arg = str(item).replace(",", "")
@@ -1383,7 +1404,7 @@ class Refname(Element):
             elif arg == "type":
                 arg = "type_"
 
-            # simply check if we can use this as a valid python kwarg
+            # simply check if we can use this as a valid Python kwarg
             try:
                 exec(f"{arg} = 1.0")
             except SyntaxError:
@@ -1408,6 +1429,9 @@ class Refname(Element):
 
 
 class Refpurpose(Element):
+    """Provides the refpurpose element which contains
+    a short synopsis of a reference."""
+
     def __repr__(self):
         return " ".join([str(item) for item in self._content])
 
@@ -1428,16 +1452,16 @@ class Refsect1(Element):
 
 
 class Command(Element):
-    """Command element."""
+    """Provides the command element."""
 
     @property
     def command(self):
-        """Return the name of the command."""
+        """Name of the command."""
         return self[0]
 
     @property
     def tail_no_args(self):
-        """Return the tail of the element after removing all its arguments."""
+        """Tail of the element after removing all its arguments."""
         tail = self.tail
         for arg in self.args:
             tail = tail.replace(arg, "")
@@ -1448,7 +1472,7 @@ class Command(Element):
 
     @property
     def has_args(self):
-        """Return wether the element has arguments or not."""
+        """Return whether the element has arguments or not."""
         # return self.tail.startswith(",")
         return False  # TODO: This is to be modified
 
@@ -1486,7 +1510,7 @@ class Command(Element):
 
     @property
     def py_args(self):
-        """Return a string containing the arguments of the element."""
+        """String containing the arguments of the element."""
         args = []
         for arg in self.args:
             if is_numeric(arg):
@@ -1500,16 +1524,20 @@ class Command(Element):
 
     @property
     def py_cmd(self):
-        """Return the pythonic name of the command."""
+        """Pythonic name of the command."""
         return to_py_name(self.command)
 
     @property
     def sphinx_cmd(self):
-        """Return the string to refer to the python command with Sphinx."""
-        return f":ref:`{self.py_cmd}`"
+        """String to refer to the Python command with Sphinx."""
+        if self.py_cmd == self.command:
+            ref = f"``self.py_cmd``"
+        else:
+            ref = f":ref:`{self.py_cmd}`"
+        return ref
 
     def to_rst(self, prefix=""):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         if self.args and self.args[0] != "":
             return f"{self.sphinx_cmd} {self.tail_no_args}"
         else:
@@ -1517,26 +1545,28 @@ class Command(Element):
 
 
 class ComputerOutput(Element):
+    """Provides the computer output element."""
+
     def to_rst(self, prefix=""):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         return f"``{self[0]}`` {self[1]}"
 
 
 class Figure(Element):
-    """Figure element."""
+    """Provides the figure element."""
 
     @property
     def title(self):
-        """Return the first Title element found in the Figure element."""
+        """First title element found in the figure element."""
         return self.rec_find("Title")
 
     @property
     def graphic(self):
-        """Return the first Graphic element found in the Figure element."""
+        """First graphic element found in the figure element."""
         return self.rec_find("Graphic")
 
     def to_rst(self, prefix="", fcache=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         graphic = self.graphic
         if graphic is not None and graphic.entityref is not None:
             lines = []
@@ -1578,12 +1608,12 @@ class Glossterm(Element):
     pass
 
 
-class Guibutton(Element):
+class GuiButton(Element):
 
     pass
 
 
-class Guiicon(Element):
+class GuiIcon(Element):
 
     pass
 
@@ -1598,7 +1628,7 @@ class Important(Element):
     pass
 
 
-class Informalequation(Element):
+class InformalEquation(Element):
 
     pass
 
@@ -1658,7 +1688,7 @@ class Imageobject(Element):
     pass
 
 
-class Informalfigure(Element):
+class InformalFigure(Element):
 
     pass
 
@@ -1679,13 +1709,15 @@ class ColSpec(Element):
 
 
 class TBody(Element):
+    """Provides the tbody element."""
+
     @property
     def rows(self):
-        """ "Return all the Row elements found in the TBody element."""
+        """ "Return all the row elements found in the TBody element."""
         return self.find_all("Row")
 
     def to_rst(self, l_head, prefix="", links=None, base_url=None):
-        """Return a list that will enable to convert the element to an RST format."""
+        """Return a list to enable converting the element to an RST format."""
         rst_rows = []
         for i, row_i in enumerate(self.rows):
             row = row_i.find_all("Entry")
@@ -1717,13 +1749,15 @@ class TBody(Element):
 
 
 class Entry(Element):
+    """Provides the entry element."""
+
     @property
     def morerows(self):
-        """Return the morerows parameter value contained in the Entry element."""
+        """Value for the ``morerows`` parameter contained in the entry element."""
         return self._element.get("morerows")
 
     def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
 
         if self.morerows is not None:
             content = self.morerows
@@ -1748,13 +1782,15 @@ class Entry(Element):
 
 
 class Row(Element):
+    """Provides the row element."""
+
     @property
     def entry(self):
-        """Return all the Entry elements found in the Row element."""
+        """Return all entry elements found in the row element."""
         return self.find_all("Entry")
 
     def to_rst_list(self, prefix="", links=None, base_url=None):
-        """Return a list that will enable to convert the element to an RST format."""
+        """Return a list to enable converting the element to an RST format."""
         row = []
         for entry in self.entry:
             content = entry.to_rst(links=links, base_url=base_url)
@@ -1765,13 +1801,15 @@ class Row(Element):
 
 
 class THead(Element):
+    """Provides the thead element."""
+
     @property
     def rows(self):
-        """Return all the Row elements found in the THead element."""
+        """Return all row elements found in the THead element."""
         return self.find_all("Row")
 
     def to_rst(self, prefix="", links=None, base_url=None):
-        """Return a list and the length of the list in order to convert the element
+        """Return a list and the length of the list for converting the element
         to an RST format."""
 
         l_rst_list = 0
@@ -1834,9 +1872,11 @@ class SegTitle(Element):
 
 
 class Chapter(Element):
+    """Provides the chapter element."""
+
     @property
     def helpstring(self):
-        """Return the helpstring parameter value contained in the Chapter element."""
+        """Return the value for the ``helpstring`` parameter contained in the chapter element."""
         return self[1]._element.get("helpstring")
 
     def __repr__(self):
@@ -1856,7 +1896,7 @@ class ProductName(Element):
 
 
 class XMLCommand(Element):
-    """XML command from documentation."""
+    """Provides the XML command from the documentation."""
 
     def __init__(
         self,
@@ -1868,7 +1908,7 @@ class XMLCommand(Element):
         fcache,
         meta_only=False,
     ):
-        """Parse command from xml file."""
+        """Parse command from XML file."""
         self._xml_filename = filename
         self._terms = terms
         self._docu_global = docu_global
@@ -1889,17 +1929,17 @@ class XMLCommand(Element):
 
     @property
     def xml_filename(self):
-        """Return the source filename of the command."""
+        """Source filename of the command."""
         return self._xml_filename
 
     @property
     def args(self):
-        """Return the command args."""
+        """Command arguments."""
         return self._refname_div.refname.args
 
     @property
     def default(self):
-        """Return the command default."""
+        """Command default."""
         if self._refsynopsis:
             for item in self._refsynopsis:
                 if str(item.title).strip() == "Command Default":
@@ -1907,7 +1947,7 @@ class XMLCommand(Element):
 
     @property
     def arg_desc(self):
-        """Return each argument's description."""
+        """Each argument's description."""
         refsyn = self.rec_find("Refsynopsisdiv")
 
         # search by ID
@@ -1920,7 +1960,7 @@ class XMLCommand(Element):
 
     @property
     def short_desc(self):
-        """Return the short description of the command."""
+        """Short description of the command."""
         if self._refname_div is not None:
             return self._refname_div.purpose.to_rst(links=self._links, base_url=self._base_url)
         return ""
@@ -1935,12 +1975,12 @@ class XMLCommand(Element):
 
     @property
     def name(self):
-        """Return the name of the XML command."""
+        """Name of the XML command."""
         return self._metadata.refentry_title
 
     @property
     def py_name(self):
-        """Python compatible name."""
+        """Python-compatible name."""
         return to_py_name(self.name)
 
     @property
@@ -1949,14 +1989,14 @@ class XMLCommand(Element):
 
     @property
     def py_signature(self):
-        """Return the begining of the python command's definition."""
+        """Beginning of the Python command's definition."""
         args = ["self"]
         kwargs = [f'{arg}=""' for arg in self.py_args if "--" not in arg]
         arg_sig = ", ".join(args + kwargs)
         return f"def {self.py_name}({arg_sig}, **kwargs):"
 
     def py_docstring(self, custom_functions):
-        """Return the python docstring of the command."""
+        """Python docstring of the command."""
         xml_cmd = f"{self._terms['pn006p']} Command: `{self.name} <{self.url}>`_"
 
         items = [self.short_desc, "", xml_cmd]
@@ -2171,7 +2211,6 @@ class XMLCommand(Element):
                                     if first == 0:
                                         first = 1
                                     else:
-                                        print("REPLACE", lines[i])
                                         lines[i] = lines[i].replace(l, name_link)
 
         docstr = "\n".join(lines)
@@ -2187,7 +2226,7 @@ class XMLCommand(Element):
 
     @property
     def py_notes(self):
-        """Return the python formatted notes string."""
+        """Python-formatted notes string."""
         lines = ["Notes", "-" * 5]
         if self.notes.tag in item_needing_all:
             lines.append(
@@ -2208,7 +2247,7 @@ class XMLCommand(Element):
 
     @property
     def py_parm(self):
-        """Return the python parameters string."""
+        """Python parameter's string."""
         if self.arg_desc is not None:
             lines = ["Parameters", "-" * 10]
             for item in self.arg_desc:
@@ -2237,7 +2276,7 @@ class XMLCommand(Element):
 
     @property
     def url(self):
-        """Return the URL to the Ansys command documentation."""
+        """URL to the Ansys command documentation."""
         cmd_base_url = f"{self._base_url}/ans_cmd/"
         return f"{cmd_base_url}{self.filename}"
 
@@ -2256,7 +2295,7 @@ class XMLCommand(Element):
 
     @property
     def notes(self):
-        """Return the Notes of the command."""
+        """Notes of the command."""
         for item in self:
             if str(item.title).strip() == "Notes":
                 return item
@@ -2276,8 +2315,12 @@ class XMLCommand(Element):
 
         return "\n".join(lines)
 
-    def py_source(self, custom_functions=None):
-        """Return the python source"""
+    def py_source(self, custom_functions=None, cmd_map=None):
+        """Return the Python source"""
+
+        if cmd_map is not None:
+            global CMD_MAP_GLOB
+            CMD_MAP_GLOB = cmd_map
 
         if custom_functions is None or self.py_name not in custom_functions.py_names:
 
@@ -2292,8 +2335,12 @@ class XMLCommand(Element):
             source = "".join(custom_functions.py_code[self.py_name])
         return source
 
-    def to_python(self, custom_functions=None, prefix=""):
-        """Return the complete python definition of the command."""
+    def to_python(self, cmd_map, custom_functions=None, prefix=""):
+        """Return the complete Python definition of the command."""
+
+        global CMD_MAP_GLOB
+        CMD_MAP_GLOB = cmd_map
+
         docstr = textwrap.indent(
             f'\nr"""{self.py_docstring(custom_functions)}\n"""', prefix=prefix + " " * 4
         )
@@ -2305,8 +2352,10 @@ class XMLCommand(Element):
 
 
 class InformalTable(Element):
+    """Provides the informal table element."""
+
     def to_rst(self, prefix=""):
-        """Return a string that will enable to convert the element to an RST format."""
+        """Return a string to enable converting the element to an RST format."""
         return "InformalTables need to be added"
 
 
@@ -2330,8 +2379,7 @@ parsers = {
     "varlistentry": VarlistEntry,
     "imagedata": ImageData,
     "imageobject": Imageobject,
-    "informalfigure": Informalfigure,
-    "classname": ClassName,
+    "informalfigure": InformalFigure,
     "classname": ClassName,
     "computeroutput": ComputerOutput,
     "figure": Figure,
@@ -2339,11 +2387,11 @@ parsers = {
     "footnoteref": Footnoteref,
     "formalpara": Formalpara,
     "glossterm": Glossterm,
-    "guibutton": Guibutton,
-    "guiicon": Guiicon,
+    "guibutton": GuiButton,
+    "guiicon": GuiIcon,
     "highlights": Highlights,
     "important": Important,
-    "informalequation": Informalequation,
+    "informalequation": InformalEquation,
     "interface": Interface,
     "markup": Markup,
     "mediaobject": Mediaobject,
@@ -2446,10 +2494,10 @@ item_needing_fcache = {
     "simplelist": SimpleList,
     "itemizedlist": ItemizedList,
     "listitem": ListItem,
-    "informalfigure": Informalfigure,
+    "informalfigure": InformalFigure,
     "variablelist": Variablelist,
     "blockquote": BlockQuote,
-    "informalequation": Informalequation,
+    "informalequation": InformalEquation,
 }
 
 item_needing_all = {
@@ -2472,10 +2520,10 @@ def get_parser():
 
 
 class OxygenXmlTree(Element):
-    """Load an XML file represented as an AST."""
+    """Provides for loading an XML file as an AST tree."""
 
     def __init__(self, filename, meta_only=False):
-        """Parse command from xml file."""
+        """Parse command from XML file."""
         self._xml_filename = filename
         root = fromstring(open(filename, "rb").read())
 
@@ -2484,5 +2532,5 @@ class OxygenXmlTree(Element):
 
     @property
     def xml_filename(self):
-        """Return the source filename of the command."""
+        """Source filename of the command."""
         return self._xml_filename

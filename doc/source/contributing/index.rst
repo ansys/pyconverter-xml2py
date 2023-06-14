@@ -35,7 +35,7 @@ templates:
 
 If your issue does not fit into one of these categories, create your own issue.
 
-To reach the PyAnsys support team, email `PyAnsys Core <pyansys_core>`_.
+To reach the PyAnsys support team, email `pyansys.core@ansys.com <pyansys.core@ansys.com>`_.
 
 
 
@@ -51,7 +51,7 @@ To build the PyDita-AST documentation locally, in the root directory of the repo
 Adhere to code style
 --------------------
 
-PyDita-AST follows the PEP8 standard as outlined in the `PyAnsys Development Guide
+PyDita-AST follows the PEP8 standard as outlined in the `PyAnsys Developer's Guide
 <dev_guide_pyansys_>`_ and implements style checking using
 `pre-commit <pre-commit_>`_.
 

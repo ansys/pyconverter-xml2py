@@ -1,5 +1,3 @@
-# Copyright (c) 2023 ANSYS, Inc. All rights reserved.
-
 import glob
 import os
 import shutil
@@ -10,10 +8,9 @@ from pydita_ast.custom_functions import CustomFunctions
 from pydita_ast.directory_format import get_paths
 from tqdm import tqdm
 
-generated_src_code = os.path.join("src", "pydita", "generatedcommands")
+RULES = {"/": "slash", "*": "star"}
 
-# map command to pycommand function
-CMD_MAP = {}
+GENERATED_SRC_CODE = os.path.join("src", "pydita", "generatedcommands")
 
 # common statements used within the docs to avoid duplication
 CONST = {
@@ -29,13 +26,8 @@ SKIP_XML = {"*IF", "*ELSE", "C***", "*RETURN", "*DEL"}
 SKIP_PYCOMMAND = {"if", "else", "c", "return", "del"}
 
 
-def nested_exec(text):
-    """Nested execute."""
-    exec(text)
-
-
 def convert(directory_path, command=None):
-    """Covert an XML directory into an RST one."""
+    """Convert an XML directory into an RST dictionary."""
 
     graph_path, link_path, term_path, xml_path = get_paths(directory_path)
     links = load.load_links(link_path)
@@ -47,12 +39,12 @@ def convert(directory_path, command=None):
         xml_path,
         meta_only=False,
     ):
-        """Scrape the command info from the XML command reference.
+        """Scrape the command information from the XML command reference.
 
         Parameters
         ----------
         xml_path : str
-            Path to the directory containing the XML files to be converted.
+            Path to the directory containing the XML files to convert.
 
         Examples
         --------
@@ -97,7 +89,7 @@ def convert(directory_path, command=None):
     )
     command_names = command_meta.keys()
 
-    # create command mapping between the ansys command name and the pycommand method.
+    # create command mapping between the ansys command name and the pycommand method
     # remove the start and slash whenever possible, for example, /GCOLUMN can simply
     # be gcolumn since it's the only command, but VGET and *VGET must be vget and star_vget
 
@@ -112,6 +104,9 @@ def convert(directory_path, command=None):
     # reserved command mapping
     COMMAND_MAPPING = {"*DEL": "stardel"}
 
+    # map command to pycommand function
+    cmd_map = {}
+
     # second pass for each name
     for ans_name in command_names:
         if ans_name in COMMAND_MAPPING:
@@ -124,11 +119,23 @@ def convert(directory_path, command=None):
                 alpha_name = lower_name
 
             if proc_names.count(alpha_name) != 1:
-                py_name = lower_name.replace("/", "slash").replace("*", "star")
+                if RULES:
+                    py_name = lower_name
+                    for rule_name, rule in RULES.items():
+                        py_name = py_name.replace(rule_name, rule)
+                    if py_name == lower_name and not py_name[0].isalnum():
+                        raise ValueError(
+                            f"Additional rules need to be defined. The {ans_name} function name is in conflict with another function."  # noqa : E501
+                        )
+                else:
+                    raise ValueError(
+                        "Some functions have identical names. You need to provide RULES."
+                    )
+
             else:
                 py_name = alpha_name
 
-        CMD_MAP[ans_name] = py_name
+        cmd_map[ans_name] = py_name
 
     # TODO : accept conversion of a single command
 
@@ -143,7 +150,7 @@ def convert(directory_path, command=None):
 
     commands = load_commands(xml_path)
 
-    return commands, links, version_variables
+    return commands, cmd_map, links, version_variables
 
 
 def copy_package(template_path, new_package_path, clean=False, include_hidden=False):
@@ -152,18 +159,18 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
     Parameters
     ----------
     template_path : str
-        Path containing the directory to be copied.
+        Path containing the directory to copy.
 
     new_package_path : str
-        Path containing the directory where the new files and directorys will be added to.
+        Path containing the directory where the new files and directorys are to be added.
 
     clean : bool, optional
-        Whether the directorys in new_package_path need to be cleared before adding new files
-        or not. The default value is False.
+        Whether the directories in the path for the new package must be cleared before adding
+        new files. The default is ``False``.
 
     include_hidden : bool, optional
-        When Python version >= 3.11, the hidden files can be handled automatically when True.
-        The default value is False.
+        Whether to handle hidden files automatically when the Python version is 3.11 or later.
+        The default is ``False``.
 
     Returns
     -------
@@ -210,6 +217,7 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
 
 def write_source(
     commands,
+    cmd_map,
     xml_doc_path,
     template_path,
     path_custom_functions=None,
@@ -221,23 +229,26 @@ def write_source(
     Parameters
     ----------
     commands : list[XMLCommand]
-        List of XMLCommand.
+        List of XML commands
+
+    cmd_map : dict
+        Dictionnary with the following format {"command_name": "python_name"}.
 
     xml_doc_path : str
-        Path containing the XML directory to be converted.
+        Path containing the XML directory to convert.
 
     template_path : str
-        Path containing ``_package`` directory.
+        Path containing the ``_package`` directory.
 
     path_custom_functions : str, optional
-        Path containing the customized functions. The default value is None.
+        Path containing the customized functions. The default is ``None``.
 
     new_package_path : str, optional
-        Path where to copy the ``_package`` directory. The default value is ``./package``.
+        Path to copy the ``_package`` directory to. The default is ``./package``.
 
     clean : bool, optional
-        Whether the directorys in new_package_path need to be cleared before adding new files
-        or not. The default value is True.
+        Whether the directories in the newp ackage path must be cleared before adding
+        new files. The default is ``True``.
 
     Returns
     -------
@@ -265,20 +276,20 @@ def write_source(
         if os.path.isdir(new_package_path):
             shutil.rmtree(new_package_path)
 
-    cmd_path = os.path.join(new_package_path, generated_src_code)
+    cmd_path = os.path.join(new_package_path, GENERATED_SRC_CODE)
     if not os.path.isdir(cmd_path):
         os.makedirs(cmd_path)
 
     for ans_name, cmd_obj in tqdm(commands.items(), desc="Writing commands"):
         if ans_name in SKIP_XML:
             continue
-        cmd_name = ast.to_py_name(ans_name)
+        cmd_name = cmd_map[ans_name]
         path = os.path.join(cmd_path, f"{cmd_name}.py")
         with open(path, "w", encoding="utf-8") as fid:
-            fid.write(cmd_obj.to_python(custom_functions))
+            fid.write(cmd_obj.to_python(cmd_map, custom_functions))
 
         try:
-            nested_exec(cmd_obj.to_python(custom_functions))
+            exec(cmd_obj.to_python(cmd_map, custom_functions))
         except:
             raise RuntimeError(f"Failed to execute {cmd_name}.py") from None
 
@@ -287,7 +298,7 @@ def write_source(
         for ans_name in commands:
             if ans_name in SKIP_XML:
                 continue
-            cmd_name = ast.to_py_name(ans_name)
+            cmd_name = cmd_map[ans_name]
             fid.write(f"from .{cmd_name} import *\n")
         fid.write("try:\n")
         fid.write("    import importlib.metadata as importlib_metadata\n")
@@ -306,13 +317,16 @@ def write_source(
     return cmd_path
 
 
-def write_docs(commands, package_path):
-    """Output to the tinypages directory.
+def write_docs(commands, cmd_map, package_path):
+    """Output to the autogenerated ``package`` directory.
 
     Parameters
     ----------
     commands : list[XMLCommand]
         List of XMLCommand.
+
+    cmd_map : dict
+        Dictionnary with the following format {"command_name": "python_name"}.
 
     path : str
         Path to the new package folder.
@@ -320,7 +334,7 @@ def write_docs(commands, package_path):
     Returns
     -------
     str
-        Path to the new doc page.
+        Path to the new document page.
 
     """
 
@@ -339,7 +353,7 @@ def write_docs(commands, package_path):
         fid.write("   :toctree: _autosummary/\n\n")
         for ans_name in commands:
             if ans_name not in SKIP_XML:
-                cmd_name = ast.to_py_name(ans_name)
+                cmd_name = cmd_map[ans_name]
                 fid.write(f"   {cmd_name}\n")
 
     return doc_src
