@@ -49,7 +49,7 @@ SKIP = {"*IF", "*ELSE", "C***", "*RETURN"}
 
 
 def to_py_name(name, cmd_map=None):
-    """Convert to a python compatible name."""
+    """Convert to a Python-compatible name."""
     if cmd_map is not None:
         global CMD_MAP_GLOB
         CMD_MAP_GLOB = cmd_map
@@ -124,7 +124,7 @@ def multireplace(string, replacements, ignore_case=False):
 
 
 def split_trail_alpha(text):
-    """Split a string based on the last tailing non alphanumeric character."""
+    """Split a string based on the last tailing non-alphanumeric character."""
     for ii, char in enumerate(text):
         if not char.isalnum():
             break
@@ -135,7 +135,7 @@ def split_trail_alpha(text):
 
 
 def is_numeric(text):
-    """Return True when a string is numeric."""
+    """Return ``True`` when a string is numeric."""
     try:
         float(text)
         return True
@@ -179,11 +179,11 @@ class Element:
 
     @property
     def tostring(self):
-        """Attributes of the element as a dictionnary."""
+        """Attributes of the element as a dictionary."""
         return tostring(self._element)
 
     def has_children(self):
-        """Return wether the element has children or not."""
+        """Return wether the element has children."""
         return bool(len(self._element.getchildren()))
 
     def get(self, entry):
@@ -197,7 +197,7 @@ class Element:
 
     @property
     def any_isalnum(self):
-        """Return ``True`` if any characters are alphanumeric."""
+        """Returns ``True`` if any characters are alphanumeric."""
         return any([char.isalnum() for char in str(self)])
 
     @property
@@ -1242,7 +1242,7 @@ def parse_text(element):
 
 
 class TGroup(Element):
-    """Provides the tgroup element which contains the header and body rows of a table."""
+    """Provides the tgroup element, which contains the header and body rows of a table."""
 
     @property
     def n_col(self):
@@ -1329,8 +1329,8 @@ class Refentrytitle(Element):
 
 
 class Refnamediv(Element):
-    """Provides the refnamediv element which contains the name,
-    purpose and classification of a reference."""
+    """Provides the refnamediv element, which contains the name,
+    purpose, and classification of a reference."""
 
     def __init__(self, element, terms=None):
         self._element = element
@@ -1429,7 +1429,7 @@ class Refname(Element):
 
 
 class Refpurpose(Element):
-    """Provides the refpurpose element which contains
+    """Provides the refpurpose element, which contains
     a short synopsis of a reference."""
 
     def __repr__(self):
@@ -1472,7 +1472,7 @@ class Command(Element):
 
     @property
     def has_args(self):
-        """Return whether the element has arguments or not."""
+        """Return whether the element has arguments."""
         # return self.tail.startswith(",")
         return False  # TODO: This is to be modified
 
@@ -1876,7 +1876,7 @@ class Chapter(Element):
 
     @property
     def helpstring(self):
-        """Return the value for the ``helpstring`` parameter contained in the chapter element."""
+        """Value for the ``helpstring`` parameter contained in the chapter element."""
         return self[1]._element.get("helpstring")
 
     def __repr__(self):
@@ -2316,7 +2316,7 @@ class XMLCommand(Element):
         return "\n".join(lines)
 
     def py_source(self, custom_functions=None, cmd_map=None):
-        """Return the Python source"""
+        """Return the Python source."""
 
         if cmd_map is not None:
             global CMD_MAP_GLOB

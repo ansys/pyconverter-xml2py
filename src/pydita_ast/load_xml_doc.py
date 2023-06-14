@@ -18,12 +18,12 @@ def load_links(link_path):
 
     Parameters
     ----------
-    link_path: str
+    link_path : str
         Path to the links directory.
 
     Returns
     -------
-    links: dict
+    links : dict
         Dictionary containing the link names and the needed information to render the links.
 
     """
@@ -68,12 +68,12 @@ def load_fcache(graph_path):
 
     Parameters
     ----------
-    graph_path: str
+    graph_path : str
         Path to the graphic directory.
 
     Returns
     -------
-    fcache: dict
+    fcache : dict
         Dictionary containing the base names of the graphics and their path.
 
     """
@@ -94,12 +94,12 @@ def load_docu_global(term_path):
 
     Parameters
     ----------
-    term_path: str
+    term_path : str
         Path to the terms directory.
 
     Returns
     -------
-    docu_global: dict
+    docu_global : dict
         Dictionary containing the entity names from the documentation and their path.
 
     """
@@ -145,37 +145,37 @@ def load_terms(
 
     Parameters
     ----------
-    term_path: str
+    term_path : str
         Path to the terms directory.
 
-    docu_global: dict
+    docu_global : dict
         Dictionary containing the entity names from the documentation and their path.
 
-    links: dict
+    links : dict
         Dictionary containing the link names and the needed information to render the links.
 
-    fcache: dict
+    fcache : dict
         Dictionary containing the base names of the graphics and their path.
 
-    variable_file: str, optional
+    variable_file : str, optional
         Name of the file containing the variable terms to import.
         The default value is ``"build_variables.ent"``.
 
-    global_terms_file: str, optional
+    global_terms_file : str, optional
         Name of the file containing the global terms to import.
         The default is ``"terms_global.ent"``.
 
-    manual_file: str, optional
+    manual_file : str, optional
         Name of the file containing the manual entities to import.
         The default is ``"manuals.ent"``.
 
-    character_directory: str, optional
+    character_directory : str, optional
         Name of the directory containg the entities for the special characters.
         The default is ``"ent"``.
 
     Returns
     -------
-    terms: dict
+    terms : dict
         Dictionary containing the entity names and their values.
 
     """
