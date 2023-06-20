@@ -170,7 +170,7 @@ jobs:
           restore-keys: |
             Python-pydita_ast-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}
       
-      - name: "Install pydita_ast"
+      - name: "Install pydita-ast"
         run: |
           pip install --upgrade pip
           pip install .[doc]
