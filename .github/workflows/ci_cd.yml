@@ -15,7 +15,7 @@ on:
 
 env:
   MAIN_PYTHON_VERSION: '3.10'
-  PACKAGE_NAME: 'pydita_ast'
+  PACKAGE_NAME: 'pydita-ast'
   PACKAGE_NAMESPACE: 'pydita_ast'
   DOCUMENTATION_CNAME: 'pydita-ast.docs.pyansys.com'
   RESET_PIP_CACHE: 0
@@ -170,7 +170,7 @@ jobs:
           restore-keys: |
             Python-pydita_ast-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}
       
-      - name: "Install pydita_ast"
+      - name: "Install pydita-ast"
         run: |
           pip install --upgrade pip
           pip install .[doc]

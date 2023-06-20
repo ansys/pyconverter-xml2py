@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 # Check https://flit.readthedocs.io/en/latest/pyproject_toml.html for all available sections
-name = "pydita_ast"
+name = "pydita-ast"
 version = "0.1.dev"
 description = "PyDita AST converter."
 readme = "README.rst"

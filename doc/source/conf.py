@@ -6,7 +6,7 @@ from ansys_sphinx_theme import ansys_favicon, get_version_match, pyansys_logo_bl
 from pydita_ast import __version__
 
 # Project information
-project = "pydita_ast"
+project = "pydita-ast"
 copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
 author = "ANSYS, Inc."
 release = version = __version__
