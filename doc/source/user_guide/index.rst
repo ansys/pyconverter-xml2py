@@ -29,7 +29,7 @@ to run the converter:
 
 .. code:: bash
 
-    python xml2rst.py -p XML_directory_path
+    pydita-ast package information -x XML_directory_path
 
 
 If you need to customize some functions, you can specify the path containing the
@@ -37,7 +37,7 @@ Python files:
 
 .. code:: bash
 
-    python xml2rst.py -p XML_directory_path -f customized_function_directory_path
+    pydita-ast package information -x XML_directory_path -f customized_function_directory_path
 
 
 For more information, see :ref:`ref_source_code`.
