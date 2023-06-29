@@ -1,3 +1,5 @@
+# Copyright (c) 2023 ANSYS, Inc. All rights reserved.
+
 import os
 
 import pydita_ast.directory_format as ff

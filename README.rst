@@ -66,14 +66,14 @@ Once the ``XML_directory`` is correctly organized, the converter can be run.
 
 .. code:: bash
 
-    pydita-ast package information -x XML_directory_path
+    pydita-ast package -x XML_directory_path
 
 If some functions need to be customized, the path containing the python 
 files can be specified.
 
 .. code:: bash
 
-    pydita-ast package information -x XML_directory_path -f customized_function_directory_path
+    pydita-ast package -x XML_directory_path -f customized_function_directory_path
 
 
 A new package is then automatically generated. Its default name is ``package``.
