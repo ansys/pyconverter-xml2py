@@ -41,8 +41,8 @@
            label="README.rst", shape="file"
          ];
 
-         pydita [
-           label="pydita", shape="folder"
+         pydoc [
+           label="pydoc", shape="folder"
          ];
 
          generated_commands [
@@ -156,9 +156,9 @@
       ansys -> accept_file
       ansys -> reject_file
 
-      scr -> pydita
+      scr -> pydoc
       
-      pydita -> generated_commands
+      pydoc -> generated_commands
 
       generated_commands -> python_files
       generated_commands -> init_files

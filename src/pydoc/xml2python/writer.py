@@ -349,7 +349,7 @@ def write_docs(commands, cmd_map, package_path):
         fid.write("Autosummary\n")
         fid.write("===========\n\n")
 
-        fid.write(".. currentmodule:: pydita.generatedcommands\n\n")
+        fid.write(".. currentmodule:: pydoc.generatedcommands\n\n")
         fid.write(".. autosummary::\n")
         fid.write("   :template: base.rst\n")
         fid.write("   :toctree: _autosummary/\n\n")

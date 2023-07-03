@@ -53,7 +53,7 @@ doc = [
 ]
 
 [tool.flit.module]
-name = "pydita.generatedcommands"
+name = "pydoc.generatedcommands"
 
 [project.urls]
 Source = "https://github.com/ansys/pydoc-xml2python/"

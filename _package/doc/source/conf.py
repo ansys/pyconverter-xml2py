@@ -1,6 +1,5 @@
 from datetime import datetime
-
-from pydita.generatedcommands import __version__
+from pydoc.generatedcommands import __version__
 
 # Project information
 project = "pydoc-generatedcommands"
