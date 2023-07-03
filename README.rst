@@ -1,8 +1,8 @@
 PyDita-AST
 ==========
 
-A Python wrapper to convert XML documentation into Python source code with its related
-Sphinx documentation.
+A Python wrapper to convert XML documentation into Python source code
+with its related Sphinx documentation.
 
 |pyansys| |pypi| |GH-CI| |codecov| |MIT| |black|
 
