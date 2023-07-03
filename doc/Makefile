@@ -25,4 +25,4 @@ clean:
 pdf:
 	@$(SPHINXBUILD) -M latex "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	cd $(BUILDDIR)/latex && latexmk -r latexmkrc -pdf *.tex -interaction=nonstopmode || true
-	(test -f $(BUILDDIR)/latex/pydita-ast-Documentation-*.pdf && echo pdf exists) || exit 1
+	(test -f $(BUILDDIR)/latex/pydoc-xml2python-Documentation-*.pdf && echo pdf exists) || exit 1

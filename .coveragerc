@@ -1,6 +1,6 @@
 [run]
 source =
-    pydita_ast
+    pydoc.xml2python
 
 [report]
 show_missing = true

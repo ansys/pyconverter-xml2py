@@ -1,19 +1,19 @@
 """Sphinx documentation configuration file."""
 from datetime import datetime
 import os
+from pydoc.xml2python import __version__
 
 from ansys_sphinx_theme import ansys_favicon, get_version_match, pyansys_logo_black
-from pydita_ast import __version__
 
 # Project information
-project = "pydita-ast"
+project = "pydoc-xml2python"
 copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
 author = "ANSYS, Inc."
 release = version = __version__
 cname = os.getenv("DOCUMENTATION_CNAME", "<DEFAULT_CNAME>")
 switcher_version = get_version_match(__version__)
 
-REPOSITORY_NAME = "pydita-ast"
+REPOSITORY_NAME = "pydoc-xml2python"
 USERNAME = "ansys"
 BRANCH = "main"
 
@@ -38,7 +38,7 @@ html_theme_options = {
     "icon_links": [
         {
             "name": "Support",
-            "url": "https://github.com/ansys/pydita-ast/discussions",
+            "url": "https://github.com/ansys/pydoc-xml2python/discussions",
             "icon": "fa fa-comment fa-fw",
         },
     ],

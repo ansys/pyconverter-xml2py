@@ -2,17 +2,17 @@
 
 import glob
 import os
+from pydoc.xml2python import ast_tree as ast
+from pydoc.xml2python import load_xml_doc as load
+from pydoc.xml2python.custom_functions import CustomFunctions
+from pydoc.xml2python.directory_format import get_paths
 import shutil
 
-from pydita_ast import ast_tree as ast
-from pydita_ast import load_xml_doc as load
-from pydita_ast.custom_functions import CustomFunctions
-from pydita_ast.directory_format import get_paths
 from tqdm import tqdm
 
 RULES = {"/": "slash", "*": "star"}
 
-GENERATED_SRC_CODE = os.path.join("src", "pydita", "generatedcommands")
+GENERATED_SRC_CODE = os.path.join("src", "pydoc", "generatedcommands")
 
 # common statements used within the docs to avoid duplication
 CONST = {

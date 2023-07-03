@@ -1,9 +1,9 @@
 # Copyright (c) 2023 ANSYS, Inc. All rights reserved.
 
 import os
+import pydoc.xml2python.writer as wrt
 import shutil
 
-import pydita_ast.writer as wrt
 import pytest
 
 

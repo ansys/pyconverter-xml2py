@@ -1,7 +1,7 @@
 AST tree
 ========
 
-.. currentmodule:: pydita_ast.ast_tree
+.. currentmodule:: pydoc.xml2python.ast_tree
 
 The following classes are used to create the AST tree:
 

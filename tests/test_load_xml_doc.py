@@ -1,6 +1,6 @@
 # Copyright (c) 2023 ANSYS, Inc. All rights reserved.
 
-import pydita_ast.load_xml_doc as lxd
+import pydoc.xml2python.load_xml_doc as lxd
 
 
 def test_load_links(link_path):

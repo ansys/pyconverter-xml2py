@@ -1,7 +1,7 @@
 Customized functions
 ====================
 
-.. currentmodule:: pydita_ast.custom_functions
+.. currentmodule:: pydoc.xml2python.custom_functions
 
 The following class and functions are used to customize functions.
 

@@ -1,7 +1,7 @@
 Load XML documentation
 ======================
 
-.. currentmodule:: pydita_ast.load_xml_doc
+.. currentmodule:: pydoc.xml2python.load_xml_doc
 
 The following functions load the XML documentation.
 

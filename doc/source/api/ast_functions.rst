@@ -1,7 +1,7 @@
 AST functions
 =============
 
-.. currentmodule:: pydita_ast.ast_tree
+.. currentmodule:: pydoc.xml2python.ast_tree
 
 The following functions are used to create the AST tree:
 

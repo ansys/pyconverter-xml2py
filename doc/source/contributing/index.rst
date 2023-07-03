@@ -18,15 +18,15 @@ Run this code to clone and install the latest version of PyDita-AST in developme
 
 .. code:: console
 
-    git clone https://github.com/ansys/pydita-ast
-    cd pydita-ast
+    git clone https://github.com/ansys/pydoc-xml2python
+    cd pydoc-xml2python
     python -m pip install --upgrade pip
     pip install -e .
 
 Post issues
 -----------
 
-Use the `PyDita-AST Issues <pydita_ast_issues_>`_ page to submit questions,
+Use the `PyDita-AST Issues <pydoc.xml2python_issues_>`_ page to submit questions,
 report bugs, and request new features. When possible, use these issue
 templates:
 

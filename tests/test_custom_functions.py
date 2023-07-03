@@ -1,8 +1,7 @@
 # Copyright (c) 2023 ANSYS, Inc. All rights reserved.
 
 import os
-
-import pydita_ast.custom_functions as cf
+import pydoc.xml2python.custom_functions as cf
 
 
 def test_customfunctions(custom_functions):

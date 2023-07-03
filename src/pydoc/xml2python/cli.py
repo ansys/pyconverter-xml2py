@@ -3,10 +3,10 @@
 """Command Line Interface for PyDita-AST."""
 
 import os
+from pydoc.xml2python import __version__
+from pydoc.xml2python import writer as wr
 
 import click
-from pydita_ast import __version__
-from pydita_ast import writer as wr
 
 
 def create_package(xml_path=None, functions_path=None, target_path=None):
@@ -75,7 +75,7 @@ def main():
 @main.command()
 def version():
     """Display current version."""
-    print(f"pydita_ast {__version__}")
+    print(f"pydoc.xml2python {__version__}")
 
 
 @main.command()

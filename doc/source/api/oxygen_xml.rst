@@ -1,7 +1,7 @@
 Oxygen XML tree
 ===============
 
-.. currentmodule:: pydita_ast.ast_tree
+.. currentmodule:: pydoc.xml2python.ast_tree
 
 The following class is used to get an Oxygen XML tree:
 

@@ -10,14 +10,14 @@ with its related Sphinx documentation.
    :target: https://docs.pyansys.com/
    :alt: PyAnsys
 
-.. |pypi| image:: https://img.shields.io/pypi/v/pydita-ast.svg?logo=python&logoColor=white
-   :target: https://pypi.org/project/pydita-ast/
+.. |pypi| image:: https://img.shields.io/pypi/v/pydoc-xml2python.svg?logo=python&logoColor=white
+   :target: https://pypi.org/project/pydoc-xml2python/
 
-.. |codecov| image:: https://codecov.io/gh/ansys/pydita-ast/branch/main/graph/badge.svg
-   :target: https://codecov.io/gh/ansys/pydita-ast
+.. |codecov| image:: https://codecov.io/gh/ansys/pydoc-xml2python/branch/main/graph/badge.svg
+   :target: https://codecov.io/gh/ansys/pydoc-xml2python
 
-.. |GH-CI| image:: https://github.com/ansys/pydita-ast/actions/workflows/ci_cd.yml/badge.svg
-   :target: https://github.com/ansys/pydita-ast/actions/workflows/ci_cd.yml
+.. |GH-CI| image:: https://github.com/ansys/pydoc-xml2python/actions/workflows/ci_cd.yml/badge.svg
+   :target: https://github.com/ansys/pydoc-xml2python/actions/workflows/ci_cd.yml
 
 .. |MIT| image:: https://img.shields.io/badge/License-MIT-yellow.svg
    :target: https://opensource.org/licenses/MIT
@@ -37,7 +37,7 @@ Sphinx documentation from an XML documentation.
 Documentation and issues
 ------------------------
 
-On the `PyDita-AST Issues <https://github.com/ansys/pydita-ast/issues>`_ for this repository,
+On the `PyDita-AST Issues <https://github.com/ansys/pydoc-xml2python/issues>`_ for this repository,
 you can create issues to submit questions, report bugs, and request new features. 
 To reach the PyAnsys support team, email `pyansys.core@ansys.com <pyansys.core@ansys.com>`_.
 
@@ -45,11 +45,11 @@ To reach the PyAnsys support team, email `pyansys.core@ansys.com <pyansys.core@a
 Getting started
 ---------------
 
-Install the ``pydita-ast`` package with:
+Install the ``pydoc-xml2python`` package with:
 
 .. code:: bash
 
-    python -m pip install pydita-ast
+    python -m pip install pydoc-xml2python
 
 
 It is recommended to organize the XML documentation as follow:
@@ -66,14 +66,14 @@ Once the ``XML_directory`` is correctly organized, the converter can be run.
 
 .. code:: bash
 
-    pydita-ast package -x XML_directory_path
+    pydoc-xml2python package -x XML_directory_path
 
 If some functions need to be customized, the path containing the python 
 files can be specified.
 
 .. code:: bash
 
-    pydita-ast package -x XML_directory_path -f customized_function_directory_path
+    pydoc-xml2python package -x XML_directory_path -f customized_function_directory_path
 
 
 A new package is then automatically generated. Its default name is ``package``.
