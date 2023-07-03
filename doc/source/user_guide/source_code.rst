@@ -37,7 +37,7 @@ generating the code:
 
 .. code:: bash
 
-    python xml2rst.py -p XML_directory_path -f customized_function_directory_path
+    pydita-ast package -x XML_directory_path -f customized_function_directory_path
 
 
 In this configuration, the provided code is used for the conversion.
