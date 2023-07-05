@@ -44,7 +44,7 @@ tests = [
     "pytest-rerunfailures==11.1.2",
 ]
 doc = [
-    "Sphinx==6.2.1",
+    "Sphinx==7.0.1",
     "ansys-sphinx-theme==0.9.9",
     "build>= 0.10.0",
     "flit>=3.8.0",
