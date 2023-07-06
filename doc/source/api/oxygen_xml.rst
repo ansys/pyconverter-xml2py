@@ -1,7 +1,7 @@
 Oxygen XML tree
 ===============
 
-.. currentmodule:: pydoc.xml2python.ast_tree
+.. currentmodule:: pyconverter.xml2py.ast_tree
 
 The following class is used to get an Oxygen XML tree:
 

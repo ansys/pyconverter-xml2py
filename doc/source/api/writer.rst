@@ -1,7 +1,7 @@
 Writer
 ======
 
-.. currentmodule:: pydoc.xml2python.writer
+.. currentmodule:: pyconverter.xml2py.writer
 
 The following functions convert the AST tree into Sphinx documentation.
 

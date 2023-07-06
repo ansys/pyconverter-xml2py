@@ -1,12 +1,12 @@
 # Copyright (c) 2023 ANSYS, Inc. All rights reserved.
 
-"""Command Line Interface for PyDita-AST."""
+"""Command Line Interface for PyConverter-XML2Py."""
 
 import os
-from pydoc.xml2python import __version__
-from pydoc.xml2python import writer as wr
 
 import click
+from pyconverter.xml2py import __version__
+from pyconverter.xml2py import writer as wr
 
 
 def create_package(xml_path=None, functions_path=None, target_path=None):
@@ -75,7 +75,7 @@ def main():
 @main.command()
 def version():
     """Display current version."""
-    print(f"pydoc.xml2python {__version__}")
+    print(f"pyconverter.xml2py {__version__}")
 
 
 @main.command()

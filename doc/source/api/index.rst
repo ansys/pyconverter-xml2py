@@ -2,7 +2,7 @@
 
 API reference
 =============
-This section provides descriptions of classes, functions, and attributes for the PyDita-AST API.
+This section provides descriptions of classes, functions, and attributes for the PyConverter-XML2Py API.
 Use the search feature or click links to view API documentation.
 
 .. toctree::

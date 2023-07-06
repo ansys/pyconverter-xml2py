@@ -2,17 +2,17 @@
 
 import glob
 import os
-from pydoc.xml2python import ast_tree as ast
-from pydoc.xml2python import load_xml_doc as load
-from pydoc.xml2python.custom_functions import CustomFunctions
-from pydoc.xml2python.directory_format import get_paths
 import shutil
 
+from pyconverter.xml2py import ast_tree as ast
+from pyconverter.xml2py import load_xml_doc as load
+from pyconverter.xml2py.custom_functions import CustomFunctions
+from pyconverter.xml2py.directory_format import get_paths
 from tqdm import tqdm
 
 RULES = {"/": "slash", "*": "star"}
 
-GENERATED_SRC_CODE = os.path.join("src", "pydoc", "generatedcommands")
+GENERATED_SRC_CODE = os.path.join("src", "pyconverter", "generatedcommands")
 
 # common statements used within the docs to avoid duplication
 CONST = {
@@ -307,7 +307,7 @@ def write_source(
         fid.write("except ModuleNotFoundError:\n")
         fid.write("    import importlib_metadata\n\n")
         fid.write("__version__ = importlib_metadata.version(__name__.replace('.', '-'))\n")
-        fid.write('"""PyDita-Generatedcommands version."""\n')
+        fid.write('"""PyConverter-Generatedcommands version."""\n')
 
     print(f"Commands written to {cmd_path}")
 
@@ -349,7 +349,7 @@ def write_docs(commands, cmd_map, package_path):
         fid.write("Autosummary\n")
         fid.write("===========\n\n")
 
-        fid.write(".. currentmodule:: pydoc.generatedcommands\n\n")
+        fid.write(".. currentmodule:: pyconverter.generatedcommands\n\n")
         fid.write(".. autosummary::\n")
         fid.write("   :template: base.rst\n")
         fid.write("   :toctree: _autosummary/\n\n")

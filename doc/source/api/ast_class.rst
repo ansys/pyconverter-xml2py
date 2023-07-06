@@ -1,7 +1,7 @@
 AST tree
 ========
 
-.. currentmodule:: pydoc.xml2python.ast_tree
+.. currentmodule:: pyconverter.xml2py.ast_tree
 
 The following classes are used to create the AST tree:
 

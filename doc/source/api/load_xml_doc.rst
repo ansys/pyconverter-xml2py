@@ -1,7 +1,7 @@
 Load XML documentation
 ======================
 
-.. currentmodule:: pydoc.xml2python.load_xml_doc
+.. currentmodule:: pyconverter.xml2py.load_xml_doc
 
 The following functions load the XML documentation.
 

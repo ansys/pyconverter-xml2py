@@ -1,8 +1,8 @@
 # Copyright (c) 2023 ANSYS, Inc. All rights reserved.
 
 import os
-import pydoc.xml2python.directory_format as ff
 
+import pyconverter.xml2py.directory_format as ff
 import pytest
 
 

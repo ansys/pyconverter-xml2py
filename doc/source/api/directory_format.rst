@@ -1,7 +1,7 @@
 Directory format
 ================
 
-.. currentmodule:: pydoc.xml2python.directory_format
+.. currentmodule:: pyconverter.xml2py.directory_format
 
 The following functions return the paths needed when the XML directory
 follows the predefined format.

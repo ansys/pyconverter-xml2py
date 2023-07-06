@@ -1,7 +1,7 @@
 AST functions
 =============
 
-.. currentmodule:: pydoc.xml2python.ast_tree
+.. currentmodule:: pyconverter.xml2py.ast_tree
 
 The following functions are used to create the AST tree:
 

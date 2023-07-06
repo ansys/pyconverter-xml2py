@@ -1,9 +1,9 @@
 import os
-from pydoc.xml2python.custom_functions import CustomFunctions
-import pydoc.xml2python.directory_format as ff
-import pydoc.xml2python.load_xml_doc as lxd
-import pydoc.xml2python.writer as wrt
 
+from pyconverter.xml2py.custom_functions import CustomFunctions
+import pyconverter.xml2py.directory_format as ff
+import pyconverter.xml2py.load_xml_doc as lxd
+import pyconverter.xml2py.writer as wrt
 import pytest
 
 pytest_plugins = ["pytester"]

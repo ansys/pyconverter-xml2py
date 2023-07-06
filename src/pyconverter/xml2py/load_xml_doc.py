@@ -3,13 +3,13 @@
 import glob
 import os
 from pathlib import Path
-import pydoc.xml2python.ast_tree as ast
-import pydoc.xml2python.version_variables as var
 import re
 import unicodedata
 
 from lxml.etree import ParserError
 from lxml.html import fromstring
+import pyconverter.xml2py.ast_tree as ast
+import pyconverter.xml2py.version_variables as var
 from tqdm import tqdm
 
 

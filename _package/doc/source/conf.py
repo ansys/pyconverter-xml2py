@@ -1,13 +1,14 @@
 from datetime import datetime
-from pydoc.generatedcommands import __version__
+
+from pyconverter.generatedcommands import __version__
 
 # Project information
-project = "pydoc-generatedcommands"
+project = "pyconverter-generatedcommands"
 copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
 author = "ANSYS, Inc."
 release = version = __version__
 
-REPOSITORY_NAME = "pydoc-generatedcommands"
+REPOSITORY_NAME = "pyconverter-generatedcommands"
 USERNAME = "pyansys"
 BRANCH = "main"
 

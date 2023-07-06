@@ -1,7 +1,8 @@
 # Copyright (c) 2023 ANSYS, Inc. All rights reserved.
 
 import os
-import pydoc.xml2python.custom_functions as cf
+
+import pyconverter.xml2py.custom_functions as cf
 
 
 def test_customfunctions(custom_functions):

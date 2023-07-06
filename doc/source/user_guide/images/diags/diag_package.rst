@@ -41,8 +41,8 @@
            label="README.rst", shape="file"
          ];
 
-         pydoc [
-           label="pydoc", shape="folder"
+         pyconverter [
+           label="pyconverter", shape="folder"
          ];
 
          generated_commands [
@@ -156,9 +156,9 @@
       ansys -> accept_file
       ansys -> reject_file
 
-      scr -> pydoc
+      scr -> pyconverter
       
-      pydoc -> generated_commands
+      pyconverter -> generated_commands
 
       generated_commands -> python_files
       generated_commands -> init_files

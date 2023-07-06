@@ -4,7 +4,7 @@ Getting started
 Installation
 ------------
 
-Two installation modes of the ``pydoc-xml2python`` package are provided: user and developer.
+Two installation modes of the ``pyconverter-xml2py`` package are provided: user and developer.
 
 User installation
 ^^^^^^^^^^^^^^^^^
@@ -13,13 +13,13 @@ Install the latest release for use with this command:
 
 .. code:: bash
 
-    python -m pip install pydoc-xml2python
+    python -m pip install pyconverter-xml2py
 
 
 For developers
 ^^^^^^^^^^^^^^
 
-Installing the ``pydoc-xml2python`` package in developer mode allows
+Installing the ``pyconverter-xml2py`` package in developer mode allows
 you to modify the source and enhance it.
 
 Before contributing to the project, see the `PyAnsys Developer's Guide`_.
@@ -30,7 +30,7 @@ Follow these steps to install the package in developer mode:
 
     .. code:: bash
 
-        git clone https://github.com/ansys/pydoc-xml2python
+        git clone https://github.com/ansys/pyconverter-xml2py
 
 #. Create a fresh-clean Python environment and activate it. If you require
    additional information on creation of a virtual environment, see the

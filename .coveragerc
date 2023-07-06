@@ -1,6 +1,6 @@
 [run]
 source =
-    pydoc.xml2python
+    pyconverter.xml2py
 
 [report]
 show_missing = true

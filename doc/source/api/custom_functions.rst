@@ -1,7 +1,7 @@
 Customized functions
 ====================
 
-.. currentmodule:: pydoc.xml2python.custom_functions
+.. currentmodule:: pyconverter.xml2py.custom_functions
 
 The following class and functions are used to customize functions.
 

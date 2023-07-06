@@ -1,7 +1,7 @@
-PyDita-AST
-==========
+PyConverter-XML2Py
+==================
 
-PyDita-AST is a Python library for converting technical DITA XML documentation into
+PyConverter-XML2Py is a Python library for converting technical DITA XML documentation into
 Python source code so that Sphinx documentation can be generated.
 
 .. grid:: 2
@@ -11,7 +11,7 @@ Python source code so that Sphinx documentation can be generated.
             
             :material-regular:`start;48px`
 
-            Explains how to start using PyDita-AST.
+            Explains how to start using PyConverter-XML2Py.
 
             +++
             .. button-link:: getting_started/index.html
@@ -29,7 +29,7 @@ Python source code so that Sphinx documentation can be generated.
             :material-regular:`book;48px`
 
             Presents in-depth information on the
-            key concepts of PyDita-AST.
+            key concepts of PyConverter-XML2Py.
 
             +++
             .. button-link:: user_guide/index.html
@@ -47,7 +47,7 @@ Python source code so that Sphinx documentation can be generated.
             
             :material-regular:`code;48px`
 
-            Describes members of the the PyDita-AST API.
+            Describes members of the the PyConverter-XML2Py API.
 
             +++
             .. button-link:: api/index.html

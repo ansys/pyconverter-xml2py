@@ -1,26 +1,26 @@
 """Sphinx documentation configuration file."""
 from datetime import datetime
 import os
-from pydoc.xml2python import __version__
 
 from ansys_sphinx_theme import ansys_favicon, get_version_match, pyansys_logo_black
+from pyconverter.xml2py import __version__
 
 # Project information
-project = "pydoc-xml2python"
+project = "pyconverter-xml2py"
 copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
 author = "ANSYS, Inc."
 release = version = __version__
 cname = os.getenv("DOCUMENTATION_CNAME", "<DEFAULT_CNAME>")
 switcher_version = get_version_match(__version__)
 
-REPOSITORY_NAME = "pydoc-xml2python"
+REPOSITORY_NAME = "pyconverter-xml2py"
 USERNAME = "ansys"
 BRANCH = "main"
 
 # Select desired logo, theme, and declare the html title
 html_logo = pyansys_logo_black
 html_theme = "ansys_sphinx_theme"
-html_short_title = html_title = "PyDita-AST"
+html_short_title = html_title = "PyConverter-XML2Py"
 
 # Favicon
 html_favicon = ansys_favicon
@@ -38,7 +38,7 @@ html_theme_options = {
     "icon_links": [
         {
             "name": "Support",
-            "url": "https://github.com/ansys/pydoc-xml2python/discussions",
+            "url": "https://github.com/ansys/pyconverter-xml2py/discussions",
             "icon": "fa fa-comment fa-fw",
         },
     ],

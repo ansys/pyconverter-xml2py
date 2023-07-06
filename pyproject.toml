@@ -4,9 +4,9 @@ build-backend = "flit_core.buildapi"
 
 [project]
 # Check https://flit.readthedocs.io/en/latest/pyproject_toml.html for all available sections
-name = "pydoc-xml2python"
+name = "pyconverter-xml2py"
 version = "0.1.dev0"
-description = "PyDoc-XML2Python converter."
+description = "PyConverter-XML2Py converter."
 readme = "README.rst"
 requires-python = ">=3.8"
 license = {file = "LICENSE"}
@@ -64,15 +64,15 @@ doc = [
 ]
 
 [tool.flit.module]
-name = "pydoc.xml2python"
+name = "pyconverter.xml2py"
 
 [project.urls]
-Source = "https://github.com/ansys/pydoc-xml2python/"
-Tracker = "https://github.com/ansys/pydoc-xml2python/issues"
-Homepage = "https://github.com/ansys/pydoc-xml2python"
+Source = "https://github.com/ansys/pyconverter-xml2py/"
+Tracker = "https://github.com/ansys/pyconverter-xml2py/issues"
+Homepage = "https://github.com/ansys/pyconverter-xml2py"
 
 [project.scripts]
-pydoc-xml2python = "pydoc.xml2python.cli:main"
+pyconverter-xml2py = "pyconverter.xml2py.cli:main"
 
 [tool.black]
 line-length = 100
