@@ -28,7 +28,7 @@ classifiers = [
 dependencies = [
     "click>=7.0,<9.0.0",
     "importlib-metadata >=4.0",
-    "lxml==4.9.2",
+    "lxml==4.9.3",
     "py-asciimath==0.3.0",
     "pylatexenc==2.10",
     "tqdm>=4.64.1",
