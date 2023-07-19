@@ -28,7 +28,7 @@ classifiers = [
 dependencies = [
     "click>=7.0,<9.0.0",
     "importlib-metadata >=4.0",
-    "lxml==4.9.2",
+    "lxml==4.9.3",
     "py-asciimath==0.3.0",
     "pylatexenc==2.10",
     "tqdm>=4.64.1",
@@ -36,12 +36,12 @@ dependencies = [
 
 [project.optional-dependencies]
 tests = [
-    "click==8.1.3",
-    "numpy==1.25.0",
+    "click==8.1.5",
+    "numpy==1.25.1",
     "parse==1.19.1",
     "pytest==7.4.0",
     "pytest-cov==4.1.0",
-    "pytest-rerunfailures==11.1.2",
+    "pytest-rerunfailures==12.0",
 ]
 doc = [
     "Sphinx==6.2.1",
@@ -49,9 +49,9 @@ doc = [
     "build>= 0.10.0",
     "flit>=3.8.0",
     "jupyter_sphinx==0.4.0",
-    "numpy==1.25.0",
+    "numpy==1.25.1",
     "numpydoc==1.5.0",
-    "pandas==2.0.2",
+    "pandas==2.0.3",
     "parse==1.19.1",
     "pypandoc==1.11",
     "pytest-sphinx==0.5.0",
