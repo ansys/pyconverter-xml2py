@@ -1,7 +1,7 @@
 PyConverter-XML2Py
 ==================
 
-PyConverter-XML2Py is a Python library for converting technical DITA XML documentation into
+PyConverter-XML2Py is a Python library for converting technical Docbook XML documentation into
 Python source code so that Sphinx documentation can be generated.
 
 .. grid:: 2

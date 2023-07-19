@@ -7,7 +7,6 @@ docstring
 isort
 Makefile
 PyConverter-XML2Py
-Py-Dita
 AST
 pytest
 venv

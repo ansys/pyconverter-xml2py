@@ -2,7 +2,7 @@ User guide
 ==========
 
 This section provides some guidelines for using the ``pyconverter-xml2py`` package.
-You can modify each step as needed to convert your own DITA XML documentation.
+You can modify each step as needed to convert your own Docbook XML documentation.
 
 
 Predefined format
