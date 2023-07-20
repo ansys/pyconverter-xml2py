@@ -1,7 +1,7 @@
 User guide
 ==========
 
-This section provides some guidelines for using the ``pyconverter-xml2py`` package.
+This section provides some guidelines for using PyConverter-XML2Py.
 You can modify each step as needed to convert your own Docbook XML documentation.
 
 
