@@ -1,9 +1,14 @@
-AST tree
-========
+AST (Abstract Syntax Tree)
+==========================
 
 .. currentmodule:: pyconverter.xml2py.ast_tree
 
-The following classes are used to create the AST tree:
+An AST (Abstract Syntax Tree) is an abstract syntactic structure of text.
+Each node of the tree denotes a construct occurring in the XML file.
+Every element the AST contains can be edited using properties
+and functions to obtain the desired rendering.
+
+The following classes are used to create the AST:
 
 .. autosummary::
    :toctree: _autosummary/ast_class

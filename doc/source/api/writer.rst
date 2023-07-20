@@ -3,7 +3,7 @@ Writer
 
 .. currentmodule:: pyconverter.xml2py.writer
 
-The following functions convert the AST tree into Sphinx documentation.
+The following functions convert the AST into Sphinx documentation.
 
 .. autosummary::
    :toctree: _autosummary/writer

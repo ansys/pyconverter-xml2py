@@ -2520,7 +2520,7 @@ def get_parser():
 
 
 class OxygenXmlTree(Element):
-    """Provides for loading an XML file as an AST tree."""
+    """Provides for loading an XML file as an AST (Abstract Syntax Tree)."""
 
     def __init__(self, filename, meta_only=False):
         """Parse command from XML file."""
