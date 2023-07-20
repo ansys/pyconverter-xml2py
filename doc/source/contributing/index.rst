@@ -42,7 +42,8 @@ To reach the PyAnsys support team, email `pyansys.core@ansys.com <pyansys.core@a
 Build documentation
 -------------------
 
-To build the PyConverter-XML2Py documentation locally, in the root directory of the repository, run::
+To build the PyConverter-XML2Py documentation locally, in the root directory of the repository,
+run these commands::
     
     pip install .[doc]
     .\doc\make.bat html 
