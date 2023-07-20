@@ -13,7 +13,7 @@ USERNAME = "pyansys"
 BRANCH = "main"
 
 # Options for HTML output
-html_short_title = html_title = "Documentation"
+html_short_title = html_title = "PyConverter-GeneratedCommands"
 html_theme = "pydata_sphinx_theme"
 html_theme_options = {
     "show_prev_next": False,

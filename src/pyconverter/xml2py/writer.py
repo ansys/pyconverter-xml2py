@@ -307,7 +307,7 @@ def write_source(
         fid.write("except ModuleNotFoundError:\n")
         fid.write("    import importlib_metadata\n\n")
         fid.write("__version__ = importlib_metadata.version(__name__.replace('.', '-'))\n")
-        fid.write('"""PyConverter-Generatedcommands version."""\n')
+        fid.write('"""PyConverter-GeneratedCommands version."""\n')
 
     print(f"Commands written to {cmd_path}")
 

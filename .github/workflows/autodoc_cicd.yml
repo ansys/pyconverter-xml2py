@@ -106,10 +106,10 @@ jobs:
         run: |
           pip install .
       
-      - name: "Retrieve PyConverter-Generatedcommands version"
+      - name: "Retrieve PyConverter-GeneratedCommands version"
         run: |
           echo "PYCONVERTER_GENERATED_VERSION=$(python -c 'from pyconverter.generatedcommands import __version__; print(__version__)')" >> $GITHUB_ENV
-          echo "PyConverter-XML2Py-Generatedcommands version is: $(python -c 'from pyconverter.generatedcommands import __version__; print(__version__)')"
+          echo "PyConverter-GeneratedCommands version is: $(python -c 'from pyconverter.generatedcommands import __version__; print(__version__)')"
 
       - name: "Cache docs build directory"
         uses: actions/cache@v3
