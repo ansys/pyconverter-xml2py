@@ -1,4 +1,4 @@
-AST (Abstract Syntax Tree)
+AST (abstract syntax tree)
 ==========================
 
 .. currentmodule:: pyconverter.xml2py.ast_tree
