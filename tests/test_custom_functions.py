@@ -2,7 +2,7 @@
 
 import os
 
-import pydita_ast.custom_functions as cf
+import pyconverter.xml2py.custom_functions as cf
 
 
 def test_customfunctions(custom_functions):

@@ -1,8 +1,8 @@
 User guide
 ==========
 
-This section provides some guidelines for using the ``pydita-ast`` package.
-You can modify each step as needed to convert your own DITA XML documentation.
+This section provides some guidelines for using PyConverter-XML2Py.
+You can modify each step as needed to convert your own Docbook XML documentation.
 
 
 Predefined format
@@ -29,7 +29,7 @@ to run the converter:
 
 .. code:: bash
 
-    pydita-ast package -x XML_directory_path
+    pyconverter-xml2py package -x XML_directory_path
 
 
 If you need to customize some functions, you can specify the path containing the
@@ -37,7 +37,7 @@ Python files:
 
 .. code:: bash
 
-    pydita-ast package -x XML_directory_path -f customized_function_directory_path
+    pyconverter-xml2py package -x XML_directory_path -f customized_function_directory_path
 
 
 For more information, see :ref:`ref_source_code`.

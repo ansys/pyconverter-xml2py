@@ -2,7 +2,7 @@
 
 import os
 
-import pydita_ast.directory_format as ff
+import pyconverter.xml2py.directory_format as ff
 import pytest
 
 

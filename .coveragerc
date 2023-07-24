@@ -1,6 +1,6 @@
 [run]
 source =
-    pydita_ast
+    pyconverter.xml2py
 
 [report]
 show_missing = true

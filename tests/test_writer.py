@@ -3,7 +3,7 @@
 import os
 import shutil
 
-import pydita_ast.writer as wrt
+import pyconverter.xml2py.writer as wrt
 import pytest
 
 

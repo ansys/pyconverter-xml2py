@@ -6,27 +6,27 @@ Contribute
 Overall guidance on contributing to a PyAnsys library appears in the
 `Contributing <dev_guide_contributing_>`_ topic
 in the *PyAnsys Developer's Guide*. Ensure that you are thoroughly familiar
-with this guide before attempting to contribute to PyDita-AST.
+with this guide before attempting to contribute to PyConverter-XML2Py.
 
-The following contribution information is specific to PyDita-AST.
+The following contribution information is specific to PyConverter-XML2Py.
 
 Clone the repository
 --------------------
 
 
-Run this code to clone and install the latest version of PyDita-AST in development mode:
+Run this code to clone and install the latest version of PyConverter-XML2Py in development mode:
 
 .. code:: console
 
-    git clone https://github.com/ansys/pydita-ast
-    cd pydita-ast
+    git clone https://github.com/ansys/pyconverter-xml2py
+    cd pyconverter-xml2py
     python -m pip install --upgrade pip
     pip install -e .
 
 Post issues
 -----------
 
-Use the `PyDita-AST Issues <pydita_ast_issues_>`_ page to submit questions,
+Use the `PyConverter-XML2Py Issues <pyconverter.xml2py_issues_>`_ page to submit questions,
 report bugs, and request new features. When possible, use these issue
 templates:
 
@@ -42,7 +42,8 @@ To reach the PyAnsys support team, email `pyansys.core@ansys.com <pyansys.core@a
 Build documentation
 -------------------
 
-To build the PyDita-AST documentation locally, in the root directory of the repository, run::
+To build the PyConverter-XML2Py documentation locally, in the root directory of the repository,
+run these commands::
     
     pip install .[doc]
     .\doc\make.bat html 
@@ -51,7 +52,7 @@ To build the PyDita-AST documentation locally, in the root directory of the repo
 Adhere to code style
 --------------------
 
-PyDita-AST follows the PEP8 standard as outlined in the `PyAnsys Developer's Guide
+PyConverter-XML2Py follows the PEP8 standard as outlined in the `PyAnsys Developer's Guide
 <dev_guide_pyansys_>`_ and implements style checking using
 `pre-commit <pre-commit_>`_.
 

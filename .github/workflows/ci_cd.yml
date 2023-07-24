@@ -15,9 +15,9 @@ on:
 
 env:
   MAIN_PYTHON_VERSION: '3.10'
-  PACKAGE_NAME: 'pydita-ast'
-  PACKAGE_NAMESPACE: 'pydita_ast'
-  DOCUMENTATION_CNAME: 'pydita-ast.docs.pyansys.com'
+  PACKAGE_NAME: 'pyconverter-xml2py'
+  PACKAGE_NAMESPACE: 'pyconverter.xml2py'
+  DOCUMENTATION_CNAME: 'pyconverter-xml2py.docs.pyansys.com'
   RESET_PIP_CACHE: 0
   RESET_AUTOSUMMARY_CACHE: 0
   RESET_DOC_BUILD_CACHE: 0
@@ -121,7 +121,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: ansys-internal/mapdl-cmd-doc
-          ref: feat/pydita-ast-predifined-format
+          ref: feat/pyconverter-xml2py-predifined-format
           token: ${{ secrets.MAPDL_CMD_DOC_TOKEN }}
           path: mapdl-cmd-doc
 
@@ -133,7 +133,7 @@ jobs:
         run: |
           pytest -v --durations=10 --maxfail=10 \
             --reruns 7 --reruns-delay 3 --ghdir ${{ github.workspace }}\
-            --cov=pydita_ast --cov-report=xml:coverage.xml --cov-report=html\
+            --cov=pyconverter.xml2py --cov-report=xml:coverage.xml --cov-report=html\
             --cov-report term
 
       - name: "Upload coverage to Codecov"
@@ -166,35 +166,35 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: Python-pydita_ast-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
+          key: Python-pyconverter.xml2py-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
-            Python-pydita_ast-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}
+            Python-pyconverter.xml2py-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}
       
-      - name: "Install pydita-ast"
+      - name: "Install pyconverter-xml2py"
         run: |
           pip install --upgrade pip
           pip install .[doc]
       
-      - name: "Retrieve pydita_ast version"
+      - name: "Retrieve pyconverter.xml2py version"
         run: |
-          echo "PYDITA_VERSION=$(python -c 'from pydita_ast import __version__; print(__version__)')" >> $GITHUB_ENV
-          echo "pydita_ast version is: $(python -c 'from pydita_ast import __version__; print(__version__)')"
+          echo "PYCONVERTER_VERSION=$(python -c 'from pyconverter.xml2py import __version__; print(__version__)')" >> $GITHUB_ENV
+          echo "pyconverter.xml2py version is: $(python -c 'from pyconverter.xml2py import __version__; print(__version__)')"
     
       - name: "Cache docs build directory"
         uses: actions/cache@v3
         with:
           path: doc/_build
-          key: doc-build-pydita-ast-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYDITA_VERSION }}-${{ github.sha }}
+          key: doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
           restore-keys: |
-            doc-build-pydita-ast-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYDITA_VERSION }}
+            doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}
 
       - name: "Cache autosummary"
         uses: actions/cache@v3
         with:
           path: doc/source/**/_autosummary/**/*.rst
-          key: autosummary-pydita-ast-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYDITA_VERSION }}-${{ github.sha }}
+          key: autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
           restore-keys: |
-            autosummary-pydita-ast-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYDITA_VERSION }}
+            autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}
 
       - name: "Run Ansys documentation building action"
         uses: ansys/actions/doc-build@v4

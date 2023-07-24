@@ -1,7 +1,7 @@
 # Copyright (c) 2023 ANSYS, Inc. All rights reserved.
 
 from click.testing import CliRunner
-from pydita_ast.cli import main
+from pyconverter.xml2py.cli import main
 
 
 def test_cli_main_group():

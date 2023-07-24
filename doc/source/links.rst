@@ -4,8 +4,8 @@
 .. _pyansys_support: pyansys.core@ansys.com
 .. _pyansys_core: pyansys.core@ansys.com
 
-.. #PyDita-AST related
-.. _pydita_ast_issues: https://github.com/ansys/pydita-ast/issues
+.. #PyConverter-XML2Py related
+.. _pyconverter.xml2py_issues: https://github.com/ansys/pyconverter-xml2py/issues
 
 .. #PyAnsys Developer Guide
 .. _dev_guide_pyansys: https://dev.docs.pyansys.com/

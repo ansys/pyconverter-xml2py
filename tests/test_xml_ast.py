@@ -1,7 +1,7 @@
 # Copyright (c) 2023 ANSYS, Inc. All rights reserved.
 
 from lxml.html import fromstring
-import pydita_ast.ast_tree as ast
+import pyconverter.xml2py.ast_tree as ast
 import pytest
 
 

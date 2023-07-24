@@ -4,9 +4,9 @@ build-backend = "flit_core.buildapi"
 
 [project]
 # Check https://flit.readthedocs.io/en/latest/pyproject_toml.html for all available sections
-name = "pydita-ast"
-version = "0.1.dev"
-description = "PyDita AST converter."
+name = "pyconverter-xml2py"
+version = "0.1.dev0"
+description = "PyConverter-XML2Py converter."
 readme = "README.rst"
 requires-python = ">=3.8"
 license = {file = "LICENSE"}
@@ -14,7 +14,7 @@ authors = [
     {name = "ANSYS, Inc.", email = "pyansys.core@ansys.com"},
 ]
 maintainers = [
-    {name = "PyAnsys developers", email = "pyansys.maintainers@ansys.com"},
+    {name = "PyAnsys Core", email = "pyansys.core@ansys.com"},
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -63,13 +63,16 @@ doc = [
     "sphinx-design==0.4.1",
 ]
 
+[tool.flit.module]
+name = "pyconverter.xml2py"
+
 [project.urls]
-Source = "https://github.com/ansys/pydita-ast/"
-Tracker = "https://github.com/ansys/pydita-ast/issues"
-Homepage = "https://github.com/ansys/pydita-ast"
+Source = "https://github.com/ansys/pyconverter-xml2py/"
+Tracker = "https://github.com/ansys/pyconverter-xml2py/issues"
+Homepage = "https://github.com/ansys/pyconverter-xml2py"
 
 [project.scripts]
-pydita-ast = "pydita_ast.cli:main"
+pyconverter-xml2py = "pyconverter.xml2py.cli:main"
 
 [tool.black]
 line-length = 100
