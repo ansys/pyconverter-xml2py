@@ -36,19 +36,32 @@ Follow these steps to install the package in developer mode:
    additional information on creation of a virtual environment, see the
    official Python `venv`_ documentation.
 
-    .. code:: bash
+    .. tab-set::
 
-        # Create a virtual environment
-        python -m venv .venv
+      .. tab-item:: Linux
+        :sync: linux
 
-        # Activate it in a POSIX system
-        source .venv/bin/activate
+        ::
 
-        # Activate it in Windows CMD environment
-        .venv\Scripts\activate.bat
+          python -m venv venv
+          source venv/bin/activate
 
-        # Activate it in Windows Powershell
-        .venv\Scripts\Activate.ps1
+      .. tab-item:: macOS
+        :sync: macos
+
+        ::
+
+          python -m venv venv
+          source venv/bin/activate
+
+      .. tab-item:: Windows
+        :sync: windows
+
+        ::
+
+          python -m venv venv
+          .\venv\Scripts\activate
+
 
 #. Make sure you have the latest version of `pip`_:
 
@@ -59,7 +72,7 @@ Follow these steps to install the package in developer mode:
 #. Install the project in editable mode:
 
     .. code:: bash
-    
+
         python -m pip install -e .
 
 #. Install additional requirements (if needed):
@@ -71,7 +84,7 @@ Follow these steps to install the package in developer mode:
 #. Verify your development installation:
 
     .. code:: bash
-        
+
         pytest tests -v
 
 
@@ -88,15 +101,48 @@ Documentation
 -------------
 
 For building documentation, you can run the usual rules provided in the
-`Sphinx`_ Makefile:
+`Sphinx`_ Makefile or make.bat:
 
-.. code:: bash
+.. tab-set::
 
-    python -m pip install .[doc]
-    make -C doc/ html
+  .. tab-item:: Makefile
 
-    # subsequently open the documentation with (under Linux):
-    your_browser_name doc/html/index.html
+    ::
+
+      python -m pip install .[doc]
+      make -C doc/ html
+
+
+  .. tab-item:: make.bat
+
+    ::
+
+      python -m pip install .[doc]
+      .\doc\make.bat html
+
+Once the documentation is built, you can open it as follow.
+
+.. tab-set::
+
+  .. tab-item:: Linux
+      :sync: linux
+
+      By running the command: 
+      ::
+
+        your_browser_name doc/html/index.html
+
+  .. tab-item:: macOS
+      :sync: macos
+
+      By opening the documentation from your file explorer located in ``doc/html/index.html``.
+
+  .. tab-item:: Windows
+      :sync: windows
+
+      By opening the documentation from your file explorer located in ``doc/html/index.html``.
+
+
 
 Distributing
 ------------
