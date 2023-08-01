@@ -23,5 +23,5 @@
 .. _pytest: https://docs.pytest.org/en/stable/
 .. _Sphinx: https://www.sphinx-doc.org/en/master/
 .. _pip: https://pypi.org/project/pip/
-.. _tox: https://tox.wiki/en/4.6.4/
+.. _tox: https://tox.wiki/
 .. _venv: https://docs.python.org/3/library/venv.html
