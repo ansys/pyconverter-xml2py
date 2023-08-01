@@ -140,6 +140,7 @@ linkcheck_ignore = [
     r"api/index.html",
     r"getting_started/index.html",
     r"contributing/index.html",
+    r"https://tox.wiki/",
 ]
 
 # The name of the Pygments (syntax highlighting) style to use.
