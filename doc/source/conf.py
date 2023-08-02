@@ -136,6 +136,17 @@ rst_epilog = ""
 with open("links.rst") as f:
     rst_epilog += f.read()
 
+linkcheck_ignore = [
+    r"api/index.html",
+    r"getting_started/index.html",
+    r"contributing/index.html",
+    r"user_guide/index.html",
+]
+
+linkcheck_allowed_redirect = [
+    r"https://tox.wiki/",
+]
+
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
 
