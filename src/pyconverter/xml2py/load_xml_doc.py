@@ -23,7 +23,7 @@ def load_links(link_path):
 
     Returns
     -------
-    links : dict
+    dict
         Dictionary containing the link names and the needed information to render the links.
 
     """
@@ -73,7 +73,7 @@ def load_fcache(graph_path):
 
     Returns
     -------
-    fcache : dict
+    dict
         Dictionary containing the base names of the graphics and their path.
 
     """
@@ -99,7 +99,7 @@ def load_docu_global(term_path):
 
     Returns
     -------
-    docu_global : dict
+    dict
         Dictionary containing the entity names from the documentation and their path.
 
     """
@@ -175,7 +175,7 @@ def load_terms(
 
     Returns
     -------
-    terms : dict
+    dict
         Dictionary containing the entity names and their values.
 
     """

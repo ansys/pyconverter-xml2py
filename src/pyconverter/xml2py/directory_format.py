@@ -43,7 +43,7 @@ def xml_path(path=None):
 
     Returns
     -------
-    path : str
+    str
         Path of the XML documentation to convert.
 
     """
