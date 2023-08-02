@@ -10,7 +10,7 @@ with this guide before attempting to contribute to PyConverter-XML2Py.
 
 The following contribution information is specific to PyConverter-XML2Py.
 
-Developper installation
+Developer installation
 -----------------------
 
 Follow these steps to install the package in developer mode:
@@ -109,7 +109,7 @@ For building documentation, you can run the usual rules provided in the
       python -m pip install .[doc]
       .\doc\make.bat html
 
-Once the documentation is built, you can open it as follow.
+Once the documentation is built, you can open it as follows.
 
 .. tab-set::
 
@@ -124,12 +124,14 @@ Once the documentation is built, you can open it as follow.
   .. tab-item:: macOS
       :sync: macos
 
-      By opening the documentation from your file explorer located in ``doc/html/index.html``.
+      By opening the documentation, which you do by going to the ``doc/html`` directory
+      and opening the ``index.html`` file.
 
   .. tab-item:: Windows
       :sync: windows
 
-      By opening the documentation from your file explorer located in ``doc/html/index.html``.
+      By opening the documentation, which you do by going to the ``doc/html`` directory
+      and opening the ``index.html`` file.
 
 
 Adhere to code style

@@ -19,7 +19,7 @@ Install the latest release for use with this command:
 For developers
 ^^^^^^^^^^^^^^
 
-Installing the pyconverter-xml2py package in developer mode allows you to modify the source and enhance it.
+Installing the ``pyconverter-xml2py`` package in developer mode allows you to modify the source and enhance it.
 Refer to the :ref:`Contribute <ref_contributing>` section to know how to take part to the project.
 
 
