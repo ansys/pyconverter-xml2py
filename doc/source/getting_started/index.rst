@@ -27,11 +27,14 @@ Post issues
 -----------
 
 Use the `PyConverter-XML2Py Issues <pyconverter.xml2py_issues_>`_ page to submit questions,
-report bugs, and request new features. When possible, use these issue
+report bug and issues, add an example, and request new features. When possible, use these issue
 templates:
 
-* Bug report template
-* Feature request template
+* *Bug, problem, error*
+* *Documentation issue*
+* *Adding an example*
+* *New feature*
+
 
 If your issue does not fit into one of these categories, create your own issue.
 
