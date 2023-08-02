@@ -141,6 +141,9 @@ linkcheck_ignore = [
     r"getting_started/index.html",
     r"contributing/index.html",
     r"user_guide/index.html",
+]
+
+linkcheck_allowed_redirect = [
     r"https://tox.wiki/",
 ]
 
