@@ -89,10 +89,6 @@ numpydoc_validation_checks = {
     # type, unless multiple values are being returned"
 }
 
-linkcheck_allowed_redirect = [
-    r"_autosummary/pyconverter.generatedcommands.*",
-]
-
 # -- Options for LaTeX output ------------------------------------------------
 latex_elements = {}
 

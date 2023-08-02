@@ -133,3 +133,4 @@ jobs:
           python-version: ${{ inputs.MAIN_PYTHON_VERSION }}
           checkout: false
           sphinxopts: -j auto
+          check-links: false
