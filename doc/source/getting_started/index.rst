@@ -27,13 +27,16 @@ Post issues
 -----------
 
 Use the `PyConverter-XML2Py Issues <pyconverter.xml2py_issues_>`_ page to submit questions,
-report bug and issues, add an example, and request new features. When possible, use these issue
-templates:
+report bug, and request new features. When possible, use these issue templates:
 
-* `Bug, problem, error <https://github.com/ansys/pyconverter-xml2py/issues/new?assignees=&labels=bug&projects=&template=bug.yml&title=Bug+located+in+...>`_
-* `Documentation issue <https://github.com/ansys/pyconverter-xml2py/issues/new?assignees=&labels=documentation&projects=&template=documentation.yml&title=Modify+...>`_
-* `Adding an example <https://github.com/ansys/pyconverter-xml2py/issues/new?assignees=&labels=example&projects=&template=examples.yml&title=Example+proposal%3A+...>`_
-* `New feature <https://github.com/ansys/pyconverter-xml2py/issues/new?assignees=&labels=enhancement&projects=&template=feature.yml&title=Add+...`_
+* `Bug, problem, error <https://github.com/ansys/pyconverter-xml2py/issues/new?assignees=&labels=bug&projects=&template=bug.yml&title=Bug+located+in+...>`_:
+  For filing a bug report
+* `Documentation issue <https://github.com/ansys/pyconverter-xml2py/issues/new?assignees=&labels=documentation&projects=&template=documentation.yml&title=Modify+...>`_:
+  For requesting modifications to the documentation
+* `Adding an example <https://github.com/ansys/pyconverter-xml2py/issues/new?assignees=&labels=example&projects=&template=examples.yml&title=Example+proposal%3A+...>`_:
+  For proposing a new example
+* `New feature <https://github.com/ansys/pyconverter-xml2py/issues/new?assignees=&labels=enhancement&projects=&template=feature.yml&title=Add+...>`_:
+  For requesting enhancements to the code
 
 
 If your issue does not fit into one of these categories, create your own issue.
