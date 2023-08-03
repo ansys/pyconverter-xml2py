@@ -11,7 +11,7 @@ with this guide before attempting to contribute to PyConverter-XML2Py.
 The following contribution information is specific to PyConverter-XML2Py.
 
 Developer installation
------------------------
+----------------------
 
 Follow these steps to install the package in developer mode:
 
@@ -19,7 +19,7 @@ Follow these steps to install the package in developer mode:
 
     .. code:: bash
 
-        git clone https://github.com/ansys/pyconverter-xml2py
+        git clone https://github.com/ansys/pyconverter-xml2py.git
 
 #. Create a fresh-clean Python environment and activate it. If you require
    additional information on creation of a virtual environment, see the
@@ -32,24 +32,24 @@ Follow these steps to install the package in developer mode:
 
         ::
 
-          python -m venv venv
-          source venv/bin/activate
+          python -m venv .venv
+          source .venv/bin/activate
 
       .. tab-item:: macOS
         :sync: macos
 
         ::
 
-          python -m venv venv
-          source venv/bin/activate
+          python -m venv .venv
+          source .venv/bin/activate
 
       .. tab-item:: Windows
         :sync: windows
 
         ::
 
-          python -m venv venv
-          .\venv\Scripts\activate
+          python -m venv .venv
+          .\.venv\Scripts\activate
 
 
 #. Make sure you have the latest version of `pip`_:
@@ -99,7 +99,7 @@ For building documentation, you can run the usual rules provided in the
     ::
 
       python -m pip install .[doc]
-      make -C doc/ html
+      make -C doc html
 
 
   .. tab-item:: make.bat
