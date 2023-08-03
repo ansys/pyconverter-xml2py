@@ -19,98 +19,27 @@ Install the latest release for use with this command:
 For developers
 ^^^^^^^^^^^^^^
 
-Installing the ``pyconverter-xml2py`` package in developer mode allows
-you to modify the source and enhance it.
-
-Before contributing to the project, see the `PyAnsys Developer's Guide`_.
-
-Follow these steps to install the package in developer mode:
-
-#. Clone the repository:
-
-    .. code:: bash
-
-        git clone https://github.com/ansys/pyconverter-xml2py
-
-#. Create a fresh-clean Python environment and activate it. If you require
-   additional information on creation of a virtual environment, see the
-   official Python `venv`_ documentation.
-
-    .. code:: bash
-
-        # Create a virtual environment
-        python -m venv .venv
-
-        # Activate it in a POSIX system
-        source .venv/bin/activate
-
-        # Activate it in Windows CMD environment
-        .venv\Scripts\activate.bat
-
-        # Activate it in Windows Powershell
-        .venv\Scripts\Activate.ps1
-
-#. Make sure you have the latest version of `pip`_:
-
-    .. code:: bash
-
-        python -m pip install -U pip
-
-#. Install the project in editable mode:
-
-    .. code:: bash
-    
-        python -m pip install -e .
-
-#. Install additional requirements (if needed):
-
-     .. code:: bash
-
-        python -m pip install .[doc,tests]
-
-#. Verify your development installation:
-
-    .. code:: bash
-        
-        pytest tests -v
+Installing the ``pyconverter-xml2py`` package in developer mode allows you to modify the source and enhance it.
+For contribution guidelines, see :ref:`Contribute <ref_contributing>`.
 
 
-Style and testing
------------------
+Post issues
+-----------
 
-If required, you can call style commands (such as `black`_, `isort`_,
-and `flake8`_) or unit testing commands (such as `pytest`_) from the command line.
-However, this does not guarantee that your project is being tested in an isolated
-environment, which is why you might consider using `tox`_.
+Use the `PyConverter-XML2Py Issues <pyconverter.xml2py_issues_>`_ page to submit questions,
+report bug, and request new features. When possible, use these issue templates:
+
+* `Bug, problem, error <https://github.com/ansys/pyconverter-xml2py/issues/new?assignees=&labels=bug&projects=&template=bug.yml&title=Bug+located+in+...>`_:
+  For filing a bug report
+* `Documentation issue <https://github.com/ansys/pyconverter-xml2py/issues/new?assignees=&labels=documentation&projects=&template=documentation.yml&title=Modify+...>`_:
+  For requesting modifications to the documentation
+* `Adding an example <https://github.com/ansys/pyconverter-xml2py/issues/new?assignees=&labels=example&projects=&template=examples.yml&title=Example+proposal%3A+...>`_:
+  For proposing a new example
+* `New feature <https://github.com/ansys/pyconverter-xml2py/issues/new?assignees=&labels=enhancement&projects=&template=feature.yml&title=Add+...>`_:
+  For requesting enhancements to the code
 
 
-Documentation
--------------
+If your issue does not fit into one of these categories, create your own issue.
 
-For building documentation, you can run the usual rules provided in the
-`Sphinx`_ Makefile:
+To reach the PyAnsys support team, email `pyansys.core@ansys.com <pyansys.core@ansys.com>`_.
 
-.. code:: bash
-
-    python -m pip install .[doc]
-    make -C doc/ html
-
-    # subsequently open the documentation with (under Linux):
-    your_browser_name doc/html/index.html
-
-Distributing
-------------
-
-If you would like to create either source or wheel files, start by installing
-the building requirements:
-
-.. code:: bash
-
-    python -m pip install -e .[doc,tests]
-
-Then, execute these commands:
-
-    .. code:: bash
-
-        python -m build
-        python -m twine check dist/*
