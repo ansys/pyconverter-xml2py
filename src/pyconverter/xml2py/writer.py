@@ -221,9 +221,10 @@ def write_source(
     commands,
     cmd_map,
     xml_doc_path,
-    template_path,
+    target_path,
     path_custom_functions=None,
-    new_package_path=None,
+    template_path=None,
+    new_package_name=None,
     clean=True,
 ):
     """Write out XML commands as Python source files.
@@ -239,14 +240,17 @@ def write_source(
     xml_doc_path : str
         Path containing the XML directory to convert.
 
-    template_path : str
-        Path containing the ``_package`` directory.
+    target_path : str
+        Path where to generate the new package.
 
     path_custom_functions : str, optional
         Path containing the customized functions. The default is ``None``.
 
-    new_package_path : str, optional
-        Path to copy the ``_package`` directory to. The default is ``./package``.
+    new_package_name : str, optional
+        The default is ``package``.
+    
+    template_path : str, optional
+        If not provided, the default template will be the default one.
 
     clean : bool, optional
         Whether the directories in the new package path must be cleared before adding
@@ -259,20 +263,16 @@ def write_source(
         ``xml-commands`` package.
 
     """
-    _package_path = os.path.join(template_path, "_package")
     if path_custom_functions is not None:
         custom_functions = CustomFunctions(path_custom_functions)
     else:
         custom_functions = None
 
-    if not os.path.isdir(_package_path):
-        raise FileNotFoundError(
-            f"Unable to locate the package templates path at '{_package_path}'. "
-            f"Expected the _package directory in '{path}'."
-        )
+    if not os.path.isdir(template_path):
+        print("The default template will be used to create the new package.")
 
     if new_package_path is None:
-        new_package_path = os.path.join(template_path, "package")
+        new_package_path = os.path.join(target_path, new_package_name)
 
     if clean:
         if os.path.isdir(new_package_path):
@@ -312,7 +312,7 @@ def write_source(
     print(f"Commands written to {cmd_path}")
 
     # copy package files to the package directory
-    copy_package(_package_path, new_package_path, clean)
+    copy_package(template_path, new_package_path, clean)
     graph_path = get_paths(xml_doc_path)[0]
     shutil.copytree(graph_path, os.path.join(new_package_path, "doc", "source", "images"))
 
