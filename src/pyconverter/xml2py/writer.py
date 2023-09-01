@@ -241,16 +241,16 @@ def write_source(
         Path containing the XML directory to convert.
 
     target_path : str
-        Path where to generate the new package.
+        Path to generate the new package to.
 
     path_custom_functions : str, optional
         Path containing the customized functions. The default is ``None``.
 
     new_package_name : str, optional
-        The default is ``package``.
+        Name of the new package. The default is ``package``.
     
     template_path : str, optional
-        If not provided, the default template will be the default one.
+        Path for the template to use. If no path is provided, the default template is used.
 
     clean : bool, optional
         Whether the directories in the new package path must be cleared before adding
