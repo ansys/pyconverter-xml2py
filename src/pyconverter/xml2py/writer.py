@@ -248,7 +248,7 @@ def write_source(
 
     new_package_name : str, optional
         Name of the new package. The default is ``package``.
-    
+
     template_path : str, optional
         Path for the template to use. If no path is provided, the default template is used.
 

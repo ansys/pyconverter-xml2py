@@ -4,6 +4,7 @@
 import os
 import shutil
 
+
 def download_template():
     """Download the templage package provided by default."""
     # init_cwd = os.getcwd()
@@ -15,13 +16,16 @@ def download_template():
     #         os.chdir(output_dir)
     #         change = True
     os.system("gitdir https://github.com/ansys/pyconverter-xml2py/tree/main/_package")
-    
-    for (path,fold,_) in os.walk('_package', topdown=True):
+
+    for (path, fold, _) in os.walk("_package", topdown=True):
         if "_package" in fold:
             print("removing : ", os.path.join(path, "_package"))
-            shutil.rmtree(os.path.join(path, "_package")) # this is due because gitdir add useless folders while copy pasting
-    
+            shutil.rmtree(
+                os.path.join(path, "_package")
+            )  # this is due because gitdir add useless folders while copy pasting
+
     # if change is True:
     #     os.chdir(init_cwd)
-    
+
+
 download_template("temp")
