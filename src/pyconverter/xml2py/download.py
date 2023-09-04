@@ -5,27 +5,17 @@ import os
 import shutil
 
 
-def download_template():
-    """Download the templage package provided by default."""
-    # init_cwd = os.getcwd()
-    # change = False
-    # if output_dir!="":
-    #     if not os.path.isdir(output_dir):
-    #         raise ValueError(f"The directory provided {output_dir} doesn't exist.")
-    #     elif output_dir != os.getcwd():
-    #         os.chdir(output_dir)
-    #         change = True
-    os.system("gitdir https://github.com/ansys/pyconverter-xml2py/tree/main/_package")
+def fix_gitdir():
+    """Remove empty folders added by gitdit while downloading the template folder."""
 
     for (path, fold, _) in os.walk("_package", topdown=True):
         if "_package" in fold:
             print("removing : ", os.path.join(path, "_package"))
-            shutil.rmtree(
-                os.path.join(path, "_package")
-            )  # this is due because gitdir add useless folders while copy pasting
-
-    # if change is True:
-    #     os.chdir(init_cwd)
+            shutil.rmtree(os.path.join(path, "_package"))  # this is due because
 
 
-download_template("temp")
+def download_template():
+    """Download the templage package provided by default."""
+
+    os.system("gitdir https://github.com/ansys/pyconverter-xml2py/tree/main/_package")
+    fix_gitdir()
