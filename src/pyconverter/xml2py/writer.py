@@ -8,6 +8,7 @@ from pyconverter.xml2py import ast_tree as ast
 from pyconverter.xml2py import load_xml_doc as load
 from pyconverter.xml2py.custom_functions import CustomFunctions
 from pyconverter.xml2py.directory_format import get_paths
+from pyconverter.xml2py.download import download_template
 from tqdm import tqdm
 
 RULES = {"/": "slash", "*": "star"}
@@ -224,7 +225,7 @@ def write_source(
     target_path,
     path_custom_functions=None,
     template_path=None,
-    new_package_name=None,
+    new_package_name="package",
     clean=True,
 ):
     """Write out XML commands as Python source files.
@@ -268,11 +269,13 @@ def write_source(
     else:
         custom_functions = None
 
-    if not os.path.isdir(template_path):
+    if template_path is None:
         print("The default template will be used to create the new package.")
+        template_path = os.path.join(os.getcwd(), "_package")
+        if not os.path.isdir(template_path):
+            download_template()
 
-    if new_package_path is None:
-        new_package_path = os.path.join(target_path, new_package_name)
+    new_package_path = os.path.join(target_path, new_package_name)
 
     if clean:
         if os.path.isdir(new_package_path):

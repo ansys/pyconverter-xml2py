@@ -19,3 +19,4 @@ def download_template():
 
     os.system("gitdir https://github.com/ansys/pyconverter-xml2py/tree/main/_package")
     fix_gitdir()
+    print("The default template package has been downloaded.")
