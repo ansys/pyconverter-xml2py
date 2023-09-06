@@ -63,7 +63,7 @@ def test_write_source_with_custom_functions(
     assert os.path.isfile(os.path.join(package_path, "doc", "source", "images", "gcmdrsymm1.png"))
 
 
-def test_write_source_no_custom_function(commands, cmd_map, cwd, directory_path, package_path):
+def test_write_source_no_custom_function(commands, cmd_map, directory_path, cwd, package_path):
     cmd_path = wrt.write_source(commands, cmd_map, directory_path, cwd)
     assert cmd_path == os.path.join(package_path, wrt.GENERATED_SRC_CODE)
     assert os.path.isfile(os.path.join(cmd_path, "acel.py"))
