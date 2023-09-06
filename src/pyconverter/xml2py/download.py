@@ -2,20 +2,22 @@
 """
 
 import os
-from github import Github, Repository, ContentFile
+
+from github import ContentFile, Github, Repository
 import requests
+
 
 def download(c: ContentFile, out: str):
     """
     This function initially comes from the following GitHub repository:
     https://github.com/Nordgaren/Github-Folder-Downloader
-    
+
     """
     r = requests.get(c.download_url)
-    output_path = f'{out}/{c.path}'
+    output_path = f"{out}/{c.path}"
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, 'wb') as f:
-        print(f'downloading {c.path} to {out}')
+    with open(output_path, "wb") as f:
+        print(f"downloading {c.path} to {out}")
         f.write(r.content)
 
 
@@ -23,7 +25,7 @@ def download_folder(repo: Repository, folder: str, out: str, recursive: bool):
     """
     This function initially comes from the following GitHub repository:
     https://github.com/Nordgaren/Github-Folder-Downloader
-    
+
     """
     contents = repo.get_contents(folder)
     for c in contents:
@@ -39,4 +41,4 @@ def download_template():
 
     g = Github()
     repo = g.get_repo("ansys/pyconverter-xml2py")
-    download_folder(repo, "_package", ".", True) 
+    download_folder(repo, "_package", ".", True)
