@@ -247,11 +247,11 @@ def write_source(
     path_custom_functions : str, optional
         Path containing the customized functions. The default is ``None``.
 
-    new_package_name : str, optional
-        Name of the new package. The default is ``package``.
-
     template_path : str, optional
         Path for the template to use. If no path is provided, the default template is used.
+
+    new_package_name : str, optional
+        Name of the new package. The default is ``package``.
 
     clean : bool, optional
         Whether the directories in the new package path must be cleared before adding
