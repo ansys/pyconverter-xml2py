@@ -2,21 +2,41 @@
 """
 
 import os
-import shutil
+from github import Github, Repository, ContentFile
+import requests
+
+def download(c: ContentFile, out: str):
+    """
+    This function initially comes from the following GitHub repository:
+    https://github.com/Nordgaren/Github-Folder-Downloader
+    
+    """
+    r = requests.get(c.download_url)
+    output_path = f'{out}/{c.path}'
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    with open(output_path, 'wb') as f:
+        print(f'downloading {c.path} to {out}')
+        f.write(r.content)
 
 
-def fix_gitdir():
-    """Remove empty folders added by gitdit while downloading the template folder."""
-
-    for (path, fold, _) in os.walk("_package", topdown=True):
-        if "_package" in fold:
-            print("removing : ", os.path.join(path, "_package"))
-            shutil.rmtree(os.path.join(path, "_package"))  # this is due because
+def download_folder(repo: Repository, folder: str, out: str, recursive: bool):
+    """
+    This function initially comes from the following GitHub repository:
+    https://github.com/Nordgaren/Github-Folder-Downloader
+    
+    """
+    contents = repo.get_contents(folder)
+    for c in contents:
+        if c.download_url is None:
+            if recursive:
+                download_folder(repo, c.path, out, recursive)
+            continue
+        download(c, out)
 
 
 def download_template():
     """Download the templage package provided by default."""
 
-    os.system("gitdir https://github.com/ansys/pyconverter-xml2py/tree/main/_package")
-    fix_gitdir()
-    print("The default template package has been downloaded.")
+    g = Github()
+    repo = g.get_repo("ansys/pyconverter-xml2py")
+    download_folder(repo, "_package", ".", True) 
