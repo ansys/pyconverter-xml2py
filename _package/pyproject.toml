@@ -34,22 +34,22 @@ dependencies = [
 
 [project.optional-dependencies]
 doc = [
-    "Sphinx==7.0.1",
+    "Sphinx==7.2.5",
     "build>= 0.10.0",
     "jupyter_sphinx==0.4.0",
-    "linuxdoc==20230629",
-    "numpy==1.25.1",
+    "linuxdoc==20230827",
+    "numpy==1.25.2",
     "numpydoc==1.5.0",
-    "pandas==2.0.3",
+    "pandas==2.1.0",
     "parse==1.19.1",
     "pypandoc==1.11",
     "pytest-sphinx==0.5.0",
     "pydata_sphinx_theme==0.13.3",
     "sphinx-autobuild==2021.3.14",
-    "sphinx-autodoc-typehints==1.23.3",
+    "sphinx-autodoc-typehints==1.24.0",
     "sphinx-copybutton==0.5.2",
-    "sphinx-notfound-page==0.8.3",
-    "sphinx-gallery==0.13.0",
+    "sphinx-notfound-page==1.0.0",
+    "sphinx-gallery==0.14.0",
 ]
 
 [tool.flit.module]
