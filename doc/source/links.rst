@@ -5,6 +5,7 @@
 .. _pyansys_core: pyansys.core@ansys.com
 
 .. #PyConverter-XML2Py related
+.. _pyconverter.xml2py_gh: https://github.com/ansys/pyconverter-xml2py
 .. _pyconverter.xml2py_issues: https://github.com/ansys/pyconverter-xml2py/issues
 
 .. #PyAnsys Developer Guide
