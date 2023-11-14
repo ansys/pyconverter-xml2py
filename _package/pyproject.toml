@@ -40,7 +40,7 @@ doc = [
     "linuxdoc==20231020",
     "numpy==1.26.1",
     "numpydoc==1.6.0",
-    "pandas==2.1.2",
+    "pandas==2.1.3",
     "parse==1.19.1",
     "pypandoc==1.12",
     "pytest-sphinx==0.5.0",
