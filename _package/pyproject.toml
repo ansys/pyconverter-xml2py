@@ -46,7 +46,7 @@ doc = [
     "pytest-sphinx==0.5.0",
     "pydata_sphinx_theme==0.14.3",
     "sphinx-autobuild==2021.3.14",
-    "sphinx-autodoc-typehints==1.24.1",
+    "sphinx-autodoc-typehints==1.25.2",
     "sphinx-copybutton==0.5.2",
     "sphinx-notfound-page==1.0.0",
     "sphinx-gallery==0.14.0",
