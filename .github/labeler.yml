@@ -1,11 +1,15 @@
 Documentation:
-- doc/source/**/*
+- changed-files:
+  - any-glob-to-any-file: 'docs/source/**/*'
 Maintenance:
-- .github/**/*
-- .flake8
-- doc/styles/**/*
-- pyproject.toml
+- changed-files:
+  - any-glob-to-any-file: '.github/**/*'
+  - any-glob-to-any-file: '.flake8'
+  - any-glob-to-any-file: 'doc/styles/**/*'
+  - any-glob-to-any-file: 'pyproject.toml'
 Dependencies:
-- pyproject.toml
+- changed-files:
+  - any-glob-to-any-file: 'pyproject.toml'
 CI/CD:
-- .github/**/*
+- changed-files:
+  - any-glob-to-any-file: '.github/**/*'
