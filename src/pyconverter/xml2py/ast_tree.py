@@ -954,10 +954,11 @@ class _Math(Element):
         self._parse_equation(element)
 
     def _parse_equation(self, eqn):
-        raw = tostring(eqn).decode().replace("xmlns:m", "xmlns")
-        raw = raw.replace('display="block"', "")
-        raw = raw.replace("<mtext>&#8202;</mtext>\n", "")
-        raw = raw.replace("<mtext>&#8201;</mtext>\n", "")
+        if eqn is not None:
+            raw = tostring(eqn).decode().replace("xmlns:m", "xmlns")
+            raw = raw.replace('display="block"', "")
+            raw = raw.replace("<mtext>&#8202;</mtext>\n", "")
+            raw = raw.replace("<mtext>&#8201;</mtext>\n", "")
         try:
             parsed = MathML2Tex().translate(raw, network=False, from_file=False)
             parsed = parsed.replace("\\hspace", "").strip()
