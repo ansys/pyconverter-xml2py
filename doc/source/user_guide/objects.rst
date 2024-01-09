@@ -2,7 +2,7 @@ XML objects
 ===========
 
 This section describes common objects handled by the converter. It is not
-an exhaustive list. For more information, see :ref:`ref_api`.
+an exhaustive list. For more information, see the API reference section.
 
 Images
 ------
