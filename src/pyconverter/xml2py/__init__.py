@@ -1,3 +1,5 @@
+# Copyright (c) 2024 ANSYS, Inc. All rights reserved.
+
 """
 pyconverter.xml2py
 """
