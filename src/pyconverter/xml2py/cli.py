@@ -1,3 +1,5 @@
+# Copyright (c) 2024 ANSYS, Inc. All rights reserved.
+
 """Command Line Interface for PyConverter-XML2Py."""
 
 import os

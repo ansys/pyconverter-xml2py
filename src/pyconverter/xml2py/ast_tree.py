@@ -1,3 +1,5 @@
+# Copyright (c) 2024 ANSYS, Inc. All rights reserved.
+
 import logging
 import re
 import textwrap
