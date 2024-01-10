@@ -68,7 +68,6 @@ directory by default. This diagram presents the format of the
 
 .. toctree::
     :maxdepth: 1
-    :hidden:
 
     source_code
     objects
