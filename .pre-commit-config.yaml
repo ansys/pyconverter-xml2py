@@ -37,7 +37,6 @@ repos:
   rev: v0.2.4 # `strings.properties` needs to be manually updated
   hooks:
     - id: add-license-headers
-      args: ["--custom_copyright", "ANSYS, Inc. All rights reserved."]
 
 # this validates our github workflow files
 - repo: https://github.com/python-jsonschema/check-jsonschema
