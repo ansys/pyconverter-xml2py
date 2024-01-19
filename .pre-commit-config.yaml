@@ -34,7 +34,7 @@ repos:
   - id: debug-statements
 
 - repo: https://github.com/ansys/pre-commit-hooks
-  rev: v0.2.4 # `strings.properties` needs to be manually updated
+  rev: v0.2.8 # `strings.properties` needs to be manually updated
   hooks:
     - id: add-license-headers
 
