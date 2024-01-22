@@ -32,7 +32,7 @@ jobs:
           python-version: ${{ inputs.MAIN_PYTHON_VERSION }}
       
       - name: "Cache pip"
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: Python-pyconverter-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ hashFiles('pyproject.toml') }}
@@ -95,7 +95,7 @@ jobs:
           name: package
       
       - name: "Cache pip"
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: Python-pyconverter-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ inputs.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
@@ -112,7 +112,7 @@ jobs:
           echo "PyConverter-GeneratedCommands version is: $(python -c 'from pyconverter.generatedcommands import __version__; print(__version__)')"
 
       - name: "Cache docs build directory"
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: doc/_build
           key: doc-build-pyconverter-generatedcommands-v${{ env.RESET_DOC_BUILD_CACHE_2 }}-${{ inputs.PYCONVERTER_GENERATED_VERSION }}-${{ github.sha }}
@@ -120,7 +120,7 @@ jobs:
             doc-build-pyconverter-generatedcommands-v${{ env.RESET_DOC_BUILD_CACHE_2 }}-${{ inputs.PYCONVERTER_GENERATED_VERSION }}
 
       - name: "Cache autosummary"
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: doc/source/_autosummary/*.rst
           key: autosummary-pyconverter-generatedcommands-v${{ env.RESET_AUTOSUMMARY_CACHE_2 }}-${{ inputs.PYCONVERTER_GENERATED_VERSION }}-${{ github.sha }}
