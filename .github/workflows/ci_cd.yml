@@ -109,7 +109,7 @@ jobs:
           sudo apt-get install pandoc
 
       - name: "Cache pip"
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: Python-v${{ env.RESET_PIP_CACHE }}-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
@@ -163,7 +163,7 @@ jobs:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
       - name: "Cache pip"
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: Python-pyconverter.xml2py-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
@@ -181,7 +181,7 @@ jobs:
           echo "pyconverter.xml2py version is: $(python -c 'from pyconverter.xml2py import __version__; print(__version__)')"
     
       - name: "Cache docs build directory"
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: doc/_build
           key: doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
@@ -189,7 +189,7 @@ jobs:
             doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}
 
       - name: "Cache autosummary"
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: doc/source/**/_autosummary/**/*.rst
           key: autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
