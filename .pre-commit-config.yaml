@@ -33,6 +33,11 @@ repos:
   - id: check-merge-conflict
   - id: debug-statements
 
+- repo: https://github.com/ansys/pre-commit-hooks
+  rev: v0.2.8 # `strings.properties` needs to be manually updated
+  hooks:
+    - id: add-license-headers
+
 # this validates our github workflow files
 - repo: https://github.com/python-jsonschema/check-jsonschema
   rev: 0.22.0

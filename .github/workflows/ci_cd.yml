@@ -15,9 +15,9 @@ on:
 
 env:
   MAIN_PYTHON_VERSION: '3.10'
-  PACKAGE_NAME: 'pydita_ast'
-  PACKAGE_NAMESPACE: 'pydita_ast'
-  DOCUMENTATION_CNAME: 'pydita-ast.docs.pyansys.com'
+  PACKAGE_NAME: 'pyconverter-xml2py'
+  PACKAGE_NAMESPACE: 'pyconverter.xml2py'
+  DOCUMENTATION_CNAME: 'pyconverter-xml2py.docs.pyansys.com'
   RESET_PIP_CACHE: 0
   RESET_AUTOSUMMARY_CACHE: 0
   RESET_DOC_BUILD_CACHE: 0
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: PyAnsys code style checks
-        uses: ansys/actions/code-style@v4
+        uses: ansys/actions/code-style@v5
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: PyAnsys documentation style checks
-        uses: ansys/actions/doc-style@v4
+        uses: ansys/actions/doc-style@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -60,7 +60,7 @@ jobs:
 
     steps:
       - name: Build wheelhouse and perform smoke test
-        uses: ansys/actions/build-wheelhouse@v4
+        uses: ansys/actions/build-wheelhouse@v5
         with:
           library-name: ${{ env.PACKAGE_NAME }}
           library-namespace: ${{ env.PACKAGE_NAMESPACE }}
@@ -81,7 +81,7 @@ jobs:
 
     steps:
       - name: Build wheelhouse and perform smoke test
-        uses: ansys/actions/build-wheelhouse@v4
+        uses: ansys/actions/build-wheelhouse@v5
         with:
           library-name: ${{ env.PACKAGE_NAME }}
           library-namespace: ${{ env.PACKAGE_NAMESPACE }}
@@ -96,10 +96,10 @@ jobs:
 
     steps:
       - name: "Install Git and checkout project"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: "Setup Python"
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
@@ -109,7 +109,7 @@ jobs:
           sudo apt-get install pandoc
 
       - name: "Cache pip"
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: Python-v${{ env.RESET_PIP_CACHE }}-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
@@ -118,10 +118,10 @@ jobs:
     
       # The token will expire in 2024.
       - name: "Checkout mapdl-cmd-doc repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: ansys-internal/mapdl-cmd-doc
-          ref: feat/pydita-ast-predifined-format
+          ref: feat/pyconverter-xml2py-predifined-format
           token: ${{ secrets.MAPDL_CMD_DOC_TOKEN }}
           path: mapdl-cmd-doc
 
@@ -133,17 +133,17 @@ jobs:
         run: |
           pytest -v --durations=10 --maxfail=10 \
             --reruns 7 --reruns-delay 3 --ghdir ${{ github.workspace }}\
-            --cov=pydita_ast --cov-report=xml:coverage.xml --cov-report=html\
+            --cov=pyconverter.xml2py --cov-report=xml:coverage.xml --cov-report=html\
             --cov-report term
 
       - name: "Upload coverage to Codecov"
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           name: coverage.xml
           flags: coverage
 
       - name: Upload coverage artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage.xml
           path: ./coverage.xml
@@ -155,49 +155,49 @@ jobs:
     needs: [doc-style]
     steps:
       - name: "Install Git and checkout project"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: "Setup Python"
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
       - name: "Cache pip"
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: Python-pydita_ast-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
+          key: Python-pyconverter.xml2py-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
-            Python-pydita_ast-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}
+            Python-pyconverter.xml2py-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}
       
-      - name: "Install pydita_ast"
+      - name: "Install pyconverter-xml2py"
         run: |
           pip install --upgrade pip
           pip install .[doc]
       
-      - name: "Retrieve pydita_ast version"
+      - name: "Retrieve pyconverter.xml2py version"
         run: |
-          echo "PYDITA_VERSION=$(python -c 'from pydita_ast import __version__; print(__version__)')" >> $GITHUB_ENV
-          echo "pydita_ast version is: $(python -c 'from pydita_ast import __version__; print(__version__)')"
+          echo "PYCONVERTER_VERSION=$(python -c 'from pyconverter.xml2py import __version__; print(__version__)')" >> $GITHUB_ENV
+          echo "pyconverter.xml2py version is: $(python -c 'from pyconverter.xml2py import __version__; print(__version__)')"
     
       - name: "Cache docs build directory"
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: doc/_build
-          key: doc-build-pydita-ast-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYDITA_VERSION }}-${{ github.sha }}
+          key: doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
           restore-keys: |
-            doc-build-pydita-ast-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYDITA_VERSION }}
+            doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}
 
       - name: "Cache autosummary"
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: doc/source/**/_autosummary/**/*.rst
-          key: autosummary-pydita-ast-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYDITA_VERSION }}-${{ github.sha }}
+          key: autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
           restore-keys: |
-            autosummary-pydita-ast-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYDITA_VERSION }}
+            autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}
 
       - name: "Run Ansys documentation building action"
-        uses: ansys/actions/doc-build@v4
+        uses: ansys/actions/doc-build@v5
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
           checkout: false
@@ -211,7 +211,7 @@ jobs:
     needs: [doc-build, build-test]
     steps:
       - name: Build library source and wheel artifacts
-        uses: ansys/actions/build-library@v4
+        uses: ansys/actions/build-library@v5
         with:
           library-name: ${{ env.PACKAGE_NAME }}
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
@@ -225,34 +225,27 @@ jobs:
     needs: [package]
     steps:
       - name: "Deploy the latest documentation"
-        uses: ansys/actions/doc-deploy-dev@v4
+        uses: ansys/actions/doc-deploy-dev@v5
         with:
             cname: ${{ env.DOCUMENTATION_CNAME }}
             token: ${{ secrets.GITHUB_TOKEN }}
 
 
   release:
-    name: "Release project to private PyPI and GitHub"
+    name: "Release project to public PyPI and GitHub"
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags')
     needs:  [package, smoke-tests-macos-windows]
     runs-on: ubuntu-latest
     steps:
-    - name: "Release to the private PyPI repository"
-      uses: ansys/actions/release-pypi-private@v4
+    - name: "Release to the public PyPI repository"
+      uses: ansys/actions/release-pypi-public@v5
       with:
         library-name: ${{ env.PACKAGE_NAME }}
         twine-username: "__token__"
-        twine-token: ${{ secrets.PYANSYS_PYPI_PRIVATE_PAT }}
-
-    # - name: "Release to the public PyPI repository"
-    #   uses: ansys/actions/release-pypi-public@v3
-    #   with:
-    #     library-name: "pydita_ast"
-    #     twine-username: "__token__"
-    #     twine-token: ${{ secrets.PYPI_TOKEN }}
+        twine-token: ${{ secrets.PYPI_TOKEN }}
 
     - name: "Release to GitHub"
-      uses: ansys/actions/release-github@v4
+      uses: ansys/actions/release-github@v5
       with:
         library-name: ${{ env.PACKAGE_NAME }}
 
@@ -265,7 +258,7 @@ jobs:
     needs: [release]
     steps:
       - name: "Deploy the stable documentation"
-        uses: ansys/actions/doc-deploy-stable@v4
+        uses: ansys/actions/doc-deploy-stable@v5
         with:
             cname: ${{ env.DOCUMENTATION_CNAME }}
             token: ${{ secrets.GITHUB_TOKEN }}

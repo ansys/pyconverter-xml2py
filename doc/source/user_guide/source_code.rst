@@ -6,7 +6,8 @@ Source code generation
 Source code is automatically generated from the name of the commands
 and the parameters defined in the documentation.
 
-The default code is as follow.
+Here are the initial command and then the default Python code that
+this command generates:
 
 .. tab-set::
 
@@ -29,19 +30,20 @@ The default code is as follow.
 Customized functions
 --------------------
 
-The converter can also handle the code generation for functions that
-need a customized code. The folder containing those files need to be specified in
-the code generation with the ``-f`` or ``--func-path`` arguments.
+The converter can handle code generation for functions that require a
+customized code. To specify the folder containing these files, you must
+be specified the ``-f`` or ``--func-path`` arguments in the command for
+generating the code:
 
 .. code:: bash
 
-    python xml2rst.py -p XML_directory_path -f customized_function_directory_path
+    pyconverter-xml2py package -x XML_directory_path -f customized_function_directory_path
 
 
-In this configuration, the provided code is the one used for the conversion.
+In this configuration, the provided code is used for the conversion.
 
-Furthermore, the **Returns** and **Examples** sections, if any, are also taken
-into account and added to the Python docstring.
+Additionally, any **Returns** and **Examples** sections are taken
+into account and added to the Python docstring:
 
 
 .. tab-set::

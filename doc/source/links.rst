@@ -4,8 +4,9 @@
 .. _pyansys_support: pyansys.core@ansys.com
 .. _pyansys_core: pyansys.core@ansys.com
 
-.. #PyDita-AST related
-.. _pydita_ast_issues: https://github.com/ansys/pydita-ast/issues
+.. #PyConverter-XML2Py related
+.. _pyconverter.xml2py_gh: https://github.com/ansys/pyconverter-xml2py
+.. _pyconverter.xml2py_issues: https://github.com/ansys/pyconverter-xml2py/issues
 
 .. #PyAnsys Developer Guide
 .. _dev_guide_pyansys: https://dev.docs.pyansys.com/
@@ -18,7 +19,7 @@
 .. _black: https://github.com/psf/black
 .. _flake8: https://flake8.pycqa.org/en/latest/
 .. _isort: https://github.com/PyCQA/isort
-.. _PyAnsys Developer's guide: https://dev.docs.pyansys.com/
+.. _PyAnsys Developer's Guide: https://dev.docs.pyansys.com/
 .. _pre-commit: https://pre-commit.com/
 .. _pytest: https://docs.pytest.org/en/stable/
 .. _Sphinx: https://www.sphinx-doc.org/en/master/

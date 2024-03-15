@@ -1,19 +1,19 @@
 from datetime import datetime
 
-from pydita.generatedcommands import __version__
+from pyconverter.generatedcommands import __version__
 
 # Project information
-project = "pydita-generatedcommands"
+project = "pyconverter-generatedcommands"
 copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
 author = "ANSYS, Inc."
 release = version = __version__
 
-REPOSITORY_NAME = "pydita-generatedcommands"
+REPOSITORY_NAME = "pyconverter-generatedcommands"
 USERNAME = "pyansys"
 BRANCH = "main"
 
 # Options for HTML output
-html_short_title = html_title = "Documentation"
+html_short_title = html_title = "PyConverter-GeneratedCommands"
 html_theme = "pydata_sphinx_theme"
 html_theme_options = {
     "show_prev_next": False,
