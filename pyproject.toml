@@ -35,10 +35,12 @@ dependencies = [
     "py-asciimath==0.3.0",
     "pylatexenc==2.10",
     "tqdm>=4.64.1",
+    "black>=24.2.0",
 ]
 
 [project.optional-dependencies]
 tests = [
+    "black>=24.2.0",
     "click==8.1.7",
     "pygithub==2.2.0",
     "lxml==5.1.0",
