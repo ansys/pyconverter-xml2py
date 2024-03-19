@@ -46,7 +46,7 @@ tests = [
     "parse==1.20.1",
     "pytest==8.1.1",
     "pytest-cov==4.1.0",
-    "pytest-rerunfailures==13.0",
+    "pytest-rerunfailures==14.0",
 ]
 doc = [
     "Sphinx==7.2.6",
