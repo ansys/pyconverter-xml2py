@@ -25,11 +25,16 @@
 import os
 
 import click
-from pyconverter.xml2py import (__version__, download, writer, formatter)
+from pyconverter.xml2py import __version__, download, formatter, writer
 
 
-
-def create_package(xml_path=None, functions_path=None, target_path=None, template_path=None, max_docstring_length=100):
+def create_package(
+    xml_path=None,
+    functions_path=None,
+    target_path=None,
+    template_path=None,
+    max_docstring_length=100,
+):
     """Create Python package based on a XML documentation.
 
     Parameters
@@ -93,7 +98,7 @@ def create_package(xml_path=None, functions_path=None, target_path=None, templat
     package_path = os.path.join(target_path, "package")
     writer.write_docs(commands, cmd_map, package_path)
     formatter.run_black(package_path, max_docstring_length)
-    
+
 
 @click.group()
 def main():
