@@ -138,6 +138,6 @@ def version():
     type=click.INT,
     help="Maximum length of the generated docstrings.",
 )
-def package(xml_path, func_path, targ_path, max_docstring_length):
+def package(xml_path, func_path, targ_path, max_length):
     """Create a Python package from your XML documentation."""
-    create_package(xml_path, func_path, targ_path, max_docstring_length)
+    create_package(xml_path, func_path, targ_path, max_length)
