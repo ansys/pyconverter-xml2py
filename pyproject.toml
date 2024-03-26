@@ -40,7 +40,7 @@ dependencies = [
 [project.optional-dependencies]
 tests = [
     "click==8.1.7",
-    "pygithub==2.2.0",
+    "pygithub==2.3.0",
     "lxml==5.1.0",
     "numpy==1.26.4",
     "parse==1.20.1",
