@@ -134,7 +134,7 @@ def version():
 )
 @click.option(
     "-l",
-    "--max-docstring-length",
+    "--max-length",
     type=click.INT,
     help="Maximum length of the generated docstrings.",
 )
