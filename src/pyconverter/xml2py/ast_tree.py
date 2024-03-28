@@ -341,13 +341,22 @@ class Element:
         return self._element.tag
 
 
+def resize_length(text, initial_indent, subsequent_indent, max_length=100):
+  
+	wrapper = textwrap.TextWrapper(width=max_length,
+                                break_long_words=False,
+                                initial_indent=initial_indent,
+                                subsequent_indent=subsequent_indent
+                                ) 
+	return wrapper.fill(text=text) 
+
 class ItemizedList(Element):
     """Provides the itemized list element."""
 
     def __repr__(self):
         return "\n".join([f"* {str(item).strip()}" for item in self])
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, prefix="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         lines = []
         for item in self:
@@ -371,7 +380,8 @@ class ItemizedList(Element):
                     if isinstance(item_lines, Element)
                     else str(item_lines[0])
                 )
-                lines.append(textwrap.indent(line, prefix + "* "))
+                resized_line = resize_length(line, initial_indent=prefix+"* ", subsequent_indent="  ", max_length=max_length)
+                lines.append(resized_line)
                 for line in item_lines[1:]:
                     text = line.to_rst(prefix) if isinstance(line, Element) else str(line)
                     lines.append(textwrap.indent(text, prefix + "  "))
@@ -409,10 +419,17 @@ class Member(Element):
     #     return " ".join(items)
 
 
+def ponctuaction_whitespace(text, ponctuation):
+    extra_space = re.findall(f"\w \{ponctuation}", text)
+    if extra_space:
+        for character in extra_space:
+            text = re.sub(f"\w \{ponctuation}", f"{character[0]}{ponctuation}", text)
+    return text
+
 class OrderedList(Element):
     """Provides the ordered list element."""
 
-    def to_rst(self, prefix="", links=None, base_url=None):
+    def to_rst(self, prefix="", max_length=100, links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
         prefix += "    "
         ordered_list = []
@@ -421,8 +438,15 @@ class OrderedList(Element):
                 rst_item = item.to_rst(prefix, links=links, base_url=base_url)
             else:
                 rst_item = item.to_rst(prefix)
-            ordered_list.append(rst_item)
-        return "\n".join(ordered_list)
+            rst_item = re.sub(r"\s+", " ", rst_item) # Remove extra whitespaces
+            rst_item = ponctuaction_whitespace(rst_item, ".") # Remove extra whitespace before period
+            rst_item = ponctuaction_whitespace(rst_item, ",") # Remove extra whitespace before comma
+            resized_item = resize_length(rst_item, initial_indent="", subsequent_indent="", max_length=max_length)
+            if resized_item != rst_item:
+                print("Resized item : ", resized_item)
+            ordered_list.append(resized_item)
+            print("Ordered list : ", rst_item)
+        return "\n\n".join(ordered_list)
 
 
 class ListItem(Element):
@@ -1791,7 +1815,6 @@ class Entry(Element):
                 else:
                     items.append(item.to_rst(prefix))
             else:
-                # print(item)
                 items.append(str(item))
 
         if self.morerows is not None:
