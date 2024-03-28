@@ -456,38 +456,41 @@ class OrderedList(Element):
             resized_item = resize_length(
                 rst_item, initial_indent="", subsequent_indent="", max_length=max_length
             )
-            if resized_item != rst_item:
-                print("Resized item : ", resized_item)
             ordered_list.append(resized_item)
-            print("Ordered list : ", rst_item)
         return "\n\n".join(ordered_list)
 
 
 class ListItem(Element):
     """Provides the list item element."""
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, prefix="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
             if isinstance(item, Element):
                 if item.tag in item_needing_all:
-                    items.append(
-                        item.to_rst(
+                    rst_item = item.to_rst(
                             prefix,
                             links=links,
                             base_url=base_url,
                             fcache=fcache,
                         )
-                    )
                 elif item.tag in item_needing_links_base_url:
-                    items.append(item.to_rst(prefix, links=links, base_url=base_url))
+                    rst_item = item.to_rst(prefix, links=links, base_url=base_url)
                 elif item.tag in item_needing_fcache:
-                    items.append(item.to_rst(prefix=prefix, fcache=fcache))
+                     rst_item = item.to_rst(prefix=prefix, fcache=fcache)
                 else:
-                    items.append(item.to_rst(prefix))
+                    rst_item = item.to_rst(prefix)
             else:
-                items.append(str(item))
+                rst_item = str(item)
+            
+            # resized_item = resize_length(
+            #     rst_item, initial_indent="", subsequent_indent="", max_length=max_length
+            # )
+            # if resized_item != rst_item:
+            #     print("Initial item : ", rst_item)
+            #     print("Resized item : ", resized_item)
+            items.append(rst_item)
         return "\n".join(items)
 
 
@@ -536,8 +539,6 @@ class OLink(Element):
             tail = tail.replace("\n", "")
             tail = tail.replace("\r", "")
             return f"`{content} <{link}>`_ {self.tail}"
-        # else:
-        #     print(self.targetptr)
 
         return super().to_rst(prefix)
 
@@ -2187,7 +2188,6 @@ class XMLCommand(Element):
             elif lines[i].lstrip().startswith("="):
                 if is_equal_sign or is_dash_sign:
                     lines[i - 1] = "**" + lines[i - 1] + "**"
-                    # print("après : ", lines[i-1])
                     lines.pop(i)
                 if is_equal_sign == False:
                     is_equal_sign = True
