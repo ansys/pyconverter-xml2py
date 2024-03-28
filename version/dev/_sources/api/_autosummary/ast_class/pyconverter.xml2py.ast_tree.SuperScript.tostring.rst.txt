@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.SuperScript.tostring
+=================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: SuperScript.tostring

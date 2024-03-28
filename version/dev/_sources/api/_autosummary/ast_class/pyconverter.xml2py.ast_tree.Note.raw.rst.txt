@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Note.raw
+=====================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Note.raw

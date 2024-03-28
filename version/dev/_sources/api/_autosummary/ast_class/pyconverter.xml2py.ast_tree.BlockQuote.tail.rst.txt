@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.BlockQuote.tail
+============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: BlockQuote.tail

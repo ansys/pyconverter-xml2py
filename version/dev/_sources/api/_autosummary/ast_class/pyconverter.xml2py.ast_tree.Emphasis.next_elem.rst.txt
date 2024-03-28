@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Emphasis.next\_elem
+================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Emphasis.next_elem

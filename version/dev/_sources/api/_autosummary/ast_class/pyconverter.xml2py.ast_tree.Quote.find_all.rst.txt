@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Quote.find\_all
+============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Quote.find_all

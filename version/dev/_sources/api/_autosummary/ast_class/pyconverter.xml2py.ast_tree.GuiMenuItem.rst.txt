@@ -1,0 +1,48 @@
+﻿pyconverter.xml2py.ast\_tree.GuiMenuItem
+========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: GuiMenuItem
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GuiMenuItem.__init__
+      ~GuiMenuItem.find
+      ~GuiMenuItem.find_all
+      ~GuiMenuItem.get
+      ~GuiMenuItem.has_children
+      ~GuiMenuItem.print_tree
+      ~GuiMenuItem.rec_find
+      ~GuiMenuItem.to_rst
+      ~GuiMenuItem.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GuiMenuItem.added
+      ~GuiMenuItem.any_isalnum
+      ~GuiMenuItem.children
+      ~GuiMenuItem.content
+      ~GuiMenuItem.id
+      ~GuiMenuItem.next_elem
+      ~GuiMenuItem.prev_elem
+      ~GuiMenuItem.raw
+      ~GuiMenuItem.tag
+      ~GuiMenuItem.tail
+      ~GuiMenuItem.text_content
+      ~GuiMenuItem.title
+      ~GuiMenuItem.tostring
+   
+   

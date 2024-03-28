@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.GuiMenu.rec\_find
+==============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: GuiMenu.rec_find

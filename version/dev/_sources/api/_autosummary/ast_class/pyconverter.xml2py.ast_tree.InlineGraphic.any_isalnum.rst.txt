@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.InlineGraphic.any\_isalnum
+=======================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: InlineGraphic.any_isalnum

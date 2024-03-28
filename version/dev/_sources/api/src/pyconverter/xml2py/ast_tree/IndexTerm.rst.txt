@@ -1,0 +1,57 @@
+
+
+
+
+IndexTerm
+=========
+
+.. py:class:: IndexTerm(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.IndexTerm
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the index term element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import IndexTerm
+
+
+
+
+

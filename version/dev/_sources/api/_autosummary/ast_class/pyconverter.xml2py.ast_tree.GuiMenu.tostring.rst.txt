@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.GuiMenu.tostring
+=============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: GuiMenu.tostring

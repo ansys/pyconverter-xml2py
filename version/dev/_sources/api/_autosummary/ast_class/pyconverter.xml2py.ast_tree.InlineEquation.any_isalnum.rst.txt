@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.InlineEquation.any\_isalnum
+========================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: InlineEquation.any_isalnum

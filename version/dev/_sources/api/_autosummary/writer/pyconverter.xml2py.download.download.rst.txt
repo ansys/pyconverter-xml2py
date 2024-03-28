@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.download.download
+====================================
+
+.. currentmodule:: pyconverter.xml2py.download
+
+.. autofunction:: download

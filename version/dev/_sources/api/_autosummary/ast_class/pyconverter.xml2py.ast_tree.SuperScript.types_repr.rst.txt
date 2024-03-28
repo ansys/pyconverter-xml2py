@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.SuperScript.types\_repr
+====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: SuperScript.types_repr

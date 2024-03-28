@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Code.added
+=======================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Code.added

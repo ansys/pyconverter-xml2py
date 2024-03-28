@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.InformalTable.prev\_elem
+=====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: InformalTable.prev_elem

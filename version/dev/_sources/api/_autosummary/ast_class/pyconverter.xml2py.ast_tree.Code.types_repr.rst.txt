@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Code.types\_repr
+=============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Code.types_repr

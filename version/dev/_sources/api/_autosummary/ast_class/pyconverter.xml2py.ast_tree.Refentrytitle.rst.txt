@@ -1,0 +1,48 @@
+﻿pyconverter.xml2py.ast\_tree.Refentrytitle
+==========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: Refentrytitle
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Refentrytitle.__init__
+      ~Refentrytitle.find
+      ~Refentrytitle.find_all
+      ~Refentrytitle.get
+      ~Refentrytitle.has_children
+      ~Refentrytitle.print_tree
+      ~Refentrytitle.rec_find
+      ~Refentrytitle.to_rst
+      ~Refentrytitle.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Refentrytitle.added
+      ~Refentrytitle.any_isalnum
+      ~Refentrytitle.children
+      ~Refentrytitle.content
+      ~Refentrytitle.id
+      ~Refentrytitle.next_elem
+      ~Refentrytitle.prev_elem
+      ~Refentrytitle.raw
+      ~Refentrytitle.tag
+      ~Refentrytitle.tail
+      ~Refentrytitle.text_content
+      ~Refentrytitle.title
+      ~Refentrytitle.tostring
+   
+   

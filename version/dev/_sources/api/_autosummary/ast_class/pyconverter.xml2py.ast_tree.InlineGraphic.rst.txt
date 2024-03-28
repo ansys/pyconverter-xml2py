@@ -1,0 +1,49 @@
+﻿pyconverter.xml2py.ast\_tree.InlineGraphic
+==========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: InlineGraphic
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~InlineGraphic.__init__
+      ~InlineGraphic.fileref
+      ~InlineGraphic.find
+      ~InlineGraphic.find_all
+      ~InlineGraphic.get
+      ~InlineGraphic.has_children
+      ~InlineGraphic.print_tree
+      ~InlineGraphic.rec_find
+      ~InlineGraphic.to_rst
+      ~InlineGraphic.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~InlineGraphic.added
+      ~InlineGraphic.any_isalnum
+      ~InlineGraphic.children
+      ~InlineGraphic.content
+      ~InlineGraphic.id
+      ~InlineGraphic.next_elem
+      ~InlineGraphic.prev_elem
+      ~InlineGraphic.raw
+      ~InlineGraphic.tag
+      ~InlineGraphic.tail
+      ~InlineGraphic.text_content
+      ~InlineGraphic.title
+      ~InlineGraphic.tostring
+   
+   

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Variablelist.any\_isalnum
+======================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Variablelist.any_isalnum

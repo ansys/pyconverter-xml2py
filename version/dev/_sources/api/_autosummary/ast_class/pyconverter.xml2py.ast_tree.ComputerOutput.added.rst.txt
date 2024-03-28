@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.ComputerOutput.added
+=================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: ComputerOutput.added

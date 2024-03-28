@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.RefMeta.find\_all
+==============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: RefMeta.find_all

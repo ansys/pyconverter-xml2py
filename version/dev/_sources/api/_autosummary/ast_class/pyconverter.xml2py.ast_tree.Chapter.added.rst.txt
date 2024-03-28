@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Chapter.added
+==========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Chapter.added

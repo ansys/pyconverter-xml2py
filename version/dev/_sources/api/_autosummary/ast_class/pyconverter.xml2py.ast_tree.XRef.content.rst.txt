@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.XRef.content
+=========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: XRef.content

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Emphasis.print\_tree
+=================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Emphasis.print_tree

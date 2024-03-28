@@ -1,0 +1,57 @@
+
+
+
+
+Note
+====
+
+.. py:class:: Note(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.Note
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the note element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Note
+
+
+
+
+

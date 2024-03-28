@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.TGroup.rec\_find
+=============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: TGroup.rec_find

@@ -1,0 +1,57 @@
+
+
+
+
+Refsect3
+========
+
+.. py:class:: Refsect3(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.Refsect3
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the base element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Refsect3
+
+
+
+
+

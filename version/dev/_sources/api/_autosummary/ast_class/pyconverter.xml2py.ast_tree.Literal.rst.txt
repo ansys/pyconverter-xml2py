@@ -1,0 +1,48 @@
+﻿pyconverter.xml2py.ast\_tree.Literal
+====================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: Literal
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Literal.__init__
+      ~Literal.find
+      ~Literal.find_all
+      ~Literal.get
+      ~Literal.has_children
+      ~Literal.print_tree
+      ~Literal.rec_find
+      ~Literal.to_rst
+      ~Literal.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Literal.added
+      ~Literal.any_isalnum
+      ~Literal.children
+      ~Literal.content
+      ~Literal.id
+      ~Literal.next_elem
+      ~Literal.prev_elem
+      ~Literal.raw
+      ~Literal.tag
+      ~Literal.tail
+      ~Literal.text_content
+      ~Literal.title
+      ~Literal.tostring
+   
+   

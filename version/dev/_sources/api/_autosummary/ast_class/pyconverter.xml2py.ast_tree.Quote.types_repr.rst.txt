@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Quote.types\_repr
+==============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Quote.types_repr

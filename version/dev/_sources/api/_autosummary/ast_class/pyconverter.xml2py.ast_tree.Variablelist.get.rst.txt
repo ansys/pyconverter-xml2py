@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Variablelist.get
+=============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Variablelist.get

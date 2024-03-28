@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Paragraph.types\_repr
+==================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Paragraph.types_repr

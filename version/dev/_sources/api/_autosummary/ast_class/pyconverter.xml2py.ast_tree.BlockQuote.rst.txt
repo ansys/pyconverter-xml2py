@@ -1,0 +1,48 @@
+﻿pyconverter.xml2py.ast\_tree.BlockQuote
+=======================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: BlockQuote
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BlockQuote.__init__
+      ~BlockQuote.find
+      ~BlockQuote.find_all
+      ~BlockQuote.get
+      ~BlockQuote.has_children
+      ~BlockQuote.print_tree
+      ~BlockQuote.rec_find
+      ~BlockQuote.to_rst
+      ~BlockQuote.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~BlockQuote.added
+      ~BlockQuote.any_isalnum
+      ~BlockQuote.children
+      ~BlockQuote.content
+      ~BlockQuote.id
+      ~BlockQuote.next_elem
+      ~BlockQuote.prev_elem
+      ~BlockQuote.raw
+      ~BlockQuote.tag
+      ~BlockQuote.tail
+      ~BlockQuote.text_content
+      ~BlockQuote.title
+      ~BlockQuote.tostring
+   
+   

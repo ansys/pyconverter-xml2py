@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Primary.id
+=======================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Primary.id

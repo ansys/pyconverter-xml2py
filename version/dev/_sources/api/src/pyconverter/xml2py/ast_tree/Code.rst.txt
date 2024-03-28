@@ -1,0 +1,57 @@
+
+
+
+
+Code
+====
+
+.. py:class:: Code(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.Code
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the code element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Code
+
+
+
+
+

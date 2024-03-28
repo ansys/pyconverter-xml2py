@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Replaceable.prev\_elem
+===================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Replaceable.prev_elem

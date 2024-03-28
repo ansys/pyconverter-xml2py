@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.InlineEquation.print\_tree
+=======================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: InlineEquation.print_tree

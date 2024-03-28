@@ -1,0 +1,48 @@
+﻿pyconverter.xml2py.ast\_tree.Title
+==================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: Title
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Title.__init__
+      ~Title.find
+      ~Title.find_all
+      ~Title.get
+      ~Title.has_children
+      ~Title.print_tree
+      ~Title.rec_find
+      ~Title.to_rst
+      ~Title.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Title.added
+      ~Title.any_isalnum
+      ~Title.children
+      ~Title.content
+      ~Title.id
+      ~Title.next_elem
+      ~Title.prev_elem
+      ~Title.raw
+      ~Title.tag
+      ~Title.tail
+      ~Title.text_content
+      ~Title.title
+      ~Title.tostring
+   
+   

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Paragraph.text\_content
+====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Paragraph.text_content

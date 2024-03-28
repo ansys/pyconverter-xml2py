@@ -1,0 +1,166 @@
+
+
+
+
+
+The ``src.pyconverter.xml2py`` library
+======================================
+
+.. py:module:: src.pyconverter.xml2py
+
+
+Summary
+-------
+
+
+
+
+
+
+
+
+.. py:currentmodule:: xml2py
+.. tab-set::
+
+
+    .. tab-item:: Submodules
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+
+          * - :py:attr:`~src.pyconverter.xml2py.ast_tree`
+            - 
+
+
+          * - :py:attr:`~src.pyconverter.xml2py.cli`
+            - Command Line Interface for PyConverter-XML2Py.
+
+
+          * - :py:attr:`~src.pyconverter.xml2py.custom_functions`
+            - 
+
+
+          * - :py:attr:`~src.pyconverter.xml2py.directory_format`
+            - 
+
+
+          * - :py:attr:`~src.pyconverter.xml2py.download`
+            - Functions to download template datasets from the pyconverter-xml2py repository.
+
+
+          * - :py:attr:`~src.pyconverter.xml2py.load_xml_doc`
+            - 
+
+
+          * - :py:attr:`~src.pyconverter.xml2py.version_variables`
+            - 
+
+
+          * - :py:attr:`~src.pyconverter.xml2py.writer`
+            - 
+
+
+
+
+
+
+
+
+    .. tab-item:: Attributes
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+
+          * - :py:attr:`~__version__`
+            - pyconverter.xml2py version.
+
+
+
+
+
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+   :hidden:
+
+    🗎 ast_tree<ast_tree/index.rst>
+    🗎 cli<cli/index.rst>
+    🗎 custom_functions<custom_functions/index.rst>
+    🗎 directory_format<directory_format/index.rst>
+    🗎 download<download/index.rst>
+    🗎 load_xml_doc<load_xml_doc/index.rst>
+    🗎 version_variables<version_variables/index.rst>
+    🗎 writer<writer/index.rst>
+
+
+
+
+
+
+
+
+
+
+
+Description
+-----------
+
+
+pyconverter.xml2py
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+..
+    !! processed by numpydoc !!
+
+
+
+
+
+
+Module detail
+-------------
+
+.. py:data:: __version__
+
+   
+   pyconverter.xml2py version.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+

@@ -1,0 +1,49 @@
+﻿pyconverter.xml2py.ast\_tree.Graphic
+====================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: Graphic
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Graphic.__init__
+      ~Graphic.find
+      ~Graphic.find_all
+      ~Graphic.get
+      ~Graphic.has_children
+      ~Graphic.print_tree
+      ~Graphic.rec_find
+      ~Graphic.to_rst
+      ~Graphic.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Graphic.added
+      ~Graphic.any_isalnum
+      ~Graphic.children
+      ~Graphic.content
+      ~Graphic.entityref
+      ~Graphic.id
+      ~Graphic.next_elem
+      ~Graphic.prev_elem
+      ~Graphic.raw
+      ~Graphic.tag
+      ~Graphic.tail
+      ~Graphic.text_content
+      ~Graphic.title
+      ~Graphic.tostring
+   
+   

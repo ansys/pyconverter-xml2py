@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Paragraph.any\_isalnum
+===================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Paragraph.any_isalnum

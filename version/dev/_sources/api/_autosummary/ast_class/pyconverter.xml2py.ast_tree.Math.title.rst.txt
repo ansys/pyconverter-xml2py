@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Math.title
+=======================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Math.title

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Table.prev\_elem
+=============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Table.prev_elem

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.InlineGraphic.text\_content
+========================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: InlineGraphic.text_content

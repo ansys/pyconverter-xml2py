@@ -1,0 +1,49 @@
+﻿pyconverter.xml2py.ast\_tree.OxygenXmlTree
+==========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: OxygenXmlTree
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OxygenXmlTree.__init__
+      ~OxygenXmlTree.find
+      ~OxygenXmlTree.find_all
+      ~OxygenXmlTree.get
+      ~OxygenXmlTree.has_children
+      ~OxygenXmlTree.print_tree
+      ~OxygenXmlTree.rec_find
+      ~OxygenXmlTree.to_rst
+      ~OxygenXmlTree.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~OxygenXmlTree.added
+      ~OxygenXmlTree.any_isalnum
+      ~OxygenXmlTree.children
+      ~OxygenXmlTree.content
+      ~OxygenXmlTree.id
+      ~OxygenXmlTree.next_elem
+      ~OxygenXmlTree.prev_elem
+      ~OxygenXmlTree.raw
+      ~OxygenXmlTree.tag
+      ~OxygenXmlTree.tail
+      ~OxygenXmlTree.text_content
+      ~OxygenXmlTree.title
+      ~OxygenXmlTree.tostring
+      ~OxygenXmlTree.xml_filename
+   
+   

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.InformalTable.title
+================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: InformalTable.title

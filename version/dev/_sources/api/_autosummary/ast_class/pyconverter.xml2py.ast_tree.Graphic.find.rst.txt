@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Graphic.find
+=========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Graphic.find

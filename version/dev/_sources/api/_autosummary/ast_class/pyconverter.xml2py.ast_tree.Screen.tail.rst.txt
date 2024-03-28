@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Screen.tail
+========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Screen.tail

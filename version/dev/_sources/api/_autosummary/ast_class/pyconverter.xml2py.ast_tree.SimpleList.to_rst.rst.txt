@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.SimpleList.to\_rst
+===============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: SimpleList.to_rst

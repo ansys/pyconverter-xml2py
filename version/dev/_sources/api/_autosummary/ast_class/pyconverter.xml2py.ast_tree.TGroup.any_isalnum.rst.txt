@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.TGroup.any\_isalnum
+================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: TGroup.any_isalnum

@@ -1,0 +1,57 @@
+
+
+
+
+Screen
+======
+
+.. py:class:: Screen(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.Screen
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the screen element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Screen
+
+
+
+
+

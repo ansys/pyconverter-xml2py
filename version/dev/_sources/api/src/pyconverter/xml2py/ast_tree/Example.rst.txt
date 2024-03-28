@@ -1,0 +1,57 @@
+
+
+
+
+Example
+=======
+
+.. py:class:: Example(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.Example
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the example element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Example
+
+
+
+
+

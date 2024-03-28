@@ -1,0 +1,57 @@
+
+
+
+
+Member
+======
+
+.. py:class:: Member(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.Member
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the member element for a simple itemized list.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Member
+
+
+
+
+

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Graphic.id
+=======================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Graphic.id

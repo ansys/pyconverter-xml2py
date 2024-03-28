@@ -1,0 +1,228 @@
+
+
+
+
+
+The ``load_xml_doc.py`` module
+==============================
+
+.. py:module:: src.pyconverter.xml2py.load_xml_doc
+
+
+Summary
+-------
+
+
+
+
+
+
+
+
+.. py:currentmodule:: load_xml_doc
+.. tab-set::
+
+
+
+
+
+
+
+    .. tab-item:: Functions
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+
+          * - :py:attr:`~load_links`
+            - Load all links.
+
+
+          * - :py:attr:`~load_fcache`
+            - Load all graphics and cache the base name without the extension.
+
+
+          * - :py:attr:`~load_docu_global`
+            - Load all global documents.
+
+
+          * - :py:attr:`~load_terms`
+            - Load all needed terms.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Module detail
+-------------
+
+.. py:function:: load_links(link_path)
+
+   
+   Load all links.
+
+
+   :Parameters:
+
+       **link_path** : :class:`python:str`
+           Path to the links directory.
+
+   :Returns:
+
+       :class:`python:dict`
+           Dictionary containing the link names and the needed information to render the links.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: load_fcache(graph_path)
+
+   
+   Load all graphics and cache the base name without the extension.
+
+
+   :Parameters:
+
+       **graph_path** : :class:`python:str`
+           Path to the graphic directory.
+
+   :Returns:
+
+       :class:`python:dict`
+           Dictionary containing the base names of the graphics and their path.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: load_docu_global(term_path)
+
+   
+   Load all global documents.
+
+
+   :Parameters:
+
+       **term_path** : :class:`python:str`
+           Path to the terms directory.
+
+   :Returns:
+
+       :class:`python:dict`
+           Dictionary containing the entity names from the documentation and their path.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: load_terms(term_path, docu_global, links, fcache, variable_file='build_variables.ent', global_terms_file='terms_global.ent', manual_file='manuals.ent', character_directory='ent')
+
+   
+   Load all needed terms.
+
+
+   :Parameters:
+
+       **term_path** : :class:`python:str`
+           Path to the terms directory.
+
+       **docu_global** : :class:`python:dict`
+           Dictionary containing the entity names from the documentation and their path.
+
+       **links** : :class:`python:dict`
+           Dictionary containing the link names and the needed information to render the links.
+
+       **fcache** : :class:`python:dict`
+           Dictionary containing the base names of the graphics and their path.
+
+       **variable_file** : :class:`python:str`, :obj:`optional`
+           Name of the file containing the variable terms to import.
+           The default value is ``"build_variables.ent"``.
+
+       **global_terms_file** : :class:`python:str`, :obj:`optional`
+           Name of the file containing the global terms to import.
+           The default is ``"terms_global.ent"``.
+
+       **manual_file** : :class:`python:str`, :obj:`optional`
+           Name of the file containing the manual entities to import.
+           The default is ``"manuals.ent"``.
+
+       **character_directory** : :class:`python:str`, :obj:`optional`
+           Name of the directory containg the entities for the special characters.
+           The default is ``"ent"``.
+
+   :Returns:
+
+       :class:`python:dict`
+           Dictionary containing the entity names and their values.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+

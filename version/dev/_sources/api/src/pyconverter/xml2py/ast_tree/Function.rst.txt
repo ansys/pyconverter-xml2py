@@ -1,0 +1,57 @@
+
+
+
+
+Function
+========
+
+.. py:class:: Function(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.Function
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the function element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Function
+
+
+
+
+

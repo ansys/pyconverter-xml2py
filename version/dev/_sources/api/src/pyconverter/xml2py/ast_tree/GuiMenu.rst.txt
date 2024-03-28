@@ -1,0 +1,57 @@
+
+
+
+
+GuiMenu
+=======
+
+.. py:class:: GuiMenu(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.GuiMenu
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the GUI menu element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import GuiMenu
+
+
+
+
+

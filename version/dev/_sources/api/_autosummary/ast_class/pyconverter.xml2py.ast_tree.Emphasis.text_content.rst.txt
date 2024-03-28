@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Emphasis.text\_content
+===================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Emphasis.text_content

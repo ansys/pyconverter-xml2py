@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.BlockQuote.any\_isalnum
+====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: BlockQuote.any_isalnum

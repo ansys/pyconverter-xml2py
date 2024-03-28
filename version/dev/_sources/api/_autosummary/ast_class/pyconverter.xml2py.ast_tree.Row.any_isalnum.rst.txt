@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Row.any\_isalnum
+=============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Row.any_isalnum

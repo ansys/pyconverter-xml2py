@@ -1,0 +1,33 @@
+﻿pyconverter.xml2py.custom\_functions.CustomFunctions
+====================================================
+
+.. currentmodule:: pyconverter.xml2py.custom_functions
+
+.. autoclass:: CustomFunctions
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CustomFunctions.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CustomFunctions.lib_import
+      ~CustomFunctions.path
+      ~CustomFunctions.py_code
+      ~CustomFunctions.py_examples
+      ~CustomFunctions.py_names
+      ~CustomFunctions.py_returns
+   
+   

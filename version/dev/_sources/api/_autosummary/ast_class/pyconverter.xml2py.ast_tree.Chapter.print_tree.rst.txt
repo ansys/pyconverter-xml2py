@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Chapter.print\_tree
+================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Chapter.print_tree

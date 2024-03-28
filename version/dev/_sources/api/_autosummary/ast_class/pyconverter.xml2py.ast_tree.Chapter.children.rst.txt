@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Chapter.children
+=============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Chapter.children

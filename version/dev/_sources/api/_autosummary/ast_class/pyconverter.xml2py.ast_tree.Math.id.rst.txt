@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Math.id
+====================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Math.id

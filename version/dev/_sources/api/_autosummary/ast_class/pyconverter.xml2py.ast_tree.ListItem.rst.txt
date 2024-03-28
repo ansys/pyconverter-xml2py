@@ -1,0 +1,48 @@
+﻿pyconverter.xml2py.ast\_tree.ListItem
+=====================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: ListItem
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ListItem.__init__
+      ~ListItem.find
+      ~ListItem.find_all
+      ~ListItem.get
+      ~ListItem.has_children
+      ~ListItem.print_tree
+      ~ListItem.rec_find
+      ~ListItem.to_rst
+      ~ListItem.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ListItem.added
+      ~ListItem.any_isalnum
+      ~ListItem.children
+      ~ListItem.content
+      ~ListItem.id
+      ~ListItem.next_elem
+      ~ListItem.prev_elem
+      ~ListItem.raw
+      ~ListItem.tag
+      ~ListItem.tail
+      ~ListItem.text_content
+      ~ListItem.title
+      ~ListItem.tostring
+   
+   

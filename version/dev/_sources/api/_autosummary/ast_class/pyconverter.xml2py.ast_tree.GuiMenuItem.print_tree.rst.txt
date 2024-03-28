@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.GuiMenuItem.print\_tree
+====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: GuiMenuItem.print_tree

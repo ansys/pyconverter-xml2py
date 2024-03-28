@@ -1,0 +1,57 @@
+
+
+
+
+GuiLabel
+========
+
+.. py:class:: GuiLabel(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.GuiLabel
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the GUI label element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import GuiLabel
+
+
+
+
+

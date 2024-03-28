@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.RefSection.title
+=============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: RefSection.title

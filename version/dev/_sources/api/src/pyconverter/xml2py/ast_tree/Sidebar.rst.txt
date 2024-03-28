@@ -1,0 +1,57 @@
+
+
+
+
+Sidebar
+=======
+
+.. py:class:: Sidebar(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.Sidebar
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the base element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Sidebar
+
+
+
+
+

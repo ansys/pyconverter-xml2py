@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Refentrytitle.id
+=============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Refentrytitle.id

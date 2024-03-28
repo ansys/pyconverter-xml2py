@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.ItemizedList.next\_elem
+====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: ItemizedList.next_elem

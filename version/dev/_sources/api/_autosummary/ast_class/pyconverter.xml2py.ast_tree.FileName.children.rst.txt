@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.FileName.children
+==============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: FileName.children

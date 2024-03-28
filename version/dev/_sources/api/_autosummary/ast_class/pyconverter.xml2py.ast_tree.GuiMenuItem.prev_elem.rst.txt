@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.GuiMenuItem.prev\_elem
+===================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: GuiMenuItem.prev_elem

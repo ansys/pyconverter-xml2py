@@ -1,0 +1,105 @@
+
+
+
+
+Phrase
+======
+
+.. py:class:: Phrase(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.Phrase
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the phrase element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+
+Overview
+--------
+.. py:currentmodule:: Phrase
+.. tab-set::
+
+
+
+
+
+
+
+    .. tab-item:: Special methods
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~__repr__`
+            - Return repr(self).
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Phrase
+
+
+
+
+Method detail
+-------------
+.. py:method:: __repr__()
+
+   
+   Return repr(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.InformalExample.next\_elem
+=======================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: InformalExample.next_elem

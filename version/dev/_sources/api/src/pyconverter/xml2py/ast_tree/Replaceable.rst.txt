@@ -1,0 +1,171 @@
+
+
+
+
+Replaceable
+===========
+
+.. py:class:: Replaceable(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.Replaceable
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the replaceable element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+
+Overview
+--------
+.. py:currentmodule:: Replaceable
+.. tab-set::
+
+
+
+    .. tab-item:: Methods
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~to_rst`
+            - Return a string to enable converting the element to an RST format.
+
+
+    .. tab-item:: Properties
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~is_equals`
+            - Replaceable equals something.
+          * - :py:attr:`~content_equals`
+            - Content of the element after handling the '=' sign.
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Replaceable
+
+
+Property detail
+---------------
+.. py:property:: is_equals
+   :canonical: src.pyconverter.xml2py.ast_tree.Replaceable.is_equals
+   :type: None
+
+
+   
+   Replaceable equals something.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: content_equals
+   :canonical: src.pyconverter.xml2py.ast_tree.Replaceable.content_equals
+   :type: None
+
+
+   
+   Content of the element after handling the '=' sign.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+Method detail
+-------------
+.. py:method:: to_rst(prefix='')
+
+   
+   Return a string to enable converting the element to an RST format.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+

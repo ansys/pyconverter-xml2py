@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.ProgramListing.text\_content
+=========================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: ProgramListing.text_content

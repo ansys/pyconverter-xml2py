@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Figure.any\_isalnum
+================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Figure.any_isalnum

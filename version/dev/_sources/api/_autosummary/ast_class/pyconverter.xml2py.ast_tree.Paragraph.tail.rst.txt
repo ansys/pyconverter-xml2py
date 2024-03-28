@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Paragraph.tail
+===========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Paragraph.tail

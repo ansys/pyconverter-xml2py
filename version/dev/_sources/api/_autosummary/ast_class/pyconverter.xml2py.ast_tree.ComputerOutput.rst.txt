@@ -1,0 +1,48 @@
+﻿pyconverter.xml2py.ast\_tree.ComputerOutput
+===========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: ComputerOutput
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ComputerOutput.__init__
+      ~ComputerOutput.find
+      ~ComputerOutput.find_all
+      ~ComputerOutput.get
+      ~ComputerOutput.has_children
+      ~ComputerOutput.print_tree
+      ~ComputerOutput.rec_find
+      ~ComputerOutput.to_rst
+      ~ComputerOutput.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ComputerOutput.added
+      ~ComputerOutput.any_isalnum
+      ~ComputerOutput.children
+      ~ComputerOutput.content
+      ~ComputerOutput.id
+      ~ComputerOutput.next_elem
+      ~ComputerOutput.prev_elem
+      ~ComputerOutput.raw
+      ~ComputerOutput.tag
+      ~ComputerOutput.tail
+      ~ComputerOutput.text_content
+      ~ComputerOutput.title
+      ~ComputerOutput.tostring
+   
+   

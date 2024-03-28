@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Screen.any\_isalnum
+================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Screen.any_isalnum

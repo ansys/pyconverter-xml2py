@@ -1,0 +1,48 @@
+﻿pyconverter.xml2py.ast\_tree.FileName
+=====================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: FileName
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FileName.__init__
+      ~FileName.find
+      ~FileName.find_all
+      ~FileName.get
+      ~FileName.has_children
+      ~FileName.print_tree
+      ~FileName.rec_find
+      ~FileName.to_rst
+      ~FileName.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FileName.added
+      ~FileName.any_isalnum
+      ~FileName.children
+      ~FileName.content
+      ~FileName.id
+      ~FileName.next_elem
+      ~FileName.prev_elem
+      ~FileName.raw
+      ~FileName.tag
+      ~FileName.tail
+      ~FileName.text_content
+      ~FileName.title
+      ~FileName.tostring
+   
+   

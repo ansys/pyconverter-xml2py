@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.load\_xml\_doc.load\_terms
+=============================================
+
+.. currentmodule:: pyconverter.xml2py.load_xml_doc
+
+.. autofunction:: load_terms

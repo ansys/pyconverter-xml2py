@@ -1,0 +1,143 @@
+
+
+
+
+Chapter
+=======
+
+.. py:class:: Chapter(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.Chapter
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the chapter element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+
+Overview
+--------
+.. py:currentmodule:: Chapter
+.. tab-set::
+
+
+
+
+    .. tab-item:: Properties
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~helpstring`
+            - Value for the ``helpstring`` parameter contained in the chapter element.
+
+
+
+
+    .. tab-item:: Special methods
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~__repr__`
+            - Return repr(self).
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Chapter
+
+
+Property detail
+---------------
+.. py:property:: helpstring
+   :canonical: src.pyconverter.xml2py.ast_tree.Chapter.helpstring
+   :type: None
+
+
+   
+   Value for the ``helpstring`` parameter contained in the chapter element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+Method detail
+-------------
+.. py:method:: __repr__()
+
+   
+   Return repr(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+

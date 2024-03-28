@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Figure.graphic
+===========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Figure.graphic

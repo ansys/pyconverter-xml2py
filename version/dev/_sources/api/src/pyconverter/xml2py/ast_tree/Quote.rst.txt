@@ -1,0 +1,143 @@
+
+
+
+
+Quote
+=====
+
+.. py:class:: Quote(element)
+   :canonical: src.pyconverter.xml2py.ast_tree.Quote
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the quote element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+
+Overview
+--------
+.. py:currentmodule:: Quote
+.. tab-set::
+
+
+
+
+    .. tab-item:: Properties
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~quote`
+            - Quote value.
+
+
+
+
+    .. tab-item:: Special methods
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~__repr__`
+            - Return repr(self).
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Quote
+
+
+Property detail
+---------------
+.. py:property:: quote
+   :canonical: src.pyconverter.xml2py.ast_tree.Quote.quote
+   :type: None
+
+
+   
+   Quote value.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+Method detail
+-------------
+.. py:method:: __repr__()
+
+   
+   Return repr(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+

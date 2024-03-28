@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Refname.prev\_elem
+===============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Refname.prev_elem

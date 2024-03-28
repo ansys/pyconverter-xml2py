@@ -1,0 +1,48 @@
+﻿pyconverter.xml2py.ast\_tree.InformalTable
+==========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: InformalTable
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~InformalTable.__init__
+      ~InformalTable.find
+      ~InformalTable.find_all
+      ~InformalTable.get
+      ~InformalTable.has_children
+      ~InformalTable.print_tree
+      ~InformalTable.rec_find
+      ~InformalTable.to_rst
+      ~InformalTable.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~InformalTable.added
+      ~InformalTable.any_isalnum
+      ~InformalTable.children
+      ~InformalTable.content
+      ~InformalTable.id
+      ~InformalTable.next_elem
+      ~InformalTable.prev_elem
+      ~InformalTable.raw
+      ~InformalTable.tag
+      ~InformalTable.tail
+      ~InformalTable.text_content
+      ~InformalTable.title
+      ~InformalTable.tostring
+   
+   

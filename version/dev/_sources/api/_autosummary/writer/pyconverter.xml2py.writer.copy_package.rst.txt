@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.writer.copy\_package
+=======================================
+
+.. currentmodule:: pyconverter.xml2py.writer
+
+.. autofunction:: copy_package

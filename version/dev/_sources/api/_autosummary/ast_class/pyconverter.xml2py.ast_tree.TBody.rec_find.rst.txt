@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.TBody.rec\_find
+============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: TBody.rec_find

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Replaceable.id
+===========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Replaceable.id

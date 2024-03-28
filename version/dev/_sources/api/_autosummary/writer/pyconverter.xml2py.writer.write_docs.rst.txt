@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.writer.write\_docs
+=====================================
+
+.. currentmodule:: pyconverter.xml2py.writer
+
+.. autofunction:: write_docs

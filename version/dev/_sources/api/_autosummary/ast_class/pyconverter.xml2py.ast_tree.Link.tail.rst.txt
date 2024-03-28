@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Link.tail
+======================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Link.tail

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Literal.title
+==========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Literal.title

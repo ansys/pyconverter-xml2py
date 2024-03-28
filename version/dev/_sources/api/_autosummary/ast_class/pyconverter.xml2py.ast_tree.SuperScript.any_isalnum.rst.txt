@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.SuperScript.any\_isalnum
+=====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: SuperScript.any_isalnum

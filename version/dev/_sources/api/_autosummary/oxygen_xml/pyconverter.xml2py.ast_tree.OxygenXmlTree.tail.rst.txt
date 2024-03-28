@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.OxygenXmlTree.tail
+===============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: OxygenXmlTree.tail

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Command.find
+=========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Command.find

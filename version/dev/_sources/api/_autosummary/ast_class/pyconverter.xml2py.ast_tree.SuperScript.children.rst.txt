@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.SuperScript.children
+=================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: SuperScript.children

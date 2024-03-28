@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Row.raw
+====================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Row.raw

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.XRef.tostring
+==========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: XRef.tostring

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.UserInput.text\_content
+====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: UserInput.text_content

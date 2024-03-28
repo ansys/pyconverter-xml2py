@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.OrderedList.tag
+============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: OrderedList.tag

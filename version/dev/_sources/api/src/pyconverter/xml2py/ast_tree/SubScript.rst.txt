@@ -1,0 +1,57 @@
+
+
+
+
+SubScript
+=========
+
+.. py:class:: SubScript(element)
+   :canonical: src.pyconverter.xml2py.ast_tree.SubScript
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the subscript element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import SubScript
+
+
+
+
+

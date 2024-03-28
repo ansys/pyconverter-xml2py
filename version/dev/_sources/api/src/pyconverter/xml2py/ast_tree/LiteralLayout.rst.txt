@@ -1,0 +1,57 @@
+
+
+
+
+LiteralLayout
+=============
+
+.. py:class:: LiteralLayout(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.LiteralLayout
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the base element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import LiteralLayout
+
+
+
+
+

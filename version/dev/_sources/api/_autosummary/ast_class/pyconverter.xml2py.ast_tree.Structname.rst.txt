@@ -1,0 +1,48 @@
+﻿pyconverter.xml2py.ast\_tree.Structname
+=======================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: Structname
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Structname.__init__
+      ~Structname.find
+      ~Structname.find_all
+      ~Structname.get
+      ~Structname.has_children
+      ~Structname.print_tree
+      ~Structname.rec_find
+      ~Structname.to_rst
+      ~Structname.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Structname.added
+      ~Structname.any_isalnum
+      ~Structname.children
+      ~Structname.content
+      ~Structname.id
+      ~Structname.next_elem
+      ~Structname.prev_elem
+      ~Structname.raw
+      ~Structname.tag
+      ~Structname.tail
+      ~Structname.text_content
+      ~Structname.title
+      ~Structname.tostring
+   
+   

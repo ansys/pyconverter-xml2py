@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.THead.tail
+=======================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: THead.tail

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Table.tostring
+===========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Table.tostring

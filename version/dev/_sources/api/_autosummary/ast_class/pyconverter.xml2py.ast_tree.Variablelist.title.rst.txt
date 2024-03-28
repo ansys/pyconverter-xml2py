@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Variablelist.title
+===============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Variablelist.title

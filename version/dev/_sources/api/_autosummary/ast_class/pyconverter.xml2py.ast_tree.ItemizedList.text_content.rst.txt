@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.ItemizedList.text\_content
+=======================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: ItemizedList.text_content

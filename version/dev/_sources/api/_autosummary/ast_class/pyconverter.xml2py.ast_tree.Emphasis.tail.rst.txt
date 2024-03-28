@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Emphasis.tail
+==========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Emphasis.tail

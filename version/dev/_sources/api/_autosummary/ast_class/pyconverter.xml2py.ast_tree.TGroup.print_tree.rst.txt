@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.TGroup.print\_tree
+===============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: TGroup.print_tree

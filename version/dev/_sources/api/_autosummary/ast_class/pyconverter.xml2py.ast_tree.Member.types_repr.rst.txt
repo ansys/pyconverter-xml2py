@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Member.types\_repr
+===============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Member.types_repr

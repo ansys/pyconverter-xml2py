@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.VarlistEntry.parm\_types
+=====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: VarlistEntry.parm_types

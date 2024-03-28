@@ -1,0 +1,48 @@
+﻿pyconverter.xml2py.ast\_tree.IndexTerm
+======================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: IndexTerm
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~IndexTerm.__init__
+      ~IndexTerm.find
+      ~IndexTerm.find_all
+      ~IndexTerm.get
+      ~IndexTerm.has_children
+      ~IndexTerm.print_tree
+      ~IndexTerm.rec_find
+      ~IndexTerm.to_rst
+      ~IndexTerm.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~IndexTerm.added
+      ~IndexTerm.any_isalnum
+      ~IndexTerm.children
+      ~IndexTerm.content
+      ~IndexTerm.id
+      ~IndexTerm.next_elem
+      ~IndexTerm.prev_elem
+      ~IndexTerm.raw
+      ~IndexTerm.tag
+      ~IndexTerm.tail
+      ~IndexTerm.text_content
+      ~IndexTerm.title
+      ~IndexTerm.tostring
+   
+   

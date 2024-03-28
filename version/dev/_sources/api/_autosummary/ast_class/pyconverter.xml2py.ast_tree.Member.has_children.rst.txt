@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Member.has\_children
+=================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Member.has_children

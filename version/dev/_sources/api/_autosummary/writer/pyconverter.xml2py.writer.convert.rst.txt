@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.writer.convert
+=================================
+
+.. currentmodule:: pyconverter.xml2py.writer
+
+.. autofunction:: convert

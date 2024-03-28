@@ -1,0 +1,57 @@
+
+
+
+
+Section1
+========
+
+.. py:class:: Section1(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.Section1
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the base element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Section1
+
+
+
+
+

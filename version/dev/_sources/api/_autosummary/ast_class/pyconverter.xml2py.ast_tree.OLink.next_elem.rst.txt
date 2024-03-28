@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.OLink.next\_elem
+=============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: OLink.next_elem

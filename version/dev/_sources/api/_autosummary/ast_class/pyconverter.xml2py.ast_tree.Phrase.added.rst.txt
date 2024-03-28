@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Phrase.added
+=========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Phrase.added

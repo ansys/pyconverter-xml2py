@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Refname.args
+=========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Refname.args

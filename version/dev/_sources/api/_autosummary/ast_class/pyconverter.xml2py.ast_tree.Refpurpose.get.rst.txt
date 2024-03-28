@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Refpurpose.get
+===========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Refpurpose.get

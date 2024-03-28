@@ -1,0 +1,705 @@
+
+
+
+
+Element
+=======
+
+.. py:class:: Element(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.Element
+
+
+
+
+
+   Provides the base element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Overview
+--------
+.. py:currentmodule:: Element
+.. tab-set::
+
+
+
+    .. tab-item:: Methods
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~has_children`
+            - Return wether the element has children.
+          * - :py:attr:`~get`
+            - Get an item from an element.
+          * - :py:attr:`~print_tree`
+            - Print the tree.
+          * - :py:attr:`~types_repr`
+            - Return the string types.
+          * - :py:attr:`~to_rst`
+            - Return a string to enable converting the element to an RST format.
+          * - :py:attr:`~rec_find`
+            - Find the first type matching a given type string recursively.
+          * - :py:attr:`~find`
+            - Find the first type matching a given type string.
+          * - :py:attr:`~find_all`
+            - Find all types matching a given type string.
+
+
+    .. tab-item:: Properties
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~text_content`
+            - Text content.
+          * - :py:attr:`~raw`
+            - Raw string of the element.
+          * - :py:attr:`~tostring`
+            - Attributes of the element as a dictionary.
+          * - :py:attr:`~added`
+            - Has the revision flag ``added``.
+          * - :py:attr:`~any_isalnum`
+            - Returns ``True`` if any characters are alphanumeric.
+          * - :py:attr:`~tail`
+            - Tail of the element as a string.
+          * - :py:attr:`~children`
+            - Children of the tree.
+          * - :py:attr:`~title`
+            - Element title.
+          * - :py:attr:`~content`
+            - Text content.
+          * - :py:attr:`~id`
+            - ID of the element.
+          * - :py:attr:`~next_elem`
+            - Next element.
+          * - :py:attr:`~prev_elem`
+            - Previous element.
+          * - :py:attr:`~tag`
+            - Element tag.
+
+
+
+
+    .. tab-item:: Special methods
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~__getitem__`
+            - 
+          * - :py:attr:`~__len__`
+            - 
+          * - :py:attr:`~__repr__`
+            - Return repr(self).
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Element
+
+
+Property detail
+---------------
+.. py:property:: text_content
+   :canonical: src.pyconverter.xml2py.ast_tree.Element.text_content
+   :type: None
+
+
+   
+   Text content.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: raw
+   :canonical: src.pyconverter.xml2py.ast_tree.Element.raw
+   :type: None
+
+
+   
+   Raw string of the element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: tostring
+   :canonical: src.pyconverter.xml2py.ast_tree.Element.tostring
+   :type: None
+
+
+   
+   Attributes of the element as a dictionary.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: added
+   :canonical: src.pyconverter.xml2py.ast_tree.Element.added
+   :type: None
+
+
+   
+   Has the revision flag ``added``.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: any_isalnum
+   :canonical: src.pyconverter.xml2py.ast_tree.Element.any_isalnum
+   :type: None
+
+
+   
+   Returns ``True`` if any characters are alphanumeric.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: tail
+   :canonical: src.pyconverter.xml2py.ast_tree.Element.tail
+   :type: None
+
+
+   
+   Tail of the element as a string.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: children
+   :canonical: src.pyconverter.xml2py.ast_tree.Element.children
+   :type: None
+
+
+   
+   Children of the tree.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: title
+   :canonical: src.pyconverter.xml2py.ast_tree.Element.title
+   :type: None
+
+
+   
+   Element title.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: content
+   :canonical: src.pyconverter.xml2py.ast_tree.Element.content
+   :type: None
+
+
+   
+   Text content.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: id
+   :canonical: src.pyconverter.xml2py.ast_tree.Element.id
+   :type: None
+
+
+   
+   ID of the element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: next_elem
+   :canonical: src.pyconverter.xml2py.ast_tree.Element.next_elem
+   :type: None
+
+
+   
+   Next element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: prev_elem
+   :canonical: src.pyconverter.xml2py.ast_tree.Element.prev_elem
+   :type: None
+
+
+   
+   Previous element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: tag
+   :canonical: src.pyconverter.xml2py.ast_tree.Element.tag
+   :type: None
+
+
+   
+   Element tag.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+Method detail
+-------------
+.. py:method:: has_children()
+
+   
+   Return wether the element has children.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:method:: get(entry)
+
+   
+   Get an item from an element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:method:: print_tree()
+
+   
+   Print the tree.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:method:: types_repr()
+
+   
+   Return the string types.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:method:: __getitem__(index)
+
+
+.. py:method:: __len__()
+
+
+.. py:method:: __repr__()
+
+   
+   Return repr(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:method:: to_rst(prefix='', links=None, base_url=None, fcache=None)
+
+   
+   Return a string to enable converting the element to an RST format.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:method:: rec_find(_type, terms=None)
+
+   
+   Find the first type matching a given type string recursively.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:method:: find(_type, terms=None)
+
+   
+   Find the first type matching a given type string.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:method:: find_all(_type, recursive=False, terms=None)
+
+   
+   Find all types matching a given type string.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Paragraph.rec\_find
+================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Paragraph.rec_find

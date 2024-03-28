@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.directory\_format.xml\_path
+==============================================
+
+.. currentmodule:: pyconverter.xml2py.directory_format
+
+.. autofunction:: xml_path

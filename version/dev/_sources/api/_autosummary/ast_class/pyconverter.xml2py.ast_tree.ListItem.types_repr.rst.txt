@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.ListItem.types\_repr
+=================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: ListItem.types_repr

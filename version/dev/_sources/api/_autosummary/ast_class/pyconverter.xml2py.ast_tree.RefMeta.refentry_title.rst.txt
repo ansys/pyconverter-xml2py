@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.RefMeta.refentry\_title
+====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: RefMeta.refentry_title

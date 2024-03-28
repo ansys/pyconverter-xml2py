@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Replaceable.is\_equals
+===================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Replaceable.is_equals

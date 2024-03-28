@@ -1,0 +1,161 @@
+
+
+
+
+
+The ``directory_format.py`` module
+==================================
+
+.. py:module:: src.pyconverter.xml2py.directory_format
+
+
+Summary
+-------
+
+
+
+
+
+
+
+
+.. py:currentmodule:: directory_format
+.. tab-set::
+
+
+
+
+
+
+
+    .. tab-item:: Functions
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+
+          * - :py:attr:`~xml_path`
+            - Return the path to the directory containing the XML documentation.
+
+
+          * - :py:attr:`~get_paths`
+            - Get the paths to the directories needed for the conversion.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Module detail
+-------------
+
+.. py:function:: xml_path(path=None)
+
+   
+   Return the path to the directory containing the XML documentation.
+   You should follow the predefined directory structure.
+
+
+   :Parameters:
+
+       **path** : :class:`python:str`, :obj:`optional`
+           Path of the XML documentation to convert. The default is ``None``,
+           in which case the path is set with either the argument parser ``-p`` or
+           ``--xml-path``, or with the ``XML_PATH`` environment variable.
+
+   :Returns:
+
+       :class:`python:str`
+           Path of the XML documentation to convert.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: get_paths(path, graph_path=None, link_path=None, term_path=None, xml_path=None)
+
+   
+   Get the paths to the directories needed for the conversion.
+
+
+   :Parameters:
+
+       **path** : :class:`python:str`
+           Path to the directory with the predefined format.
+
+       **graph_path** : :class:`python:str`, :obj:`optional`
+           Path to the directory containing the graphics. The default is ``None``,
+           in which case the XML predefined directory format is used.
+
+       **link_path** : :class:`python:str`, :obj:`optional`
+           Path to the directory containing the links. The default is ``None``,
+           in which case the XML predefined directory format is used.
+
+       **term_path** : :class:`python:str`, :obj:`optional`
+           Path to the directory containing the terms. The default is ``None``,
+           in which case the XML predefined directory format is used.
+
+       **xml_path** : :class:`python:str`
+           Path to the directory containing the XML files. The default is ``None``,
+           in which case the XML predefined directory format is used.
+
+   :Returns:
+
+       **graphic_path** : :class:`python:str`
+           Path of the directory containing the graphics.
+
+       **link_path** : :class:`python:str`
+           Path of the directory containing the links.
+
+       **term_path** : :class:`python:str`
+           Path of the directory containing the terms.
+
+       **xml_path** : :class:`python:str`
+           Path of the directory containing the XML files.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.XRef.raw
+=====================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: XRef.raw

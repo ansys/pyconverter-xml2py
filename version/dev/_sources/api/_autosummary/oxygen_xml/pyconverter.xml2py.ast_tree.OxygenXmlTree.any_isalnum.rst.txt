@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.OxygenXmlTree.any\_isalnum
+=======================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: OxygenXmlTree.any_isalnum

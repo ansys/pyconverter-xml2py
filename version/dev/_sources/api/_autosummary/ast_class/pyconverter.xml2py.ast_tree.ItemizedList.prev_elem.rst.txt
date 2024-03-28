@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.ItemizedList.prev\_elem
+====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: ItemizedList.prev_elem

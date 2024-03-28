@@ -1,0 +1,1046 @@
+
+
+
+
+
+The ``ast_tree.py`` module
+==========================
+
+.. py:module:: src.pyconverter.xml2py.ast_tree
+
+
+Summary
+-------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.. py:currentmodule:: ast_tree
+.. tab-set::
+
+
+
+
+    .. tab-item:: Classes
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+
+          * - :py:attr:`~Element`
+            - Provides the base element.
+
+
+          * - :py:attr:`~ItemizedList`
+            - Provides the itemized list element.
+
+
+          * - :py:attr:`~SimpleList`
+            - Provides the simple itemized list element.
+
+
+          * - :py:attr:`~Member`
+            - Provides the member element for a simple itemized list.
+
+
+          * - :py:attr:`~OrderedList`
+            - Provides the ordered list element.
+
+
+          * - :py:attr:`~ListItem`
+            - Provides the list item element.
+
+
+          * - :py:attr:`~FileName`
+            - Provides the filename element.
+
+
+          * - :py:attr:`~OLink`
+            - Provides the external link element.
+
+
+          * - :py:attr:`~Paragraph`
+            - Provides the paragraph element.
+
+
+          * - :py:attr:`~Phrase`
+            - Provides the phrase element.
+
+
+          * - :py:attr:`~Structname`
+            - Provides the structure name element.
+
+
+          * - :py:attr:`~Title`
+            - Provides the title element.
+
+
+          * - :py:attr:`~Emphasis`
+            - Provides the emphasis element.
+
+
+          * - :py:attr:`~Example`
+            - Provides the example element.
+
+
+          * - :py:attr:`~InformalExample`
+            - Provides the informal example element.
+
+
+          * - :py:attr:`~GuiMenu`
+            - Provides the GUI menu element.
+
+
+          * - :py:attr:`~Replaceable`
+            - Provides the replaceable element.
+
+
+          * - :py:attr:`~ProgramListing`
+            - Provides the program listing element.
+
+
+          * - :py:attr:`~Variablelist`
+            - Provides the variable list.
+
+
+          * - :py:attr:`~RefSection`
+            - Provides the reference section element.
+
+
+          * - :py:attr:`~VarlistEntry`
+            - Provides the variable list entry element.
+
+
+          * - :py:attr:`~Term`
+            - Provides the term element.
+
+
+          * - :py:attr:`~GuiLabel`
+            - Provides the GUI label element.
+
+
+          * - :py:attr:`~GuiMenuItem`
+            - Provides the GUI menu item element.
+
+
+          * - :py:attr:`~SuperScript`
+            - Provides the superscript element.
+
+
+          * - :py:attr:`~Code`
+            - Provides the code element.
+
+
+          * - :py:attr:`~Math`
+            - Provides the math element.
+
+
+          * - :py:attr:`~InlineEquation`
+            - Provides the inline equation element.
+
+
+          * - :py:attr:`~SubScript`
+            - Provides the subscript element.
+
+
+          * - :py:attr:`~InlineGraphic`
+            - Provides the inline graphic element.
+
+
+          * - :py:attr:`~Quote`
+            - Provides the quote element.
+
+
+          * - :py:attr:`~Link`
+            - Provides the link element.
+
+
+          * - :py:attr:`~XRef`
+            - Provides the cross reference element.
+
+
+          * - :py:attr:`~UserInput`
+            - Provides the user input element.
+
+
+          * - :py:attr:`~Screen`
+            - Provides the screen element.
+
+
+          * - :py:attr:`~Literal`
+            - Provides the literal output element.
+
+
+          * - :py:attr:`~Caution`
+            - Provides the caution element.
+
+
+          * - :py:attr:`~Graphic`
+            - Provides the graphic element.
+
+
+          * - :py:attr:`~Function`
+            - Provides the function element.
+
+
+          * - :py:attr:`~Note`
+            - Provides the note element.
+
+
+          * - :py:attr:`~BlockQuote`
+            - Provides the block quote element.
+
+
+          * - :py:attr:`~RefMeta`
+            - Provides the reference metadata element.
+
+
+          * - :py:attr:`~IndexTerm`
+            - Provides the index term element.
+
+
+          * - :py:attr:`~Primary`
+            - Provides the primary element.
+
+
+          * - :py:attr:`~TGroup`
+            - Provides the tgroup element, which contains the header and body rows of a table.
+
+
+          * - :py:attr:`~Table`
+            - Provides the table element
+
+
+          * - :py:attr:`~Refentrytitle`
+            - Provides the title of the reference entry.
+
+
+          * - :py:attr:`~Refnamediv`
+            - Provides the refnamediv element, which contains the name,
+
+
+          * - :py:attr:`~Refname`
+            - Provides the refname element which contains
+
+
+          * - :py:attr:`~Refpurpose`
+            - Provides the refpurpose element, which contains
+
+
+          * - :py:attr:`~Refclass`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Application`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Refsect1`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Command`
+            - Provides the command element.
+
+
+          * - :py:attr:`~ComputerOutput`
+            - Provides the computer output element.
+
+
+          * - :py:attr:`~Figure`
+            - Provides the figure element.
+
+
+          * - :py:attr:`~Footnote`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Footnoteref`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Formalpara`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Glossterm`
+            - Provides the base element.
+
+
+          * - :py:attr:`~GuiButton`
+            - Provides the base element.
+
+
+          * - :py:attr:`~GuiIcon`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Highlights`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Important`
+            - Provides the base element.
+
+
+          * - :py:attr:`~InformalEquation`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Interface`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Markup`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Mediaobject`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Option`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Refsect3`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Refsynopsisdiv`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Sidebar`
+            - Provides the base element.
+
+
+          * - :py:attr:`~XMLType`
+            - Provides the base element.
+
+
+          * - :py:attr:`~XMLWarning`
+            - Provides the base element.
+
+
+          * - :py:attr:`~ClassName`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Imageobject`
+            - Provides the base element.
+
+
+          * - :py:attr:`~InformalFigure`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Envar`
+            - Provides the base element.
+
+
+          * - :py:attr:`~ImageData`
+            - Provides the base element.
+
+
+          * - :py:attr:`~ColSpec`
+            - Provides the base element.
+
+
+          * - :py:attr:`~TBody`
+            - Provides the tbody element.
+
+
+          * - :py:attr:`~Entry`
+            - Provides the entry element.
+
+
+          * - :py:attr:`~Row`
+            - Provides the row element.
+
+
+          * - :py:attr:`~THead`
+            - Provides the thead element.
+
+
+          * - :py:attr:`~Remark`
+            - Provides the base element.
+
+
+          * - :py:attr:`~LiteralLayout`
+            - Provides the base element.
+
+
+          * - :py:attr:`~CiteTitle`
+            - Provides the base element.
+
+
+          * - :py:attr:`~ULink`
+            - Provides the base element.
+
+
+          * - :py:attr:`~SegTitle`
+            - Provides the base element.
+
+
+          * - :py:attr:`~Chapter`
+            - Provides the chapter element.
+
+
+          * - :py:attr:`~Section1`
+            - Provides the base element.
+
+
+          * - :py:attr:`~ProductName`
+            - Provides the base element.
+
+
+          * - :py:attr:`~XMLCommand`
+            - Provides the XML command from the documentation.
+
+
+          * - :py:attr:`~InformalTable`
+            - Provides the informal table element.
+
+
+          * - :py:attr:`~OxygenXmlTree`
+            - Provides for loading an XML file as an AST (abstract syntax tree).
+
+
+
+
+
+    .. tab-item:: Functions
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+
+          * - :py:attr:`~to_py_name`
+            - Convert to a Python-compatible name.
+
+
+          * - :py:attr:`~multireplace`
+            - Given a string and a replacement map, return the replaced string.
+
+
+          * - :py:attr:`~split_trail_alpha`
+            - Split a string based on the last tailing non-alphanumeric character.
+
+
+          * - :py:attr:`~is_numeric`
+            - Return ``True`` when a string is numeric.
+
+
+          * - :py:attr:`~parse_element`
+            - Parse a single element.
+
+
+          * - :py:attr:`~parse_children`
+            - Parse an element.
+
+
+          * - :py:attr:`~parse_text`
+            - Parse a paragraph element.
+
+
+          * - :py:attr:`~get_parser`
+            - 
+
+
+
+    .. tab-item:: Attributes
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+
+          * - :py:attr:`~parsers`
+            - 
+
+
+          * - :py:attr:`~item_needing_links_base_url`
+            - 
+
+
+          * - :py:attr:`~item_needing_fcache`
+            - 
+
+
+          * - :py:attr:`~item_needing_all`
+            - 
+
+
+
+    .. tab-item:: Constants
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+
+          * - :py:attr:`~CONV_EQN`
+            - 
+
+
+          * - :py:attr:`~CMD_MAP_GLOB`
+            - 
+
+
+          * - :py:attr:`~CONST`
+            - 
+
+
+          * - :py:attr:`~CLEANUP`
+            - 
+
+
+          * - :py:attr:`~CMD_MAP`
+            - 
+
+
+          * - :py:attr:`~SKIP`
+            - 
+
+
+
+
+
+
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+   :hidden:
+
+    🝆 Element<Element>
+    🝆 ItemizedList<ItemizedList>
+    🝆 SimpleList<SimpleList>
+    🝆 Member<Member>
+    🝆 OrderedList<OrderedList>
+    🝆 ListItem<ListItem>
+    🝆 FileName<FileName>
+    🝆 OLink<OLink>
+    🝆 Paragraph<Paragraph>
+    🝆 Phrase<Phrase>
+    🝆 Structname<Structname>
+    🝆 Title<Title>
+    🝆 Emphasis<Emphasis>
+    🝆 Example<Example>
+    🝆 InformalExample<InformalExample>
+    🝆 GuiMenu<GuiMenu>
+    🝆 Replaceable<Replaceable>
+    🝆 ProgramListing<ProgramListing>
+    🝆 Variablelist<Variablelist>
+    🝆 RefSection<RefSection>
+    🝆 VarlistEntry<VarlistEntry>
+    🝆 Term<Term>
+    🝆 GuiLabel<GuiLabel>
+    🝆 GuiMenuItem<GuiMenuItem>
+    🝆 SuperScript<SuperScript>
+    🝆 Code<Code>
+    🝆 Math<Math>
+    🝆 InlineEquation<InlineEquation>
+    🝆 SubScript<SubScript>
+    🝆 InlineGraphic<InlineGraphic>
+    🝆 Quote<Quote>
+    🝆 Link<Link>
+    🝆 XRef<XRef>
+    🝆 UserInput<UserInput>
+    🝆 Screen<Screen>
+    🝆 Literal<Literal>
+    🝆 Caution<Caution>
+    🝆 Graphic<Graphic>
+    🝆 Function<Function>
+    🝆 Note<Note>
+    🝆 BlockQuote<BlockQuote>
+    🝆 RefMeta<RefMeta>
+    🝆 IndexTerm<IndexTerm>
+    🝆 Primary<Primary>
+    🝆 TGroup<TGroup>
+    🝆 Table<Table>
+    🝆 Refentrytitle<Refentrytitle>
+    🝆 Refnamediv<Refnamediv>
+    🝆 Refname<Refname>
+    🝆 Refpurpose<Refpurpose>
+    🝆 Refclass<Refclass>
+    🝆 Application<Application>
+    🝆 Refsect1<Refsect1>
+    🝆 Command<Command>
+    🝆 ComputerOutput<ComputerOutput>
+    🝆 Figure<Figure>
+    🝆 Footnote<Footnote>
+    🝆 Footnoteref<Footnoteref>
+    🝆 Formalpara<Formalpara>
+    🝆 Glossterm<Glossterm>
+    🝆 GuiButton<GuiButton>
+    🝆 GuiIcon<GuiIcon>
+    🝆 Highlights<Highlights>
+    🝆 Important<Important>
+    🝆 InformalEquation<InformalEquation>
+    🝆 Interface<Interface>
+    🝆 Markup<Markup>
+    🝆 Mediaobject<Mediaobject>
+    🝆 Option<Option>
+    🝆 Refsect3<Refsect3>
+    🝆 Refsynopsisdiv<Refsynopsisdiv>
+    🝆 Sidebar<Sidebar>
+    🝆 XMLType<XMLType>
+    🝆 XMLWarning<XMLWarning>
+    🝆 ClassName<ClassName>
+    🝆 Imageobject<Imageobject>
+    🝆 InformalFigure<InformalFigure>
+    🝆 Envar<Envar>
+    🝆 ImageData<ImageData>
+    🝆 ColSpec<ColSpec>
+    🝆 TBody<TBody>
+    🝆 Entry<Entry>
+    🝆 Row<Row>
+    🝆 THead<THead>
+    🝆 Remark<Remark>
+    🝆 LiteralLayout<LiteralLayout>
+    🝆 CiteTitle<CiteTitle>
+    🝆 ULink<ULink>
+    🝆 SegTitle<SegTitle>
+    🝆 Chapter<Chapter>
+    🝆 Section1<Section1>
+    🝆 ProductName<ProductName>
+    🝆 XMLCommand<XMLCommand>
+    🝆 InformalTable<InformalTable>
+    🝆 OxygenXmlTree<OxygenXmlTree>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Module detail
+-------------
+
+.. py:function:: to_py_name(name, cmd_map=None)
+
+   
+   Convert to a Python-compatible name.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: multireplace(string, replacements, ignore_case=False)
+
+   
+   Given a string and a replacement map, return the replaced string.
+
+
+   :Parameters:
+
+       **string** : :class:`python:str`
+           String to execute replacements on.
+
+       **replacements** : :class:`python:dict`
+           Replacement dictionary {value to find: value to replace}.
+
+       **ignore_case** : :ref:`bool <python:bltin-boolean-values>`, :obj:`optional`
+           Whether the match should be case insensitive. The default is ``False``.
+
+   :Returns:
+
+       :class:`python:str`
+           Replaced string.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: split_trail_alpha(text)
+
+   
+   Split a string based on the last tailing non-alphanumeric character.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: is_numeric(text)
+
+   
+   Return ``True`` when a string is numeric.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: parse_element(element)
+
+   
+   Parse a single element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: parse_children(element)
+
+   
+   Parse an element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: parse_text(element)
+
+   
+   Parse a paragraph element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: get_parser()
+
+
+.. py:data:: CONV_EQN
+   :value: False
+
+   
+
+.. py:data:: CMD_MAP_GLOB
+
+   
+
+.. py:data:: CONST
+
+   
+
+.. py:data:: CLEANUP
+
+   
+
+.. py:data:: CMD_MAP
+
+   
+
+.. py:data:: SKIP
+
+   
+
+.. py:data:: parsers
+
+   
+
+.. py:data:: item_needing_links_base_url
+
+   
+
+.. py:data:: item_needing_fcache
+
+   
+
+.. py:data:: item_needing_all
+
+   
+
+
+

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.TGroup.tbody
+=========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: TGroup.tbody

@@ -1,0 +1,48 @@
+﻿pyconverter.xml2py.ast\_tree.SuperScript
+========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: SuperScript
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SuperScript.__init__
+      ~SuperScript.find
+      ~SuperScript.find_all
+      ~SuperScript.get
+      ~SuperScript.has_children
+      ~SuperScript.print_tree
+      ~SuperScript.rec_find
+      ~SuperScript.to_rst
+      ~SuperScript.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SuperScript.added
+      ~SuperScript.any_isalnum
+      ~SuperScript.children
+      ~SuperScript.content
+      ~SuperScript.id
+      ~SuperScript.next_elem
+      ~SuperScript.prev_elem
+      ~SuperScript.raw
+      ~SuperScript.tag
+      ~SuperScript.tail
+      ~SuperScript.text_content
+      ~SuperScript.title
+      ~SuperScript.tostring
+   
+   

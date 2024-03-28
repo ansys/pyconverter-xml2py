@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Title.types\_repr
+==============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: Title.types_repr

@@ -1,0 +1,105 @@
+
+
+
+
+Math
+====
+
+.. py:class:: Math(element)
+   :canonical: src.pyconverter.xml2py.ast_tree.Math
+
+
+
+Bases: :py:obj:`_Math`
+
+
+   Provides the math element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+
+Overview
+--------
+.. py:currentmodule:: Math
+.. tab-set::
+
+
+
+    .. tab-item:: Methods
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~to_rst`
+            - Return a string to enable converting the element to an RST format.
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import Math
+
+
+
+
+Method detail
+-------------
+.. py:method:: to_rst(prefix='')
+
+   
+   Return a string to enable converting the element to an RST format.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+

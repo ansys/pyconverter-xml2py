@@ -1,0 +1,143 @@
+
+
+
+
+XRef
+====
+
+.. py:class:: XRef(element)
+   :canonical: src.pyconverter.xml2py.ast_tree.XRef
+
+
+
+Bases: :py:obj:`Link`
+
+
+   Provides the cross reference element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+
+Overview
+--------
+.. py:currentmodule:: XRef
+.. tab-set::
+
+
+
+    .. tab-item:: Methods
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~to_rst`
+            - Return a string to enable converting the element to an RST format.
+
+
+    .. tab-item:: Properties
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~tail`
+            - Tail of the element as a string.
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import XRef
+
+
+Property detail
+---------------
+.. py:property:: tail
+   :canonical: src.pyconverter.xml2py.ast_tree.XRef.tail
+   :type: None
+
+
+   
+   Tail of the element as a string.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+Method detail
+-------------
+.. py:method:: to_rst(prefix='')
+
+   
+   Return a string to enable converting the element to an RST format.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+

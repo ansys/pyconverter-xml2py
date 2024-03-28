@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Quote.prev\_elem
+=============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Quote.prev_elem

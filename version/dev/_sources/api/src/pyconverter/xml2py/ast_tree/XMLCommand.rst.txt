@@ -1,0 +1,572 @@
+
+
+
+
+XMLCommand
+==========
+
+.. py:class:: XMLCommand(filename, terms, docu_global, version_variables, links, fcache, meta_only=False)
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the XML command from the documentation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Overview
+--------
+.. py:currentmodule:: XMLCommand
+.. tab-set::
+
+
+
+    .. tab-item:: Methods
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~py_docstring`
+            - Python docstring of the command.
+          * - :py:attr:`~py_source`
+            - Return the Python source.
+          * - :py:attr:`~to_python`
+            - Return the complete Python definition of the command.
+
+
+    .. tab-item:: Properties
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~xml_filename`
+            - Source filename of the command.
+          * - :py:attr:`~args`
+            - Command arguments.
+          * - :py:attr:`~default`
+            - Command default.
+          * - :py:attr:`~arg_desc`
+            - Each argument's description.
+          * - :py:attr:`~short_desc`
+            - Short description of the command.
+          * - :py:attr:`~name`
+            - Name of the XML command.
+          * - :py:attr:`~py_name`
+            - Python-compatible name.
+          * - :py:attr:`~py_args`
+            - 
+          * - :py:attr:`~py_signature`
+            - Beginning of the Python command's definition.
+          * - :py:attr:`~py_notes`
+            - Python-formatted notes string.
+          * - :py:attr:`~py_parm`
+            - Python parameter's string.
+          * - :py:attr:`~url`
+            - URL to the Ansys command documentation.
+          * - :py:attr:`~filename`
+            - Command filename
+          * - :py:attr:`~notes`
+            - Notes of the command.
+
+
+
+
+    .. tab-item:: Special methods
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~__repr__`
+            - Return repr(self).
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import XMLCommand
+
+
+Property detail
+---------------
+.. py:property:: xml_filename
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.xml_filename
+   :type: None
+
+
+   
+   Source filename of the command.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: args
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.args
+   :type: None
+
+
+   
+   Command arguments.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: default
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.default
+   :type: None
+
+
+   
+   Command default.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: arg_desc
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.arg_desc
+   :type: None
+
+
+   
+   Each argument's description.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: short_desc
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.short_desc
+   :type: None
+
+
+   
+   Short description of the command.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: name
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.name
+   :type: None
+
+
+   
+   Name of the XML command.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: py_name
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.py_name
+   :type: None
+
+
+   
+   Python-compatible name.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: py_args
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.py_args
+   :type: None
+
+
+
+.. py:property:: py_signature
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.py_signature
+   :type: None
+
+
+   
+   Beginning of the Python command's definition.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: py_notes
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.py_notes
+   :type: None
+
+
+   
+   Python-formatted notes string.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: py_parm
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.py_parm
+   :type: None
+
+
+   
+   Python parameter's string.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: url
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.url
+   :type: None
+
+
+   
+   URL to the Ansys command documentation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: filename
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.filename
+   :type: None
+
+
+   
+   Command filename
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: notes
+   :canonical: src.pyconverter.xml2py.ast_tree.XMLCommand.notes
+   :type: None
+
+
+   
+   Notes of the command.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+Method detail
+-------------
+.. py:method:: py_docstring(custom_functions)
+
+   
+   Python docstring of the command.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:method:: __repr__()
+
+   
+   Return repr(self).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:method:: py_source(custom_functions=None, cmd_map=None)
+
+   
+   Return the Python source.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:method:: to_python(cmd_map, custom_functions=None, prefix='')
+
+   
+   Return the complete Python definition of the command.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+

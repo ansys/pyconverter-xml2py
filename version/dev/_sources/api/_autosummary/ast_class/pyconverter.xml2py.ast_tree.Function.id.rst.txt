@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Function.id
+========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Function.id

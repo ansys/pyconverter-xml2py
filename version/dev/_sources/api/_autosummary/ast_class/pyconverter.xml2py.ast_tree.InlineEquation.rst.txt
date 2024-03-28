@@ -1,0 +1,49 @@
+﻿pyconverter.xml2py.ast\_tree.InlineEquation
+===========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: InlineEquation
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~InlineEquation.__init__
+      ~InlineEquation.find
+      ~InlineEquation.find_all
+      ~InlineEquation.get
+      ~InlineEquation.has_children
+      ~InlineEquation.print_tree
+      ~InlineEquation.rec_find
+      ~InlineEquation.to_rst
+      ~InlineEquation.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~InlineEquation.added
+      ~InlineEquation.any_isalnum
+      ~InlineEquation.children
+      ~InlineEquation.content
+      ~InlineEquation.equation
+      ~InlineEquation.id
+      ~InlineEquation.next_elem
+      ~InlineEquation.prev_elem
+      ~InlineEquation.raw
+      ~InlineEquation.tag
+      ~InlineEquation.tail
+      ~InlineEquation.text_content
+      ~InlineEquation.title
+      ~InlineEquation.tostring
+   
+   

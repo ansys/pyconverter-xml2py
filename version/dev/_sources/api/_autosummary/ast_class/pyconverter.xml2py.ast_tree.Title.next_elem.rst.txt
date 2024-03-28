@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Title.next\_elem
+=============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Title.next_elem

@@ -1,0 +1,247 @@
+
+
+
+
+CustomFunctions
+===============
+
+.. py:class:: CustomFunctions
+   :canonical: src.pyconverter.xml2py.custom_functions.CustomFunctions
+
+
+
+
+
+   Provides for creating customized functions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Overview
+--------
+.. py:currentmodule:: CustomFunctions
+.. tab-set::
+
+
+
+
+    .. tab-item:: Properties
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~path`
+            - Path where the customized function files are located.
+          * - :py:attr:`~py_names`
+            - List with all customized functions located in the folder.
+          * - :py:attr:`~py_returns`
+            - Dictionary containing the ``Returns`` section if any.
+          * - :py:attr:`~py_examples`
+            - Dictionary containing the ``Examples`` section if any.
+          * - :py:attr:`~py_code`
+            - Dictionary containing the customized source code.
+          * - :py:attr:`~lib_import`
+            - Dictionary containing the needed libraries if any.
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.custom_functions import CustomFunctions
+
+
+Property detail
+---------------
+.. py:property:: path
+   :canonical: src.pyconverter.xml2py.custom_functions.CustomFunctions.path
+   :type: None
+
+
+   
+   Path where the customized function files are located.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: py_names
+   :canonical: src.pyconverter.xml2py.custom_functions.CustomFunctions.py_names
+   :type: None
+
+
+   
+   List with all customized functions located in the folder.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: py_returns
+   :canonical: src.pyconverter.xml2py.custom_functions.CustomFunctions.py_returns
+   :type: None
+
+
+   
+   Dictionary containing the ``Returns`` section if any.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: py_examples
+   :canonical: src.pyconverter.xml2py.custom_functions.CustomFunctions.py_examples
+   :type: None
+
+
+   
+   Dictionary containing the ``Examples`` section if any.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: py_code
+   :canonical: src.pyconverter.xml2py.custom_functions.CustomFunctions.py_code
+   :type: None
+
+
+   
+   Dictionary containing the customized source code.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: lib_import
+   :canonical: src.pyconverter.xml2py.custom_functions.CustomFunctions.lib_import
+   :type: None
+
+
+   
+   Dictionary containing the needed libraries if any.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+

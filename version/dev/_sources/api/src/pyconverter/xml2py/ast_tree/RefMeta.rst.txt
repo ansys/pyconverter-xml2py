@@ -1,0 +1,108 @@
+
+
+
+
+RefMeta
+=======
+
+.. py:class:: RefMeta(element, parse_children=True)
+   :canonical: src.pyconverter.xml2py.ast_tree.RefMeta
+
+
+
+Bases: :py:obj:`Element`
+
+
+   Provides the reference metadata element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+
+
+
+
+
+
+
+
+Overview
+--------
+.. py:currentmodule:: RefMeta
+.. tab-set::
+
+
+
+
+    .. tab-item:: Properties
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~refentry_title`
+            - Title of the referency entry.
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import RefMeta
+
+
+Property detail
+---------------
+.. py:property:: refentry_title
+   :canonical: src.pyconverter.xml2py.ast_tree.RefMeta.refentry_title
+   :type: None
+
+
+   
+   Title of the referency entry.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
+

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.VarlistEntry.next\_elem
+====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: VarlistEntry.next_elem

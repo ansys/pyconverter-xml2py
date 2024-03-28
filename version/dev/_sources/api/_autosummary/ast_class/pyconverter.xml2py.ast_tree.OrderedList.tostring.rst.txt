@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.OrderedList.tostring
+=================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: OrderedList.tostring

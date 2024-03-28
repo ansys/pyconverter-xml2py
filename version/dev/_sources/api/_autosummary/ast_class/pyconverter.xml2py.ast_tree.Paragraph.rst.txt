@@ -1,0 +1,48 @@
+﻿pyconverter.xml2py.ast\_tree.Paragraph
+======================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: Paragraph
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Paragraph.__init__
+      ~Paragraph.find
+      ~Paragraph.find_all
+      ~Paragraph.get
+      ~Paragraph.has_children
+      ~Paragraph.print_tree
+      ~Paragraph.rec_find
+      ~Paragraph.to_rst
+      ~Paragraph.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Paragraph.added
+      ~Paragraph.any_isalnum
+      ~Paragraph.children
+      ~Paragraph.content
+      ~Paragraph.id
+      ~Paragraph.next_elem
+      ~Paragraph.prev_elem
+      ~Paragraph.raw
+      ~Paragraph.tag
+      ~Paragraph.tail
+      ~Paragraph.text_content
+      ~Paragraph.title
+      ~Paragraph.tostring
+   
+   

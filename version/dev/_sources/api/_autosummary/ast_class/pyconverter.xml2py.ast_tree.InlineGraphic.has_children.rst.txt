@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.InlineGraphic.has\_children
+========================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: InlineGraphic.has_children

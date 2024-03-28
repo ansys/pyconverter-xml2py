@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.Structname.text\_content
+=====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoproperty:: Structname.text_content

@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.IndexTerm.has\_children
+====================================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: IndexTerm.has_children

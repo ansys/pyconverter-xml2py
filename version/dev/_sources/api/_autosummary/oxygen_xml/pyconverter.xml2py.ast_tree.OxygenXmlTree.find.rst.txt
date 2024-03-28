@@ -1,0 +1,6 @@
+﻿pyconverter.xml2py.ast\_tree.OxygenXmlTree.find
+===============================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. automethod:: OxygenXmlTree.find

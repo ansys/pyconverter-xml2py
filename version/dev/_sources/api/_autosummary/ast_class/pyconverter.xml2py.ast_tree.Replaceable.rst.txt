@@ -1,0 +1,50 @@
+﻿pyconverter.xml2py.ast\_tree.Replaceable
+========================================
+
+.. currentmodule:: pyconverter.xml2py.ast_tree
+
+.. autoclass:: Replaceable
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Replaceable.__init__
+      ~Replaceable.find
+      ~Replaceable.find_all
+      ~Replaceable.get
+      ~Replaceable.has_children
+      ~Replaceable.print_tree
+      ~Replaceable.rec_find
+      ~Replaceable.to_rst
+      ~Replaceable.types_repr
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Replaceable.added
+      ~Replaceable.any_isalnum
+      ~Replaceable.children
+      ~Replaceable.content
+      ~Replaceable.content_equals
+      ~Replaceable.id
+      ~Replaceable.is_equals
+      ~Replaceable.next_elem
+      ~Replaceable.prev_elem
+      ~Replaceable.raw
+      ~Replaceable.tag
+      ~Replaceable.tail
+      ~Replaceable.text_content
+      ~Replaceable.title
+      ~Replaceable.tostring
+   
+   
