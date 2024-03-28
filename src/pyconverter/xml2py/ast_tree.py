@@ -342,13 +342,15 @@ class Element:
 
 
 def resize_length(text, initial_indent, subsequent_indent, max_length=100):
-  
-	wrapper = textwrap.TextWrapper(width=max_length,
-                                break_long_words=False,
-                                initial_indent=initial_indent,
-                                subsequent_indent=subsequent_indent
-                                ) 
-	return wrapper.fill(text=text) 
+
+    wrapper = textwrap.TextWrapper(
+        width=max_length,
+        break_long_words=False,
+        initial_indent=initial_indent,
+        subsequent_indent=subsequent_indent,
+    )
+    return wrapper.fill(text=text)
+
 
 class ItemizedList(Element):
     """Provides the itemized list element."""
@@ -380,7 +382,12 @@ class ItemizedList(Element):
                     if isinstance(item_lines, Element)
                     else str(item_lines[0])
                 )
-                resized_line = resize_length(line, initial_indent=prefix+"* ", subsequent_indent="  ", max_length=max_length)
+                resized_line = resize_length(
+                    line,
+                    initial_indent=prefix + "* ",
+                    subsequent_indent="  ",
+                    max_length=max_length,
+                )
                 lines.append(resized_line)
                 for line in item_lines[1:]:
                     text = line.to_rst(prefix) if isinstance(line, Element) else str(line)
@@ -426,6 +433,7 @@ def ponctuaction_whitespace(text, ponctuation):
             text = re.sub(f"\w \{ponctuation}", f"{character[0]}{ponctuation}", text)
     return text
 
+
 class OrderedList(Element):
     """Provides the ordered list element."""
 
@@ -438,10 +446,16 @@ class OrderedList(Element):
                 rst_item = item.to_rst(prefix, links=links, base_url=base_url)
             else:
                 rst_item = item.to_rst(prefix)
-            rst_item = re.sub(r"\s+", " ", rst_item) # Remove extra whitespaces
-            rst_item = ponctuaction_whitespace(rst_item, ".") # Remove extra whitespace before period
-            rst_item = ponctuaction_whitespace(rst_item, ",") # Remove extra whitespace before comma
-            resized_item = resize_length(rst_item, initial_indent="", subsequent_indent="", max_length=max_length)
+            rst_item = re.sub(r"\s+", " ", rst_item)  # Remove extra whitespaces
+            rst_item = ponctuaction_whitespace(
+                rst_item, "."
+            )  # Remove extra whitespace before period
+            rst_item = ponctuaction_whitespace(
+                rst_item, ","
+            )  # Remove extra whitespace before comma
+            resized_item = resize_length(
+                rst_item, initial_indent="", subsequent_indent="", max_length=max_length
+            )
             if resized_item != rst_item:
                 print("Resized item : ", resized_item)
             ordered_list.append(resized_item)
