@@ -55,7 +55,7 @@ doc = [
     "flit>=3.8.0",
     "jupyter_sphinx==0.5.3",
     "numpy==1.26.4",
-    "numpydoc==1.6.0",
+    "numpydoc==1.7.0",
     "pandas==2.2.1",
     "parse==1.20.1",
     "pypandoc==1.13",
