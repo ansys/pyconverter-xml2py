@@ -470,20 +470,20 @@ class ListItem(Element):
             if isinstance(item, Element):
                 if item.tag in item_needing_all:
                     rst_item = item.to_rst(
-                            prefix,
-                            links=links,
-                            base_url=base_url,
-                            fcache=fcache,
-                        )
+                        prefix,
+                        links=links,
+                        base_url=base_url,
+                        fcache=fcache,
+                    )
                 elif item.tag in item_needing_links_base_url:
                     rst_item = item.to_rst(prefix, links=links, base_url=base_url)
                 elif item.tag in item_needing_fcache:
-                     rst_item = item.to_rst(prefix=prefix, fcache=fcache)
+                    rst_item = item.to_rst(prefix=prefix, fcache=fcache)
                 else:
                     rst_item = item.to_rst(prefix)
             else:
                 rst_item = str(item)
-            
+
             # resized_item = resize_length(
             #     rst_item, initial_indent="", subsequent_indent="", max_length=max_length
             # )
