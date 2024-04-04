@@ -62,7 +62,7 @@ def create_package(
 
     max_docstring_length: int, optional
         Maximum length of the generated docstrings.
-        The default value is 100.
+        The default is ``100``.
 
     """  # noqa : E501
     if xml_path is None:
