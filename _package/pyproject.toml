@@ -43,7 +43,7 @@ doc = [
     "pandas==2.2.2",
     "parse==1.20.1",
     "pypandoc==1.13",
-    "pytest-sphinx==0.6.2",
+    "pytest-sphinx==0.6.3",
     "pydata_sphinx_theme==0.15.2",
     "sphinx-autobuild==2024.4.13",
     "sphinx-autodoc-typehints==2.0.1",
