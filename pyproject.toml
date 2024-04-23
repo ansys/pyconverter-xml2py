@@ -49,7 +49,7 @@ tests = [
     "pytest-rerunfailures==14.0",
 ]
 doc = [
-    "Sphinx==7.2.6",
+    "Sphinx==7.3.7",
     "ansys-sphinx-theme[autoapi]==0.15.2",
     "build>= 0.10.0",
     "flit>=3.8.0",
@@ -60,8 +60,8 @@ doc = [
     "parse==1.20.1",
     "pypandoc==1.13",
     "pytest-sphinx==0.6.3",
-    "sphinx-autobuild==2024.4.13",
-    "sphinx-autodoc-typehints==2.0.1",
+    "sphinx-autobuild==2024.4.16",
+    "sphinx-autodoc-typehints==2.1.0",
     "sphinx-copybutton==0.5.2",
     "sphinx-notfound-page==1.0.0",
     "sphinx-gallery==0.15.0",
