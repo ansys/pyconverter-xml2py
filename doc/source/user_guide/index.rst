@@ -63,7 +63,7 @@ directory by default. This diagram presents the format of the
 
 
 
-Hello
+Hello.
 
 
 
