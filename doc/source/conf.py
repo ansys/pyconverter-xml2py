@@ -5,7 +5,6 @@ from pathlib import Path
 
 from ansys_sphinx_theme import (
     ansys_favicon,
-    get_autoapi_templates_dir_relative_path,
     get_version_match,
     pyansys_logo_black,
 )
@@ -52,6 +51,9 @@ html_theme_options = {
         "json_url": f"https://{cname}/versions.json",
         "version_match": switcher_version,
     },
+    "ansys_sphinx_theme_autoapi": {
+        "project": project,
+    },
 }
 
 html_context = {
@@ -64,10 +66,10 @@ html_context = {
 
 # Sphinx extensions
 extensions = [
+    "ansys_sphinx_theme.extension.autoapi",
     "jupyter_sphinx",
     "numpydoc",
     "sphinx.ext.autodoc",
-    "autoapi.extension",
     "sphinx_autodoc_typehints",
     "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
@@ -123,26 +125,8 @@ source_suffix = ".rst"
 # The master toctree document.
 master_doc = "index"
 
-# Configuration for Sphinx autoapi
-autoapi_type = "python"
+# Sphinx AutoAPI configuration
 autoapi_dirs = ["../../src"]
-autoapi_root = "api"
-autoapi_options = [
-    "members",
-    "undoc-members",
-    "show-inheritance",
-    "show-module-summary",
-    "special-members",
-]
-autoapi_template_dir = get_autoapi_templates_dir_relative_path(Path(__file__))
-suppress_warnings = ["autoapi.python_import_resolution"]
-autoapi_python_use_implicit_namespaces = True
-autoapi_render_in_single_page = ["class", "enum", "exception"]
-autoapi_own_page_level = "class"
-autoapi_keep_files = True
-# Generate section labels up to four levels deep
-autosectionlabel_maxdepth = 4
-
 
 def prepare_jinja_env(jinja_env) -> None:
     """
