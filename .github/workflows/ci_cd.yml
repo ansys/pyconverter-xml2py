@@ -180,21 +180,21 @@ jobs:
           echo "PYCONVERTER_VERSION=$(python -c 'from pyconverter.xml2py import __version__; print(__version__)')" >> $GITHUB_ENV
           echo "pyconverter.xml2py version is: $(python -c 'from pyconverter.xml2py import __version__; print(__version__)')"
     
-      - name: "Cache docs build directory"
-        uses: actions/cache@v4
-        with:
-          path: doc/_build
-          key: doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
-          restore-keys: |
-            doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}
+      # - name: "Cache docs build directory"
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: doc/_build
+      #     key: doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
+      #     restore-keys: |
+      #       doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}
 
-      - name: "Cache autosummary"
-        uses: actions/cache@v4
-        with:
-          path: doc/source/**/_autosummary/**/*.rst
-          key: autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
-          restore-keys: |
-            autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}
+      # - name: "Cache autosummary"
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: doc/source/**/_autosummary/**/*.rst
+      #     key: autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
+      #     restore-keys: |
+      #       autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}
 
       - name: "Run Ansys documentation building action"
         uses: ansys/actions/doc-build@v6
