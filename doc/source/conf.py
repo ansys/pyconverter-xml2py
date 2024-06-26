@@ -53,6 +53,7 @@ html_theme_options = {
     },
     "ansys_sphinx_theme_autoapi": {
         "project": project,
+        "directory": "src",
     },
 }
 
@@ -124,9 +125,6 @@ source_suffix = ".rst"
 
 # The master toctree document.
 master_doc = "index"
-
-# Sphinx AutoAPI configuration
-autoapi_dirs = ["../../src"]
 
 def prepare_jinja_env(jinja_env) -> None:
     """
