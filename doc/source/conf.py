@@ -3,11 +3,7 @@ from datetime import datetime
 import os
 from pathlib import Path
 
-from ansys_sphinx_theme import (
-    ansys_favicon,
-    get_version_match,
-    pyansys_logo_black,
-)
+from ansys_sphinx_theme import ansys_favicon, get_version_match, pyansys_logo_black
 from pyconverter.xml2py import __version__
 
 # Project information
@@ -125,6 +121,7 @@ source_suffix = ".rst"
 
 # The master toctree document.
 master_doc = "index"
+
 
 def prepare_jinja_env(jinja_env) -> None:
     """
