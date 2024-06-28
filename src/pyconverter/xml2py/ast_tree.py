@@ -245,6 +245,23 @@ class Element:
         return self._content
 
     @property
+    def children_types(self):
+        """Types of the children."""
+        return [type(child).__name__ for child in self.children]
+
+    def get_children_by_type(self, type_name):
+        """Return children of a specific type."""
+        specific_children = []
+        for child in self.children:
+            if type(child).__name__ == type_name:
+                specific_children.append(child)
+        return specific_children
+
+    def get_titles_in_element_list(list_element):
+        """Return the titles of the elements in a list of elements."""
+        return [element.title for element in list_element]
+
+    @property
     def title(self):
         """Element title."""
         return self.find("Title")
