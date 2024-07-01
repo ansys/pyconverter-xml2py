@@ -1,0 +1,6 @@
+library_structure_yaml:
+  - src
+  - pyconverter
+  - generatedcommands
+
+new_package_name: package

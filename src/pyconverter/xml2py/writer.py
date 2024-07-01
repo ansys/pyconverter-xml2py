@@ -23,6 +23,7 @@
 import glob
 import os
 import shutil
+import yaml
 
 from pyconverter.xml2py import ast_tree as ast
 from pyconverter.xml2py import load_xml_doc as load
@@ -237,6 +238,68 @@ def copy_package(template_path, new_package_path, clean=False, include_hidden=Fa
             if os.path.isfile(hidden_template) and not os.path.isfile(hidden_new_path):
                 shutil.copy(hidden_template, hidden_new_path)
 
+def write_init_file(library_path, cmd_map, commands):
+    """
+    Write the __init__.py file for the package generated.
+    
+    Parameters
+    ----------
+    library_path : str
+        Path to the directory containing the generated package.
+    cmd_map : dict
+        Dictionary with this format: ``{"command_name": "python_name"}``.
+    commands : list
+        List of XML commands.
+    """
+    mod_file = os.path.join(cmd_path, "__init__.py")
+    with open(mod_file, "w") as fid:
+        for ans_name in commands:
+            if ans_name in SKIP_XML:
+                continue
+            cmd_name = cmd_map[ans_name]
+            fid.write(f"from .{cmd_name} import *\n")
+        fid.write("try:\n")
+        fid.write("    import importlib.metadata as importlib_metadata\n")
+        fid.write("except ModuleNotFoundError:\n")
+        fid.write("    import importlib_metadata\n\n")
+        fid.write("__version__ = importlib_metadata.version(__name__.replace('.', '-'))\n")
+        fid.write('"""PyConverter-GeneratedCommands version."""\n')
+
+def get_config_data(yaml_path):
+    """
+    Load the configuration data from the YAML file.
+    
+    Parameters
+    ----------
+    
+    yaml_path : str
+        Path to the YAML file.
+    """
+    with open(yaml_path, "r") as file:
+        config_data = yaml.safe_load(file)
+
+    return config_data
+
+def get_library_structure_path(new_package_path, config_path):
+    """
+    Return the desired library structure path.
+    """
+    config_data = get_config_data(config_path)
+    library_structure = config_data["library_structure_yaml"]
+    library_structure_str = "/".join(library_structure)
+    return os.path.join(new_package_path, library_structure_str)
+
+def get_new_package_name(config_path):
+    """
+    Return the desired new package name.
+    
+    Parameters
+    ----------
+    config_path : str
+        Path to the configuration file.
+    """
+    config_data = get_config_data(config_path)
+    return config_data["new_package_name"]
 
 def write_source(
     commands,
@@ -245,7 +308,7 @@ def write_source(
     target_path,
     path_custom_functions=None,
     template_path=None,
-    new_package_name="package",
+    config_path="config.yaml",
     clean=True,
 ):
     """Write out XML commands as Python source files.
@@ -270,8 +333,8 @@ def write_source(
     template_path : str, optional
         Path for the template to use. If no path is provided, the default template is used.
 
-    new_package_name : str, optional
-        Name of the new package. The default is ``package``.
+    config_path : str, optional
+        Path to the configuration file. The default is ``config.yaml``.
 
     clean : bool, optional
         Whether the directories in the new package path must be cleared before adding
@@ -295,21 +358,23 @@ def write_source(
         if not os.path.isdir(template_path):
             download_template()
 
+    new_package_name = get_new_package_name(config_path)
     new_package_path = os.path.join(target_path, new_package_name)
 
     if clean:
         if os.path.isdir(new_package_path):
             shutil.rmtree(new_package_path)
 
-    cmd_path = os.path.join(new_package_path, GENERATED_SRC_CODE)
-    if not os.path.isdir(cmd_path):
-        os.makedirs(cmd_path)
+    library_path = get_library_structure_path(new_package_path, config_path)
+    
+    if not os.path.isdir(library_path):
+        os.makedirs(library_path)
 
     for ans_name, cmd_obj in tqdm(commands.items(), desc="Writing commands"):
         if ans_name in SKIP_XML:
             continue
         cmd_name = cmd_map[ans_name]
-        path = os.path.join(cmd_path, f"{cmd_name}.py")
+        path = os.path.join(library_path, f"{cmd_name}.py")
         with open(path, "w", encoding="utf-8") as fid:
             fid.write(cmd_obj.to_python(cmd_map, custom_functions))
 
@@ -318,28 +383,16 @@ def write_source(
         except:
             raise RuntimeError(f"Failed to execute {cmd_name}.py") from None
 
-    mod_file = os.path.join(cmd_path, "__init__.py")
-    with open(mod_file, "w") as fid:
-        for ans_name in commands:
-            if ans_name in SKIP_XML:
-                continue
-            cmd_name = cmd_map[ans_name]
-            fid.write(f"from .{cmd_name} import *\n")
-        fid.write("try:\n")
-        fid.write("    import importlib.metadata as importlib_metadata\n")
-        fid.write("except ModuleNotFoundError:\n")
-        fid.write("    import importlib_metadata\n\n")
-        fid.write("__version__ = importlib_metadata.version(__name__.replace('.', '-'))\n")
-        fid.write('"""PyConverter-GeneratedCommands version."""\n')
+    write_init_file(library_path, cmd_map, commands)
 
-    print(f"Commands written to {cmd_path}")
+    print(f"Commands written to {library_path}")
 
     # copy package files to the package directory
     copy_package(template_path, new_package_path, clean)
     graph_path = get_paths(xml_doc_path)[0]
     shutil.copytree(graph_path, os.path.join(new_package_path, "doc", "source", "images"))
 
-    return cmd_path
+    return library_path
 
 
 def write_docs(commands, cmd_map, package_path):
