@@ -1261,7 +1261,14 @@ def parse_element(element):
 
 
 def parse_children(element):
-    """Parse an element."""
+    """
+    Parse the children of an element.
+
+    Returns
+    -------
+    list
+        List of the children of the element.
+    """
 
     children = []
     for child in element.getchildren():
@@ -2353,13 +2360,16 @@ class XMLCommand(Element):
 
         return "\n".join(lines)
 
-    def py_source(self, custom_functions=None, cmd_map=None):
-        """Return the Python source."""
+    def py_source(self, custom_functions=None):
+        """
+        Return the Python source.
 
-        if cmd_map is not None:
-            global CMD_MAP_GLOB
-            CMD_MAP_GLOB = cmd_map
+        Parameters
+        ----------
+        custom_functions : CustomFunctions, optional
+            Custom functions to be added to the command. Default is None.
 
+        """
         if custom_functions is None or self.py_name not in custom_functions.py_names:
 
             if len(self.py_args) > 0:
@@ -2373,11 +2383,23 @@ class XMLCommand(Element):
             source = "".join(custom_functions.py_code[self.py_name])
         return source
 
-    def to_python(self, cmd_map, custom_functions=None, prefix=""):
-        """Return the complete Python definition of the command."""
+    def to_python(self, custom_functions=None, prefix=""):
+        """
+        Return the complete Python definition of the command.
 
-        global CMD_MAP_GLOB
-        CMD_MAP_GLOB = cmd_map
+        Parameters
+        ----------
+        custom_functions : CustomFunctions, optional
+            Custom functions to be added to the command. Default is None.
+
+        prefix : str, optional
+            Prefix to be added to the command. Default is "".
+
+        Returns
+        -------
+        str
+            Python function of the command including the converted docstring.
+        """
 
         docstr = textwrap.indent(
             f'\nr"""{self.py_docstring(custom_functions)}\n"""', prefix=prefix + " " * 4
