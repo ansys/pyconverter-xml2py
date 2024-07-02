@@ -27,22 +27,22 @@ import pyconverter.xml2py.writer as wrt
 import pytest
 
 
-def test_convert(commands, cmd_map, custom_functions):
+def test_convert(commands, custom_functions):
     assert commands["/XFRM"].name == "/XFRM"
     assert (
         "Original command: WRITE\n\nShort Description:\nWrites the radiation matrix file.\n\nFunction signature:\nWRITE,"  # noqa : E501
         in commands["WRITE"].__repr__()
     )
     assert (
-        commands["E"].py_source(custom_functions, cmd_map)
+        commands["E"].py_source(custom_functions)
         == '    command = f"E,{i},{j},{k},{l},{m},{n},{o},{p}"\n    return self.run(command, **kwargs)\n'  # noqa : E501
     )
     assert 'def zoom(self, wn="", lab="", x1="", y1="", x2="", y2="", **kwargs):\n    r"""Zooms a region of a display window.\n\n' in commands[  # noqa : E501
         "/ZOOM"
     ].to_python(
-        cmd_map, custom_functions
+        custom_functions
     )
-    assert "import re" in commands["K"].to_python(cmd_map, custom_functions)
+    assert "import re" in commands["K"].to_python(custom_functions)
 
 
 def test_copy_package(cwd):
