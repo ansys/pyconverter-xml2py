@@ -1,6 +1,9 @@
-library_structure_yaml:
-  - src
+library_name_structured: # Future name of the library
   - pyconverter
   - generatedcommands
 
 new_package_name: package
+
+rules:
+  - "/": slash
+  - "*": star

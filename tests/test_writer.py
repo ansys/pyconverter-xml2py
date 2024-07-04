@@ -45,13 +45,13 @@ def test_convert(commands, custom_functions):
     assert "import re" in commands["K"].to_python(custom_functions)
 
 
-def test_copy_package(cwd):
+def test_copy_template_package(cwd):
     new_package_path = os.path.join(cwd, "tmp_directory")
     if os.path.isdir(new_package_path):
         shutil.rmtree(new_package_path)
     os.makedirs(new_package_path)
     template_path = os.path.join(cwd, "_package")
-    wrt.copy_package(template_path, new_package_path)
+    wrt.copy_template_package(template_path, new_package_path)
     assert os.path.isdir(new_package_path) is True
     assert os.path.isdir(os.path.join(new_package_path, "doc")) is True
     assert os.path.isfile(os.path.join(new_package_path, "LICENSE")) is True

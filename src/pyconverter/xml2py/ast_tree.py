@@ -68,6 +68,13 @@ CMD_MAP = {}
 SKIP = {"*IF", "*ELSE", "C***", "*RETURN"}
 
 
+class CommandMap:
+    
+    def __init__(self, name_map):
+        self.name_map = name_map
+        global CMD_MAP_GLOB
+        CMD_MAP_GLOB = name_map
+
 def to_py_name(name, cmd_map=None):
     """Convert to a Python-compatible name."""
     if cmd_map is not None:
@@ -98,7 +105,7 @@ def multireplace(string, replacements, ignore_case=False):
         Replacement dictionary {value to find: value to replace}.
 
     ignore_case : bool, optional
-        Whether the match should be case insensitive. The default is ``False``.
+        Whether the match should be case insensitive. The default value is ``False``.
 
     Returns
     -------
@@ -2032,13 +2039,12 @@ class XMLCommand(Element):
     def py_args(self):
         return [arg.lower() for arg in self.args]
 
-    @property
-    def py_signature(self):
+    def py_signature(self, prefix=""):
         """Beginning of the Python command's definition."""
         args = ["self"]
         kwargs = [f'{arg}=""' for arg in self.py_args if "--" not in arg]
         arg_sig = ", ".join(args + kwargs)
-        return f"def {self.py_name}({arg_sig}, **kwargs):"
+        return f"{prefix}def {self.py_name}({arg_sig}, **kwargs):"
 
     def py_docstring(self, custom_functions):
         """Python docstring of the command."""
@@ -2360,14 +2366,14 @@ class XMLCommand(Element):
 
         return "\n".join(lines)
 
-    def py_source(self, custom_functions=None):
+    def py_source(self, custom_functions=None,prefix=""):
         """
         Return the Python source.
 
         Parameters
         ----------
         custom_functions : CustomFunctions, optional
-            Custom functions to be added to the command. Default is None.
+            Custom functions to be added to the command. The default value is None.
 
         """
         if custom_functions is None or self.py_name not in custom_functions.py_names:
@@ -2377,7 +2383,7 @@ class XMLCommand(Element):
             else:
                 command = 'command = f"' + self.name + '"\n'
             return_command = "return self.run(command, **kwargs)\n"
-            source = textwrap.indent("".join([command, return_command]), prefix=" " * 4)
+            source = textwrap.indent("".join([command, return_command]), prefix=" " * 4+prefix)
 
         else:
             source = "".join(custom_functions.py_code[self.py_name])
@@ -2390,10 +2396,10 @@ class XMLCommand(Element):
         Parameters
         ----------
         custom_functions : CustomFunctions, optional
-            Custom functions to be added to the command. Default is None.
+            Custom functions to be added to the command. The default value is None.
 
         prefix : str, optional
-            Prefix to be added to the command. Default is "".
+            Prefix to be added to the command. The default value is "".
 
         Returns
         -------
@@ -2405,9 +2411,9 @@ class XMLCommand(Element):
             f'\nr"""{self.py_docstring(custom_functions)}\n"""', prefix=prefix + " " * 4
         )
         if custom_functions is not None and self.py_name in custom_functions.lib_import:
-            out = f"{''.join(custom_functions.lib_import[self.py_name])}\n{self.py_signature}{docstr}\n{self.py_source(custom_functions)}"  # noqa : E501
+            out = f"{''.join(custom_functions.lib_import[self.py_name])}\n{self.py_signature(prefix)}{docstr}\n{self.py_source(custom_functions, prefix)}"  # noqa : E501
         else:
-            out = f"{self.py_signature}{docstr}\n{self.py_source(custom_functions)}"
+            out = f"{self.py_signature(prefix)}{docstr}\n{self.py_source(custom_functions, prefix)}"
         return out
 
 
