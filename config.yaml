@@ -5,5 +5,12 @@ library_name_structured: # Future name of the library
 new_package_name: package
 
 rules:
-  - "/": slash
-  - "*": star
+  "/": slash
+  "*": star
+
+specific_classes:
+  2D to 3D Analysis: Analysis2Dto3D
+  Matrix Operations (APDL Math):
+    - Matrix Operations
+    - MatrixOperations(AnsMath)
+    - from ansys.math.core.math import AnsMath
