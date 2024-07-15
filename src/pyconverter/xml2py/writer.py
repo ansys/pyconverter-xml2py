@@ -450,24 +450,25 @@ def write_source(
                 class_structure = {}
                 additional_imports = None
                 if initial_class_name in specific_classes.keys():
-                    output = specific_classes[initial_class_name]
-                    if type(output)==list and len(output)>1:
-                        class_name = output[0]
-                        class_name_with_parent = output[1]
-                        additional_imports = output[2]
-                        file_name = class_name.replace(" ", "_").replace("/","_").lower()
-                        class_name = class_name.title().replace(" ", "").replace("/","")
-                    elif type(output)==str:
-                        class_name = output
-                    else:
-                        raise TypeError("Invalid class name")
+                    specific_class_dict = specific_classes[initial_class_name]
+                    print(specific_class_dict)
+                    class_name = specific_class_dict["class_name"]
+                    file_name = specific_class_dict["file_name"]
+                    file_path = os.path.join(module_path, f"{file_name}.py")
+                    if "additional_imports" in specific_class_dict.keys():
+                        additional_imports = specific_class_dict["additional_imports"]
+                    print("PATH : ", file_path)
                 else:
                     class_name = initial_class_name.title().replace(" ", "").replace("/","")
                     file_name = initial_class_name.replace(" ", "_").replace("/","_").lower()
-                file_path = os.path.join(module_path, f"{file_name}.py")
+                    file_path = os.path.join(module_path, f"{file_name}.py")
                 with open(file_path, "w", encoding="utf-8") as fid:
                     if additional_imports is not None:
-                        fid.write(f"{additional_imports}\n\n")
+                        library_imports = additional_imports["library_imports"]
+                        for library_import in library_imports:
+                            fid.write(f"{library_import}\n")
+                        fid.write("\n")
+                        class_name_with_parent = additional_imports["class_name_with_parent"]
                         fid.write(f"class {class_name_with_parent}:\n")
                     else:
                         fid.write(f"class {class_name}:\n")
@@ -567,6 +568,7 @@ API documentation
                     fid.write(f".. currentmodule:: {library_name}.{module_file_name}.{file_name}\n\n")
                     fid.write(f".. autoclass:: {library_name}.{module_file_name}.{file_name}.{class_name}\n\n")
                     fid.write(".. autosummary::\n")
+                    fid.write("   :template: base.rst\n")
                     fid.write("   :toctree: _autosummary\n\n")
                     for initial_command_name in method_list:
                         if initial_command_name in SKIP_XML:
