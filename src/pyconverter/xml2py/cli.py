@@ -94,13 +94,13 @@ def create_package(xml_path=None, functions_path=None, target_path=None, templat
             download.download_template()
 
     if json_structure_path is not None:
-        structure_map = utils.parse_package_structure(json_structure_path)
+        structure_map = utils.parse_yaml(json_structure_path)
     else:
         structure_map = None
     command_map, name_map, *_ = wr.convert(xml_path)
     module_names, package_structure = wr.write_source(command_map, name_map, xml_path, target_path, functions_path, structure_map=structure_map)
     package_path = os.path.join(target_path, "package")
-    wr.write_docs(name_map, package_path, module_names, package_structure, structure_map)
+    wr.write_docs(name_map, package_path, module_names, package_structure)
 
 
 @click.group()

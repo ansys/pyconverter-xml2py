@@ -30,7 +30,7 @@ from pyconverter.xml2py import load_xml_doc as load
 from pyconverter.xml2py.custom_functions import CustomFunctions
 from pyconverter.xml2py.directory_format import get_paths
 from pyconverter.xml2py.download import download_template
-from pyconverter.xml2py.utils import get_name_map
+from pyconverter.xml2py.utils import get_name_map, get_config_data_value
 from tqdm import tqdm
 
 GENERATED_SRC_CODE = os.path.join("src", "pyconverter", "generatedcommands")
@@ -257,25 +257,6 @@ def write__init__file(library_path, module_name_list):
         fid.write("    import importlib_metadata\n\n")
         fid.write("__version__ = importlib_metadata.version(__name__.replace('.', '-'))\n")
         fid.write('"""PyConverter-GeneratedCommands version."""\n')
-    
-    
-def get_config_data(yaml_path):
-    """
-    Load the configuration data from the YAML file.
-
-    Parameters
-    ----------
-
-    yaml_path : str
-        Path to the YAML file.
-    """
-    try:
-        with open(yaml_path, "r") as file:
-            config_data = yaml.safe_load(file)
-    except FileNotFoundError:
-        return None
-
-    return config_data
 
 
 def get_library_path(new_package_path, config_path):
@@ -299,25 +280,11 @@ def get_library_path(new_package_path, config_path):
     str
         Path to the desired library structure.
     """
-    config_data = get_config_data(config_path)
-    library_name = config_data["library_name_structured"]
+    library_name = get_config_data_value(config_path, "library_name_structured")
     if not "src" in library_name:
         library_name.insert(0, "src")
     library_name_str = "/".join(library_name)
     return os.path.join(new_package_path, library_name_str)
-
-
-def get_new_package_name(config_path):
-    """
-    Return the desired new package name.
-
-    Parameters
-    ----------
-    config_path : str
-        Path to the configuration file.
-    """
-    config_data = get_config_data(config_path)
-    return config_data["new_package_name"]
 
 
 def write_source(
@@ -372,6 +339,7 @@ def write_source(
     dict
         Dictionary with the following format: ``{'python_module_name': [{'python_class_name': python_names_list}]}".
     """
+    package_structure = None
     if path_custom_functions is not None:
         custom_functions = CustomFunctions(path_custom_functions)
     else:
@@ -383,7 +351,7 @@ def write_source(
         if not os.path.isdir(template_path):
             download_template()
 
-    new_package_name = get_new_package_name(config_path)
+    new_package_name = get_config_data_value(config_path, "new_package_name")
     new_package_path = os.path.join(target_path, new_package_name)
 
     if clean:
@@ -439,25 +407,24 @@ def write_source(
         import subprocess
         
         package_structure = {}
-        specific_classes = get_config_data(config_path)["specific_classes"]
+        all_commands = []
+        specific_classes = get_config_data_value(config_path, "specific_classes")
         for module_name, class_map in tqdm(structure_map.items(), desc="Writing commands..."):
             module_name = module_name.replace(" ", "_").lower()
             module_path = os.path.join(library_path, module_name)
             if not os.path.isdir(module_path):
                 os.makedirs(module_path)
             module_name_list.append(module_name)
+            class_structure = {}
             for initial_class_name, method_list in class_map.items():
-                class_structure = {}
                 additional_imports = None
                 if initial_class_name in specific_classes.keys():
                     specific_class_dict = specific_classes[initial_class_name]
-                    print(specific_class_dict)
                     class_name = specific_class_dict["class_name"]
                     file_name = specific_class_dict["file_name"]
                     file_path = os.path.join(module_path, f"{file_name}.py")
                     if "additional_imports" in specific_class_dict.keys():
                         additional_imports = specific_class_dict["additional_imports"]
-                    print("PATH : ", file_path)
                 else:
                     class_name = initial_class_name.title().replace(" ", "").replace("/","")
                     file_name = initial_class_name.replace(" ", "_").replace("/","_").lower()
@@ -479,6 +446,7 @@ def write_source(
                         command_obj = command_map[initial_command_name]
                         python_method = command_obj.to_python(custom_functions, prefix='    ')
                         methods_structure.append(name_map[initial_command_name])
+                        all_commands.append(initial_class_name)
                         fid.write(f"{python_method}\n")
 
                     try:
@@ -487,9 +455,13 @@ def write_source(
                         print(python_method)
                         raise RuntimeError(f"Failed to execute {file_path}") from None
                 fid.close()
-                class_structure[class_name] = methods_structure
+                class_structure[file_name] = [class_name, methods_structure]
             package_structure[module_name] = class_structure
 
+        for command_name in name_map.keys():
+            if command_name not in all_commands:
+                print(f"{command_name} is not in the structure map")
+        print(name_map.keys())
     write__init__file(library_path, module_name_list)
 
     print(f"Commands written to {library_path}")
@@ -498,11 +470,10 @@ def write_source(
     copy_template_package(template_path, new_package_path, clean)
     graph_path = get_paths(xml_doc_path)[0]
     shutil.copytree(graph_path, os.path.join(new_package_path, "doc", "source", "images"))
-
     return module_name_list, package_structure
 
 
-def write_docs(name_map, package_path, module_name_list, package_structure=None, structure_map=None, config_path="config.yaml"):
+def write_docs(name_map, package_path, module_name_list, package_structure=None, config_path="config.yaml"):
     """Output to the autogenerated ``package`` directory.
 
     Parameters
@@ -518,9 +489,6 @@ def write_docs(name_map, package_path, module_name_list, package_structure=None,
     
     package_structure :
         Dictionary with the following format: ``{'python_module_name': [{'python_class_name': python_names_list}]}".
-        
-    structure_map : dict, optional
-        Dictionary with the following format: ``{'module_name': [{'class_name': python_names_list}]}".
 
     Returns
     -------
@@ -528,9 +496,7 @@ def write_docs(name_map, package_path, module_name_list, package_structure=None,
         Path to the new document page.
 
     """
-    config_data = get_config_data(config_path)
-    config_data = get_config_data(config_path)
-    library_name = config_data["library_name_structured"]
+    library_name = get_config_data_value(config_path, "library_name_structured")
     if library_name[0]=="src":
         library_name.pop(0)
     library_name = ".".join(library_name)
@@ -550,32 +516,43 @@ API documentation
    :hidden:\n\n
 """)
         for module_name_i in module_name_list:
-            fid.write(f"   {module_name_i}\n")
+            fid.write(f"   {module_name_i}/index.rst\n")
     fid.close()
     
-    if structure_map is not None:
-        for module_name, class_map in tqdm(structure_map.items(), desc="Writing docs..."):
-            module_file_name = module_name.replace(" ", "_").lower()
-            module_title = module_name.capitalize()
-            module_doc = os.path.join(doc_package_path, f"{module_file_name}.rst")
-            with open(module_doc, "w") as fid:
-                fid.write(f".. _ref_{module_name}:\n\n")
+    if package_structure is not None:
+        for module_folder_name, class_map in tqdm(package_structure.items(), desc="Writing docs..."):
+            module_title = module_folder_name.replace("_", " ").capitalize()
+            module_folder = os.path.join(doc_package_path, f"{module_folder_name}")
+            if not os.path.isdir(module_folder):
+                os.makedirs(module_folder)
+            module_file = os.path.join(module_folder, f"index.rst")
+            with open(module_file, "w") as fid:
+                fid.write(f".. _ref_{module_folder_name}:\n\n")
                 fid.write(f"{module_title}\n")
                 fid.write("=" * len(module_title) + "\n\n")
-                for class_name, method_list in class_map.items():
-                    file_name = class_name.replace(" ", "_").replace("/","_").lower()
-                    class_name = class_name.title().replace(" ", "").replace("/","")
-                    fid.write(f".. currentmodule:: {library_name}.{module_file_name}.{file_name}\n\n")
-                    fid.write(f".. autoclass:: {library_name}.{module_file_name}.{file_name}.{class_name}\n\n")
+                fid.write(f".. toctree::\n")
+                fid.write(f"   :maxdepth: 2\n")
+                fid.write(f"   :hidden:\n\n")
+                for class_file_name in class_map.keys():
+                    fid.write(f"   {class_file_name}\n")
+            fid.close()
+            for class_file_name, class_structure in class_map.items():
+                class_name = class_structure[0]
+                method_list = class_structure[1]
+                class_file = os.path.join(module_folder, f"{class_file_name}.rst")
+                with open(class_file, "w") as fid:
+                    fid.write(f".. _ref_{class_file_name}:\n\n")
+                    fid.write(f"{class_name}\n")
+                    fid.write("=" * len(class_name) + "\n\n")
+                    fid.write(f".. currentmodule:: {library_name}.{module_folder_name}.{class_file_name}\n\n")
+                    fid.write(f".. autoclass:: {library_name}.{module_folder_name}.{class_file_name}.{class_name}\n\n")
                     fid.write(".. autosummary::\n")
                     fid.write("   :template: base.rst\n")
                     fid.write("   :toctree: _autosummary\n\n")
-                    for initial_command_name in method_list:
-                        if initial_command_name in SKIP_XML:
-                            continue
-                        command_name = name_map[initial_command_name]
-                        fid.write(f"   {class_name}.{command_name}\n")
+                    for python_command_name in method_list:
+                        fid.write(f"   {class_name}.{python_command_name}\n")
                     fid.write("\n\n")
+                fid.close()
     
     # for module_name, class_map in tqdm(structure_map.items(), desc="Writing commands..."):
     #         module_name = module_name.replace(" ", "_").lower()

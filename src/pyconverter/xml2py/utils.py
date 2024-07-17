@@ -1,21 +1,47 @@
 import yaml
 
-RULES = {"/": "slash", "*": "star"}
+def parse_yaml(yaml_path):
+    """
+    Parse a YAML file.
 
-def parse_package_structure(yaml_file_path):
-    with open(yaml_file_path, "r") as yaml_file:
-        data = yaml.safe_load(yaml_file)
-    return data
+    Parameters
+    ----------
 
-def get_rules(yaml_file_path):
-    data = parse_package_structure(yaml_file_path)
-    print(data["rules"])
-    return data["rules"]
+    yaml_path : str
+        Path to the YAML file.
+    """
+    try:
+        with open(yaml_path, "r") as file:
+            yaml_data= yaml.safe_load(file)
+    except FileNotFoundError:
+        yaml_data = None
+    return yaml_data
+
+def get_config_data_value(yaml_path, value):
+    """
+    Return the value of a specific key in the YAML file.
+
+    Parameters
+    ----------
+
+    yaml_path : str
+        Path to the YAML file.
+    
+    value : str
+        Key to search for in the YAML file.
+    """
+    config_data = parse_yaml(yaml_path)
+    try:
+        output = config_data[value]
+    except KeyError:
+        output = None
+
+    return output
 
 def get_name_map(meta_command, yaml_file_path):
     # convert all to flat and determine number of occurances
     proc_names = []
-    # get_rules(yaml_file_path) # This need to be modified, current format : [{'/': 'slash'}, {'*': 'star'}]
+    rules = get_config_data_value(yaml_file_path, "rules")
     for cmd_name in meta_command:
         cmd_name = cmd_name.lower()
         if not cmd_name[0].isalnum():
@@ -40,9 +66,9 @@ def get_name_map(meta_command, yaml_file_path):
                 alpha_name = lower_name
 
             if proc_names.count(alpha_name) != 1:
-                if RULES: # need to get it from config file
+                if rules != None: # need to get it from config file
                     py_name = lower_name
-                    for rule_name, rule in RULES.items():
+                    for rule_name, rule in rules.items():
                         py_name = py_name.replace(rule_name, rule)
                     if py_name == lower_name and not py_name[0].isalnum():
                         raise ValueError(
