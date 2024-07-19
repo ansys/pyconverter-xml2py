@@ -50,9 +50,6 @@ doc = [
     "sphinx-copybutton==0.5.2",
     "sphinx-notfound-page==1.0.2",
 ]
-extra = [
-    "ansys-math-core==0.1.5",
-]
 [tool.flit.module]
 name = "pyconverter.generatedcommands"
 

@@ -1968,6 +1968,8 @@ class XMLCommand(Element):
         self._links = links
         self._base_url = version_variables.base_url
         self._fcache = fcache
+        self._group = None
+        self._is_archived = False
         root = fromstring(open(filename, "rb").read())
 
         # ensure that refentry exists
@@ -1978,7 +1980,7 @@ class XMLCommand(Element):
 
         # parse the command
         super().__init__(self._refentry, parse_children=not meta_only)
-
+  
     @property
     def xml_filename(self):
         """Source filename of the command."""
@@ -2038,6 +2040,26 @@ class XMLCommand(Element):
     @property
     def py_args(self):
         return [arg.lower() for arg in self.args]
+
+    @property
+    def is_archived(self):
+        """Return whether the command is archived."""
+        return self._is_archived
+
+    @is_archived.setter
+    def is_archived(self, is_archived):
+        """Set whether the command is archived."""
+        self._is_archived = is_archived
+
+    @property
+    def group(self):
+        """Return the group of the command."""
+        return self._group
+
+    @group.setter
+    def group(self, group):
+        """Set the group of the command."""
+        self._group = group
 
     def py_signature(self, prefix=""):
         """Beginning of the Python command's definition."""

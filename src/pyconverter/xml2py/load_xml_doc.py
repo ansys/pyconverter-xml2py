@@ -78,8 +78,6 @@ def load_links(link_path):
                         text = str(linkmap[0])
                     links[f"{targetptr}"] = (root_name, root_title, href, text)
 
-        grab_links(linkmap)
-
     return links
 
 
@@ -158,6 +156,7 @@ def load_terms(
     variable_file="build_variables.ent",
     global_terms_file="terms_global.ent",
     manual_file="manuals.ent",
+    group_code_file="../xml/ansys.groupcodes.commands.ent",
     character_directory="ent",
 ):
 
@@ -313,6 +312,20 @@ def load_terms(
                             except KeyError:
                                 continue
 
+    # load group code
+    group_code_terms_path = os.path.join(term_path, group_code_file)
+    if os.path.isfile(group_code_terms_path):
+        with open(group_code_terms_path, "r") as fid:
+            lines = fid.read().splitlines()
+
+            for line in lines:
+                entity_names = re.findall(r"!ENTITY (\S*) ", line)
+                if len(entity_names):
+                    entity_name = entity_names[0]
+                    classname = re.findall(r"(?<=<classname>)(.*?)(?=<\/classname>)", line)[0]
+                    typename = re.findall(r"(?<=<type>)(.*?)(?=<\/type>)", line)[0]
+                    terms[entity_name] = [classname,typename]
+    
     else:
         print("WARNING: No entitiy directory.")
 

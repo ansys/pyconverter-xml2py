@@ -98,7 +98,7 @@ def create_package(xml_path=None, functions_path=None, target_path=None, templat
     else:
         structure_map = None
     command_map, name_map, *_ = wr.convert(xml_path)
-    module_names, package_structure = wr.write_source(command_map, name_map, xml_path, target_path, functions_path, structure_map=structure_map)
+    module_names, package_structure = wr.write_source(command_map, name_map, xml_path, target_path, functions_path)
     package_path = os.path.join(target_path, "package")
     wr.write_docs(name_map, package_path, module_names, package_structure)
 

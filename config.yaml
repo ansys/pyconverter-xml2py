@@ -9,12 +9,4 @@ rules:
   "*": star
 
 specific_classes:
-  2D to 3D Analysis:
-    class_name: Analysis2Dto3D
-    file_name: analysis_2d_to_3d
-  Matrix Operations (APDL Math):
-    class_name : MatrixOperations
-    file_name: matrix_operations
-    additional_imports:
-      library_imports: [from ansys.math.core.math import AnsMath]
-      class_name_with_parent: MatrixOperations(AnsMath)
+  2D to 3D Analysis: Analysis 2D to 3D

@@ -23,7 +23,7 @@
 import glob
 import os
 import shutil
-import yaml
+import regex as re
 
 from pyconverter.xml2py import ast_tree as ast
 from pyconverter.xml2py import load_xml_doc as load
@@ -117,8 +117,7 @@ def convert(directory_path):
         xml_commands = []
         for filename in tqdm(filenames, desc=desc):
             try:
-                xml_commands.append(
-                    ast.XMLCommand(
+                command = ast.XMLCommand(
                         filename,
                         terms,
                         docu_global,
@@ -127,10 +126,29 @@ def convert(directory_path):
                         fcache,
                         meta_only=meta_only,
                     )
-                )
+                xml_commands.append(command)
+                if meta_only == False:
+                    refnamediv = command.get_children_by_type("Refnamediv")[0]
+                    ref = str(refnamediv.get_children_by_type("Refclass")[0])
+                    try:
+                        ref = re.findall(r"(?<=&)(.*?)(?=;)", ref)[0]
+                        if ref == "xtycadimport":
+                            continue # CAD imports need to be handdled differently
+                        command.group = terms[ref]
+                    except IndexError:
+                        classname = re.findall(r"(.*?)(?=:)", ref)
+                        if "" in classname:
+                            classname.remove("")
+                        if len(classname)>1:
+                            typename = re.findall(r"(?<=:)(.*?)(?=[A-Z][A-Z])", classname[1])[0] # the function will only appear in one module (example with CECYC)
+                        else:
+                            typename = re.findall(r"(?<=:)(.*)", ref)[0]
+                        command_group = [classname[0],typename]
+                        command.group = command_group
+                        command.is_archived = True
             except RuntimeError:
                 continue
-
+        
         return {cmd.name: cmd for cmd in xml_commands}
 
     command_map_meta = load_commands(
@@ -295,8 +313,8 @@ def write_source(
     path_custom_functions=None,
     template_path=None,
     config_path="config.yaml",
-    structure_map=None,
     clean=True,
+    structured = True,
 ):
     """Write out XML commands as Python source files.
 
@@ -339,7 +357,7 @@ def write_source(
     dict
         Dictionary with the following format: ``{'python_module_name': [{'python_class_name': python_names_list}]}".
     """
-    package_structure = None
+    
     if path_custom_functions is not None:
         custom_functions = CustomFunctions(path_custom_functions)
     else:
@@ -368,14 +386,12 @@ def write_source(
     
     module_name_list = []
     
-    # Modifications will happen here
-    if structure_map is None:    
+    if structured == False: 
+        package_structure = None
         for initial_command_name, command_obj in tqdm(command_map.items(), desc="Writing commands"):
             if initial_command_name in SKIP_XML:
                 continue
             python_name = name_map[initial_command_name]
-            # Need to create a package layer
-            # Need to create a class / file layer
             module_name_list.append(python_name)
             path = os.path.join(library_path, f"{python_name}.py")
             with open(path, "w", encoding="utf-8") as fid:
@@ -388,80 +404,112 @@ def write_source(
                 raise RuntimeError(f"Failed to execute {python_name}.py") from None
         
     else:
-        # Check if the structure map is correct
-        if type(structure_map) is not dict:
-            raise ValueError(
-                    """
-                    The structure map must be a dictionary with the following format:
-                    {'module_name': [{'class_name': python_names_list}]}".
-                    """
-                )
-        else:
-            if type(structure_map[list(structure_map.keys())[0]]) is not dict:
-                raise ValueError(
-                    """
-                    The structure map must be a dictionary with the following format:
-                    {'module_name': [{'class_name': python_names_list}]}".
-                    """
-                )
         import subprocess
         
         package_structure = {}
         all_commands = []
         specific_classes = get_config_data_value(config_path, "specific_classes")
-        for module_name, class_map in tqdm(structure_map.items(), desc="Writing commands..."):
-            module_name = module_name.replace(" ", "_").lower()
+
+        for command in command_map.values():
+            if command.name in SKIP_PYCOMMAND:
+                continue
+            if command.group is None:
+                continue
+            initial_module_name, initial_class_name = command.group
+            initial_module_name = initial_module_name.replace("/","")
+            module_name = initial_module_name.replace(" ", "_").lower()
             module_path = os.path.join(library_path, module_name)
             if not os.path.isdir(module_path):
                 os.makedirs(module_path)
-            module_name_list.append(module_name)
-            class_structure = {}
-            for initial_class_name, method_list in class_map.items():
-                additional_imports = None
-                if initial_class_name in specific_classes.keys():
-                    specific_class_dict = specific_classes[initial_class_name]
-                    class_name = specific_class_dict["class_name"]
-                    file_name = specific_class_dict["file_name"]
-                    file_path = os.path.join(module_path, f"{file_name}.py")
-                    if "additional_imports" in specific_class_dict.keys():
-                        additional_imports = specific_class_dict["additional_imports"]
-                else:
-                    class_name = initial_class_name.title().replace(" ", "").replace("/","")
-                    file_name = initial_class_name.replace(" ", "_").replace("/","_").lower()
-                    file_path = os.path.join(module_path, f"{file_name}.py")
+                package_structure[initial_module_name] = {}
+            if initial_class_name in specific_classes.keys():
+                initial_class_name = specific_classes[initial_class_name]
+            class_name = initial_class_name.title().replace(" ", "").replace("/","")
+            file_name = initial_class_name.replace(" ", "_").replace("/","_").lower()
+            if file_name =="":
+                pass
+
+            file_path = os.path.join(module_path, f"{file_name}.py")
+            print(command.name)
+            print(command.group)
+            print(module_name)
+            if os.path.isfile(file_path) is not True:
+                class_structure = []
                 with open(file_path, "w", encoding="utf-8") as fid:
-                    if additional_imports is not None:
-                        library_imports = additional_imports["library_imports"]
-                        for library_import in library_imports:
-                            fid.write(f"{library_import}\n")
-                        fid.write("\n")
-                        class_name_with_parent = additional_imports["class_name_with_parent"]
-                        fid.write(f"class {class_name_with_parent}:\n")
-                    else:
-                        fid.write(f"class {class_name}:\n")
-                    methods_structure = []
-                    for initial_command_name in method_list:
-                        if initial_command_name in SKIP_XML:
-                            continue
-                        command_obj = command_map[initial_command_name]
-                        python_method = command_obj.to_python(custom_functions, prefix='    ')
-                        methods_structure.append(name_map[initial_command_name])
-                        all_commands.append(initial_class_name)
-                        fid.write(f"{python_method}\n")
+                    fid.write(f"class {class_name}:\n")
+                    fid.close()
+            else:
+                class_structure = package_structure[initial_module_name][class_name]
+            class_structure.append(command.py_name)
 
-                    try:
-                        subprocess.run(["python", str(file_path)])
-                    except:
-                        print(python_method)
-                        raise RuntimeError(f"Failed to execute {file_path}") from None
-                fid.close()
-                class_structure[file_name] = [class_name, methods_structure]
-            package_structure[module_name] = class_structure
+            package_structure[initial_module_name][class_name] = class_structure
+            with open(file_path, "a", encoding="utf-8") as fid:
+                python_method = command.to_python(custom_functions, prefix='    ')
+                fid.write(f"{python_method}\n")
+            fid.close()
+            all_commands.append(command.name)
+        print(package_structure)
+        try:
+            subprocess.run(["python", str(file_path)])
+        except:
+            print(python_method)
+            raise RuntimeError(f"Failed to execute {file_path}") from None
 
-        for command_name in name_map.keys():
-            if command_name not in all_commands:
-                print(f"{command_name} is not in the structure map")
-        print(name_map.keys())
+        # stop
+    
+        # for module_name, class_map in tqdm(structure_map.items(), desc="Writing commands..."):
+        #     module_name = module_name.replace(" ", "_").lower()
+        #     module_path = os.path.join(library_path, module_name)
+        #     if not os.path.isdir(module_path):
+        #         os.makedirs(module_path)
+        #     module_name_list.append(module_name)
+        #     class_structure = {}
+        #     for initial_class_name, method_list in class_map.items():
+        #         additional_imports = None
+        #         if initial_class_name in specific_classes.keys():
+        #             specific_class_dict = specific_classes[initial_class_name]
+        #             class_name = specific_class_dict["class_name"]
+        #             file_name = specific_class_dict["file_name"]
+        #             file_path = os.path.join(module_path, f"{file_name}.py")
+        #             if "additional_imports" in specific_class_dict.keys():
+        #                 additional_imports = specific_class_dict["additional_imports"]
+        #         else:
+        #             class_name = initial_class_name.title().replace(" ", "").replace("/","")
+        #             file_name = initial_class_name.replace(" ", "_").replace("/","_").lower()
+        #             file_path = os.path.join(module_path, f"{file_name}.py")
+        #         with open(file_path, "w", encoding="utf-8") as fid:
+        #             if additional_imports is not None:
+        #                 library_imports = additional_imports["library_imports"]
+        #                 for library_import in library_imports:
+        #                     fid.write(f"{library_import}\n")
+        #                 fid.write("\n")
+        #                 class_name_with_parent = additional_imports["class_name_with_parent"]
+        #                 fid.write(f"class {class_name_with_parent}:\n")
+        #             else:
+        #                 fid.write(f"class {class_name}:\n")
+        #             methods_structure = []
+        #             for initial_command_name in method_list:
+        #                 if initial_command_name in SKIP_XML:
+        #                     continue
+        #                 command_obj = command_map[initial_command_name]
+        #                 python_method = command_obj.to_python(custom_functions, prefix='    ')
+        #                 methods_structure.append(name_map[initial_command_name])
+        #                 all_commands.append(initial_command_name)
+        #                 fid.write(f"{python_method}\n")
+        #         fid.close()
+        #         try:
+        #             subprocess.run(["python", str(file_path)])
+        #         except:
+        #             print(python_method)
+        #             raise RuntimeError(f"Failed to execute {file_path}") from None
+            
+        #         class_structure[file_name] = [class_name, methods_structure]
+        #     package_structure[module_name] = class_structure
+
+    for command_name in name_map.keys():
+        if command_name not in all_commands:
+            print(f"{command_name} is not in the structure map")
+
     write__init__file(library_path, module_name_list)
 
     print(f"Commands written to {library_path}")
