@@ -244,7 +244,7 @@ def copy_template_package(template_path, new_package_path, clean=False, include_
                 shutil.copy(hidden_template, hidden_new_path)
 
 
-def write__init__file(library_path, module_name_list):
+def write_global__init__file(library_path, module_name_list):
     """
     Write the __init__.py file for the package generated.
 
@@ -267,15 +267,33 @@ def write__init__file(library_path, module_name_list):
     # TODO: needs to be modified due to the new structure
     
     with open(mod_file, "w") as fid:
-        for module_name in module_name_list:
-            fid.write(f"from .{module_name} import *\n")
+        fid.write(f"from . import (\n")
+        for dir in os.listdir(library_path):
+            if os.path.isdir(os.path.join(library_path, dir)):
+                fid.write(f"    {dir},\n")
+        fid.write(")\n\n")
         fid.write("try:\n")
         fid.write("    import importlib.metadata as importlib_metadata\n")
         fid.write("except ModuleNotFoundError:\n")
         fid.write("    import importlib_metadata\n\n")
         fid.write("__version__ = importlib_metadata.version(__name__.replace('.', '-'))\n")
         fid.write('"""PyConverter-GeneratedCommands version."""\n')
+    fid.close()
 
+
+def write__init__file(library_path):
+    
+    for dir in os.listdir(library_path):
+        if os.path.isdir(os.path.join(library_path, dir)):
+            listdir = os.listdir(os.path.join(library_path, dir))
+            if len(listdir) > 0:
+                with open(os.path.join(library_path, dir, "__init__.py"), "w") as fid:
+                    fid.write(f"from . import (\n")
+                    for file in listdir:
+                        if file.endswith(".py"):
+                            fid.write(f"    {file[:-3]},\n")
+                    fid.write(")\n")
+                    fid.close()
 
 def get_library_path(new_package_path, config_path):
     """
@@ -397,12 +415,13 @@ def write_source(
             with open(path, "w", encoding="utf-8") as fid:
                 python_method = command_obj.to_python(custom_functions)
                 fid.write(f"{python_method}\n")
-
+            fid.close()
+            
             try:
                 exec(command_obj.to_python(custom_functions))
             except:
                 raise RuntimeError(f"Failed to execute {python_name}.py") from None
-        
+    
     else:
         import subprocess
         
@@ -445,15 +464,12 @@ def write_source(
                 fid.write(f"{python_method}\n")
             fid.close()
             all_commands.append(command.name)
-        print(package_structure)
         try:
             subprocess.run(["python", str(file_path)])
         except:
             print(python_method)
             raise RuntimeError(f"Failed to execute {file_path}") from None
 
-        # stop
-    
         # for module_name, class_map in tqdm(structure_map.items(), desc="Writing commands..."):
         #     module_name = module_name.replace(" ", "_").lower()
         #     module_path = os.path.join(library_path, module_name)
@@ -507,7 +523,8 @@ def write_source(
         if command_name not in all_commands:
             print(f"{command_name} is not in the structure map")
 
-    write__init__file(library_path, module_name_list)
+    write_global__init__file(library_path, module_name_list)
+    write__init__file(library_path)
 
     print(f"Commands written to {library_path}")
 
@@ -598,21 +615,5 @@ API documentation
                         fid.write(f"   {class_name}.{python_command_name}\n")
                 fid.close()
     
-    # for module_name, class_map in tqdm(structure_map.items(), desc="Writing commands..."):
-    #         module_name = module_name.replace(" ", "_").lower()
-    #         module_path = os.path.join(library_path, module_name)
-    #         if not os.path.isdir(module_path):
-    #             os.makedirs(module_path)
-    #         module_name_list.append(module_name)
-    #         for class_name, method_list in class_map.items():
-    #             file_name = class_name.replace(" ", "_").replace("/","_").lower() # not correct but somothing needs to be modified here.
-    #             class_name = class_name.title().replace(" ", "").replace("/","")
-    #             file_path = os.path.join(module_path, f"{file_name}.py")
-    #             with open(file_path, "w", encoding="utf-8") as fid:
-    #                 fid.write(f"class {class_name}:\n")
-    #                 for initial_command_name in method_list:
-    #                     if initial_command_name in SKIP_XML:
-    #                         continue
-    #                     command_obj = command_map[initial_command_name]
     
     return doc_src
