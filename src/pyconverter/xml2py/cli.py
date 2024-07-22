@@ -27,10 +27,9 @@ import os
 import click
 from pyconverter.xml2py import __version__, download
 from pyconverter.xml2py import writer as wr
-from pyconverter.xml2py import utils
 
 
-def create_package(xml_path=None, functions_path=None, target_path=None, template_path=None, json_structure_path=None):
+def create_package(xml_path=None, functions_path=None, target_path=None, template_path=None):
     """Create Python package based on a XML documentation.
 
     Parameters
@@ -51,10 +50,6 @@ def create_package(xml_path=None, functions_path=None, target_path=None, templat
         The default value is the ``_package`` directory accessible in the
         `PyConverter-XML2Py GitHub repository <https://github.com/ansys/pyconverter-xml2py/tree/main/_package>`_.
 
-    json_structure_path: str, optional
-        Path to the JSON file that contains the structure map of the package.
-        The structure map is a dictionary with the following format: ``{'module_name': [{'class_name': python_names_list}]}".
-        The default value is ``None``.
     """  # noqa : E501
     if xml_path is None:
         xml_path = os.environ.get("XML_PATH")
@@ -93,10 +88,6 @@ def create_package(xml_path=None, functions_path=None, target_path=None, templat
         if not os.path.isdir(os.path.join(os.getcwd(), "_package")):
             download.download_template()
 
-    if json_structure_path is not None:
-        structure_map = utils.parse_yaml(json_structure_path)
-    else:
-        structure_map = None
     command_map, name_map, *_ = wr.convert(xml_path)
     package_structure = wr.write_source(command_map, name_map, xml_path, target_path, functions_path)
     package_path = os.path.join(target_path, "package")
@@ -141,12 +132,6 @@ def version():
     type=click.Path(),
     help="Path for the template to use. If no path is provided, the default template is used.",
 )
-@click.option(
-    "-j",
-    "--json-path",
-    type=click.Path(),
-    help="Path to the JSON file that contains the structure map of the package.",
-)
-def package(xml_path, func_path, targ_path, template_path, json_path):
+def package(xml_path, func_path, targ_path, template_path):
     """Create a Python package from your XML documentation."""
-    create_package(xml_path, func_path, targ_path, template_path, json_path)
+    create_package(xml_path, func_path, targ_path, template_path)

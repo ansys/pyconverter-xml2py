@@ -2408,7 +2408,7 @@ class XMLCommand(Element):
             source = textwrap.indent("".join([command, return_command]), prefix=" " * 4+prefix)
 
         else:
-            source = "".join(custom_functions.py_code[self.py_name])
+            source = textwrap.indent("".join(custom_functions.py_code[self.py_name]), prefix)
         return source
 
     def to_python(self, custom_functions=None, prefix=""):
