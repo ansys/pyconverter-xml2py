@@ -656,7 +656,7 @@ class InformalExample(Element):
     def __repr__(self):
         lines = ["\n"]
         if self.title:
-            lines.append(f"Example:\n")  # noqa : E231
+            lines.append(f"Example:\n")
         else:
             lines.append(f"Example: {self.title}\n")
         lines.extend([f"{line}" for line in self._content])  # self._content.splitlines()
@@ -729,7 +729,7 @@ class ProgramListing(Element):
 
     def to_rst(self, prefix=""):
         """Return a string to enable converting the element to an RST format."""
-        header = f"\n\n{prefix}.. code::\n\n"  # noqa : E231
+        header = f"\n\n{prefix}.. code::\n\n"
         return header + textwrap.indent(self.source, prefix + " " * 3) + "\n"
 
 
@@ -981,7 +981,7 @@ class SuperScript(Element):
 
     def to_rst(self, prefix=""):
         """Return a string to enable converting the element to an RST format."""
-        return f":sup:`{self.content[0]}` {self.tail}"  # noqa : E231
+        return f":sup:`{self.content[0]}` {self.tail}"
 
 
 class Code(Element):

@@ -260,7 +260,8 @@ def write_global__init__file(library_path, module_name_list):
         Dictionary with the following format: ``{"initial_command_name": command_object}``.
 
     structure_map : dict, optional
-        Dictionary with the following format: ``{'module_name': [{'class_name': python_names_list}]}".
+        Dictionary with the following format:
+        ``{'module_name': [{'class_name': python_names_list}]}".
         The default value is ``None``.
     """
     mod_file = os.path.join(library_path, "__init__.py")
@@ -361,7 +362,8 @@ def write_source(
         Path to the configuration file. The default is ``config.yaml``.
 
     structure_map : dict, optional
-        Dictionary with the following format: ``{'module_name': [{'class_name': python_names_list}]}".
+        Dictionary with the following format:
+        ``{'module_name': [{'class_name': python_names_list}]}".
         The default value is ``None``.
 
     clean : bool, optional
@@ -374,7 +376,8 @@ def write_source(
         List of module names created.
 
     dict
-        Dictionary with the following format: ``{'python_module_name': [{'python_class_name': python_names_list}]}".
+        Dictionary with the following format:
+        ``{'python_module_name': [{'python_class_name': python_names_list}]}".
     """
 
     if path_custom_functions is not None:
@@ -548,7 +551,8 @@ def write_docs(package_path, package_structure=None, config_path="config.yaml"):
         List of module names created.
 
     package_structure :
-        Dictionary with the following format: ``{'python_module_name': [{'python_class_name': python_names_list}]}".
+        Dictionary with the following format:
+        ``{'python_module_name': [{'python_class_name': python_names_list}]}".
 
     Returns
     -------
@@ -609,10 +613,10 @@ API documentation
                     fid.write(f"{class_name}\n")
                     fid.write("=" * len(class_name) + "\n\n")
                     fid.write(
-                        f".. currentmodule:: {library_name}.{module_folder_name}.{class_file_name}\n\n"
+                        f".. currentmodule:: {library_name}.{module_folder_name}.{class_file_name}\n\n"  # noqa : E501
                     )
                     fid.write(
-                        f".. autoclass:: {library_name}.{module_folder_name}.{class_file_name}.{class_name}\n\n"
+                        f".. autoclass:: {library_name}.{module_folder_name}.{class_file_name}.{class_name}\n\n"  # noqa : E501
                     )
                     fid.write(".. autosummary::\n")
                     fid.write("   :template: base.rst\n")
