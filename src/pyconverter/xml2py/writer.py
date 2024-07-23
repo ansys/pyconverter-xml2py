@@ -29,7 +29,7 @@ from pyconverter.xml2py import load_xml_doc as load
 from pyconverter.xml2py.custom_functions import CustomFunctions
 from pyconverter.xml2py.directory_format import get_paths
 from pyconverter.xml2py.download import download_template
-from pyconverter.xml2py.utils import create_name_map, get_config_data_value
+from pyconverter.xml2py.utils import create_name_map, get_config_data_value, import_handler
 import regex as re
 from tqdm import tqdm
 
@@ -462,8 +462,16 @@ def write_source(
             package_structure[module_name][file_name] = [class_name, class_structure]
             with open(file_path, "a", encoding="utf-8") as fid:
                 python_method = command.to_python(custom_functions, prefix="    ")
-                fid.write(f"{python_method}\n")
-            fid.close()
+                str_before_def = re.findall(r"[\s\S]*?(?=def)", python_method)[0]
+                output = re.findall(r"((import|from) [^\n]*)", str_before_def)
+                if len(output) == 0:
+                    fid.write(f"{python_method}\n")
+                    fid.close()
+                else:
+                    fid.close()
+                    print(python_method)
+                    import_handler(file_path, python_method, output)
+
             all_commands.append(command.name)
         try:
             subprocess.run(["python", str(file_path)])

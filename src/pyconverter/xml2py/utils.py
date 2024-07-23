@@ -113,3 +113,15 @@ def create_name_map(meta_command, yaml_file_path):
     ast.NameMap(name_map)
 
     return name_map
+
+
+def import_handler(filename, additional_content, findalls):
+    needed_imports = ""
+    for match in findalls:
+        needed_imports += f"{match[0]}\n"
+        additional_content = additional_content.replace(match[0], "").replace("\n\n", "\n")
+
+    with open(filename, "r+") as f:
+        content = f.read()
+        f.seek(0, 0)
+        f.write(needed_imports + content + additional_content)

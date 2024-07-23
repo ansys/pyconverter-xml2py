@@ -74,11 +74,11 @@ class NameMap:
         NAME_MAP_GLOB = name_map
 
 
-def to_py_name(name, cmd_map=None):
+def to_py_name(name, name_map=None):
     """Convert to a Python-compatible name."""
-    if cmd_map is not None:
+    if name_map is not None:
         global NAME_MAP_GLOB
-        NAME_MAP_GLOB = cmd_map
+        NAME_MAP_GLOB = name_map
     try:
         py_name = NAME_MAP_GLOB[name]
     except:
