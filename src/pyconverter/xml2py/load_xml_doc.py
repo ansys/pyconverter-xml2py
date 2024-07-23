@@ -78,7 +78,6 @@ def load_links(link_path):
                         text = str(linkmap[0])
                     links[f"{targetptr}"] = (root_name, root_title, href, text)
 
-
         grab_links(linkmap)
 
     return links
@@ -327,8 +326,8 @@ def load_terms(
                     entity_name = entity_names[0]
                     classname = re.findall(r"(?<=<classname>)(.*?)(?=<\/classname>)", line)[0]
                     typename = re.findall(r"(?<=<type>)(.*?)(?=<\/type>)", line)[0]
-                    terms[entity_name] = [classname,typename]
-    
+                    terms[entity_name] = [classname, typename]
+
     else:
         print("WARNING: No entitiy directory.")
 

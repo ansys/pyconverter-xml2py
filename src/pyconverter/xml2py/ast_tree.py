@@ -29,7 +29,6 @@ from lxml.etree import tostring
 from lxml.html import fromstring
 
 CONV_EQN = False
-CMD_MAP_GLOB = {}
 
 if CONV_EQN:
     from py_asciimath.translator.translator import MathML2Tex
@@ -62,26 +61,26 @@ CLEANUP = {
 }
 
 # Map XML command to pycommand function
-CMD_MAP = {}
+NAME_MAP_GLOB = {}
 
 # XML commands to skip
 SKIP = {"*IF", "*ELSE", "C***", "*RETURN"}
 
 
-class CommandMap:
-    
+class NameMap:
     def __init__(self, name_map):
         self.name_map = name_map
-        global CMD_MAP_GLOB
-        CMD_MAP_GLOB = name_map
+        global NAME_MAP_GLOB
+        NAME_MAP_GLOB = name_map
+
 
 def to_py_name(name, cmd_map=None):
     """Convert to a Python-compatible name."""
     if cmd_map is not None:
-        global CMD_MAP_GLOB
-        CMD_MAP_GLOB = cmd_map
+        global NAME_MAP_GLOB
+        NAME_MAP_GLOB = cmd_map
     try:
-        py_name = CMD_MAP_GLOB[name]
+        py_name = NAME_MAP_GLOB[name]
     except:
         py_name = name
         print("not documented : ", name)
@@ -657,7 +656,7 @@ class InformalExample(Element):
     def __repr__(self):
         lines = ["\n"]
         if self.title:
-            lines.append(f"Example:\n")
+            lines.append(f"Example:\n")  # noqa : E231
         else:
             lines.append(f"Example: {self.title}\n")
         lines.extend([f"{line}" for line in self._content])  # self._content.splitlines()
@@ -730,7 +729,7 @@ class ProgramListing(Element):
 
     def to_rst(self, prefix=""):
         """Return a string to enable converting the element to an RST format."""
-        header = f"\n\n{prefix}.. code::\n\n"
+        header = f"\n\n{prefix}.. code::\n\n"  # noqa : E231
         return header + textwrap.indent(self.source, prefix + " " * 3) + "\n"
 
 
@@ -982,7 +981,7 @@ class SuperScript(Element):
 
     def to_rst(self, prefix=""):
         """Return a string to enable converting the element to an RST format."""
-        return f":sup:`{self.content[0]}` {self.tail}"
+        return f":sup:`{self.content[0]}` {self.tail}"  # noqa : E231
 
 
 class Code(Element):
@@ -1980,7 +1979,7 @@ class XMLCommand(Element):
 
         # parse the command
         super().__init__(self._refentry, parse_children=not meta_only)
-  
+
     @property
     def xml_filename(self):
         """Source filename of the command."""
@@ -2388,7 +2387,7 @@ class XMLCommand(Element):
 
         return "\n".join(lines)
 
-    def py_source(self, custom_functions=None,prefix=""):
+    def py_source(self, custom_functions=None, prefix=""):
         """
         Return the Python source.
 
@@ -2405,7 +2404,7 @@ class XMLCommand(Element):
             else:
                 command = 'command = f"' + self.name + '"\n'
             return_command = "return self.run(command, **kwargs)\n"
-            source = textwrap.indent("".join([command, return_command]), prefix=" " * 4+prefix)
+            source = textwrap.indent("".join([command, return_command]), prefix=" " * 4 + prefix)
 
         else:
             source = textwrap.indent("".join(custom_functions.py_code[self.py_name]), prefix)

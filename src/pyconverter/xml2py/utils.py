@@ -1,4 +1,28 @@
+# Copyright (C) 2024 ANSYS, Inc. and/or its affiliates.
+# SPDX-License-Identifier: MIT
+#
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+import pyconverter.xml2py.ast_tree as ast
 import yaml
+
 
 def parse_yaml(yaml_path):
     """
@@ -12,10 +36,11 @@ def parse_yaml(yaml_path):
     """
     try:
         with open(yaml_path, "r") as file:
-            yaml_data= yaml.safe_load(file)
+            yaml_data = yaml.safe_load(file)
     except FileNotFoundError:
         yaml_data = None
     return yaml_data
+
 
 def get_config_data_value(yaml_path, value):
     """
@@ -26,7 +51,7 @@ def get_config_data_value(yaml_path, value):
 
     yaml_path : str
         Path to the YAML file.
-    
+
     value : str
         Key to search for in the YAML file.
     """
@@ -38,7 +63,8 @@ def get_config_data_value(yaml_path, value):
 
     return output
 
-def get_name_map(meta_command, yaml_file_path):
+
+def create_name_map(meta_command, yaml_file_path):
     # convert all to flat and determine number of occurances
     proc_names = []
     rules = get_config_data_value(yaml_file_path, "rules")
@@ -66,7 +92,7 @@ def get_name_map(meta_command, yaml_file_path):
                 alpha_name = lower_name
 
             if proc_names.count(alpha_name) != 1:
-                if rules != None: # need to get it from config file
+                if rules != None:  # need to get it from config file
                     py_name = lower_name
                     for rule_name, rule in rules.items():
                         py_name = py_name.replace(rule_name, rule)
@@ -83,5 +109,7 @@ def get_name_map(meta_command, yaml_file_path):
                 py_name = alpha_name
 
         name_map[ans_name] = py_name
-    
+
+    ast.NameMap(name_map)
+
     return name_map

@@ -27,22 +27,22 @@ import pyconverter.xml2py.writer as wrt
 import pytest
 
 
-def test_convert(commands, custom_functions):
-    assert commands["/XFRM"].name == "/XFRM"
+def test_convert(command_map, custom_functions):
+    assert command_map["/XFRM"].name == "/XFRM"
     assert (
         "Original command: WRITE\n\nShort Description:\nWrites the radiation matrix file.\n\nFunction signature:\nWRITE,"  # noqa : E501
-        in commands["WRITE"].__repr__()
+        in command_map["WRITE"].__repr__()
     )
     assert (
-        commands["E"].py_source(custom_functions)
+        command_map["E"].py_source(custom_functions)
         == '    command = f"E,{i},{j},{k},{l},{m},{n},{o},{p}"\n    return self.run(command, **kwargs)\n'  # noqa : E501
     )
-    assert 'def zoom(self, wn="", lab="", x1="", y1="", x2="", y2="", **kwargs):\n    r"""Zooms a region of a display window.\n\n' in commands[  # noqa : E501
+    assert 'def zoom(self, wn="", lab="", x1="", y1="", x2="", y2="", **kwargs):\n    r"""Zooms a region of a display window.\n\n' in command_map[  # noqa : E501
         "/ZOOM"
     ].to_python(
         custom_functions
     )
-    assert "import re" in commands["K"].to_python(custom_functions)
+    assert "import re" in command_map["K"].to_python(custom_functions)
 
 
 def test_copy_template_package(cwd):
@@ -74,27 +74,43 @@ def package_path(cwd):
 
 
 def test_write_source_with_custom_functions(
-    commands, cmd_map, path_custom_functions, cwd, directory_path, package_path
+    command_map,
+    name_map,
+    directory_path,
+    cwd,
+    package_path,
+    path_custom_functions,
+    library_name_structured,
 ):
-    cmd_path = wrt.write_source(commands, cmd_map, directory_path, cwd, path_custom_functions)
-    assert cmd_path == os.path.join(package_path, wrt.GENERATED_SRC_CODE)
-    assert os.path.isfile(os.path.join(cmd_path, "acel.py"))
+    wrt.write_source(command_map, name_map, directory_path, cwd, path_custom_functions)
+    library_name = "/".join(library_name_structured)
+    if not "src" in library_name_structured:
+        cmd_path = os.path.join(package_path, "src", library_name)
+    else:
+        cmd_path = os.path.join(package_path, library_name)
+    assert os.path.isfile(os.path.join(cmd_path, "apdl", "abbreviations.py"))
     assert os.path.isdir(os.path.join(package_path, "doc", "source", "images"))
     assert os.path.isfile(os.path.join(package_path, "doc", "source", "images", "gcmdrsymm1.png"))
 
 
-def test_write_source_no_custom_function(commands, cmd_map, directory_path, cwd, package_path):
-    cmd_path = wrt.write_source(commands, cmd_map, directory_path, cwd)
-    assert cmd_path == os.path.join(package_path, wrt.GENERATED_SRC_CODE)
-    assert os.path.isfile(os.path.join(cmd_path, "acel.py"))
+def test_write_source_no_custom_function(
+    command_map, name_map, directory_path, cwd, package_path, library_name_structured
+):
+    wrt.write_source(command_map, name_map, directory_path, cwd)
+    library_name = "/".join(library_name_structured)
+    if not "src" in library_name_structured:
+        cmd_path = os.path.join(package_path, "src", library_name)
+    else:
+        cmd_path = os.path.join(package_path, library_name)
+    assert os.path.isfile(os.path.join(cmd_path, "apdl", "abbreviations.py"))
     assert os.path.isdir(os.path.join(package_path, "doc", "source", "images"))
     assert os.path.isfile(os.path.join(package_path, "doc", "source", "images", "gcmdrsymm1.png"))
 
 
-def test_write_docs(commands, cmd_map, package_path):
-    doc_src = wrt.write_docs(commands, cmd_map, package_path)
+def test_write_docs(package_path, package_structure):
+    doc_src = wrt.write_docs(package_path, package_structure)
     file = open(doc_src, "r")
     content = file.read()
     file.close()
-    assert "Autosummary" in content
-    assert "agen" in content
+    assert "API documentation" in content
+    assert "apdl/index.rst" in content

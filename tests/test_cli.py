@@ -44,19 +44,7 @@ def test_cli_main_package_group():
     assert result.exit_code == 0
 
     assert "Create a Python package from your XML documentation." in result.output
-    assert (
-        "-x, --xml-path PATH"
-        in result.output
-    )
-    assert (
-        "-f, --func-path PATH"
-        in result.output
-    )
-    assert (
-        "-p, --targ-path PATH"
-        in result.output
-    )
-    assert ( 
-            "-t, --template-path PATH"
-        in result.output
-    )
+    assert "-x, --xml-path PATH" in result.output
+    assert "-f, --func-path PATH" in result.output
+    assert "-p, --targ-path PATH" in result.output
+    assert "-t, --template-path PATH" in result.output

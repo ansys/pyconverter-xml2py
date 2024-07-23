@@ -89,7 +89,9 @@ def create_package(xml_path=None, functions_path=None, target_path=None, templat
             download.download_template()
 
     command_map, name_map, *_ = wr.convert(xml_path)
-    package_structure = wr.write_source(command_map, name_map, xml_path, target_path, functions_path)
+    package_structure = wr.write_source(
+        command_map, name_map, xml_path, target_path, functions_path
+    )
     package_path = os.path.join(target_path, "package")
     wr.write_docs(package_path, package_structure)
 

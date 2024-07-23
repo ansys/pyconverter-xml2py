@@ -25,6 +25,7 @@ import os
 from pyconverter.xml2py.custom_functions import CustomFunctions
 import pyconverter.xml2py.directory_format as ff
 import pyconverter.xml2py.load_xml_doc as lxd
+from pyconverter.xml2py.utils import get_config_data_value
 import pyconverter.xml2py.writer as wrt
 import pytest
 
@@ -103,12 +104,12 @@ def version_variables(load_terms):
 
 
 @pytest.fixture
-def commands(directory_path):
+def command_map(directory_path):
     return wrt.convert(directory_path)[0]
 
 
 @pytest.fixture
-def cmd_map(directory_path):
+def name_map(directory_path):
     return wrt.convert(directory_path)[1]
 
 
@@ -125,3 +126,18 @@ def path_custom_functions(cwd):
 @pytest.fixture
 def custom_functions(path_custom_functions):
     return CustomFunctions(path_custom_functions)
+
+
+@pytest.fixture
+def config_path(cwd):
+    return os.path.join(cwd, "config.yaml")
+
+
+@pytest.fixture
+def library_name_structured(config_path):
+    return get_config_data_value(config_path, "library_name_structured")
+
+
+@pytest.fixture
+def package_structure(command_map, name_map, directory_path, cwd, path_custom_functions):
+    return wrt.write_source(command_map, name_map, directory_path, cwd, path_custom_functions)
