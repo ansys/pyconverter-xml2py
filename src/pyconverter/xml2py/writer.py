@@ -261,7 +261,7 @@ def write_global__init__file(library_path, module_name_list):
 
     structure_map : dict, optional
         Dictionary with the following format:
-        ``{'module_name': [{'class_name': python_names_list}]}".
+        ``{'module_name': [{'class_name': python_names_list}]}``.
         The default value is ``None``.
     """
     mod_file = os.path.join(library_path, "__init__.py")
@@ -377,7 +377,7 @@ def write_source(
 
     dict
         Dictionary with the following format:
-        ``{'python_module_name': [{'python_class_name': python_names_list}]}".
+        ``{'python_module_name': [{'python_class_name': python_names_list}]}``.
     """
 
     if path_custom_functions is not None:
