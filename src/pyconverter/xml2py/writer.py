@@ -363,7 +363,7 @@ def write_source(
 
     structure_map : dict, optional
         Dictionary with the following format:
-        ``{'module_name': [{'class_name': python_names_list}]}".
+        ``{'module_name': [{'class_name': python_names_list}]}``.
         The default value is ``None``.
 
     clean : bool, optional
@@ -462,6 +462,7 @@ def write_source(
             package_structure[module_name][file_name] = [class_name, class_structure]
             with open(file_path, "a", encoding="utf-8") as fid:
                 python_method = command.to_python(custom_functions, prefix="    ")
+                # check if there are any imports before the function definition.
                 str_before_def = re.findall(r"[\s\S]*?(?=def)", python_method)[0]
                 output = re.findall(r"((import|from) [^\n]*)", str_before_def)
                 if len(output) == 0:
@@ -469,7 +470,6 @@ def write_source(
                     fid.close()
                 else:
                     fid.close()
-                    print(python_method)
                     import_handler(file_path, python_method, output)
 
             all_commands.append(command.name)
@@ -560,7 +560,7 @@ def write_docs(package_path, package_structure=None, config_path="config.yaml"):
 
     package_structure :
         Dictionary with the following format:
-        ``{'python_module_name': [{'python_class_name': python_names_list}]}".
+        ``{'python_module_name': [{'python_class_name': python_names_list}]}``.
 
     Returns
     -------
