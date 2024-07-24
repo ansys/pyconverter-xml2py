@@ -34,12 +34,9 @@ def parse_yaml(yaml_path):
     yaml_path : str
         Path to the YAML file.
     """
-    try:
+    if os.path.isfile(yaml_path):
         with open(yaml_path, "r") as file:
-            yaml_data = yaml.safe_load(file)
-    except FileNotFoundError:
-        yaml_data = None
-    return yaml_data
+            return yaml.safe_load(file)
 
 
 def get_config_data_value(yaml_path, value):
@@ -56,12 +53,7 @@ def get_config_data_value(yaml_path, value):
         Key to search for in the YAML file.
     """
     config_data = parse_yaml(yaml_path)
-    try:
-        output = config_data[value]
-    except KeyError:
-        output = None
-
-    return output
+    return  config_data.get(value, None)
 
 
 def create_name_map(meta_command, yaml_file_path):
@@ -92,7 +84,7 @@ def create_name_map(meta_command, yaml_file_path):
                 alpha_name = lower_name
 
             if proc_names.count(alpha_name) != 1:
-                if rules != None:  # need to get it from config file
+                if rules:  # need to get it from config file
                     py_name = lower_name
                     for rule_name, rule in rules.items():
                         py_name = py_name.replace(rule_name, rule)
@@ -102,7 +94,8 @@ def create_name_map(meta_command, yaml_file_path):
                         )
                 else:
                     raise ValueError(
-                        "Some functions have identical names. You need to provide RULES."
+                       f"Function '{ans_name}' has identical name to another function."
+                       "You need to provide RULES to differentiate them."
                     )
 
             else:

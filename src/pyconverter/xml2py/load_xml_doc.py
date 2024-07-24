@@ -320,13 +320,13 @@ def load_terms(
         with open(group_code_terms_path, "r") as fid:
             lines = fid.read().splitlines()
 
-            for line in lines:
-                entity_names = re.findall(r"!ENTITY (\S*) ", line)
-                if len(entity_names):
-                    entity_name = entity_names[0]
-                    classname = re.findall(r"(?<=<classname>)(.*?)(?=<\/classname>)", line)[0]
-                    typename = re.findall(r"(?<=<type>)(.*?)(?=<\/type>)", line)[0]
-                    terms[entity_name] = [classname, typename]
+        for line in lines:
+            entity_names = re.findall(r"!ENTITY (\S*) ", line)
+            if len(entity_names):
+                entity_name = entity_names[0]
+                classname = re.findall(r"(?<=<classname>)(.*?)(?=<\/classname>)", line)[0]
+                typename = re.findall(r"(?<=<type>)(.*?)(?=<\/type>)", line)[0]
+                terms[entity_name] = [classname, typename]
 
     else:
         print("WARNING: No entitiy directory.")

@@ -53,7 +53,6 @@ def convert(directory_path):
 
     Parameters
     ----------
-
     directory_path : str
         Path to the directory containing the XML files to convert.
 
@@ -416,7 +415,6 @@ def write_source(
             with open(path, "w", encoding="utf-8") as fid:
                 python_method = command_obj.to_python(custom_functions)
                 fid.write(f"{python_method}\n")
-            fid.close()
 
             try:
                 exec(command_obj.to_python(custom_functions))
@@ -431,9 +429,7 @@ def write_source(
         specific_classes = get_config_data_value(config_path, "specific_classes")
 
         for command in command_map.values():
-            if command.name in SKIP_XML:
-                continue
-            if command.group is None:
+            if command.name in SKIP_XML or command.group is None:
                 continue
             initial_module_name, initial_class_name = command.group
             initial_module_name = initial_module_name.replace("/", "")
@@ -450,11 +446,10 @@ def write_source(
                 pass
 
             file_path = os.path.join(module_path, f"{file_name}.py")
-            if os.path.isfile(file_path) is not True:
+            if not os.path.isfile(file_path):
                 class_structure = []
                 with open(file_path, "w", encoding="utf-8") as fid:
                     fid.write(f"class {class_name}:\n")
-                    fid.close()
             else:
                 class_structure = package_structure[module_name][file_name][1]
             class_structure.append(command.py_name)
@@ -475,9 +470,8 @@ def write_source(
             all_commands.append(command.name)
         try:
             subprocess.run(["python", str(file_path)])
-        except:
-            print(python_method)
-            raise RuntimeError(f"Failed to execute {file_path}") from None
+        except Exception as e:
+            raise RuntimeError(f"Failed to execute '{python_method}' from '{file_path}'.") from e
 
         # for module_name, class_map in tqdm(structure_map.items(), desc="Writing commands..."):
         #     module_name = module_name.replace(" ", "_").lower()
@@ -591,7 +585,6 @@ API documentation
         )
         for module_name in package_structure.keys():
             fid.write(f"   {module_name}/index.rst\n")
-    fid.close()
 
     if package_structure is not None:
         for module_folder_name, class_map in tqdm(
@@ -611,10 +604,7 @@ API documentation
                 fid.write(f"   :hidden:\n\n")
                 for class_file_name in class_map.keys():
                     fid.write(f"   {class_file_name}\n")
-            fid.close()
-            for class_file_name, class_structure in class_map.items():
-                class_name = class_structure[0]
-                method_list = class_structure[1]
+            for class_file_name, (class_name, method_list)  in class_map.items():
                 class_file = os.path.join(module_folder, f"{class_file_name}.rst")
                 with open(class_file, "w") as fid:
                     fid.write(f".. _ref_{class_file_name}:\n\n")
@@ -631,6 +621,5 @@ API documentation
                     fid.write("   :toctree: _autosummary\n\n")
                     for python_command_name in method_list:
                         fid.write(f"   {class_name}.{python_command_name}\n")
-                fid.close()
 
     return doc_src
