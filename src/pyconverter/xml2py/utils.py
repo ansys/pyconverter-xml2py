@@ -20,9 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import os
+
 import pyconverter.xml2py.ast_tree as ast
 import yaml
-import os
 
 
 def parse_yaml(yaml_path):
@@ -93,8 +94,8 @@ def create_name_map(meta_command, yaml_file_path):
                         )
                 else:
                     raise ValueError(
-                       f"Function '{ans_name}' has identical name to another function."
-                       "You need to provide RULES to differentiate them."
+                        f"Function '{ans_name}' has identical name to another function."
+                        "You need to provide RULES to differentiate them."
                     )
 
             else:
@@ -118,9 +119,11 @@ def import_handler(filename, additional_content, findalls):
         f.seek(0, 0)
         f.write(needed_imports + content + additional_content)
 
+
 # ############################################################################
 # AST functions
 # ############################################################################
+
 
 def split_trail_alpha(text):
     """Split a string based on the last tailing non-alphanumeric character."""

@@ -595,7 +595,8 @@ API documentation
                 os.makedirs(module_folder)
             module_file = os.path.join(module_folder, f"index.rst")
             with open(module_file, "w") as fid:
-                fid.write(f"""
+                fid.write(
+                    f"""
 .. _ref_{module_folder_name}:
 
 {module_title}
@@ -605,10 +606,11 @@ API documentation
    :maxdepth: 2
    :hidden:
 
-""")
+"""
+                )
                 for class_file_name in class_map.keys():
                     fid.write(f"   {class_file_name}\n")
-            for class_file_name, (class_name, method_list)  in class_map.items():
+            for class_file_name, (class_name, method_list) in class_map.items():
                 class_file = os.path.join(module_folder, f"{class_file_name}.rst")
                 with open(class_file, "w") as fid:
                     fid.write(f".. _ref_{class_file_name}:\n\n")

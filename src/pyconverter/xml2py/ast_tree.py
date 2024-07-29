@@ -1866,7 +1866,7 @@ class ProductName(Element):
 
 class XMLCommand(Element):
     """Provides the XML command from the documentation."""
-    
+
     def __init__(
         self,
         filename,
@@ -2212,11 +2212,15 @@ class XMLCommand(Element):
 
         docstr = re.sub(r"bgcolor=\S\S\S\S\S\S\S\S\S\S?", "", docstr)
         docstr = re.sub(r"_cellfont Shading=\S\S\S\S\S\S\S\S", "", docstr)
-        
+
         if self.is_archived == True:
             logging.info(f"{self.name} is an archived command.")
-            docstr = docstr + "\n\n.. warning::\n\n    This command is archived in the latest version of the software.\n"
-        
+            docstr = (
+                docstr
+                + "\n\n.. warning::\n\n"
+                + "This command is archived in the latest version of the software.\n"
+            )
+
         return docstr
 
     @property
