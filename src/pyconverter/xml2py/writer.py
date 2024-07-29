@@ -518,10 +518,7 @@ def write_docs(package_path, package_structure=None, config_path="config.yaml"):
     if not os.path.isdir(doc_package_path):
         os.makedirs(doc_package_path)
 
-    doc_src = os.path.join(doc_package_path, "docs.rst")
-    with open(doc_src, "w") as fid:
-        fid.write(
-            """
+    doc_src_content = """
 API documentation
 ==================
 
@@ -529,21 +526,21 @@ API documentation
    :maxdepth: 2
    :hidden:\n\n
 """
-        )
-        for module_name in package_structure.keys():
-            fid.write(f"   {module_name}/index.rst\n")
-
+    for module_name in package_structure.keys():
+        doc_src_content += f"   {module_name}/index.rst\n"
+    
+    # Write the main doc file
+    doc_src = os.path.join(doc_package_path, "docs.rst")
+    with open(doc_src, "w") as fid:
+        fid.write(doc_src_content)
+    
     if package_structure is not None:
         for module_folder_name, class_map in tqdm(
             package_structure.items(), desc="Writing docs..."
         ):
             module_title = module_folder_name.replace("_", " ").capitalize()
-            module_folder = os.path.join(doc_package_path, f"{module_folder_name}")
-            os.makedirs(module_folder, exist_ok=True)
-            module_file = os.path.join(module_folder, f"index.rst")
-            with open(module_file, "w") as fid:
-                fid.write(
-                    f"""
+            
+            module_content = f"""
 .. _ref_{module_folder_name}:
 
 {module_title}
@@ -554,25 +551,41 @@ API documentation
    :hidden:
 
 """
-                )
-                for class_file_name in class_map.keys():
-                    fid.write(f"   {class_file_name}\n")
+            for class_file_name in class_map.keys():
+                module_content+="   {class_file_name}\n"
+            
+            # Write the module index file
+            module_folder = os.path.join(doc_package_path, f"{module_folder_name}")
+            os.makedirs(module_folder, exist_ok=True) 
+            module_file = os.path.join(module_folder, f"index.rst")
+            with open(module_file, "w") as fid:
+                fid.write(module_content)
+            
             for class_file_name, (class_name, method_list) in class_map.items():
+                
+                class_content = f"""
+.. _ref_{class_file_name}:
+
+
+{class_name}
+{"=" * len(class_name)}
+
+
+.. currentmodule:: {library_name}.{module_folder_name}.{class_file_name}
+
+.. autoclass:: {library_name}.{module_folder_name}.{class_file_name}.{class_name}
+
+.. autosummary::
+   :template: base.rst
+   :toctree: _autosummary
+
+"""
+                for python_command_name in method_list:
+                    class_content += f"   {class_name}.{python_command_name}\n"
+                
+                # Write the class file
                 class_file = os.path.join(module_folder, f"{class_file_name}.rst")
                 with open(class_file, "w") as fid:
-                    fid.write(f".. _ref_{class_file_name}:\n\n")
-                    fid.write(f"{class_name}\n")
-                    fid.write("=" * len(class_name) + "\n\n")
-                    fid.write(
-                        f".. currentmodule:: {library_name}.{module_folder_name}.{class_file_name}\n\n"  # noqa : E501
-                    )
-                    fid.write(
-                        f".. autoclass:: {library_name}.{module_folder_name}.{class_file_name}.{class_name}\n\n"  # noqa : E501
-                    )
-                    fid.write(".. autosummary::\n")
-                    fid.write("   :template: base.rst\n")
-                    fid.write("   :toctree: _autosummary\n\n")
-                    for python_command_name in method_list:
-                        fid.write(f"   {class_name}.{python_command_name}\n")
+                    fid.write(class_content)
 
     return doc_src
