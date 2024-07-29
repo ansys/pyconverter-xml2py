@@ -324,8 +324,7 @@ def get_library_path(new_package_path, config_path):
     library_name = get_config_data_value(config_path, "library_name_structured")
     if not "src" in library_name:
         library_name.insert(0, "src")
-    library_name_str = "/".join(library_name)
-    return os.path.join(new_package_path, library_name_str)
+    return os.path.join(new_package_path, *library_name)
 
 
 def write_source(
