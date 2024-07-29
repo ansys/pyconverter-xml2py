@@ -22,6 +22,7 @@
 
 import os
 
+from lxml.html import fromstring
 import pyconverter.xml2py.ast_tree as ast
 import yaml
 
@@ -143,3 +144,16 @@ def is_numeric(text):
         return True
     except ValueError:
         return False
+
+
+def get_refentry(filename):
+    """
+    Get the refentry from the XML file.
+
+    Parameters
+    ----------
+    filename : str
+        Path to the XML file.
+    """
+    root = fromstring(open(filename, "rb").read())
+    return list(root.iterfind(".//refentry"))

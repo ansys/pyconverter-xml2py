@@ -245,7 +245,7 @@ class Element:
             if type(item).__name__ == _type:
                 if _type == "Refname" or _type == "Refnamediv":
                     if terms == None:
-                        print("ERROR: terms not defined for a Refname class")
+                        logging.error("ERROR: terms not defined for a Refname class")
                     item.terms = terms
                 return item
         return None
@@ -408,7 +408,7 @@ class OLink(Element):
         """Return a string to enable converting the element to an RST format."""
         key = f"{self.targetptr}"
         if (links or base_url) is None:
-            print("ERROR in the links or the base_url definitions - OLink class.")
+            logging.error("ERROR in the links or the base_url definitions - OLink class.")
         if key in links:
             root_name, root_title, href, text = links[key]
             link = f"{base_url}{root_name}/{href}"
@@ -425,8 +425,6 @@ class OLink(Element):
             tail = tail.replace("\n", "")
             tail = tail.replace("\r", "")
             return f"`{content} <{link}>`_ {self.tail}"
-        # else:
-        #     print(self.targetptr)
 
         return super().to_rst(indent)
 
@@ -1003,7 +1001,7 @@ class Link(Element):
     def to_rst(self, indent="", links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
         if (links or base_url) is None:
-            print("ERROR in the links or the base_url definitions - Link class.")
+            logging.error("ERROR in the links or the base_url definitions - Link class.")
         tail = " ".join([str(item) for item in self])
         tail = self.tail.replace("\n", "")
         if self.linkend in links:
@@ -1856,6 +1854,7 @@ class XMLCommand(Element):
     def __init__(
         self,
         filename,
+        refentry,
         terms,
         docu_global,
         version_variables,
@@ -1873,14 +1872,7 @@ class XMLCommand(Element):
         self._fcache = fcache
         self._group = None
         self._is_archived = False
-        root = fromstring(open(filename, "rb").read())
-
-        # ensure that refentry exists
-        try:
-            self._refentry = next(root.iterfind(".//refentry"))
-        except StopIteration:
-            logging.warning(f"File {filename} is not a command file.")
-            raise RuntimeError("The provided file is not a command file.")
+        self._refentry = refentry
 
         # parse the command
         super().__init__(self._refentry, parse_children=not meta_only)
@@ -2105,7 +2097,6 @@ class XMLCommand(Element):
             elif lines[i].lstrip().startswith("="):
                 if is_equal_sign or is_dash_sign:
                     lines[i - 1] = "**" + lines[i - 1] + "**"
-                    # print("après : ", lines[i-1])
                     lines.pop(i)
                 if is_equal_sign == False:
                     is_equal_sign = True
@@ -2342,12 +2333,22 @@ class XMLCommand(Element):
         """
 
         docstr = textwrap.indent(
-            f'\nr"""{self.py_docstring(custom_functions)}\n"""', prefix=indent + " " * 4
+            f'r"""{self.py_docstring(custom_functions)}\n"""', prefix=indent + " " * 4
         )
         if custom_functions is not None and self.py_name in custom_functions.lib_import:
-            out = f"{''.join(custom_functions.lib_import[self.py_name])}\n{self.py_signature(indent)}{docstr}\n{self.py_source(custom_functions, indent)}"  # noqa : E501
+            imports = "\n".join(custom_functions.lib_import[self.py_name])
+            out = f"""
+{imports}
+{self.py_signature(indent)}
+{docstr}
+{self.py_source(custom_functions, indent)}
+"""
         else:
-            out = f"{self.py_signature(indent)}{docstr}\n{self.py_source(custom_functions, indent)}"
+            out = f"""
+{self.py_signature(indent)}
+{docstr}
+{self.py_source(custom_functions, indent)}
+"""
         return out
 
 

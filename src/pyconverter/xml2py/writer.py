@@ -32,7 +32,12 @@ from pyconverter.xml2py.custom_functions import CustomFunctions
 from pyconverter.xml2py.directory_format import get_paths
 from pyconverter.xml2py.download import download_template
 import pyconverter.xml2py.utils.regex_pattern as pat
-from pyconverter.xml2py.utils.utils import create_name_map, get_config_data_value, import_handler
+from pyconverter.xml2py.utils.utils import (
+    create_name_map,
+    get_config_data_value,
+    get_refentry,
+    import_handler,
+)
 import regex as re
 from tqdm import tqdm
 
@@ -46,8 +51,7 @@ CONST = {
 }
 
 # XML commands to skip
-SKIP_XML = {"*IF", "*ELSE", "C***", "*RETURN", "*DEL"}
-SKIP_PYCOMMAND = {"if", "else", "c", "return", "del"}
+SKIP_XML = {"*IF", "*ELSE", "*RETURN", "*DEL"}  # Equivalent to if, else, return, del
 
 
 def convert(directory_path):
@@ -116,9 +120,12 @@ def convert(directory_path):
 
         xml_commands = []
         for filename in tqdm(filenames, desc=desc):
-            try:
+            # If ``get_refentry`` returns an empty list, the file is not a command file
+            refentry = get_refentry(filename)
+            if len(refentry) > 0:
                 command = ast.XMLCommand(
                     filename,
+                    refentry[0],
                     terms,
                     docu_global,
                     version_variables,
@@ -146,9 +153,6 @@ def convert(directory_path):
                             typename = re.findall(pat.get_typename_1opt, ref)[0]
                         command.group = [classname[0], typename]
                         command.is_archived = True
-            except RuntimeError:
-                # The file is not a command file.
-                continue
 
         return {cmd.name: cmd for cmd in xml_commands}
 
@@ -385,13 +389,13 @@ def write_source(
         custom_functions = None
 
     if template_path is None:
-        print("The default template will be used to create the new package.")
+        logging.info("The default template will be used to create the new package.")
         template_path = os.path.join(os.getcwd(), "_package")
         if not os.path.isdir(template_path):
             download_template()
 
     new_package_name = get_config_data_value(config_path, "new_package_name")
-    print(f"Creating package {new_package_name}...")
+    logging.info(f"Creating package {new_package_name}...")
     new_package_path = os.path.join(target_path, new_package_name)
 
     if clean:
@@ -471,12 +475,12 @@ def write_source(
 
     for command_name in name_map.keys():
         if command_name not in all_commands:
-            print(f"{command_name} is not in the structure map")
+            logging.info(f"{command_name} is not in the structure map")
 
     write_global__init__file(library_path)
     write__init__file(library_path)
 
-    print(f"Commands written to {library_path}")
+    logging.info(f"Commands written to {library_path}")
 
     # copy package files to the package directory
     copy_template_package(template_path, new_package_path, clean)
@@ -536,8 +540,7 @@ API documentation
         ):
             module_title = module_folder_name.replace("_", " ").capitalize()
             module_folder = os.path.join(doc_package_path, f"{module_folder_name}")
-            if not os.path.isdir(module_folder):
-                os.makedirs(module_folder)
+            os.makedirs(module_folder, exist_ok=True)
             module_file = os.path.join(module_folder, f"index.rst")
             with open(module_file, "w") as fid:
                 fid.write(

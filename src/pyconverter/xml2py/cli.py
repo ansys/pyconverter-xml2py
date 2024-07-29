@@ -22,6 +22,7 @@
 
 """Command Line Interface for PyConverter-XML2Py."""
 
+import logging
 import os
 
 import click
@@ -65,9 +66,12 @@ def create_package(xml_path=None, functions_path=None, target_path=None, templat
             )
 
     if functions_path is None:
-        print(
-            "No customized functions path was entered. The default code generation will be applied to all the commands.",  # noqa : E501
-            "You can specify the customized functions by adding a path to the --func-path argument.",  # noqa : E501
+        logging.info(
+            """
+            No customized functions path was entered. The default code generation will be applied
+            to all the commands. You can specify the customized functions by adding a path to the
+            --func-path argument.
+            """
         )
 
     else:

@@ -10,6 +10,7 @@ rules:
 
 specific_command_mapping:
   "*DEL": stardel
+  "C***": c
 
 specific_classes:
   2D to 3D Analysis: Analysis 2D to 3D
