@@ -127,12 +127,12 @@ def convert(directory_path):
                 if meta_only == False:
                     refnamediv = command.get_children_by_type("Refnamediv")[0]
                     ref = str(refnamediv.get_children_by_type("Refclass")[0])
-                    try:
-                        ref = re.findall(r"(?<=&)(.*?)(?=;)", ref)[0]
-                        if ref == "xtycadimport":
-                            continue  # CAD imports need to be handdled differently
-                        command.group = terms[ref]
-                    except IndexError:
+                    group = re.findall(r"(?<=&)(.*?)(?=;)", ref)
+                    if len(group) > 0:
+                        if group[0] == "xtycadimport":
+                            continue  # CAD imports need to be handdled differently -- LOGGER here
+                        command.group = terms[group[0]]
+                    else:
                         classname = re.findall(r"(.*?)(?=:)", ref)
                         if "" in classname:
                             classname.remove("")
@@ -146,6 +146,7 @@ def convert(directory_path):
                         command.group = command_group
                         command.is_archived = True
             except RuntimeError:
+                # The file is not a command file.
                 continue
 
         return {cmd.name: cmd for cmd in xml_commands}
@@ -391,6 +392,7 @@ def write_source(
             download_template()
 
     new_package_name = get_config_data_value(config_path, "new_package_name")
+    print(f"Creating package {new_package_name}...")
     new_package_path = os.path.join(target_path, new_package_name)
 
     if clean:
@@ -403,7 +405,6 @@ def write_source(
         os.makedirs(library_path)
 
     module_name_list = []
-
     if structured == False:
         package_structure = None
         for initial_command_name, command_obj in tqdm(command_map.items(), desc="Writing commands"):
@@ -412,12 +413,11 @@ def write_source(
             python_name = name_map[initial_command_name]
             module_name_list.append(python_name)
             path = os.path.join(library_path, f"{python_name}.py")
-            with open(path, "w", encoding="utf-8") as fid:
-                python_method = command_obj.to_python(custom_functions)
-                fid.write(f"{python_method}\n")
-
+            python_method = command_obj.to_python(custom_functions)
             try:
-                exec(command_obj.to_python(custom_functions))
+                exec(python_method)
+                with open(path, "w", encoding="utf-8") as fid:
+                    fid.write(f"{python_method}\n")
             except:
                 raise RuntimeError(f"Failed to execute {python_name}.py") from None
 
@@ -427,8 +427,7 @@ def write_source(
         package_structure = {}
         all_commands = []
         specific_classes = get_config_data_value(config_path, "specific_classes")
-
-        for command in command_map.values():
+        for command in tqdm(command_map.values(), desc="Writing commands"):
             if command.name in SKIP_XML or command.group is None:
                 continue
             initial_module_name, initial_class_name = command.group
@@ -596,12 +595,17 @@ API documentation
                 os.makedirs(module_folder)
             module_file = os.path.join(module_folder, f"index.rst")
             with open(module_file, "w") as fid:
-                fid.write(f".. _ref_{module_folder_name}:\n\n")
-                fid.write(f"{module_title}\n")
-                fid.write("=" * len(module_title) + "\n\n")
-                fid.write(f".. toctree::\n")
-                fid.write(f"   :maxdepth: 2\n")
-                fid.write(f"   :hidden:\n\n")
+                fid.write(f"""
+.. _ref_{module_folder_name}:
+
+{module_title}
+{"="*len(module_title)}
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+
+""")
                 for class_file_name in class_map.keys():
                     fid.write(f"   {class_file_name}\n")
             for class_file_name, (class_name, method_list)  in class_map.items():

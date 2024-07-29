@@ -22,6 +22,7 @@
 
 import pyconverter.xml2py.ast_tree as ast
 import yaml
+import os
 
 
 def parse_yaml(yaml_path):
@@ -53,29 +54,27 @@ def get_config_data_value(yaml_path, value):
         Key to search for in the YAML file.
     """
     config_data = parse_yaml(yaml_path)
-    return  config_data.get(value, None)
+    return config_data.get(value)
 
 
 def create_name_map(meta_command, yaml_file_path):
     # convert all to flat and determine number of occurances
-    proc_names = []
+    naive_names = []
     rules = get_config_data_value(yaml_file_path, "rules")
-    for cmd_name in meta_command:
-        cmd_name = cmd_name.lower()
-        if not cmd_name[0].isalnum():
-            cmd_name = cmd_name[1:]
-        proc_names.append(cmd_name)
-
-    # reserved command mapping
-    COMMAND_MAPPING = {"*DEL": "stardel"}
+    specific_command_mapping = get_config_data_value(yaml_file_path, "specific_command_mapping")
+    for ans_name in meta_command:
+        ans_name = ans_name.lower()
+        if not ans_name[0].isalnum():
+            ans_name = ans_name[1:]
+        naive_names.append(ans_name)
 
     # map command to pycommand function
     name_map = {}
 
     # second pass for each name
     for ans_name in meta_command:
-        if ans_name in COMMAND_MAPPING:
-            py_name = COMMAND_MAPPING[ans_name]
+        if ans_name in specific_command_mapping:
+            py_name = specific_command_mapping[ans_name]
         else:
             lower_name = ans_name.lower()
             if not lower_name[0].isalnum():
@@ -83,8 +82,8 @@ def create_name_map(meta_command, yaml_file_path):
             else:
                 alpha_name = lower_name
 
-            if proc_names.count(alpha_name) != 1:
-                if rules:  # need to get it from config file
+            if naive_names.count(alpha_name) > 1:
+                if rules:
                     py_name = lower_name
                     for rule_name, rule in rules.items():
                         py_name = py_name.replace(rule_name, rule)
@@ -118,3 +117,26 @@ def import_handler(filename, additional_content, findalls):
         content = f.read()
         f.seek(0, 0)
         f.write(needed_imports + content + additional_content)
+
+# ############################################################################
+# AST functions
+# ############################################################################
+
+def split_trail_alpha(text):
+    """Split a string based on the last tailing non-alphanumeric character."""
+    for ii, char in enumerate(text):
+        if not char.isalnum():
+            break
+
+    ii += 1
+
+    return text[:ii], text[ii:]
+
+
+def is_numeric(text):
+    """Return ``True`` when a string is numeric."""
+    try:
+        float(text)
+        return True
+    except ValueError:
+        return False

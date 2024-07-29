@@ -8,5 +8,8 @@ rules:
   "/": slash
   "*": star
 
+specific_command_mapping:
+  "*DEL": stardel
+
 specific_classes:
   2D to 3D Analysis: Analysis 2D to 3D

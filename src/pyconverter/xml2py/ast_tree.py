@@ -28,6 +28,8 @@ import warnings
 from lxml.etree import tostring
 from lxml.html import fromstring
 
+from .utils import is_numeric, split_trail_alpha
+
 CONV_EQN = False
 
 if CONV_EQN:
@@ -79,94 +81,10 @@ def to_py_name(name, name_map=None):
     if name_map is not None:
         global NAME_MAP_GLOB
         NAME_MAP_GLOB = name_map
-    try:
-        py_name = NAME_MAP_GLOB[name]
-    except:
-        py_name = name
-        print("not documented : ", name)
-    return py_name
-
-
-# ############################################################################
-# AST functions
-# ############################################################################
-
-
-def multireplace(string, replacements, ignore_case=False):
-    """Given a string and a replacement map, return the replaced string.
-
-    Parameters
-    ----------
-    string : str
-        String to execute replacements on.
-
-    replacements : dict
-        Replacement dictionary {value to find: value to replace}.
-
-    ignore_case : bool, optional
-        Whether the match should be case insensitive. The default value is ``False``.
-
-    Returns
-    -------
-    str
-        Replaced string.
-    """
-    if not replacements:
-        # Edge case that'd produce a funny regex and cause a KeyError
-        return string
-
-    # If case insensitive, we need to normalize the old string so that later a replacement
-    # can be found. For instance with {"HEY": "lol"} we should match and find a replacement for
-    # "hey", "HEY", "hEy", etc.
-    if ignore_case:
-
-        def normalize_old(s):
-            return s.lower()
-
-        re_mode = re.IGNORECASE
-
+    if name in NAME_MAP_GLOB:
+        return NAME_MAP_GLOB[name]
     else:
-
-        def normalize_old(s):
-            return s
-
-        re_mode = 0
-
-    replacements = {normalize_old(key): val for key, val in replacements.items()}
-
-    # Place longer ones first to keep shorter substrings from matching where the longer ones
-    # should take place.
-    # For instance given the replacements {'ab': 'AB', 'abc': 'ABC'} against the string 'hey abc',
-    # it should produce 'hey ABC' and not 'hey ABc'
-    rep_sorted = sorted(replacements, key=len, reverse=True)
-    rep_escaped = map(re.escape, rep_sorted)
-
-    # Create a big OR regex that matches any of the substrings to replace.
-    pattern = re.compile("|".join(rep_escaped), re_mode)
-
-    # For each match, look up the new string in the replacements, being the key the normalized
-    # old string.
-    return pattern.sub(lambda match: replacements[normalize_old(match.group(0))], string)
-
-
-def split_trail_alpha(text):
-    """Split a string based on the last tailing non-alphanumeric character."""
-    for ii, char in enumerate(text):
-        if not char.isalnum():
-            break
-
-    ii += 1
-
-    return text[:ii], text[ii:]
-
-
-def is_numeric(text):
-    """Return ``True`` when a string is numeric."""
-    try:
-        float(text)
-        return True
-    except ValueError:
-        return False
+        return name
 
 
 # ############################################################################
@@ -1948,7 +1866,7 @@ class ProductName(Element):
 
 class XMLCommand(Element):
     """Provides the XML command from the documentation."""
-
+    
     def __init__(
         self,
         filename,
@@ -1975,7 +1893,8 @@ class XMLCommand(Element):
         try:
             self._refentry = next(root.iterfind(".//refentry"))
         except StopIteration:
-            raise RuntimeError("Not a command file")
+            logging.warning(f"File {filename} is not a command file.")
+            raise RuntimeError("The provided file is not a command file.")
 
         # parse the command
         super().__init__(self._refentry, parse_children=not meta_only)
@@ -2293,7 +2212,11 @@ class XMLCommand(Element):
 
         docstr = re.sub(r"bgcolor=\S\S\S\S\S\S\S\S\S\S?", "", docstr)
         docstr = re.sub(r"_cellfont Shading=\S\S\S\S\S\S\S\S", "", docstr)
-
+        
+        if self.is_archived == True:
+            logging.info(f"{self.name} is an archived command.")
+            docstr = docstr + "\n\n.. warning::\n\n    This command is archived in the latest version of the software.\n"
+        
         return docstr
 
     @property
