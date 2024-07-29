@@ -27,8 +27,7 @@ import warnings
 
 from lxml.etree import tostring
 from lxml.html import fromstring
-
-from .utils import is_numeric, split_trail_alpha
+from pyconverter.xml2py.utils.utils import is_numeric, split_trail_alpha
 
 CONV_EQN = False
 

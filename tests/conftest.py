@@ -25,7 +25,7 @@ import os
 from pyconverter.xml2py.custom_functions import CustomFunctions
 import pyconverter.xml2py.directory_format as ff
 import pyconverter.xml2py.load_xml_doc as lxd
-from pyconverter.xml2py.utils import get_config_data_value
+from pyconverter.xml2py.utils.utils import get_config_data_value
 import pyconverter.xml2py.writer as wrt
 import pytest
 

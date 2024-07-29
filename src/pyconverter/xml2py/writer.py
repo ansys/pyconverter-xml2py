@@ -21,15 +21,18 @@
 # SOFTWARE.
 
 import glob
+import logging
 import os
 import shutil
+import sys
 
 from pyconverter.xml2py import ast_tree as ast
 from pyconverter.xml2py import load_xml_doc as load
 from pyconverter.xml2py.custom_functions import CustomFunctions
 from pyconverter.xml2py.directory_format import get_paths
 from pyconverter.xml2py.download import download_template
-from pyconverter.xml2py.utils import create_name_map, get_config_data_value, import_handler
+import pyconverter.xml2py.utils.regex_pattern as pat
+from pyconverter.xml2py.utils.utils import create_name_map, get_config_data_value, import_handler
 import regex as re
 from tqdm import tqdm
 
@@ -127,23 +130,21 @@ def convert(directory_path):
                 if meta_only == False:
                     refnamediv = command.get_children_by_type("Refnamediv")[0]
                     ref = str(refnamediv.get_children_by_type("Refclass")[0])
-                    group = re.findall(r"(?<=&)(.*?)(?=;)", ref)
+                    group = re.findall(pat.get_group, ref)
                     if len(group) > 0:
                         if group[0] == "xtycadimport":
+                            logging.warning(f"CAD command - {command.name} will not be converted.")
                             continue  # CAD imports need to be handdled differently -- LOGGER here
                         command.group = terms[group[0]]
                     else:
-                        classname = re.findall(r"(.*?)(?=:)", ref)
-                        if "" in classname:
-                            classname.remove("")
+                        classname = re.findall(pat.get_classname, ref)
                         if len(classname) > 1:
-                            typename = re.findall(r"(?<=:)(.*?)(?=[A-Z][A-Z])", classname[1])[
+                            typename = re.findall(pat.get_typename_2opt, ref)[
                                 0
-                            ]  # the function will only appear in one module (example with CECYC)
+                            ]  # the function is defined in the first module (example with CECYC)
                         else:
-                            typename = re.findall(r"(?<=:)(.*)", ref)[0]
-                        command_group = [classname[0], typename]
-                        command.group = command_group
+                            typename = re.findall(pat.get_typename_1opt, ref)[0]
+                        command.group = [classname[0], typename]
                         command.is_archived = True
             except RuntimeError:
                 # The file is not a command file.
@@ -179,7 +180,7 @@ def convert(directory_path):
     return command_map, name_map, links, version_variables
 
 
-def copy_template_package(template_path, new_package_path, clean=False, include_hidden=False):
+def copy_template_package(template_path, new_package_path, clean=False):
     """
     Add files and directory from a template directory path to a new path.
 
@@ -195,10 +196,6 @@ def copy_template_package(template_path, new_package_path, clean=False, include_
         Whether the directories in the path for the new package must be cleared before adding
         new files. The default is ``False``.
 
-    include_hidden : bool, optional
-        Whether to handle hidden files automatically when the Python version is 3.11 or later.
-        The default is ``False``.
-
     Returns
     -------
     str
@@ -206,16 +203,22 @@ def copy_template_package(template_path, new_package_path, clean=False, include_
         ``xml-commands`` package.
 
     """
-    # For Python version >= 3.11, glob.glob() handles it if include_hidden=True.
-    if include_hidden is True:
-        try:  # Python 3.11 or later
-            filename_list = glob.glob(
-                os.path.join(template_path, "*"), recursive=True, include_hidden=True
-            )
-        except:
-            filename_list = glob.glob(os.path.join(template_path, "*"), recursive=True)
+    # .vale.ini and .gitignore are hidden files.
+    if sys.version_info.major == 3 and sys.version_info.minor >= 11:
+        filename_list = glob.glob(
+            os.path.join(template_path, "*"), recursive=True, include_hidden=True
+        )
     else:
+        # Manually copying .vale.ini and .gitignore
         filename_list = glob.glob(os.path.join(template_path, "*"), recursive=True)
+        vale_path = ["doc", ".vale.ini"]
+        gitignore_path = ["doc", "styles", ".gitignore"]
+        hidden_path = [vale_path, gitignore_path]
+        for hpath in hidden_path:
+            hidden_template = os.path.join(template_path, *hpath)
+            hidden_new_path = os.path.join(new_package_path, *hpath)
+            if os.path.isfile(hidden_template) and not os.path.isfile(hidden_new_path):
+                shutil.copy(hidden_template, hidden_new_path)
 
     for filename in filename_list:
         split_name_dir = filename.split(os.path.sep)
@@ -232,19 +235,8 @@ def copy_template_package(template_path, new_package_path, clean=False, include_
         else:
             shutil.copy(filename, new_package_path)
 
-    if include_hidden is False:
-        # .vale.ini and .gitignore are hidden files.
-        vale_path = ["doc", ".vale.ini"]
-        gitignore_path = ["doc", "styles", ".gitignore"]
-        hidden_path = [vale_path, gitignore_path]
-        for hpath in hidden_path:
-            hidden_template = os.path.join(template_path, *hpath)
-            hidden_new_path = os.path.join(new_package_path, *hpath)
-            if os.path.isfile(hidden_template) and not os.path.isfile(hidden_new_path):
-                shutil.copy(hidden_template, hidden_new_path)
 
-
-def write_global__init__file(library_path, module_name_list):
+def write_global__init__file(library_path):
     """
     Write the __init__.py file for the package generated.
 
@@ -265,7 +257,6 @@ def write_global__init__file(library_path, module_name_list):
         The default value is ``None``.
     """
     mod_file = os.path.join(library_path, "__init__.py")
-    # TODO: needs to be modified due to the new structure
 
     with open(mod_file, "w") as fid:
         fid.write(f"from . import (\n")
@@ -283,6 +274,14 @@ def write_global__init__file(library_path, module_name_list):
 
 
 def write__init__file(library_path):
+    """ "
+    Write the __init__.py file within each module directory.
+
+    Parameters
+    ----------
+    library_path : str
+        Path to the directory containing the generated package.
+    """
 
     for dir in os.listdir(library_path):
         if os.path.isdir(os.path.join(library_path, dir)):
@@ -404,14 +403,12 @@ def write_source(
     if not os.path.isdir(library_path):
         os.makedirs(library_path)
 
-    module_name_list = []
     if structured == False:
         package_structure = None
         for initial_command_name, command_obj in tqdm(command_map.items(), desc="Writing commands"):
             if initial_command_name in SKIP_XML:
                 continue
             python_name = name_map[initial_command_name]
-            module_name_list.append(python_name)
             path = os.path.join(library_path, f"{python_name}.py")
             python_method = command_obj.to_python(custom_functions)
             try:
@@ -457,8 +454,8 @@ def write_source(
             with open(file_path, "a", encoding="utf-8") as fid:
                 python_method = command.to_python(custom_functions, indent="    ")
                 # check if there are any imports before the function definition.
-                str_before_def = re.findall(r"[\s\S]*?(?=def)", python_method)[0]
-                output = re.findall(r"((import|from) [^\n]*)", str_before_def)
+                str_before_def = re.findall(pat.before_def, python_method)[0]
+                output = re.findall(pat.get_imports, str_before_def)
                 if len(output) == 0:
                     fid.write(f"{python_method}\n")
                     fid.close()
@@ -472,60 +469,11 @@ def write_source(
         except Exception as e:
             raise RuntimeError(f"Failed to execute '{python_method}' from '{file_path}'.") from e
 
-        # for module_name, class_map in tqdm(structure_map.items(), desc="Writing commands..."):
-        #     module_name = module_name.replace(" ", "_").lower()
-        #     module_path = os.path.join(library_path, module_name)
-        #     if not os.path.isdir(module_path):
-        #         os.makedirs(module_path)
-        #     module_name_list.append(module_name)
-        #     class_structure = {}
-        #     for initial_class_name, method_list in class_map.items():
-        #         additional_imports = None
-        #         if initial_class_name in specific_classes.keys():
-        #             specific_class_dict = specific_classes[initial_class_name]
-        #             class_name = specific_class_dict["class_name"]
-        #             file_name = specific_class_dict["file_name"]
-        #             file_path = os.path.join(module_path, f"{file_name}.py")
-        #             if "additional_imports" in specific_class_dict.keys():
-        #                 additional_imports = specific_class_dict["additional_imports"]
-        #         else:
-        #             class_name = initial_class_name.title().replace(" ", "").replace("/","")
-        #             file_name = initial_class_name.replace(" ", "_").replace("/","_").lower()
-        #             file_path = os.path.join(module_path, f"{file_name}.py")
-        #         with open(file_path, "w", encoding="utf-8") as fid:
-        #             if additional_imports is not None:
-        #                 library_imports = additional_imports["library_imports"]
-        #                 for library_import in library_imports:
-        #                     fid.write(f"{library_import}\n")
-        #                 fid.write("\n")
-        #                 class_name_with_parent = additional_imports["class_name_with_parent"]
-        #                 fid.write(f"class {class_name_with_parent}:\n")
-        #             else:
-        #                 fid.write(f"class {class_name}:\n")
-        #             methods_structure = []
-        #             for initial_command_name in method_list:
-        #                 if initial_command_name in SKIP_XML:
-        #                     continue
-        #                 command_obj = command_map[initial_command_name]
-        #                 python_method = command_obj.to_python(custom_functions, indent='    ')
-        #                 methods_structure.append(name_map[initial_command_name])
-        #                 all_commands.append(initial_command_name)
-        #                 fid.write(f"{python_method}\n")
-        #         fid.close()
-        #         try:
-        #             subprocess.run(["python", str(file_path)])
-        #         except:
-        #             print(python_method)
-        #             raise RuntimeError(f"Failed to execute {file_path}") from None
-
-        #         class_structure[file_name] = [class_name, methods_structure]
-        #     package_structure[module_name] = class_structure
-
     for command_name in name_map.keys():
         if command_name not in all_commands:
             print(f"{command_name} is not in the structure map")
 
-    write_global__init__file(library_path, module_name_list)
+    write_global__init__file(library_path)
     write__init__file(library_path)
 
     print(f"Commands written to {library_path}")
@@ -547,9 +495,6 @@ def write_docs(package_path, package_structure=None, config_path="config.yaml"):
 
     package_path : str
         Path to the new package folder.
-
-    module_name_list : list
-        List of module names created.
 
     package_structure :
         Dictionary with the following format:
