@@ -203,7 +203,7 @@ class Element:
         """ID of the element."""
         return self._element.get("id")
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
@@ -211,20 +211,20 @@ class Element:
                 if item.tag in item_needing_all:
                     items.append(
                         item.to_rst(
-                            prefix,
+                            indent,
                             links=links,
                             base_url=base_url,
                             fcache=fcache,
                         )
                     )
                 elif item.tag in item_needing_links_base_url:
-                    items.append(item.to_rst(prefix, links=links, base_url=base_url))
+                    items.append(item.to_rst(indent, links=links, base_url=base_url))
                 elif item.tag in item_needing_fcache:
-                    items.append(item.to_rst(prefix=prefix, fcache=fcache))
+                    items.append(item.to_rst(indent=indent, fcache=fcache))
                 else:
-                    items.append(item.to_rst(prefix=prefix))
+                    items.append(item.to_rst(indent=indent))
             else:
-                items.append(prefix + str(item))
+                items.append(indent + str(item))
         return " ".join(items)
 
     def rec_find(self, _type, terms=None):
@@ -288,21 +288,21 @@ class ItemizedList(Element):
     def __repr__(self):
         return "\n".join([f"* {str(item).strip()}" for item in self])
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         lines = []
         for item in self:
             if isinstance(item, Element):
                 if item.tag in item_needing_all:
                     item_lines = item.to_rst(
-                        prefix, links=links, base_url=base_url, fcache=fcache
+                        indent, links=links, base_url=base_url, fcache=fcache
                     ).splitlines()
                 elif item.tag in item_needing_links_base_url:
-                    item_lines = item.to_rst(prefix, links=links, base_url=base_url).splitlines()
+                    item_lines = item.to_rst(indent, links=links, base_url=base_url).splitlines()
                 elif item.tag in item_needing_fcache:
-                    item_lines = item.to_rst(prefix=prefix, fcache=fcache).splitlines()
+                    item_lines = item.to_rst(indent=indent, fcache=fcache).splitlines()
                 else:
-                    item_lines = item.to_rst(prefix)
+                    item_lines = item.to_rst(indent)
             else:
                 item_lines = str(item).splitlines()
 
@@ -312,10 +312,10 @@ class ItemizedList(Element):
                     if isinstance(item_lines, Element)
                     else str(item_lines[0])
                 )
-                lines.append(textwrap.indent(line, prefix + "* "))
+                lines.append(textwrap.indent(line, indent + "* "))
                 for line in item_lines[1:]:
-                    text = line.to_rst(prefix) if isinstance(line, Element) else str(line)
-                    lines.append(textwrap.indent(text, prefix + "  "))
+                    text = line.to_rst(indent) if isinstance(line, Element) else str(line)
+                    lines.append(textwrap.indent(text, indent + "  "))
             else:
                 lines.extend(item_lines)
 
@@ -336,32 +336,19 @@ class Member(Element):
 
     pass
 
-    # def to_rst(self, prefix=''):
-    #     text = super().to_rst(prefix)
-    #     return text.replace('\n', '')
-
-    # def to_rst(self, prefix=""):
-    #     items = []
-    #     for item in self:
-    #         if isinstance(item, Element):
-    #             items.append(item.to_rst(prefix))
-    #         else:
-    #             items.append(str(item))
-    #     return " ".join(items)
-
 
 class OrderedList(Element):
     """Provides the ordered list element."""
 
-    def to_rst(self, prefix="", links=None, base_url=None):
+    def to_rst(self, indent="", links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
-        prefix += "    "
+        indent += "    "
         ordered_list = []
         for item in self:
             if item.tag in item_needing_links_base_url:
-                rst_item = item.to_rst(prefix, links=links, base_url=base_url)
+                rst_item = item.to_rst(indent, links=links, base_url=base_url)
             else:
-                rst_item = item.to_rst(prefix)
+                rst_item = item.to_rst(indent)
             ordered_list.append(rst_item)
         return "\n".join(ordered_list)
 
@@ -369,7 +356,7 @@ class OrderedList(Element):
 class ListItem(Element):
     """Provides the list item element."""
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
@@ -377,18 +364,18 @@ class ListItem(Element):
                 if item.tag in item_needing_all:
                     items.append(
                         item.to_rst(
-                            prefix,
+                            indent,
                             links=links,
                             base_url=base_url,
                             fcache=fcache,
                         )
                     )
                 elif item.tag in item_needing_links_base_url:
-                    items.append(item.to_rst(prefix, links=links, base_url=base_url))
+                    items.append(item.to_rst(indent, links=links, base_url=base_url))
                 elif item.tag in item_needing_fcache:
-                    items.append(item.to_rst(prefix=prefix, fcache=fcache))
+                    items.append(item.to_rst(indent=indent, fcache=fcache))
                 else:
-                    items.append(item.to_rst(prefix))
+                    items.append(item.to_rst(indent))
             else:
                 items.append(str(item))
         return "\n".join(items)
@@ -397,7 +384,7 @@ class ListItem(Element):
 class FileName(Element):
     """Provides the filename element."""
 
-    def to_rst(self, prefix=""):
+    def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
         return f"``{self[0]}`` {self.tail}"
 
@@ -418,7 +405,7 @@ class OLink(Element):
         """Value for the ``targetdoc`` parameter contained in the OLink element."""
         return self.get("targetdoc")
 
-    def to_rst(self, prefix="", links=None, base_url=None):
+    def to_rst(self, indent="", links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
         key = f"{self.targetptr}"
         if (links or base_url) is None:
@@ -442,7 +429,7 @@ class OLink(Element):
         # else:
         #     print(self.targetptr)
 
-        return super().to_rst(prefix)
+        return super().to_rst(indent)
 
 
 class Paragraph(Element):
@@ -454,7 +441,7 @@ class Paragraph(Element):
         lines.append("\n")
         return "".join(lines)
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
@@ -463,7 +450,7 @@ class Paragraph(Element):
                     items.append(
                         "\n\n"
                         + item.to_rst(
-                            prefix=prefix,
+                            indent=indent,
                             links=links,
                             base_url=base_url,
                             fcache=fcache,
@@ -473,18 +460,18 @@ class Paragraph(Element):
                     if item.tag in item_needing_all:
                         items.append(
                             item.to_rst(
-                                prefix=prefix,
+                                indent=indent,
                                 links=links,
                                 base_url=base_url,
                                 fcache=fcache,
                             )
                         )
                     elif item.tag in item_needing_links_base_url:
-                        items.append(item.to_rst(prefix=prefix, links=links, base_url=base_url))
+                        items.append(item.to_rst(indent=indent, links=links, base_url=base_url))
                     elif item.tag in item_needing_fcache:
-                        items.append(item.to_rst(prefix=prefix, fcache=fcache))
+                        items.append(item.to_rst(indent=indent, fcache=fcache))
                     else:
-                        items.append(item.to_rst(prefix=prefix))
+                        items.append(item.to_rst(indent=indent))
             else:
                 items.append(str(item))
 
@@ -529,7 +516,7 @@ class Emphasis(Element):
         """Return the role parameter value contained in the Emphasis element."""
         return self._element.get("role")
 
-    def to_rst(self, prefix="", links=None, base_url=None):
+    def to_rst(self, indent="", links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
 
         if self.role == "bold":
@@ -547,9 +534,9 @@ class Emphasis(Element):
         for item in self[1:]:
             if isinstance(item, Element):
                 if item.tag in item_needing_links_base_url:
-                    items.append(item.to_rst(prefix, links=links, base_url=base_url))
+                    items.append(item.to_rst(indent, links=links, base_url=base_url))
                 else:
-                    items.append(item.to_rst(prefix))
+                    items.append(item.to_rst(indent))
             else:
                 items.append(str(item))
 
@@ -625,7 +612,7 @@ class Replaceable(Element):
 
         return f"``{self.content[0].lower()}={parm}`` {tail}"
 
-    def to_rst(self, prefix=""):
+    def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
         if isinstance(self.prev_elem, Command):
             if any([self.content[0] in arg for arg in self.prev_elem.args]):
@@ -645,16 +632,16 @@ class ProgramListing(Element):
             return "\n".join(str(item) for item in self.content)
         return self._element.text
 
-    def to_rst(self, prefix=""):
+    def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
-        header = f"\n\n{prefix}.. code::\n\n"
-        return header + textwrap.indent(self.source, prefix + " " * 3) + "\n"
+        header = f"\n\n{indent}.. code::\n\n"
+        return header + textwrap.indent(self.source, indent + " " * 3) + "\n"
 
 
 class Variablelist(Element):
     """Provides the variable list."""
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         active_items = []
         for item in self:
@@ -664,18 +651,18 @@ class Variablelist(Element):
                 if item.tag in item_needing_all:
                     active_items.append(
                         item.to_rst(
-                            prefix,
+                            indent,
                             links=links,
                             base_url=base_url,
                             fcache=fcache,
                         )
                     )
                 elif item.tag in item_needing_links_base_url:
-                    active_items.append(item.to_rst(prefix, links=links, base_url=base_url))
+                    active_items.append(item.to_rst(indent, links=links, base_url=base_url))
                 elif item.tag in item_needing_fcache:
-                    active_items.append(item.to_rst(prefix=prefix, fcache=fcache))
+                    active_items.append(item.to_rst(indent=indent, fcache=fcache))
                 else:
-                    active_items.append(item.to_rst(prefix))
+                    active_items.append(item.to_rst(indent))
             else:
                 active_items.append(str(item))
         return "\n".join(active_items) + "\n"
@@ -689,7 +676,7 @@ class Variablelist(Element):
 class RefSection(Element):
     """Provides the reference section element."""
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self[1:]:
@@ -697,18 +684,18 @@ class RefSection(Element):
                 if item.tag in item_needing_all:
                     items.append(
                         item.to_rst(
-                            prefix=prefix,
+                            indent=indent,
                             links=links,
                             base_url=base_url,
                             fcache=fcache,
                         )
                     )
                 elif item.tag in item_needing_links_base_url:
-                    items.append(item.to_rst(prefix=prefix, links=links, base_url=base_url))
+                    items.append(item.to_rst(indent=indent, links=links, base_url=base_url))
                 elif item.tag in item_needing_fcache:
-                    items.append(item.to_rst(prefix=prefix, fcache=fcache))
+                    items.append(item.to_rst(indent=indent, fcache=fcache))
                 else:
-                    items.append(item.to_rst(prefix=prefix))
+                    items.append(item.to_rst(indent=indent))
             else:
                 items.append(str(item))
         return "\n".join(items)
@@ -828,16 +815,16 @@ class VarlistEntry(Element):
             rst = ". ".join(valid)
         return rst
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
-        prefix += "    "
+        indent += "    "
         # if this is a parameter arg
         if self.is_arg:
             lines = [f"{self.py_term(links=links, base_url=base_url)}"]
             lines.append(
                 textwrap.indent(
                     self.py_text(links=links, base_url=base_url, fcache=fcache),
-                    prefix,
+                    indent,
                 )
             )
             return "\n".join(lines)
@@ -846,7 +833,7 @@ class VarlistEntry(Element):
         # term_text = term_text[0] + '\n' + textwrap.indent('\n'.join(term_text[1:]), )
 
         lines = [
-            f"* ``{self.py_term(links=links, base_url=base_url)}`` - {textwrap.indent(self.py_text(links=links, base_url=base_url, fcache=fcache), prefix)}"  # noqa : E501
+            f"* ``{self.py_term(links=links, base_url=base_url)}`` - {textwrap.indent(self.py_text(links=links, base_url=base_url, fcache=fcache), indent)}"  # noqa : E501
         ]
         text = "\n".join(lines)
         # if 'ID number to which this tip belongs' in text:
@@ -857,7 +844,7 @@ class VarlistEntry(Element):
 class Term(Element):
     """Provides the term element."""
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
 
         items = []
@@ -897,7 +884,7 @@ class GuiMenuItem(Element):
 class SuperScript(Element):
     """Provides the superscript element."""
 
-    def to_rst(self, prefix=""):
+    def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
         return f":sup:`{self.content[0]}` {self.tail}"
 
@@ -942,10 +929,10 @@ class _Math(Element):
 class Math(_Math):
     """Provides the math element."""
 
-    def to_rst(self, prefix=""):
+    def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
-        lines = ["", "", f"{prefix}.. math::\n"]
-        lines.append(textwrap.indent(self.equation, prefix=prefix + " " * 4))
+        lines = ["", "", f"{indent}.. math::\n"]
+        lines.append(textwrap.indent(self.equation, prefix=indent + " " * 4))
         lines.append("")
         return "\n".join(lines)
 
@@ -963,7 +950,7 @@ class InlineEquation(_Math):
         """Return the tail of the element as a string."""
         return self.raw.split("</inlineequation>")[-1].replace("\n", "")
 
-    def to_rst(self, prefix=""):
+    def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
         return f":math:`{self.equation.strip()}` {self.tail}"
 
@@ -1014,7 +1001,7 @@ class Link(Element):
     def __repr__(self):
         return str(self.linkend)
 
-    def to_rst(self, prefix="", links=None, base_url=None):
+    def to_rst(self, indent="", links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
         if (links or base_url) is None:
             print("ERROR in the links or the base_url definitions - Link class.")
@@ -1038,7 +1025,7 @@ class XRef(Link):
         """Tail of the element as a string."""
         return " ".join([str(item) for item in self._content])
 
-    def to_rst(self, prefix=""):
+    def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
         # disabled at the moment
         # return f':ref:`{self.linkend}`{self.tail}'
@@ -1060,7 +1047,7 @@ class Screen(Element):
 class Literal(Element):
     """Provides the literal output element."""
 
-    def to_rst(self, prefix=""):
+    def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
         return f"``{self.content[0]}`` {self.tail}"
 
@@ -1068,10 +1055,10 @@ class Literal(Element):
 class Caution(Element):
     """Provides the caution element."""
 
-    def to_rst(self, prefix=""):
+    def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
         lines = ["", "", ".. warning::"]
-        lines.append(textwrap.indent(str(self), prefix=prefix + "   "))
+        lines.append(textwrap.indent(str(self), prefix=indent + "   "))
         return "\n".join(lines)
 
 
@@ -1086,7 +1073,7 @@ class Graphic(Element):
             entityref = entityref.strip()
         return entityref
 
-    def to_rst(self, fcache, prefix=""):
+    def to_rst(self, fcache, indent=""):
         """Return a string to enable converting the element to an RST format."""
 
         if self.entityref is None:
@@ -1100,7 +1087,7 @@ class Graphic(Element):
 
         if self.entityref in fcache:
             filename = fcache[self.entityref]
-            text = f"\n\n{prefix}.. figure:: ../images/{filename}\n"
+            text = f"\n\n{indent}.. figure:: ../images/{filename}\n"
             return text
 
         return ""
@@ -1121,7 +1108,7 @@ class Note(Element):
 class BlockQuote(Element):
     """Provides the block quote element."""
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
@@ -1129,20 +1116,20 @@ class BlockQuote(Element):
                 if item.tag in item_needing_all:
                     items.append(
                         item.to_rst(
-                            prefix,
+                            indent,
                             links=links,
                             base_url=base_url,
                             fcache=fcache,
                         )
                     )
                 elif item.tag in item_needing_links_base_url:
-                    items.append(item.to_rst(prefix, links=links, base_url=base_url))
+                    items.append(item.to_rst(indent, links=links, base_url=base_url))
                 elif item.tag in item_needing_fcache:
-                    items.append(item.to_rst(prefix=prefix, fcache=fcache))
+                    items.append(item.to_rst(indent=indent, fcache=fcache))
                 else:
-                    items.append(item.to_rst(prefix))
+                    items.append(item.to_rst(indent))
             else:
-                items.append(prefix + str(item))
+                items.append(indent + str(item))
         return "\n\n" + " ".join(items) + "\n\n"
 
 
@@ -1233,7 +1220,7 @@ class TGroup(Element):
         """List of the rows in the TBody."""
         return self.find("TBody").find_all("Row")
 
-    def to_rst(self, prefix="", links=None, base_url=None):
+    def to_rst(self, indent="", links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
         l_head = 0
 
@@ -1265,7 +1252,7 @@ class Table(Element):
         """TGroup."""
         return self.find("TGroup")
 
-    def to_rst(self, prefix="", links=None, base_url=None):
+    def to_rst(self, indent="", links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
         lines = []
         if self.title is not None:
@@ -1275,7 +1262,7 @@ class Table(Element):
 
         if self.tgroup is not None:
             a = self.tgroup
-            lines.append(a.to_rst(prefix=prefix, links=links, base_url=base_url))
+            lines.append(a.to_rst(indent=indent, links=links, base_url=base_url))
 
         return "\n".join(lines)
 
@@ -1505,7 +1492,7 @@ class Command(Element):
             ref = f":ref:`{self.py_cmd}`"
         return ref
 
-    def to_rst(self, prefix=""):
+    def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
         if self.args and self.args[0] != "":
             return f"{self.sphinx_cmd} {self.tail_no_args}"
@@ -1516,7 +1503,7 @@ class Command(Element):
 class ComputerOutput(Element):
     """Provides the computer output element."""
 
-    def to_rst(self, prefix=""):
+    def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
         return f"``{self[0]}`` {self[1]}"
 
@@ -1534,12 +1521,12 @@ class Figure(Element):
         """First graphic element found in the figure element."""
         return self.rec_find("Graphic")
 
-    def to_rst(self, prefix="", fcache=None):
+    def to_rst(self, indent="", fcache=None):
         """Return a string to enable converting the element to an RST format."""
         graphic = self.graphic
         if graphic is not None and graphic.entityref is not None:
             lines = []
-            lines.append(graphic.to_rst(prefix=prefix, fcache=fcache))
+            lines.append(graphic.to_rst(indent=indent, fcache=fcache))
             if self.title is not None:
                 lines.append(f"   {self.title}")
 
@@ -1549,11 +1536,11 @@ class Figure(Element):
         for item in self:
             if isinstance(item, Element):
                 if item.tag in item_needing_fcache:
-                    items.append(item.to_rst(prefix=prefix, fcache=fcache))
+                    items.append(item.to_rst(indent=indent, fcache=fcache))
                 else:
-                    items.append(item.to_rst(prefix))
+                    items.append(item.to_rst(indent))
             else:
-                items.append(prefix + str(item))
+                items.append(indent + str(item))
         return "\n" + "".join(items)
 
 
@@ -1685,7 +1672,7 @@ class TBody(Element):
         """ "Return all the row elements found in the TBody element."""
         return self.find_all("Row")
 
-    def to_rst(self, l_head, prefix="", links=None, base_url=None):
+    def to_rst(self, l_head, indent="", links=None, base_url=None):
         """Return a list to enable converting the element to an RST format."""
         rst_rows = []
         for i, row_i in enumerate(self.rows):
@@ -1725,7 +1712,7 @@ class Entry(Element):
         """Value for the ``morerows`` parameter contained in the entry element."""
         return self._element.get("morerows")
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
 
         if self.morerows is not None:
@@ -1735,9 +1722,9 @@ class Entry(Element):
         for item in self:
             if isinstance(item, Element):
                 if item.tag in item_needing_links_base_url:
-                    items.append(item.to_rst(prefix, links=links, base_url=base_url))
+                    items.append(item.to_rst(indent, links=links, base_url=base_url))
                 else:
-                    items.append(item.to_rst(prefix))
+                    items.append(item.to_rst(indent))
             else:
                 items.append(str(item))
 
@@ -1758,7 +1745,7 @@ class Row(Element):
         """Return all entry elements found in the row element."""
         return self.find_all("Entry")
 
-    def to_rst_list(self, prefix="", links=None, base_url=None):
+    def to_rst_list(self, indent="", links=None, base_url=None):
         """Return a list to enable converting the element to an RST format."""
         row = []
         for entry in self.entry:
@@ -1777,7 +1764,7 @@ class THead(Element):
         """Return all row elements found in the THead element."""
         return self.find_all("Row")
 
-    def to_rst(self, prefix="", links=None, base_url=None):
+    def to_rst(self, indent="", links=None, base_url=None):
         """Return a list and the length of the list for converting the element
         to an RST format."""
 
@@ -1979,12 +1966,12 @@ class XMLCommand(Element):
         """Set the group of the command."""
         self._group = group
 
-    def py_signature(self, prefix=""):
+    def py_signature(self, indent=""):
         """Beginning of the Python command's definition."""
         args = ["self"]
         kwargs = [f'{arg}=""' for arg in self.py_args if "--" not in arg]
         arg_sig = ", ".join(args + kwargs)
-        return f"{prefix}def {self.py_name}({arg_sig}, **kwargs):"
+        return f"{indent}def {self.py_name}({arg_sig}, **kwargs):"
 
     def py_docstring(self, custom_functions):
         """Python docstring of the command."""
@@ -2314,7 +2301,7 @@ class XMLCommand(Element):
 
         return "\n".join(lines)
 
-    def py_source(self, custom_functions=None, prefix=""):
+    def py_source(self, custom_functions=None, indent=""):
         """
         Return the Python source.
 
@@ -2331,13 +2318,13 @@ class XMLCommand(Element):
             else:
                 command = 'command = f"' + self.name + '"\n'
             return_command = "return self.run(command, **kwargs)\n"
-            source = textwrap.indent("".join([command, return_command]), prefix=" " * 4 + prefix)
+            source = textwrap.indent("".join([command, return_command]), prefix=" " * 4 + indent)
 
         else:
-            source = textwrap.indent("".join(custom_functions.py_code[self.py_name]), prefix)
+            source = textwrap.indent("".join(custom_functions.py_code[self.py_name]), indent)
         return source
 
-    def to_python(self, custom_functions=None, prefix=""):
+    def to_python(self, custom_functions=None, indent=""):
         """
         Return the complete Python definition of the command.
 
@@ -2346,8 +2333,8 @@ class XMLCommand(Element):
         custom_functions : CustomFunctions, optional
             Custom functions to be added to the command. The default value is None.
 
-        prefix : str, optional
-            Prefix to be added to the command. The default value is "".
+        indent : str, optional
+            Indentation of the Python function. The default value is "".
 
         Returns
         -------
@@ -2356,19 +2343,19 @@ class XMLCommand(Element):
         """
 
         docstr = textwrap.indent(
-            f'\nr"""{self.py_docstring(custom_functions)}\n"""', prefix=prefix + " " * 4
+            f'\nr"""{self.py_docstring(custom_functions)}\n"""', prefix=indent + " " * 4
         )
         if custom_functions is not None and self.py_name in custom_functions.lib_import:
-            out = f"{''.join(custom_functions.lib_import[self.py_name])}\n{self.py_signature(prefix)}{docstr}\n{self.py_source(custom_functions, prefix)}"  # noqa : E501
+            out = f"{''.join(custom_functions.lib_import[self.py_name])}\n{self.py_signature(indent)}{docstr}\n{self.py_source(custom_functions, indent)}"  # noqa : E501
         else:
-            out = f"{self.py_signature(prefix)}{docstr}\n{self.py_source(custom_functions, prefix)}"
+            out = f"{self.py_signature(indent)}{docstr}\n{self.py_source(custom_functions, indent)}"
         return out
 
 
 class InformalTable(Element):
     """Provides the informal table element."""
 
-    def to_rst(self, prefix=""):
+    def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
         return "InformalTables need to be added"
 

@@ -455,7 +455,7 @@ def write_source(
 
             package_structure[module_name][file_name] = [class_name, class_structure]
             with open(file_path, "a", encoding="utf-8") as fid:
-                python_method = command.to_python(custom_functions, prefix="    ")
+                python_method = command.to_python(custom_functions, indent="    ")
                 # check if there are any imports before the function definition.
                 str_before_def = re.findall(r"[\s\S]*?(?=def)", python_method)[0]
                 output = re.findall(r"((import|from) [^\n]*)", str_before_def)
@@ -507,7 +507,7 @@ def write_source(
         #                 if initial_command_name in SKIP_XML:
         #                     continue
         #                 command_obj = command_map[initial_command_name]
-        #                 python_method = command_obj.to_python(custom_functions, prefix='    ')
+        #                 python_method = command_obj.to_python(custom_functions, indent='    ')
         #                 methods_structure.append(name_map[initial_command_name])
         #                 all_commands.append(initial_command_name)
         #                 fid.write(f"{python_method}\n")
