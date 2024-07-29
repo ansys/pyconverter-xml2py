@@ -528,18 +528,18 @@ API documentation
 """
     for module_name in package_structure.keys():
         doc_src_content += f"   {module_name}/index.rst\n"
-    
+
     # Write the main doc file
     doc_src = os.path.join(doc_package_path, "docs.rst")
     with open(doc_src, "w") as fid:
         fid.write(doc_src_content)
-    
+
     if package_structure is not None:
         for module_folder_name, class_map in tqdm(
             package_structure.items(), desc="Writing docs..."
         ):
             module_title = module_folder_name.replace("_", " ").capitalize()
-            
+
             module_content = f"""
 .. _ref_{module_folder_name}:
 
@@ -552,17 +552,17 @@ API documentation
 
 """
             for class_file_name in class_map.keys():
-                module_content+="   {class_file_name}\n"
-            
+                module_content += "   {class_file_name}\n"
+
             # Write the module index file
             module_folder = os.path.join(doc_package_path, f"{module_folder_name}")
-            os.makedirs(module_folder, exist_ok=True) 
+            os.makedirs(module_folder, exist_ok=True)
             module_file = os.path.join(module_folder, f"index.rst")
             with open(module_file, "w") as fid:
                 fid.write(module_content)
-            
+
             for class_file_name, (class_name, method_list) in class_map.items():
-                
+
                 class_content = f"""
 .. _ref_{class_file_name}:
 
@@ -582,7 +582,7 @@ API documentation
 """
                 for python_command_name in method_list:
                     class_content += f"   {class_name}.{python_command_name}\n"
-                
+
                 # Write the class file
                 class_file = os.path.join(module_folder, f"{class_file_name}.rst")
                 with open(class_file, "w") as fid:
