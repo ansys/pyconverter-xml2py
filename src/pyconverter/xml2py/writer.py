@@ -418,7 +418,7 @@ def write_source(
                 exec(python_method)
                 with open(path, "w", encoding="utf-8") as fid:
                     fid.write(f"{python_method}\n")
-            except RuntimeError as e:
+            except Exception as e:
                 raise RuntimeError(f"Failed to execute {python_name}.py") from e
 
     else:
@@ -441,8 +441,6 @@ def write_source(
                 initial_class_name = specific_classes[initial_class_name]
             class_name = initial_class_name.title().replace(" ", "").replace("/", "")
             file_name = initial_class_name.replace(" ", "_").replace("/", "_").lower()
-            if file_name == "":
-                pass
 
             file_path = os.path.join(module_path, f"{file_name}.py")
             if not os.path.isfile(file_path):
