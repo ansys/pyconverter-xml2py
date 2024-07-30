@@ -91,7 +91,10 @@ def create_name_map(meta_command, yaml_file_path):
                         py_name = py_name.replace(rule_name, rule)
                     if py_name == lower_name and not py_name[0].isalnum():
                         raise ValueError(
-                            f"Additional rules need to be defined. The {ans_name} function name is in conflict with another function."  # noqa : E501
+                            f"""
+                            Additional rules need to be defined. 
+                            The {ans_name} function name is in conflict with another function.
+                            """
                         )
                 else:
                     raise ValueError(

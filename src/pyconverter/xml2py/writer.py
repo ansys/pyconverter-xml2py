@@ -418,8 +418,8 @@ def write_source(
                 exec(python_method)
                 with open(path, "w", encoding="utf-8") as fid:
                     fid.write(f"{python_method}\n")
-            except:
-                raise RuntimeError(f"Failed to execute {python_name}.py") from None
+            except RuntimeError as e:
+                raise RuntimeError(f"Failed to execute {python_name}.py") from e
 
     else:
         import subprocess
@@ -552,7 +552,7 @@ API documentation
 
 """
             for class_file_name in class_map.keys():
-                module_content += "   {class_file_name}\n"
+                module_content += f"   {class_file_name}\n"
 
             # Write the module index file
             module_folder = os.path.join(doc_package_path, f"{module_folder_name}")
@@ -578,6 +578,7 @@ API documentation
 .. autosummary::
    :template: base.rst
    :toctree: _autosummary
+
 
 """
                 for python_command_name in method_list:
