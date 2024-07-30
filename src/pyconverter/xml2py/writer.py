@@ -418,8 +418,8 @@ def write_source(
                 exec(python_method)
                 with open(path, "w", encoding="utf-8") as fid:
                     fid.write(f"{python_method}\n")
-            except:
-                raise RuntimeError(f"Failed to execute {python_name}.py") from None
+            except Exception as e:
+                raise RuntimeError(f"Failed to execute {python_name}.py") from e
 
     else:
         import subprocess
