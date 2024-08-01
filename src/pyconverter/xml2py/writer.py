@@ -492,15 +492,15 @@ def write_docs(package_path, package_structure=None, config_path="config.yaml"):
 
     Parameters
     ----------
-    name_map : dict
-        Dictionary with the following format: ``{"initial_command_name": "python_name"}``.
-
     package_path : str
         Path to the new package folder.
 
     package_structure :
         Dictionary with the following format:
         ``{'python_module_name': [{'python_class_name': python_names_list}]}``.
+
+    config_path : str, optional
+        Path to the configuration file. The default is ``config.yaml``.
 
     Returns
     -------
