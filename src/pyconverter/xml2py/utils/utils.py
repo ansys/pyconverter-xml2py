@@ -38,7 +38,8 @@ def parse_yaml(yaml_path):
     """
     if os.path.isfile(yaml_path):
         with open(yaml_path, "r") as file:
-            return yaml.safe_load(file)
+            data = yaml.safe_load(file)
+        return data
 
 
 def get_config_data_value(yaml_path, value):
