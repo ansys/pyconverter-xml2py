@@ -167,6 +167,7 @@ def convert(directory_path):
     # be gcolumn since it's the only command, but VGET and *VGET must be vget and star_vget
 
     name_map = create_name_map(meta_command, "config.yaml")
+    ast.NameMap(name_map)
 
     # TODO : accept conversion of a single command
 

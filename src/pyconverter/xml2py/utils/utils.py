@@ -23,7 +23,6 @@
 import os
 
 from lxml.html import fromstring
-import pyconverter.xml2py.ast_tree as ast
 import yaml
 
 
@@ -106,8 +105,6 @@ def create_name_map(meta_command, yaml_file_path):
                 py_name = alpha_name
 
         name_map[ans_name] = py_name
-
-    ast.NameMap(name_map)
 
     return name_map
 
