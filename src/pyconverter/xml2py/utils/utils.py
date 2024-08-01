@@ -40,6 +40,8 @@ def parse_yaml(yaml_path):
         with open(yaml_path, "r") as file:
             data = yaml.safe_load(file)
         return data
+    else:
+        raise FileNotFoundError(f"File {yaml_path} not found.")
 
 
 def get_config_data_value(yaml_path, value):
