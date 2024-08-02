@@ -208,8 +208,11 @@ def copy_template_package(template_path, new_package_path, clean=False):
             os.path.join(template_path, "*"), recursive=True, include_hidden=True
         )
     else:
-        # Manually copying .vale.ini and .gitignore
         filename_list = glob.glob(os.path.join(template_path, "*"), recursive=True)
+        # Manually copying .vale.ini and .gitignore
+        styles_path = os.path.join(new_package_path, "doc", "styles")
+        if not os.path.isdir(styles_path):
+            os.makedirs(styles_path, exist_ok=True)
         vale_path = ["doc", ".vale.ini"]
         gitignore_path = ["doc", "styles", ".gitignore"]
         hidden_path = [vale_path, gitignore_path]

@@ -34,6 +34,7 @@ dependencies = [
     "numpy>=1.14.0; python_version>='3.9'",
     "py-asciimath==0.3.0",
     "pylatexenc==2.10",
+    "pyyaml>=5.1.0",
     "tqdm>=4.64.1",
     "regex>=2021.4.4",
 ]
