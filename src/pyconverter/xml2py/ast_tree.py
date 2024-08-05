@@ -1995,7 +1995,7 @@ class XMLCommand(Element):
 
         # final post-processing
         def replacer(match):
-            return match.group().replace("*", r"\*")
+            return match.group().replace("*", r"\*").replace("\\*", "\*")
 
         # sphinx doesn't like asterisk symbols
         docstr = re.sub(r"(?<=\S)\*|(\*\S)", replacer, docstr)
