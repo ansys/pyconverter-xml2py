@@ -1084,7 +1084,7 @@ class Graphic(Element):
 
         if self.entityref in fcache:
             filename = fcache[self.entityref]
-            text = f"\n\n{indent}.. figure:: ../images/{filename}\n"
+            text = f"\n\n{indent}.. figure:: ../../images/{filename}\n"
             return text
 
         return ""
