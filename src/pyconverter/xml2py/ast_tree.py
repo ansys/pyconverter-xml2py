@@ -1006,9 +1006,9 @@ class Link(Element):
         tail = self.tail.replace("\n", "")
         if self.linkend in links:
             root_name, root_title, href, text = links[self._linkend]
-            root_title = root_title.replace("\n", "")
+            text = text.replace("\n", "")
             link = f"{base_url}{root_name}/{href}"
-            return f"`{root_title} <{link}>`_ {tail}"
+            return f"`{text} <{link}>`_ {tail}"
 
         # missing link...
         return tail
@@ -1902,9 +1902,13 @@ class XMLCommand(Element):
 
         # search by ID
         if refsyn is None:
+            arg_desc = []
             for elem in self.find_all("RefSection"):
-                if elem.id is not None and "argdescript" in elem.id:
-                    return elem
+                if (
+                    elem.id is not None and "argdescript" in elem.id
+                ):  # need to be modified for extended docstrings
+                    arg_desc.append(elem)
+            return arg_desc
 
         return refsyn
 

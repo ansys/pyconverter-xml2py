@@ -288,7 +288,6 @@ def load_terms(
                             return match.group()
                         return terms[term]
 
-                # term_replacer_ = term_replacer(match, links)
                 text = re.sub(r"&[\S]*;", term_replacer, text)
 
                 terms[key] = text
