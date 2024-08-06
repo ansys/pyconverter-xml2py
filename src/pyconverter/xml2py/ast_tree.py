@@ -1908,7 +1908,10 @@ class XMLCommand(Element):
                     elem.id is not None and "argdescript" in elem.id
                 ):  # need to be modified for extended docstrings
                     arg_desc.append(elem)
-            return arg_desc
+            if len(arg_desc) > 0:
+                return arg_desc
+            else:
+                return None
 
         return refsyn
 
