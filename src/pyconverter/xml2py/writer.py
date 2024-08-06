@@ -519,7 +519,7 @@ API documentation
 ==================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :hidden:\n\n
 """
     for module_name in package_structure.keys():
