@@ -519,8 +519,8 @@ API documentation
 ==================
 
 .. toctree::
-   :maxdepth: 1
-   :hidden:\n\n
+   :maxdepth: 2
+
 """
     for module_name in package_structure.keys():
         doc_src_content += f"   {module_name}/index.rst\n"
@@ -543,7 +543,7 @@ API documentation
 {"="*len(module_title)}
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
 """
             for class_file_name in class_map.keys():
