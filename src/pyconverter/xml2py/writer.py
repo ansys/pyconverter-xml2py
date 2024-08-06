@@ -544,7 +544,6 @@ API documentation
 
 .. toctree::
    :maxdepth: 2
-   :hidden:
 
 """
             for class_file_name in class_map.keys():
