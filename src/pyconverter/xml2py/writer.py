@@ -336,6 +336,7 @@ def write_source(
     clean=True,
     structured=True,
     check_structure_map=False,
+    check_files=True,
 ):
     """Write out XML commands as Python source files.
 
@@ -371,6 +372,9 @@ def write_source(
 
     check_structure_map : bool, optional
         Whether the structure map must be checked. The default value is ``False``.
+
+    check_files : bool, optional
+        Whether the files must be checked. The default value is ``False``.
 
     Returns
     -------
@@ -430,31 +434,42 @@ def write_source(
         for command in tqdm(command_map.values(), desc="Writing commands"):
             if command.name in SKIP_XML or command.group is None:
                 continue
+
+            # Get the module / folder name and its path from the group of the command
             initial_module_name, initial_class_name = command.group
             initial_module_name = initial_module_name.replace("/", "")
             module_name = initial_module_name.replace(" ", "_").lower()
             module_path = os.path.join(library_path, module_name)
+
+            # Create the module folder and structure if it doesn't exist yet
             if not os.path.isdir(module_path):
                 os.makedirs(module_path)
                 package_structure[module_name] = {}
+
+            # Check whether the class name needs to follow a specific rule
             if initial_class_name in specific_classes.keys():
                 initial_class_name = specific_classes[initial_class_name]
+
+            # Get the class / file name and its path
             class_name = initial_class_name.title().replace(" ", "").replace("/", "")
             file_name = initial_class_name.replace(" ", "_").replace("/", "_").lower()
-
             file_path = os.path.join(module_path, f"{file_name}.py")
+
+            # Create the class file and structure if it doesn't exist yet
             if not os.path.isfile(file_path):
                 class_structure = []
                 with open(file_path, "w", encoding="utf-8") as fid:
                     fid.write(f"class {class_name}:\n")
             else:
+                # Get the class structure
                 class_structure = package_structure[module_name][file_name][1]
             class_structure.append(command.py_name)
 
             package_structure[module_name][file_name] = [class_name, class_structure]
             with open(file_path, "a", encoding="utf-8") as fid:
                 python_method = command.to_python(custom_functions, indent="    ")
-                # check if there are any imports before the function definition.
+
+                # Check if there are any imports to add before the function definition.
                 str_before_def = re.findall(pat.before_def, python_method)[0]
                 output = re.findall(pat.get_imports, str_before_def)
                 if len(output) == 0:
@@ -465,15 +480,22 @@ def write_source(
                     import_handler(file_path, python_method, output)
 
             all_commands.append(command.name)
-        try:
-            subprocess.run(["python", str(file_path)])
-        except Exception as e:
-            raise RuntimeError(f"Failed to execute '{python_method}' from '{file_path}'.") from e
 
     if check_structure_map:
         for command_name in name_map.keys():
             if command_name not in all_commands:
                 raise Exception(f"{command_name} is not in the structure map")
+
+    if check_files:
+        for module_name in package_structure.keys():
+            for class_name, _ in package_structure[module_name].items():
+                file_path = os.path.join(library_path, module_name, f"{class_name}.py")
+                try:
+                    subprocess.run(["python", str(file_path)])
+                except Exception as e:
+                    raise RuntimeError(
+                        f"Failed to execute '{python_method}' from '{file_path}'."
+                    ) from e
 
     write_global__init__file(library_path)
     write__init__file(library_path)
