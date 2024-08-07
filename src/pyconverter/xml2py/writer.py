@@ -542,8 +542,17 @@ API documentation
 {module_title}
 {"="*len(module_title)}
 
+.. list-table::
+
+"""
+            for class_file_name in class_map.keys():
+                module_content += f"   * - :ref:`ref_{class_file_name}`\n"
+            
+            module_content += f"""
+
 .. toctree::
    :maxdepth: 1
+   :hidden:
 
 """
             for class_file_name in class_map.keys():
