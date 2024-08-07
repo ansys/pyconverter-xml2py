@@ -764,7 +764,8 @@ class VarlistEntry(Element):
             arg = ""
 
         if not is_numeric(arg):
-            return f'"{arg}"'
+            return f"{arg}"
+
         return arg
 
     def __repr__(self):
@@ -828,9 +829,11 @@ class VarlistEntry(Element):
 
         # term_text = [line.strip() for line in self.py_text.splitlines()]
         # term_text = term_text[0] + '\n' + textwrap.indent('\n'.join(term_text[1:]), )
-
+        py_term = self.py_term(links=links, base_url=base_url)
+        if "``" in py_term:
+            py_term = py_term.replace("``", "")
         lines = [
-            f"* ``{self.py_term(links=links, base_url=base_url)}`` - {textwrap.indent(self.py_text(links=links, base_url=base_url, fcache=fcache), indent)}"  # noqa : E501
+            f"* ``{py_term}`` - {textwrap.indent(self.py_text(links=links, base_url=base_url, fcache=fcache), indent)}"  # noqa : E501
         ]
         text = "\n".join(lines)
         # if 'ID number to which this tip belongs' in text:
@@ -1484,7 +1487,7 @@ class Command(Element):
     def sphinx_cmd(self):
         """String to refer to the Python command with Sphinx."""
         if self.py_cmd == self.command:
-            ref = f"``self.py_cmd``"
+            ref = f"``{self.py_cmd}``"
         else:
             ref = f":ref:`{self.py_cmd}`"
         return ref
@@ -1969,6 +1972,7 @@ class XMLCommand(Element):
         args = ["self"]
         kwargs = [f'{arg}=""' for arg in self.py_args if "--" not in arg]
         arg_sig = ", ".join(args + kwargs)
+        # print(self.py_parm)
         return f"{indent}def {self.py_name}({arg_sig}, **kwargs):"
 
     def py_docstring(self, custom_functions):

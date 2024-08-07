@@ -335,6 +335,7 @@ def write_source(
     config_path="config.yaml",
     clean=True,
     structured=True,
+    check_structure_map=False,
 ):
     """Write out XML commands as Python source files.
 
@@ -359,16 +360,17 @@ def write_source(
         Path for the template to use. If no path is provided, the default template is used.
 
     config_path : str, optional
-        Path to the configuration file. The default is ``config.yaml``.
-
-    structure_map : dict, optional
-        Dictionary with the following format:
-        ``{'module_name': [{'class_name': python_names_list}]}``.
-        The default value is ``None``.
+        Path to the configuration file. The default is ``config.yaml``.`.
 
     clean : bool, optional
         Whether the directories in the new package path must be cleared before adding
         new files. The default value is ``True``.
+
+    structured : bool, optional
+        Whether the package should be structured. The default value is ``True``.
+
+    check_structure_map : bool, optional
+        Whether the structure map must be checked. The default value is ``False``.
 
     Returns
     -------
@@ -468,9 +470,10 @@ def write_source(
         except Exception as e:
             raise RuntimeError(f"Failed to execute '{python_method}' from '{file_path}'.") from e
 
-    for command_name in name_map.keys():
-        if command_name not in all_commands:
-            logging.info(f"{command_name} is not in the structure map")
+    if check_structure_map:
+        for command_name in name_map.keys():
+            if command_name not in all_commands:
+                raise Exception(f"{command_name} is not in the structure map")
 
     write_global__init__file(library_path)
     write__init__file(library_path)
@@ -547,7 +550,7 @@ API documentation
 """
             for class_file_name in class_map.keys():
                 module_content += f"   * - :ref:`ref_{class_file_name}`\n"
-            
+
             module_content += f"""
 
 .. toctree::
