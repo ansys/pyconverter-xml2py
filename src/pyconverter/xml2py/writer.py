@@ -310,11 +310,12 @@ def write_source(
             continue
         cmd_name = cmd_map[ans_name]
         path = os.path.join(cmd_path, f"{cmd_name}.py")
+        py_func = cmd_obj.to_python(cmd_map, custom_functions)
         with open(path, "w", encoding="utf-8") as fid:
-            fid.write(cmd_obj.to_python(cmd_map, custom_functions))
+            fid.write(py_func)
 
         try:
-            exec(cmd_obj.to_python(cmd_map, custom_functions))
+            exec(py_func)
         except:
             raise RuntimeError(f"Failed to execute {cmd_name}.py") from None
 
