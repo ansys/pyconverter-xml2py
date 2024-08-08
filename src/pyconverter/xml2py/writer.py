@@ -325,6 +325,54 @@ def get_library_path(new_package_path, config_path):
     return os.path.join(new_package_path, *library_name)
 
 
+def get_module_info(library_path, command):
+    """
+    Get the module name, class name, and module path from the command group.
+
+    Parameters
+    ----------
+    library_path : str
+        Path to the library directory.
+
+    command : ast.XMLCommand
+        Command object.
+    """
+    initial_module_name, initial_class_name = command.group
+    initial_module_name = initial_module_name.replace("/", "")
+    module_name = initial_module_name.replace(" ", "_").lower()
+    module_path = os.path.join(library_path, module_name)
+    return module_name, initial_class_name, module_path
+
+
+def get_class_info(initial_class_name, module_path):
+    """
+    Return the class name, file name, and file path from the initial class name.
+
+    Parameters
+    ----------
+    initial_class_name : str
+        Initial class name.
+
+    module_path : str
+        Path to the module directory.
+
+    Returns
+    -------
+    str
+        Class name.
+
+    str
+        File name.
+
+    str
+        File path.
+    """
+    class_name = initial_class_name.title().replace(" ", "").replace("/", "")
+    file_name = initial_class_name.replace(" ", "_").replace("/", "_").lower()
+    file_path = os.path.join(module_path, f"{file_name}.py")
+    return class_name, file_name, file_path
+
+
 def write_source(
     command_map,
     name_map,
@@ -435,11 +483,7 @@ def write_source(
             if command.name in SKIP_XML or command.group is None:
                 continue
 
-            # Get the module / folder name and its path from the group of the command
-            initial_module_name, initial_class_name = command.group
-            initial_module_name = initial_module_name.replace("/", "")
-            module_name = initial_module_name.replace(" ", "_").lower()
-            module_path = os.path.join(library_path, module_name)
+            module_name, initial_class_name, module_path = get_module_info(library_path, command)
 
             # Create the module folder and structure if it doesn't exist yet
             if not os.path.isdir(module_path):
@@ -450,10 +494,7 @@ def write_source(
             if initial_class_name in specific_classes.keys():
                 initial_class_name = specific_classes[initial_class_name]
 
-            # Get the class / file name and its path
-            class_name = initial_class_name.title().replace(" ", "").replace("/", "")
-            file_name = initial_class_name.replace(" ", "_").replace("/", "_").lower()
-            file_path = os.path.join(module_path, f"{file_name}.py")
+            class_name, file_name, file_path = get_class_info(initial_class_name, module_path)
 
             # Create the class file and structure if it doesn't exist yet
             if not os.path.isfile(file_path):
@@ -466,10 +507,12 @@ def write_source(
             class_structure.append(command.py_name)
 
             package_structure[module_name][file_name] = [class_name, class_structure]
+
+            # Write the Python method to the class file
             with open(file_path, "a", encoding="utf-8") as fid:
                 python_method = command.to_python(custom_functions, indent="    ")
 
-                # Check if there are any imports to add before the function definition.
+                # Check if there are any imports to be added before the function definition.
                 str_before_def = re.findall(pat.before_def, python_method)[0]
                 output = re.findall(pat.get_imports, str_before_def)
                 if len(output) == 0:
