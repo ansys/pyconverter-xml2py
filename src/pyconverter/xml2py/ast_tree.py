@@ -2370,7 +2370,7 @@ class InformalTable(Element):
 
     def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
-        return "InformalTables need to be added"
+        return "InformalTables need to be added."
 
 
 parsers = {
