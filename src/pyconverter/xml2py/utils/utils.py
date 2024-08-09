@@ -151,7 +151,7 @@ def is_numeric(text):
 
 def get_refentry(filename):
     """
-    Get the refentry from the XML file.
+    Get the reference entry from the XML file.
 
     Parameters
     ----------

@@ -240,7 +240,7 @@ def copy_template_package(template_path, new_package_path, clean=False):
 
 def write_global__init__file(library_path):
     """
-    Write the __init__.py file for the package generated.
+    Write the ``__init__.py`` file for the package generated.
 
     Parameters
     ----------
@@ -256,7 +256,7 @@ def write_global__init__file(library_path):
     structure_map : dict, optional
         Dictionary with the following format:
         ``{'module_name': [{'class_name': python_names_list}]}``.
-        The default value is ``None``.
+        The default is ``None``.
     """
     mod_file = os.path.join(library_path, "__init__.py")
 
@@ -277,7 +277,7 @@ def write_global__init__file(library_path):
 
 def write__init__file(library_path):
     """ "
-    Write the __init__.py file within each module directory.
+    Write the ``__init__.py`` file within each module directory.
 
     Parameters
     ----------
@@ -300,11 +300,11 @@ def write__init__file(library_path):
 
 def get_library_path(new_package_path, config_path):
     """
-    Return the desired library path with the following format:
+    Get the desired library path with the following format:
     ``new_package_path/library_structure``.
 
     For instance, if ``library_name_structured`` in the ``config.yaml`` file is
-    ``["pyconverter", "generatedcommands"]``, the function will return
+    ``["pyconverter", "generatedcommands"]``, the function returns
     ``new_package_path/pyconverter/generatedcommands``.
 
     Parameters
@@ -346,7 +346,7 @@ def get_module_info(library_path, command):
 
 def get_class_info(initial_class_name, module_path):
     """
-    Return the class name, file name, and file path from the initial class name.
+    Get the class name, file name, and file path from the initial class name.
 
     Parameters
     ----------
@@ -413,16 +413,16 @@ def write_source(
 
     clean : bool, optional
         Whether the directories in the new package path must be cleared before adding
-        new files. The default value is ``True``.
+        new files. The default is ``True``.
 
     structured : bool, optional
-        Whether the package should be structured. The default value is ``True``.
+        Whether the package should be structured. The default is ``True``.
 
     check_structure_map : bool, optional
-        Whether the structure map must be checked. The default value is ``False``.
+        Whether the structure map must be checked. The default is ``False``.
 
     check_files : bool, optional
-        Whether the files must be checked. The default value is ``False``.
+        Whether the files must be checked. The default is ``False``.
 
     Returns
     -------
@@ -440,7 +440,7 @@ def write_source(
         custom_functions = None
 
     if template_path is None:
-        logging.info("The default template will be used to create the new package.")
+        logging.info("The default template are used to create the package.")
         template_path = os.path.join(os.getcwd(), "_package")
         if not os.path.isdir(template_path):
             download_template()

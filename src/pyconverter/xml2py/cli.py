@@ -68,9 +68,9 @@ def create_package(xml_path=None, functions_path=None, target_path=None, templat
     if functions_path is None:
         logging.info(
             """
-            No customized functions path was entered. The default code generation will be applied
+            No customized functions path was entered. The default code generation is applied
             to all the commands. You can specify the customized functions by adding a path to the
-            --func-path argument.
+            ``--func-path`` argument.
             """
         )
 
