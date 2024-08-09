@@ -1004,7 +1004,9 @@ class Link(Element):
     def to_rst(self, indent="", links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
         if (links or base_url) is None:
-            logging.error("ERROR exists in the links or the 'base_url' definitions in the 'Link' class.")
+            logging.error(
+                "ERROR exists in the links or the 'base_url' definitions in the 'Link' class."
+            )
         tail = " ".join([str(item) for item in self])
         tail = self.tail.replace("\n", "")
         if self.linkend in links:

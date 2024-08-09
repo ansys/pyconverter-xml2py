@@ -100,8 +100,9 @@ def create_name_map(meta_command, yaml_file_path):
                         )
                 else:
                     raise ValueError(
-                        f"Function '{ans_name}' has identical name to another function."
-                        "You need to provide RULES to differentiate them."
+                        f"""Function '{ans_name}' has identical name to another function.
+                        You need to provide additional rules within the ``config.yaml`` file
+                        to differentiate them."""
                     )
 
             else:
