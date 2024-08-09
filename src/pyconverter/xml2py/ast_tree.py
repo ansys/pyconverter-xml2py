@@ -173,7 +173,7 @@ class Element:
         return [type(child).__name__ for child in self.children]
 
     def get_children_by_type(self, type_name):
-        """Return children of a specific type."""
+        """Get children of a specific type."""
         specific_children = []
         for child in self.children:
             if type(child).__name__ == type_name:
@@ -181,7 +181,7 @@ class Element:
         return specific_children
 
     def get_titles_in_element_list(list_element):
-        """Return the titles of the elements in a list of elements."""
+        """Get the titles of the elements in a list of elements."""
         return [element.title for element in list_element]
 
     @property
@@ -245,7 +245,7 @@ class Element:
             if type(item).__name__ == _type:
                 if _type == "Refname" or _type == "Refnamediv":
                     if terms == None:
-                        logging.error("ERROR: terms not defined for a Refname class")
+                        logging.error("ERROR: terms are not defined for a 'Refname' class.")
                     item.terms = terms
                 return item
         return None
@@ -1004,7 +1004,7 @@ class Link(Element):
     def to_rst(self, indent="", links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
         if (links or base_url) is None:
-            logging.error("ERROR in the links or the base_url definitions - Link class.")
+            logging.error("ERROR exists in the links or the 'base_url' definitions in the 'Link' class.")
         tail = " ".join([str(item) for item in self])
         tail = self.tail.replace("\n", "")
         if self.linkend in links:
@@ -1949,7 +1949,7 @@ class XMLCommand(Element):
 
     @property
     def is_archived(self):
-        """Return whether the command is archived."""
+        """Flag indicating if the command is archived."""
         return self._is_archived
 
     @is_archived.setter
@@ -1959,7 +1959,7 @@ class XMLCommand(Element):
 
     @property
     def group(self):
-        """Return the group of the command."""
+        """Group of the command."""
         return self._group
 
     @group.setter
@@ -2309,7 +2309,7 @@ class XMLCommand(Element):
         Parameters
         ----------
         custom_functions : CustomFunctions, optional
-            Custom functions to be added to the command. The default value is None.
+            Custom functions to add to the command. The default is ``None``.
 
         """
         if custom_functions is None or self.py_name not in custom_functions.py_names:
@@ -2332,10 +2332,10 @@ class XMLCommand(Element):
         Parameters
         ----------
         custom_functions : CustomFunctions, optional
-            Custom functions to be added to the command. The default value is None.
+            Custom functions to add to the command. The default is ``None``.
 
         indent : str, optional
-            Indentation of the Python function. The default value is "".
+            Indentation of the Python function. The default is ``""``.
 
         Returns
         -------

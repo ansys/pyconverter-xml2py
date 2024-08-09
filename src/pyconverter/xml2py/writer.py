@@ -527,7 +527,7 @@ def write_source(
     if check_structure_map:
         for command_name in name_map.keys():
             if command_name not in all_commands:
-                raise Exception(f"{command_name} is not in the structure map")
+                raise Exception(f"{command_name} is not in the structure map.")
 
     if check_files:
         for module_name in package_structure.keys():
