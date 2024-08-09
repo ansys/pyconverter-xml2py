@@ -158,6 +158,7 @@ def load_terms(
     variable_file="build_variables.ent",
     global_terms_file="terms_global.ent",
     manual_file="manuals.ent",
+    group_code_file="../xml/ansys.groupcodes.commands.ent",
     character_directory="ent",
 ):
 
@@ -287,7 +288,6 @@ def load_terms(
                             return match.group()
                         return terms[term]
 
-                # term_replacer_ = term_replacer(match, links)
                 text = re.sub(r"&[\S]*;", term_replacer, text)
 
                 terms[key] = text
@@ -312,6 +312,20 @@ def load_terms(
                                 terms[entity_names[0]] = unicodedata.lookup(char_name)
                             except KeyError:
                                 continue
+
+    # load group code
+    group_code_terms_path = os.path.join(term_path, group_code_file)
+    if os.path.isfile(group_code_terms_path):
+        with open(group_code_terms_path, "r") as fid:
+            lines = fid.read().splitlines()
+
+        for line in lines:
+            entity_names = re.findall(r"!ENTITY (\S*) ", line)
+            if len(entity_names):
+                entity_name = entity_names[0]
+                classname = re.findall(r"(?<=<classname>)(.*?)(?=<\/classname>)", line)[0]
+                typename = re.findall(r"(?<=<type>)(.*?)(?=<\/type>)", line)[0]
+                terms[entity_name] = [classname, typename]
 
     else:
         print("WARNING: No entitiy directory.")

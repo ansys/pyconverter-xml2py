@@ -74,10 +74,7 @@ def xml_path(path=None):
             args = parser.parse_args()
             path = args.xml_path
         except:
-            try:
-                path = os.environ.get("XML_PATH")
-            except:
-                pass
+            path = os.environ.get("XML_PATH")
 
     if path is None:
         raise RuntimeError(

@@ -20,31 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from click.testing import CliRunner
-from pyconverter.xml2py.cli import main
-
-
-def test_cli_main_group():
-    runner = CliRunner()
-    result = runner.invoke(main, ["--help"])
-    assert result.exit_code == 0
-
-    assert (
-        """A Python wrapper to convert XML documentation into Python source code with"""
-        in result.output
-    )
-
-    assert "package  Create a Python package from your XML documentation." in result.output
-    assert "version  Display current version." in result.output
-
-
-def test_cli_main_package_group():
-    runner = CliRunner()
-    result = runner.invoke(main, ["package", "--help"])
-    assert result.exit_code == 0
-
-    assert "Create a Python package from your XML documentation." in result.output
-    assert "-x, --xml-path PATH" in result.output
-    assert "-f, --func-path PATH" in result.output
-    assert "-p, --targ-path PATH" in result.output
-    assert "-t, --template-path PATH" in result.output
+before_def = r"[\s\S]*?(?=def)"
+get_group = r"(?<=&)(.*?)(?=;)"
+get_classname = r"(\S+)(?=:)"
+get_typename_1opt = r"(?<=:)(.*)"
+get_typename_2opt = r"(?<=:)(.*?)(?=[A-Z][A-Z])"
+get_imports = r"((import|from) [^\n]*)"

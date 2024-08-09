@@ -102,10 +102,6 @@ class CustomFunctions:
 
     def __init__(self, path):
         self._path = path
-        try:
-            os.path.isdir(path)
-        except:
-            raise (FileExistsError, f"The path_functions {path} does not exist.")
         self._py_names = []
         self._py_returns = {}
         self._py_examples = {}
@@ -136,7 +132,7 @@ class CustomFunctions:
         self._path = path
         try:
             os.path.isdir(path)
-        except:
+        except FileExistsError:
             raise (FileExistsError, f"The path_functions {path} does not exist.")
         self._py_names = []
         for filename in list(glob.glob(os.path.join(path, "*.py"))):
