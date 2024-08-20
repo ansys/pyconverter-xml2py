@@ -38,7 +38,7 @@ doc = [
     "build>= 0.10.0",
     "jupyter_sphinx==0.5.3",
     "linuxdoc==20240509",
-    "numpy==2.0.1",
+    "numpy==2.1.0",
     "numpydoc==1.8.0",
     "pandas==2.2.2",
     "parse==1.20.2",
