@@ -510,7 +510,7 @@ def write_source(
 
             # Write the Python method to the class file
             with open(file_path, "a", encoding="utf-8") as fid:
-                python_method = command.to_python(custom_functions, indent=4*" ")
+                python_method = command.to_python(custom_functions, indent=4 * " ")
 
                 # Check if there are any imports to be added before the function definition.
                 str_before_def = re.findall(pat.before_def, python_method)[0]
