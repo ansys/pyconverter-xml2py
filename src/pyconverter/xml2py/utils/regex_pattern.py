@@ -20,9 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-before_def = r"[\s\S]*?(?=def)"
-get_group = r"(?<=&)(.*?)(?=;)"
-get_classname = r"(\S+)(?=:)"
-get_typename_1opt = r"(?<=:)(.*)"
-get_typename_2opt = r"(?<=:)(.*?)(?=[A-Z][A-Z])"
-get_imports = r"((import|from) [^\n]*)"
+BEFORE_DEF = r"[\s\S]*?(?=def)"
+GET_GROUP = r"(?<=&)(.*?)(?=;)"
+GET_CLASSNAME = r"(\S+)(?=:)"
+GET_TYPENAME_1OPT = r"(?<=:)(.*)"
+GET_TYPENAME_2OPT = r"(?<=:)(.*?)(?=[A-Z][A-Z])"
+GET_IMPORTS = r"((import|from) [^\n]*)"

@@ -129,20 +129,20 @@ def convert(directory_path):
                 if meta_only == False:
                     refnamediv = command.get_children_by_type("Refnamediv")[0]
                     ref = str(refnamediv.get_children_by_type("Refclass")[0])
-                    group = re.findall(pat.get_group, ref)
+                    group = re.findall(pat.GET_GROUP, ref)
                     if len(group) > 0:
                         if group[0] == "xtycadimport":
                             logging.warning(f"CAD command - {command.name} will not be converted.")
                             continue  # CAD imports need to be handdled differently -- LOGGER here
                         command.group = terms[group[0]]
                     else:
-                        classname = re.findall(pat.get_classname, ref)
+                        classname = re.findall(pat.GET_CLASSNAME, ref)
                         if len(classname) > 1:
-                            typename = re.findall(pat.get_typename_2opt, ref)[
+                            typename = re.findall(pat.GET_TYPENAME_2OPT, ref)[
                                 0
                             ]  # the function is defined in the first module (example with CECYC)
                         else:
-                            typename = re.findall(pat.get_typename_1opt, ref)[0]
+                            typename = re.findall(pat.GET_TYPENAME_1OPT, ref)[0]
                         command.group = [classname[0], typename]
                         command.is_archived = True
 
@@ -493,8 +493,8 @@ def write_source(
                 python_method = command.to_python(custom_functions, indent=4 * " ")
 
                 # Check if there are any imports to be added before the function definition.
-                str_before_def = re.findall(pat.before_def, python_method)[0]
-                output = re.findall(pat.get_imports, str_before_def)
+                str_before_def = re.findall(pat.BEFORE_DEF, python_method)[0]
+                output = re.findall(pat.GET_IMPORTS, str_before_def)
                 if len(output) == 0:
                     fid.write(f"{python_method}\n")
                     fid.close()
