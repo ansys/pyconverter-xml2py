@@ -20,8 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import glob
-import os
+from pathlib import Path
 
 import numpy as np
 
@@ -102,13 +101,15 @@ class CustomFunctions:
 
     def __init__(self, path):
         self._path = path
+        if not Path(path).is_dir():
+            raise (FileExistsError, f"The path_functions {path} does not exist.")
         self._py_names = []
         self._py_returns = {}
         self._py_examples = {}
         self._py_code = {}
         self._lib_import = {}
-        for filename in list(glob.glob(os.path.join(path, "*.py"))):
-            py_name = os.path.split(filename)[-1][:-3]
+        for filename in Path(path).glob("*.py"):
+            py_name = filename.stem
             self._py_names.append(py_name)
             list_py_returns, list_py_examples, list_py_code, list_import = get_docstring_lists(
                 filename
@@ -124,19 +125,19 @@ class CustomFunctions:
 
     @property
     def path(self):
-        """Path where the customized function files are located."""
+        """Path object where the customized function files are located."""
         return self._path
 
     @path.setter
     def path(self, path):
         self._path = path
         try:
-            os.path.isdir(path)
+            path.is_dir()
         except FileExistsError:
             raise (FileExistsError, f"The path_functions {path} does not exist.")
         self._py_names = []
-        for filename in list(glob.glob(os.path.join(path, "*.py"))):
-            py_name = os.path.split(filename)[-1][:-3]
+        for filename in Path(path).glob("*.py"):
+            py_name = filename.stem
             self._py_names.append(py_name)
             list_py_returns, list_py_examples, list_py_code, list_import = get_docstring_lists(
                 filename

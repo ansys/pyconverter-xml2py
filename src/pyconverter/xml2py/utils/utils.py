@@ -20,8 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import os
-
 from lxml.html import fromstring
 import yaml
 
@@ -32,10 +30,10 @@ def parse_yaml(yaml_path):
 
     Parameters
     ----------
-    yaml_path : str
-        Path to the YAML file.
+    yaml_path : Path
+        Path object of the YAML file.
     """
-    if os.path.isfile(yaml_path):
+    if yaml_path.is_file():
         with open(yaml_path, "r") as file:
             data = yaml.safe_load(file)
         return data
@@ -49,8 +47,8 @@ def get_config_data_value(yaml_path, value):
 
     Parameters
     ----------
-    yaml_path : str
-        Path to the YAML file.
+    yaml_path : Path
+        Path object of the YAML file.
     value : str
         Key to search for in the YAML file.
     """

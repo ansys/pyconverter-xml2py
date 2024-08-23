@@ -23,21 +23,21 @@
 """Functions to download template datasets from the pyconverter-xml2py repository.
 """
 
-import os
+from pathlib import Path
 
 from github import ContentFile, Github, Repository
 import requests
 
 
-def download(c: ContentFile, out: str):
+def download(c: ContentFile, out: Path):
     """
     This function initially comes from the following GitHub repository:
     https://github.com/Nordgaren/Github-Folder-Downloader
 
     """
     r = requests.get(c.download_url)
-    output_path = f"{out}/{c.path}"
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    output_path = out / c.path
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "wb") as f:
         print(f"downloading {c.path} to {out}")
         f.write(r.content)

@@ -21,6 +21,7 @@
 # SOFTWARE.
 
 import os
+from pathlib import Path
 
 from pyconverter.xml2py.custom_functions import CustomFunctions
 import pyconverter.xml2py.directory_format as ff
@@ -69,11 +70,6 @@ def term_path(directory_path):
 
 
 @pytest.fixture
-def xml_path(directory_path):
-    return ff.get_paths(directory_path)[3]
-
-
-@pytest.fixture
 def docu_global(term_path):
     return lxd.load_docu_global(term_path)
 
@@ -115,12 +111,12 @@ def name_map(directory_path):
 
 @pytest.fixture
 def cwd():
-    return os.getcwd()
+    return Path.getcwd()
 
 
 @pytest.fixture
 def path_custom_functions(cwd):
-    return os.path.join(cwd, "tests", "customized_functions")
+    return cwd / "tests" / "customized_functions"
 
 
 @pytest.fixture
@@ -130,7 +126,7 @@ def custom_functions(path_custom_functions):
 
 @pytest.fixture
 def config_path(cwd):
-    return os.path.join(cwd, "config.yaml")
+    return cwd / "config.yaml"
 
 
 @pytest.fixture
