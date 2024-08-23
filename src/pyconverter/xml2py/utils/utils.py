@@ -51,7 +51,6 @@ def get_config_data_value(yaml_path, value):
     ----------
     yaml_path : str
         Path to the YAML file.
-
     value : str
         Key to search for in the YAML file.
     """

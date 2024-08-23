@@ -2312,7 +2312,6 @@ class XMLCommand(Element):
         ----------
         custom_functions : CustomFunctions, optional
             Custom functions to add to the command. The default is ``None``.
-
         """
         if custom_functions is None or self.py_name not in custom_functions.py_names:
 
@@ -2335,7 +2334,6 @@ class XMLCommand(Element):
         ----------
         custom_functions : CustomFunctions, optional
             Custom functions to add to the command. The default is ``None``.
-
         indent : str, optional
             Indentation of the Python function. The default is ``""``.
 

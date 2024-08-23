@@ -67,7 +67,6 @@ def convert(directory_path):
     -------
     dict
         Dictionary with the following format: ``{"command_name": command_object}``.
-
     dict
         Dictionary with the following format: ``{"initial_command_name": "python_name"}``.
     """
@@ -100,7 +99,6 @@ def convert(directory_path):
         -------
         dict
             Dictionary with the following format: ``{"command_name": command_object}``.
-
         """
         if not os.path.isdir(xml_path):
             raise FileNotFoundError(f'Invalid path "{xml_path}"')
@@ -348,7 +346,6 @@ def get_class_info(initial_class_name, module_path):
     ----------
     initial_class_name : str
         Initial class name.
-
     module_path : str
         Path to the module directory.
 
@@ -356,10 +353,8 @@ def get_class_info(initial_class_name, module_path):
     -------
     str
         Class name.
-
     str
         File name.
-
     str
         File path.
     """
@@ -388,35 +383,25 @@ def write_source(
     ----------
     command_map : dict
         Dictionary with the following format: ``{"initial_command_name": command_obj}``.
-
     name_map : dict
         Dictionary with the following format: ``{"initial_command_name": "python_name"}``.
-
     xml_doc_path : str
         Path containing the XML directory to convert.
-
     target_path : str
         Path to generate the new package to.
-
     path_custom_functions : str, optional
         Path containing the customized functions. The default is ``None``.
-
     template_path : str, optional
         Path for the template to use. If no path is provided, the default template is used.
-
     config_path : str, optional
         Path to the configuration file. The default is ``config.yaml``.`.
-
     clean : bool, optional
         Whether the directories in the new package path must be cleared before adding
         new files. The default is ``True``.
-
     structured : bool, optional
         Whether the package should be structured. The default is ``True``.
-
     check_structure_map : bool, optional
         Whether the structure map must be checked. The default is ``False``.
-
     check_files : bool, optional
         Whether the files must be checked. The default is ``False``.
 
@@ -424,7 +409,6 @@ def write_source(
     -------
     list
         List of module names created.
-
     dict
         Dictionary with the following format:
         ``{'python_module_name': [{'python_class_name': python_names_list}]}``.
@@ -541,7 +525,7 @@ def write_source(
 
     logging.info(f"Commands written to {library_path}")
 
-    # copy package files to the package directory
+    # Copy package files to the package directory
     copy_template_package(template_path, new_package_path, clean)
     graph_path = get_paths(xml_doc_path)[0]
     shutil.copytree(graph_path, os.path.join(new_package_path, "doc", "source", "images"))
@@ -555,11 +539,9 @@ def write_docs(package_path, package_structure=None, config_path="config.yaml"):
     ----------
     package_path : str
         Path to the new package folder.
-
     package_structure :
         Dictionary with the following format:
         ``{'python_module_name': [{'python_class_name': python_names_list}]}``.
-
     config_path : str, optional
         Path to the configuration file. The default is ``config.yaml``.
 
@@ -567,7 +549,6 @@ def write_docs(package_path, package_structure=None, config_path="config.yaml"):
     -------
     str
         Path to the new document page.
-
     """
     library_name = get_config_data_value(config_path, "library_name_structured")
     if library_name[0] == "src":

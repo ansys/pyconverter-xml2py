@@ -65,7 +65,6 @@ def xml_path(path=None):
     -------
     str
         Path of the XML documentation to convert.
-
     """
     if path is None:
         try:
@@ -97,37 +96,29 @@ def get_paths(path, graph_path=None, link_path=None, term_path=None, xml_path=No
     ----------
     path : str
         Path to the directory with the predefined format.
-
     graph_path : str, optional
         Path to the directory containing the graphics. The default is ``None``,
         in which case the XML predefined directory format is used.
-
     link_path : str, optional
         Path to the directory containing the links. The default is ``None``,
         in which case the XML predefined directory format is used.
-
     term_path : str, optional
         Path to the directory containing the terms. The default is ``None``,
         in which case the XML predefined directory format is used.
-
     xml_path : str
         Path to the directory containing the XML files. The default is ``None``,
         in which case the XML predefined directory format is used.
 
     Returns
     -------
-    graphic_path : str
+    str
         Path of the directory containing the graphics.
-
-    link_path : str
+    str
         Path of the directory containing the links.
-
-    term_path : str
+    str
         Path of the directory containing the terms.
-
-    xml_path : str
+    str
         Path of the directory containing the XML files.
-
     """
 
     if graph_path is None:
