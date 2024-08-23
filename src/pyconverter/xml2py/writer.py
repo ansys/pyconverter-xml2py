@@ -246,13 +246,10 @@ def write_global__init__file(library_path):
     ----------
     library_path : str
         Path to the directory containing the generated package.
-
     name_map : dict
         Dictionary with the following format: ``{"initial_command_name": "python_name"}``.
-
     command_map : dict
         Dictionary with the following format: ``{"initial_command_name": command_object}``.
-
     structure_map : dict, optional
         Dictionary with the following format:
         ``{'module_name': [{'class_name': python_names_list}]}``.
@@ -333,7 +330,6 @@ def get_module_info(library_path, command):
     ----------
     library_path : str
         Path to the library directory.
-
     command : ast.XMLCommand
         Command object.
     """

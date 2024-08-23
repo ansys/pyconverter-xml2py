@@ -32,7 +32,6 @@ def parse_yaml(yaml_path):
 
     Parameters
     ----------
-
     yaml_path : str
         Path to the YAML file.
     """
@@ -50,7 +49,6 @@ def get_config_data_value(yaml_path, value):
 
     Parameters
     ----------
-
     yaml_path : str
         Path to the YAML file.
 
