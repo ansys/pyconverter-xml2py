@@ -25,6 +25,7 @@
 import logging
 import os
 from pathlib import Path
+from typing import Union
 
 import click
 from pyconverter.xml2py import __version__, download
@@ -32,11 +33,11 @@ from pyconverter.xml2py import writer as wr
 
 
 def create_package(
-    xml_path=None,
-    target_path=None,
-    template_path=None,
-    custom_functions_path=None,
-):
+    xml_path: Union[Path, None] = None,
+    target_path: Union[Path, None] = None,
+    template_path: Union[Path, None] = None,
+    custom_functions_path: Union[Path, None] = None,
+) -> None:
     """Create Python package based on a XML documentation.
 
     Parameters
@@ -142,6 +143,11 @@ def version():
     type=click.Path(),
     help="Path for the template to use. If no path is provided, the default template is used.",
 )
-def package(xml_path, func_path, targ_path, template_path):
+def package(
+    xml_path: Path,
+    func_path: Path,
+    targ_path: Path,
+    template_path: Path,
+) -> None:
     """Create a Python package from your XML documentation."""
     create_package(xml_path, targ_path, template_path, func_path)

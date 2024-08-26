@@ -29,7 +29,7 @@ from github import ContentFile, Github, Repository
 import requests
 
 
-def download(c: ContentFile, out: Path):
+def download(c: ContentFile, out: Path) -> None:
     """
     This function initially comes from the following GitHub repository:
     https://github.com/Nordgaren/Github-Folder-Downloader
@@ -43,7 +43,7 @@ def download(c: ContentFile, out: Path):
         f.write(r.content)
 
 
-def download_folder(repo: Repository, folder: str, out: str, recursive: bool):
+def download_folder(repo: Repository, folder: str, out: str, recursive: bool) -> None:
     """
     This function initially comes from the following GitHub repository:
     https://github.com/Nordgaren/Github-Folder-Downloader
@@ -58,7 +58,7 @@ def download_folder(repo: Repository, folder: str, out: str, recursive: bool):
         download(c, out)
 
 
-def download_template():
+def download_template() -> None:
     """Download the templage package provided by default."""
 
     g = Github()

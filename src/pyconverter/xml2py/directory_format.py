@@ -46,8 +46,17 @@
 #     ├── .xml files
 #     └── .ent files
 
+from pathlib import Path
+from typing import Tuple, Union
 
-def get_paths(path, graph_path=None, link_path=None, term_path=None, xml_path=None):
+
+def get_paths(
+    path: Path,
+    graph_path: Union[Path, None] = None,
+    link_path: Union[Path, None] = None,
+    term_path: Union[Path, None] = None,
+    xml_path: Union[Path, None] = None,
+) -> Tuple[Path, Path, Path, Path]:
     """Get the paths to the directories needed for the conversion.
 
     Parameters

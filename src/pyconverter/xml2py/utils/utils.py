@@ -20,11 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from pathlib import Path
+from typing import Tuple, Union
+
 from lxml.html import fromstring
 import yaml
 
 
-def parse_yaml(yaml_path):
+def parse_yaml(yaml_path: Path) -> None:
     """
     Parse a YAML file.
 
@@ -41,7 +44,7 @@ def parse_yaml(yaml_path):
         raise FileNotFoundError(f"File {yaml_path} not found.")
 
 
-def get_config_data_value(yaml_path, value):
+def get_config_data_value(yaml_path: Path, value: str) -> Union[str, dict, list, None]:
     """
     Return the value of a specific key in the YAML file.
 
@@ -56,7 +59,22 @@ def get_config_data_value(yaml_path, value):
     return config_data.get(value)
 
 
-def create_name_map(meta_command, yaml_file_path):
+def create_name_map(meta_command: list[str], yaml_file_path: Path) -> dict:
+    """
+    Create a mapping between the initial command name and the Python function name.
+
+    Parameters
+    ----------
+    meta_command : list[str]
+        List of command names.
+    yaml_file_path : Path
+        Path object of the YAML file.
+
+    Returns
+    -------
+    dict
+        Dictionary with the following format: ``{"initial_command_name": "python_name"}``.
+    """
     # convert all to flat and determine number of occurances
     naive_names = []
     rules = get_config_data_value(yaml_file_path, "rules")
@@ -108,7 +126,23 @@ def create_name_map(meta_command, yaml_file_path):
     return name_map
 
 
-def import_handler(filename, additional_content, findalls):
+def import_handler(
+    filename: Path,
+    additional_content: str,
+    findalls: list[tuple],
+) -> None:
+    """
+    Handle the imports in the Python file.
+
+    Parameters
+    ----------
+    filename : Path
+        Path object of the Python file.
+    additional_content : str
+        Additional content to add to the Python file.
+    findalls : list[tuple]
+        List of tuples containing the imports to add to the Python file.
+    """
     needed_imports = ""
     for match in findalls:
         needed_imports += f"{match[0]}\n"
@@ -125,8 +159,15 @@ def import_handler(filename, additional_content, findalls):
 # ############################################################################
 
 
-def split_trail_alpha(text):
-    """Split a string based on the last tailing non-alphanumeric character."""
+def split_trail_alpha(text: str) -> Tuple[str, str]:
+    """
+    Split a string based on the last tailing non-alphanumeric character.
+
+    Parameters
+    ----------
+    text : str
+        String to split.
+    """
     for ii, char in enumerate(text):
         if not char.isalnum():
             break
@@ -136,8 +177,20 @@ def split_trail_alpha(text):
     return text[:ii], text[ii:]
 
 
-def is_numeric(text):
-    """Return ``True`` when a string is numeric."""
+def is_numeric(text: str) -> bool:
+    """
+    Return ``True`` when a string is numeric.
+
+    Parameters
+    ----------
+    text : str
+        String to check.
+
+    Returns
+    -------
+    bool
+        ``True`` if the string is numeric.
+    """
     try:
         float(text)
         return True
@@ -145,14 +198,14 @@ def is_numeric(text):
         return False
 
 
-def get_refentry(filename):
+def get_refentry(filename: Path) -> list:
     """
-    Get the reference entry from the XML file.
+    Get the reference entry from an XML file.
 
     Parameters
     ----------
-    filename : str
-        Path to the XML file.
+    filename : Path
+        Path object of an XML file.
     """
     root = fromstring(open(filename, "rb").read())
     return list(root.iterfind(".//refentry"))

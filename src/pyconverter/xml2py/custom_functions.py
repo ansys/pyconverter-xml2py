@@ -21,11 +21,12 @@
 # SOFTWARE.
 
 from pathlib import Path
+from typing import Tuple
 
 import numpy as np
 
 
-def get_docstring_lists(filename):
+def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str], list[str]]:
     """
     Get lists of strings depending on Python file sections.
 
@@ -36,13 +37,13 @@ def get_docstring_lists(filename):
 
     Returns
     -------
-    list_py_returns : List[str]
+    List[str]
         List containing the docstring ``Returns`` section.
-    list_py_examples : List[str]
+    List[str]
         List containing the docstring ``Examples`` section.
-    list_py_code : List[str]
+    List[str]
         List containing the source code.
-    list_import : List[str]
+    List[str]
         List containing the library import section.
     """
     pyfile = open(filename, "r")
@@ -99,7 +100,7 @@ class CustomFunctions:
         self._py_code = {}
         self._lib_import = {}
 
-    def __init__(self, path):
+    def __init__(self, path: Path) -> None:
         self._path = path
         if not Path(path).is_dir():
             raise (FileExistsError, f"The path_functions {path} does not exist.")
@@ -124,12 +125,12 @@ class CustomFunctions:
                 self._lib_import[py_name] = list_import
 
     @property
-    def path(self):
+    def path(self) -> Path:
         """Path object where the customized function files are located."""
         return self._path
 
     @path.setter
-    def path(self, path):
+    def path(self, path: Path) -> None:
         self._path = path
         try:
             path.is_dir()
@@ -152,26 +153,26 @@ class CustomFunctions:
                 self._lib_import[py_name] = list_import
 
     @property
-    def py_names(self):
+    def py_names(self) -> list:
         """List with all customized functions located in the folder."""
         return self._py_names
 
     @property
-    def py_returns(self):
+    def py_returns(self) -> dict:
         """Dictionary containing the ``Returns`` section if any."""
         return self._py_returns
 
     @property
-    def py_examples(self):
+    def py_examples(self) -> dict:
         """Dictionary containing the ``Examples`` section if any."""
         return self._py_examples
 
     @property
-    def py_code(self):
+    def py_code(self) -> dict:
         """Dictionary containing the customized source code."""
         return self._py_code
 
     @property
-    def lib_import(self):
+    def lib_import(self) -> dict:
         """Dictionary containing the needed libraries if any."""
         return self._lib_import
