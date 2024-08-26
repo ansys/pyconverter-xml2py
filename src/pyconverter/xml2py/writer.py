@@ -235,7 +235,7 @@ def write_global__init__file(library_path):
         fid.write(f"from . import (\n")
         for dir in library_path.iterdir():
             if dir.is_dir():
-                fid.write(f"    {dir},\n")
+                fid.write(f"    {dir.stem},\n")
         fid.write(")\n\n")
         fid.write("try:\n")
         fid.write("    import importlib.metadata as importlib_metadata\n")
