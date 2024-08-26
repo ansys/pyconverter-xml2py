@@ -20,13 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import os
-
 import pyconverter.xml2py.directory_format as ff
 
 
 def test_get_path(directory_path):
-    assert os.path.join(directory_path, "graphics") == ff.get_paths(directory_path)[0]
-    assert os.path.join(directory_path, "links") == ff.get_paths(directory_path)[1]
-    assert os.path.join(directory_path, "terms") == ff.get_paths(directory_path)[2]
-    assert os.path.join(directory_path, "xml") == ff.get_paths(directory_path)[3]
+    graph_path, link_path, term_path, xml_path = ff.get_paths(directory_path)
+    assert directory_path / "graphics" == graph_path
+    assert directory_path / "links" == link_path
+    assert directory_path / "terms" == term_path
+    assert directory_path / "xml" == xml_path

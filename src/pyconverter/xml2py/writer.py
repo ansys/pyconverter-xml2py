@@ -20,12 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import glob
 import logging
-import os
 from pathlib import Path
 import shutil
-import sys
 
 from pyconverter.xml2py import ast_tree as ast
 from pyconverter.xml2py import load_xml_doc as load
@@ -167,8 +164,8 @@ def convert(directory_path):
     # if command is not None:
     #     if command not in command_meta:
     #         raise ValueError(f"Invalid command {command}")
-    #     fname = command_meta[command].xml_filename
-    #     cmd = ast.XMLCommand(os.path.expanduser(fname), )
+    #     fname = Path(command_meta[command].xml_filename)
+    #     cmd = ast.XMLCommand(fname.expanduser())
     #     commands = {to_py_name(cmd.name): cmd}
     # else:  # convert all commands
 
@@ -183,11 +180,11 @@ def copy_template_package(template_path, new_package_path, clean=False):
 
     Parameters
     ----------
-    template_path : str
-        Path containing the directory to copy.
+    template_path : Path
+        Path object containing the directory to copy.
 
-    new_package_path : str
-        Path containing the directory where the new files and directorys are to be added.
+    new_package_path : Path
+        Path object containing the directory where the new files and directorys are to be added.
 
     clean : bool, optional
         Whether the directories in the path for the new package must be cleared before adding
@@ -195,43 +192,22 @@ def copy_template_package(template_path, new_package_path, clean=False):
 
     Returns
     -------
-    str
-        Path containing the source files of the created
+    Path
+        Path object containing the source files of the created
         ``xml-commands`` package.
 
     """
-    # .vale.ini and .gitignore are hidden files.
-    if sys.version_info.major == 3 and sys.version_info.minor >= 11:
-        filename_list = glob.glob(
-            os.path.join(template_path, "*"), recursive=True, include_hidden=True
-        )
-    else:
-        filename_list = glob.glob(os.path.join(template_path, "*"), recursive=True)
-        # Manually copying .vale.ini and .gitignore
-        styles_path = os.path.join(new_package_path, "doc", "styles")
-        if not os.path.isdir(styles_path):
-            os.makedirs(styles_path, exist_ok=True)
-        vale_path = ["doc", ".vale.ini"]
-        gitignore_path = ["doc", "styles", ".gitignore"]
-        hidden_path = [vale_path, gitignore_path]
-        for hpath in hidden_path:
-            hidden_template = os.path.join(template_path, *hpath)
-            hidden_new_path = os.path.join(new_package_path, *hpath)
-            if os.path.isfile(hidden_template) and not os.path.isfile(hidden_new_path):
-                shutil.copy(hidden_template, hidden_new_path)
+    filename_list = list(template_path.glob("*"))
 
     for filename in filename_list:
-        split_name_dir = filename.split(os.path.sep)
-        new_path_dir = os.path.join(new_package_path, split_name_dir[-1])
-
-        if os.path.isdir(filename):
-            if not os.path.isdir(new_path_dir):
-                os.makedirs(new_path_dir, exist_ok=True)
-            elif os.path.isdir(new_path_dir) and clean:
+        new_path_dir = new_package_path / filename.name
+        if filename.is_dir():
+            if not new_path_dir.is_dir():
+                new_path_dir.mkdir(parents=True, exist_ok=True)
+            elif new_path_dir.is_dir() and clean:
                 shutil.rmtree(new_path_dir)
-                os.makedirs(new_path_dir)
+                new_path_dir.mkdir(parents=True)
             copy_template_package(filename, new_path_dir, clean)
-
         else:
             shutil.copy(filename, new_package_path)
 
@@ -242,8 +218,8 @@ def write_global__init__file(library_path):
 
     Parameters
     ----------
-    library_path : str
-        Path to the directory containing the generated package.
+    library_path : Path
+        Path object of the directory containing the generated package.
     name_map : dict
         Dictionary with the following format: ``{"initial_command_name": "python_name"}``.
     command_map : dict
@@ -253,12 +229,12 @@ def write_global__init__file(library_path):
         ``{'module_name': [{'class_name': python_names_list}]}``.
         The default is ``None``.
     """
-    mod_file = os.path.join(library_path, "__init__.py")
+    mod_file = library_path / "__init__.py"
 
     with open(mod_file, "w") as fid:
         fid.write(f"from . import (\n")
-        for dir in os.listdir(library_path):
-            if os.path.isdir(os.path.join(library_path, dir)):
+        for dir in library_path.iterdir():
+            if dir.is_dir():
                 fid.write(f"    {dir},\n")
         fid.write(")\n\n")
         fid.write("try:\n")
@@ -276,19 +252,19 @@ def write__init__file(library_path):
 
     Parameters
     ----------
-    library_path : str
-        Path to the directory containing the generated package.
+    library_path : Path
+        Path object of the directory containing the generated package.
     """
 
-    for dir in os.listdir(library_path):
-        if os.path.isdir(os.path.join(library_path, dir)):
-            listdir = os.listdir(os.path.join(library_path, dir))
+    for dir in library_path.iterdir():
+        if dir.is_dir():
+            listdir = list(dir.iterdir())
             if len(listdir) > 0:
-                with open(os.path.join(library_path, dir, "__init__.py"), "w") as fid:
+                with open(dir / "__init__.py", "w") as fid:
                     fid.write(f"from . import (\n")
                     for file in listdir:
-                        if file.endswith(".py"):
-                            fid.write(f"    {file[:-3]},\n")
+                        if file.name.endswith(".py"):
+                            fid.write(f"    {file.stem},\n")
                     fid.write(")\n")
                     fid.close()
 
@@ -304,37 +280,47 @@ def get_library_path(new_package_path, config_path):
 
     Parameters
     ----------
-    new_package_path : str
-        Path to the new package directory.
+    new_package_path : Path
+        Path objecy of the new package directory.
     config_path : str
         Path to the configuration file.
 
     Returns
     -------
-    str
-        Path to the desired library structure.
+    Path
+        Path object of the new library structure.
     """
     library_name = get_config_data_value(config_path, "library_name_structured")
     if not "src" in library_name:
         library_name.insert(0, "src")
-    return os.path.join(new_package_path, *library_name)
+    return new_package_path.joinpath(*library_name)
 
 
 def get_module_info(library_path, command):
     """
-    Get the module name, class name, and module path from the command group.
+    Get the module name, class name, and module path from command
+    information.
 
     Parameters
     ----------
-    library_path : str
-        Path to the library directory.
+    library_path : Path
+        Path object to the library directory.
     command : ast.XMLCommand
         Command object.
+
+    Returns
+    -------
+    str
+        Module where the command is stored.
+    str
+        Class where the command is stored.
+    Path
+        Path object of the module directory
     """
     initial_module_name, initial_class_name = command.group
     initial_module_name = initial_module_name.replace("/", "")
     module_name = initial_module_name.replace(" ", "_").lower()
-    module_path = os.path.join(library_path, module_name)
+    module_path = library_path / module_name
     return module_name, initial_class_name, module_path
 
 
@@ -346,8 +332,8 @@ def get_class_info(initial_class_name, module_path):
     ----------
     initial_class_name : str
         Initial class name.
-    module_path : str
-        Path to the module directory.
+    module_path : Path
+        Path object of the module directory.
 
     Returns
     -------
@@ -355,12 +341,12 @@ def get_class_info(initial_class_name, module_path):
         Class name.
     str
         File name.
-    str
+    Path
         File path.
     """
     class_name = initial_class_name.title().replace(" ", "").replace("/", "")
     file_name = initial_class_name.replace(" ", "_").replace("/", "_").lower()
-    file_path = os.path.join(module_path, f"{file_name}.py")
+    file_path = module_path / f"{file_name}.py"
     return class_name, file_name, file_path
 
 
@@ -421,22 +407,22 @@ def write_source(
 
     if template_path is None:
         logging.info("The default template are used to create the package.")
-        template_path = os.path.join(os.getcwd(), "_package")
-        if not os.path.isdir(template_path):
+        template_path = Path.cwd() / "_package"
+        if not template_path.is_dir:
             download_template()
 
     new_package_name = get_config_data_value(config_path, "new_package_name")
     logging.info(f"Creating package {new_package_name}...")
-    new_package_path = os.path.join(target_path, new_package_name)
+    new_package_path = target_path / new_package_name
 
     if clean:
-        if os.path.isdir(new_package_path):
+        if new_package_path.is_dir():
             shutil.rmtree(new_package_path)
 
-    library_path = get_library_path(new_package_path, config_path)
+    library_path = Path(get_library_path(new_package_path, config_path))
 
-    if not os.path.isdir(library_path):
-        os.makedirs(library_path)
+    if not library_path.is_dir():
+        library_path.mkdir(parents=True, exist_ok=True)
 
     if structured == False:
         package_structure = None
@@ -444,7 +430,7 @@ def write_source(
             if initial_command_name in SKIP_XML:
                 continue
             python_name = name_map[initial_command_name]
-            path = os.path.join(library_path, f"{python_name}.py")
+            path = library_path / f"{python_name}.py"
             python_method = command_obj.to_python(custom_functions)
             try:
                 exec(python_method)
@@ -466,8 +452,8 @@ def write_source(
             module_name, initial_class_name, module_path = get_module_info(library_path, command)
 
             # Create the module folder and structure if it doesn't exist yet
-            if not os.path.isdir(module_path):
-                os.makedirs(module_path)
+            if not module_path.is_dir():
+                module_path.mkdir(parents=True, exist_ok=True)
                 package_structure[module_name] = {}
 
             # Check whether the class name needs to follow a specific rule
@@ -477,7 +463,7 @@ def write_source(
             class_name, file_name, file_path = get_class_info(initial_class_name, module_path)
 
             # Create the class file and structure if it doesn't exist yet
-            if not os.path.isfile(file_path):
+            if not file_path.is_file():
                 class_structure = []
                 with open(file_path, "w", encoding="utf-8") as fid:
                     fid.write(f"class {class_name}:\n")
@@ -512,7 +498,7 @@ def write_source(
     if check_files:
         for module_name in package_structure.keys():
             for class_name, _ in package_structure[module_name].items():
-                file_path = os.path.join(library_path, module_name, f"{class_name}.py")
+                file_path = library_path / module_name / f"{class_name}.py"
                 try:
                     subprocess.run(["python", str(file_path)])
                 except Exception as e:
@@ -528,7 +514,7 @@ def write_source(
     # Copy package files to the package directory
     copy_template_package(template_path, new_package_path, clean)
     graph_path = get_paths(xml_doc_path)[0]
-    shutil.copytree(graph_path, os.path.join(new_package_path, "doc", "source", "images"))
+    shutil.copytree(graph_path, new_package_path / "doc" / "source" / "images")
     return package_structure
 
 
@@ -557,7 +543,7 @@ def write_docs(package_path, package_structure=None, config_path=Path("config.ya
 
     doc_package_path = package_path / "doc" / "source"
     if not doc_package_path.is_dir():
-        os.makedirs(doc_package_path)
+        doc_package_path.mkdir(parents=True, exist_ok=True)
 
     doc_src_content = """
 API documentation
@@ -571,7 +557,7 @@ API documentation
         doc_src_content += f"   {module_name}/index.rst\n"
 
     # Write the main doc file
-    doc_src = os.path.join(doc_package_path, "docs.rst")
+    doc_src = doc_package_path / "docs.rst"
     with open(doc_src, "w") as fid:
         fid.write(doc_src_content)
 
@@ -604,9 +590,9 @@ API documentation
                 module_content += f"   {class_file_name}\n"
 
             # Write the module index file
-            module_folder = os.path.join(doc_package_path, f"{module_folder_name}")
-            os.makedirs(module_folder, exist_ok=True)
-            module_file = os.path.join(module_folder, f"index.rst")
+            module_folder = doc_package_path / module_folder_name
+            module_folder.mkdir(parents=True, exist_ok=True)
+            module_file = module_folder / "index.rst"
             with open(module_file, "w") as fid:
                 fid.write(module_content)
 
@@ -634,7 +620,7 @@ API documentation
                     class_content += f"   {class_name}.{python_command_name}\n"
 
                 # Write the class file
-                class_file = os.path.join(module_folder, f"{class_file_name}.rst")
+                class_file = module_folder / f"{class_file_name}.rst"
                 with open(class_file, "w") as fid:
                     fid.write(class_content)
 

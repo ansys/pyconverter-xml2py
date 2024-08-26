@@ -20,8 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import os
-
 import pyconverter.xml2py.custom_functions as cf
 
 
@@ -34,7 +32,7 @@ def test_customfunctions(custom_functions):
 
 
 def test_get_docstring_lists(path_custom_functions):
-    path_custom_function = os.path.join(path_custom_functions, "kdist.py")
+    path_custom_function = path_custom_functions / "kdist.py"
     list_py_returns, list_py_examples, list_py_code, list_import = cf.get_docstring_lists(
         path_custom_function
     )

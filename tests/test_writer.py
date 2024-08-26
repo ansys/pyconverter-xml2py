@@ -20,7 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import os
 import shutil
 
 import pyconverter.xml2py.writer as wrt
@@ -46,31 +45,23 @@ def test_convert(command_map, custom_functions):
 
 
 def test_copy_template_package(cwd):
-    new_package_path = os.path.join(cwd, "tmp_directory")
-    if os.path.isdir(new_package_path):
+    new_package_path = cwd / "tmp_directory"
+    if new_package_path.is_dir():
         shutil.rmtree(new_package_path)
-    os.makedirs(new_package_path)
-    template_path = os.path.join(cwd, "_package")
+    new_package_path.mkdir()
+    template_path = cwd / "_package"
     wrt.copy_template_package(template_path, new_package_path)
-    assert os.path.isdir(new_package_path) is True
-    assert os.path.isdir(os.path.join(new_package_path, "doc")) is True
-    assert os.path.isfile(os.path.join(new_package_path, "LICENSE")) is True
-    assert os.path.isdir(os.path.join(new_package_path, "doc", "source", "_templates")) is True
-    assert (
-        os.path.isfile(os.path.join(new_package_path, "doc", "source", "_templates", "base.rst"))
-        is True
-    )
+    assert new_package_path.is_dir() is True
+    assert (new_package_path / "doc").is_dir() is True
+    assert (new_package_path / "LICENSE").is_file() is True
+    assert (new_package_path / "doc" / "source" / "_templates").is_dir() is True
+    assert (new_package_path / "doc" / "source" / "_templates" / "base.rst").is_file() is True
     shutil.rmtree(new_package_path)
 
 
 @pytest.fixture
-def cwd():
-    return os.getcwd()
-
-
-@pytest.fixture
 def package_path(cwd):
-    return os.path.join(cwd, "package")
+    return cwd / "package"
 
 
 def test_write_source_with_custom_functions(
@@ -83,28 +74,24 @@ def test_write_source_with_custom_functions(
     library_name_structured,
 ):
     wrt.write_source(command_map, name_map, directory_path, cwd, path_custom_functions)
-    library_name = "/".join(library_name_structured)
     if not "src" in library_name_structured:
-        cmd_path = os.path.join(package_path, "src", library_name)
-    else:
-        cmd_path = os.path.join(package_path, library_name)
-    assert os.path.isfile(os.path.join(cmd_path, "apdl", "abbreviations.py"))
-    assert os.path.isdir(os.path.join(package_path, "doc", "source", "images"))
-    assert os.path.isfile(os.path.join(package_path, "doc", "source", "images", "gcmdrsymm1.png"))
+        library_name_structured.insert(0, "src")
+    cmd_path = package_path.joinpath(*library_name_structured)
+    assert (cmd_path / "apdl" / "abbreviations.py").is_file()
+    assert (package_path / "doc" / "source" / "images").is_dir()
+    assert (package_path / "doc" / "source" / "images" / "gcmdrsymm1.png").is_file()
 
 
 def test_write_source_no_custom_function(
     command_map, name_map, directory_path, cwd, package_path, library_name_structured
 ):
     wrt.write_source(command_map, name_map, directory_path, cwd)
-    library_name = "/".join(library_name_structured)
     if not "src" in library_name_structured:
-        cmd_path = os.path.join(package_path, "src", library_name)
-    else:
-        cmd_path = os.path.join(package_path, library_name)
-    assert os.path.isfile(os.path.join(cmd_path, "apdl", "abbreviations.py"))
-    assert os.path.isdir(os.path.join(package_path, "doc", "source", "images"))
-    assert os.path.isfile(os.path.join(package_path, "doc", "source", "images", "gcmdrsymm1.png"))
+        library_name_structured.insert(0, "src")
+    cmd_path = package_path.joinpath(*library_name_structured)
+    assert (cmd_path / "apdl" / "abbreviations.py").is_file()
+    assert (package_path / "doc" / "source" / "images").is_dir()
+    assert (package_path / "doc" / "source" / "images" / "gcmdrsymm1.png").is_file()
 
 
 def test_write_docs(package_path, package_structure):
