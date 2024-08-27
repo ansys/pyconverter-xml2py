@@ -1,0 +1,16 @@
+library_name_structured: # Future name of the library
+  - pyconverter
+  - generatedcommands
+
+new_package_name: package
+
+rules:
+  "/": slash
+  "*": star
+
+specific_command_mapping:
+  "*DEL": stardel
+  "C***": c
+
+specific_classes:
+  2D to 3D Analysis: Analysis 2D to 3D
