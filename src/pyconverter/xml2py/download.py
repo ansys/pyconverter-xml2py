@@ -23,27 +23,27 @@
 """Functions to download template datasets from the pyconverter-xml2py repository.
 """
 
-import os
+from pathlib import Path
 
 from github import ContentFile, Github, Repository
 import requests
 
 
-def download(c: ContentFile, out: str):
+def download(c: ContentFile, out: Path) -> None:
     """
     This function initially comes from the following GitHub repository:
     https://github.com/Nordgaren/Github-Folder-Downloader
 
     """
     r = requests.get(c.download_url)
-    output_path = f"{out}/{c.path}"
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    output_path = out / c.path
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "wb") as f:
         print(f"downloading {c.path} to {out}")
         f.write(r.content)
 
 
-def download_folder(repo: Repository, folder: str, out: str, recursive: bool):
+def download_folder(repo: Repository, folder: str, out: str, recursive: bool) -> None:
     """
     This function initially comes from the following GitHub repository:
     https://github.com/Nordgaren/Github-Folder-Downloader
@@ -58,7 +58,7 @@ def download_folder(repo: Repository, folder: str, out: str, recursive: bool):
         download(c, out)
 
 
-def download_template():
+def download_template() -> None:
     """Download the templage package provided by default."""
 
     g = Github()

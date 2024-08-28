@@ -21,10 +21,12 @@
 # SOFTWARE.
 
 import os
+from pathlib import Path
 
 from pyconverter.xml2py.custom_functions import CustomFunctions
 import pyconverter.xml2py.directory_format as ff
 import pyconverter.xml2py.load_xml_doc as lxd
+from pyconverter.xml2py.utils.utils import get_config_data_value
 import pyconverter.xml2py.writer as wrt
 import pytest
 
@@ -38,7 +40,7 @@ def pytest_addoption(parser):
 def pytest_generate_tests(metafunc):
     # This is called for every test. Only get/set command line arguments
     # if the argument is specified in the list of test "fixturenames".
-    option_value = metafunc.config.option.ghdir
+    option_value = Path(metafunc.config.option.ghdir)
     if "ghdir" in metafunc.fixturenames and option_value is not None:
         metafunc.parametrize("ghdir", [option_value])
 
@@ -46,9 +48,10 @@ def pytest_generate_tests(metafunc):
 @pytest.fixture
 def directory_path(ghdir):
     if os.environ.get("ON_CI", "").lower() == "true":
-        directory_path = os.path.join(ghdir, "mapdl-cmd-doc")
+        directory_path = Path(ghdir) / "mapdl-cmd-doc"
     else:
-        directory_path = os.path.abspath(os.path.join(os.getcwd(), "../mapdl-cmd-doc"))
+        directory_path = Path.cwd().parent / "mapdl-cmd-doc"
+        directory_path = directory_path.resolve()
     return directory_path
 
 
@@ -65,11 +68,6 @@ def link_path(directory_path):
 @pytest.fixture
 def term_path(directory_path):
     return ff.get_paths(directory_path)[2]
-
-
-@pytest.fixture
-def xml_path(directory_path):
-    return ff.get_paths(directory_path)[3]
 
 
 @pytest.fixture
@@ -103,25 +101,40 @@ def version_variables(load_terms):
 
 
 @pytest.fixture
-def commands(directory_path):
+def command_map(directory_path):
     return wrt.convert(directory_path)[0]
 
 
 @pytest.fixture
-def cmd_map(directory_path):
+def name_map(directory_path):
     return wrt.convert(directory_path)[1]
 
 
 @pytest.fixture
 def cwd():
-    return os.getcwd()
+    return Path.cwd()
 
 
 @pytest.fixture
 def path_custom_functions(cwd):
-    return os.path.join(cwd, "tests", "customized_functions")
+    return cwd / "tests" / "customized_functions"
 
 
 @pytest.fixture
 def custom_functions(path_custom_functions):
     return CustomFunctions(path_custom_functions)
+
+
+@pytest.fixture
+def config_path(cwd):
+    return cwd / "config.yaml"
+
+
+@pytest.fixture
+def library_name_structured(config_path):
+    return get_config_data_value(config_path, "library_name_structured")
+
+
+@pytest.fixture
+def package_structure(command_map, name_map, directory_path, cwd, path_custom_functions):
+    return wrt.write_source(command_map, name_map, directory_path, cwd, path_custom_functions)
