@@ -21,13 +21,13 @@
 # SOFTWARE.
 
 import logging
-import regex as re
 import textwrap
 import warnings
 
 from lxml.etree import tostring
 from lxml.html import fromstring
 from pyconverter.xml2py.utils.utils import is_numeric, split_trail_alpha
+import regex as re
 
 CONV_EQN = False
 
@@ -283,7 +283,7 @@ class Element:
 
 def resize_length(text, initial_indent, subsequent_indent, max_length=100):
     """Resize the length of a text."""
-    
+
     wrapper = textwrap.TextWrapper(
         width=max_length,
         break_long_words=False,
@@ -320,7 +320,6 @@ class ItemizedList(Element):
 
             rst_list = []
             if item_lines and isinstance(item, Member):
-                
                 line = (
                     item_lines[0].to_rst()
                     if isinstance(item_lines, Element)
@@ -329,17 +328,22 @@ class ItemizedList(Element):
                 rst_list.append(line)
                 for line in item_lines[1:]:
                     text = line.to_rst(indent) if isinstance(line, Element) else str(line)
-                    rst_list.append(textwrap.indent(text, indent + "  "))
-            
-            else: 
+                    rst_list.append(textwrap.indent(text, prefix=indent + "  "))
+
+            else:
                 rst_list = item_lines
-            
-            # rst_list = resize_length(rst_list, initial_indent="", subsequent_indent="", max_length=max_length)
+
+            # rst_list = resize_length(
+            #     rst_list,
+            #     initial_indent="",
+            #     subsequent_indent="",
+            #     max_length=max_length
+            # )
             for i in range(len(rst_list)):
                 rst_list[i] = ponctuaction_whitespace(rst_list[i], ".")
                 rst_list[i] = ponctuaction_whitespace(rst_list[i], ",")
-                rst_list[i] = resize_length(rst_list[i], initial_indent="", subsequent_indent="", max_length=max_length)
-            
+                rst_list[i] = resize_length(rst_list[i], initial_indent="", subsequent_indent="")
+
             lines.extend(rst_list)
 
         # lists must have at least one line proceeding
@@ -363,9 +367,11 @@ class Member(Element):
 def ponctuaction_whitespace(text, ponctuation):
     extra_space = re.findall(f"\S\h+\{ponctuation}", text)
     if extra_space:
-        for character in list(set(extra_space)): # remove duplicates in extra_space list
+        for character in list(set(extra_space)):  # remove duplicates in extra_space list
             assigned_character = "\)" if character[0] == ")" else character[0]
-            text = re.sub(f"{assigned_character}\h+\{ponctuation}", f"{assigned_character}{ponctuation}", text)
+            text = re.sub(
+                f"{assigned_character}\h+\{ponctuation}", f"{assigned_character}{ponctuation}", text
+            )
     return text
 
 
@@ -467,12 +473,12 @@ class OLink(Element):
             tail = self.tail
             tail = tail.replace("\n", "")
             tail = tail.replace("\r", "")
-        
+
             rst_link = f"`{content} <{link}>`_ {self.tail}"
 
         else:
             rst_link = super().to_rst(indent)
-        
+
         return rst_link
 
 
@@ -518,9 +524,9 @@ class Paragraph(Element):
                         items.append(item.to_rst(indent=indent))
             else:
                 items.append(str(item))
-        
+
         rst_item = " ".join(items) + "\n"
-        
+
         return rst_item
 
 
@@ -672,19 +678,27 @@ class ProgramListing(Element):
         """Return a string to enable converting the element to an RST format."""
         header = f"\n\n{indent}.. code::\n\n"
         source_code = re.sub(r"[^\S\r\n]", " ", self.source)  # Remove extra whitespaces
-        rst_item = header + textwrap.indent(source_code, indent + " " * 3) + "\n"
-        # rst_item = resize_length(rst_item, initial_indent="", subsequent_indent="   !", max_length=max_length, replace_whitespace=False)
+        rst_item = header + textwrap.indent(source_code, prefix=indent + " " * 3) + "\n"
+        # rst_item = resize_length(
+        #   rst_item,
+        #   initial_indent="",
+        #   subsequent_indent="   !",
+        #   max_length=max_length,
+        #   replace_whitespace=False
+        # )
         return rst_item
+
 
 def resize_list_text(text, max_length=100):
     lines = text.split("\n")
     new_text = []
     for line in lines:
         n_line = len(re.match(r"^\s*", line).group())
-        if line.strip() and line.strip()[0] =="*":
-            n_line +=2
-        new_text.append(resize_length(line, "", " "*n_line, max_length))
+        if line.strip() and line.strip()[0] == "*":
+            n_line += 2
+        new_text.append(resize_length(line, "", " " * n_line, max_length))
     return "\n".join(new_text)
+
 
 class Variablelist(Element):
     """Provides the variable list."""
@@ -697,25 +711,24 @@ class Variablelist(Element):
                 continue
             if isinstance(item, Element):
                 if item.tag in item_needing_all:
-                    active_items.append(
-                        item.to_rst(
-                            indent,
-                            links=links,
-                            base_url=base_url,
-                            fcache=fcache,
-                        )
+                    rst_item = item.to_rst(
+                        indent,
+                        links=links,
+                        base_url=base_url,
+                        fcache=fcache,
+                    )
                 elif item.tag in item_needing_links_base_url:
-                    rst_item = item.to_rst(indent, links=links, base_url=base_url)
+                    rst_item = item.to_rst(indent=indent, links=links, base_url=base_url)
                 elif item.tag in item_needing_fcache:
                     rst_item = item.to_rst(indent=indent, fcache=fcache)
                 else:
-                    active_items.append(item.to_rst(indent))
+                    rst_item = item.to_rst(indent=indent)
             else:
                 rst_item = str(item)
-            
+
             rst_item = resize_list_text(rst_item, max_length)
             active_items.append(rst_item)
-            
+
         return "\n".join(active_items) + "\n"
 
     @property
@@ -876,7 +889,7 @@ class VarlistEntry(Element):
             lines.append(
                 textwrap.indent(
                     self.py_text(links=links, base_url=base_url, fcache=fcache),
-                    indent,
+                    prefix=indent,
                 )
             )
             return "\n".join(lines)
@@ -986,7 +999,7 @@ class Math(_Math):
     def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
         lines = ["", "", f"{indent}.. math::\n"]
-        lines.append(textwrap.indent(self.equation, indent=indent + " " * 4))
+        lines.append(textwrap.indent(self.equation, prefix=indent + " " * 4))
         lines.append("")
         return "\n".join(lines)
 
@@ -1114,7 +1127,7 @@ class Caution(Element):
     def to_rst(self, indent=""):
         """Return a string to enable converting the element to an RST format."""
         lines = ["", "", ".. warning::"]
-        lines.append(textwrap.indent(str(self), indent=indent + "   "))
+        lines.append(textwrap.indent(str(self), prefix=indent + "   "))
         return "\n".join(lines)
 
 
@@ -2374,10 +2387,10 @@ class XMLCommand(Element):
             else:
                 command = 'command = f"' + self.name + '"\n'
             return_command = "return self.run(command, **kwargs)\n"
-            source = textwrap.indent("".join([command, return_command]), indent=" " * 4 + indent)
+            source = textwrap.indent("".join([command, return_command]), prefix=" " * 4 + indent)
 
         else:
-            source = textwrap.indent("".join(custom_functions.py_code[self.py_name]), indent)
+            source = textwrap.indent("".join(custom_functions.py_code[self.py_name]), prefix=indent)
         return source
 
     def to_python(self, custom_functions=None, indent=""):
@@ -2398,7 +2411,7 @@ class XMLCommand(Element):
         """
 
         docstr = textwrap.indent(
-            f'r"""{self.py_docstring(custom_functions)}\n"""', indent=indent + " " * 4
+            f'r"""{self.py_docstring(custom_functions)}\n"""', prefix=indent + " " * 4
         )
         if custom_functions is not None and self.py_name in custom_functions.lib_import:
             imports = "\n".join(custom_functions.lib_import[self.py_name])
