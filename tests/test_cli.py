@@ -48,4 +48,5 @@ def test_cli_main_package_group():
     assert "-f, --func-path PATH" in result.output
     assert "-p, --targ-path PATH" in result.output
     assert "-t, --template-path PATH" in result.output
+    assert "-b, --run-black BOOLEAN" in result.output
     assert "-l, --max-length INTEGER" in result.output
