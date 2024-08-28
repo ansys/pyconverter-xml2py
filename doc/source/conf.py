@@ -90,7 +90,6 @@ intersphinx_mapping = {
 # numpydoc configuration
 numpydoc_show_class_members = False
 numpydoc_xref_param_type = True
-numpydoc_xref_param_type = True
 autosectionlabel_prefix_document = True
 
 # Consider enabling numpydoc validation. See:

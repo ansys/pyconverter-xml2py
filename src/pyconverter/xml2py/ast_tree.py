@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 import logging
-import re
+import regex as re
 import textwrap
 import warnings
 
@@ -342,12 +342,14 @@ class Element:
 
 
 def resize_length(text, initial_indent, subsequent_indent, max_length=100):
-
+    """Resize the length of a text."""
+    
     wrapper = textwrap.TextWrapper(
         width=max_length,
         break_long_words=False,
         initial_indent=initial_indent,
         subsequent_indent=subsequent_indent,
+        drop_whitespace=False,
     )
     return wrapper.fill(text=text)
 
@@ -376,24 +378,29 @@ class ItemizedList(Element):
             else:
                 item_lines = str(item).splitlines()
 
+            rst_list = []
             if item_lines and isinstance(item, Member):
+                
                 line = (
                     item_lines[0].to_rst()
                     if isinstance(item_lines, Element)
                     else str(item_lines[0])
                 )
-                resized_line = resize_length(
-                    line,
-                    initial_indent=prefix + "* ",
-                    subsequent_indent="  ",
-                    max_length=max_length,
-                )
-                lines.append(resized_line)
+                rst_list.append(line)
                 for line in item_lines[1:]:
                     text = line.to_rst(prefix) if isinstance(line, Element) else str(line)
-                    lines.append(textwrap.indent(text, prefix + "  "))
-            else:
-                lines.extend(item_lines)
+                    rst_list.append(textwrap.indent(text, prefix + "  "))
+            
+            else: 
+                rst_list = item_lines
+            
+            # rst_list = resize_length(rst_list, initial_indent="", subsequent_indent="", max_length=max_length)
+            for i in range(len(rst_list)):
+                rst_list[i] = ponctuaction_whitespace(rst_list[i], ".")
+                rst_list[i] = ponctuaction_whitespace(rst_list[i], ",")
+                rst_list[i] = resize_length(rst_list[i], initial_indent="", subsequent_indent="", max_length=max_length)
+            
+            lines.extend(rst_list)
 
         # lists must have at least one line proceeding
         lines = ["", ""] + lines + [""]
@@ -427,10 +434,11 @@ class Member(Element):
 
 
 def ponctuaction_whitespace(text, ponctuation):
-    extra_space = re.findall(f"\w \{ponctuation}", text)
+    extra_space = re.findall(f"\S\h+\{ponctuation}", text)
     if extra_space:
-        for character in extra_space:
-            text = re.sub(f"\w \{ponctuation}", f"{character[0]}{ponctuation}", text)
+        for character in list(set(extra_space)): # remove duplicates in extra_space list
+            assigned_character = "\)" if character[0] == ")" else character[0]
+            text = re.sub(f"{assigned_character}\h+\{ponctuation}", f"{assigned_character}{ponctuation}", text)
     return text
 
 
@@ -463,7 +471,7 @@ class OrderedList(Element):
 class ListItem(Element):
     """Provides the list item element."""
 
-    def to_rst(self, prefix="", max_length=100, links=None, base_url=None, fcache=None):
+    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
@@ -484,12 +492,6 @@ class ListItem(Element):
             else:
                 rst_item = str(item)
 
-            # resized_item = resize_length(
-            #     rst_item, initial_indent="", subsequent_indent="", max_length=max_length
-            # )
-            # if resized_item != rst_item:
-            #     print("Initial item : ", rst_item)
-            #     print("Resized item : ", resized_item)
             items.append(rst_item)
         return "\n".join(items)
 
@@ -538,9 +540,13 @@ class OLink(Element):
             tail = self.tail
             tail = tail.replace("\n", "")
             tail = tail.replace("\r", "")
-            return f"`{content} <{link}>`_ {self.tail}"
+        
+            rst_link = f"`{content} <{link}>`_ {self.tail}"
 
-        return super().to_rst(prefix)
+        else:
+            rst_link = super().to_rst(prefix)
+        
+        return rst_link
 
 
 class Paragraph(Element):
@@ -552,7 +558,7 @@ class Paragraph(Element):
         lines.append("\n")
         return "".join(lines)
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, prefix="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
@@ -585,18 +591,10 @@ class Paragraph(Element):
                         items.append(item.to_rst(prefix=prefix))
             else:
                 items.append(str(item))
-
-        # if len(items) > 1:
-        #     spaced_items = []
-        #     for item in items:
-        #         if not item.startswith('\n'):
-        #             spaced_items.append(' ' + item)
-        #         else:
-        #             spaced_items.append(item)
-        # else:
-        #     spaced_items = items
-
-        return " ".join(items) + "\n"
+        
+        rst_item = " ".join(items) + "\n"
+        
+        return rst_item
 
 
 class Phrase(Element):
@@ -743,16 +741,28 @@ class ProgramListing(Element):
             return "\n".join(str(item) for item in self.content)
         return self._element.text
 
-    def to_rst(self, prefix=""):
+    def to_rst(self, prefix="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         header = f"\n\n{prefix}.. code::\n\n"
-        return header + textwrap.indent(self.source, prefix + " " * 3) + "\n"
+        source_code = re.sub(r"[^\S\r\n]", " ", self.source)  # Remove extra whitespaces
+        rst_item = header + textwrap.indent(source_code, prefix + " " * 3) + "\n"
+        # rst_item = resize_length(rst_item, initial_indent="", subsequent_indent="   !", max_length=max_length, replace_whitespace=False)
+        return rst_item
 
+def resize_list_text(text, max_length=100):
+    lines = text.split("\n")
+    new_text = []
+    for line in lines:
+        n_line = len(re.match(r"^\s*", line).group())
+        if line.strip() and line.strip()[0] =="*":
+            n_line +=2
+        new_text.append(resize_length(line, "", " "*n_line, max_length))
+    return "\n".join(new_text)
 
 class Variablelist(Element):
     """Provides the variable list."""
 
-    def to_rst(self, prefix="", links=None, base_url=None, fcache=None):
+    def to_rst(self, prefix="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         active_items = []
         for item in self:
@@ -760,22 +770,24 @@ class Variablelist(Element):
                 continue
             if isinstance(item, Element):
                 if item.tag in item_needing_all:
-                    active_items.append(
-                        item.to_rst(
+                    rst_item = item.to_rst(
                             prefix,
                             links=links,
                             base_url=base_url,
                             fcache=fcache,
                         )
-                    )
                 elif item.tag in item_needing_links_base_url:
-                    active_items.append(item.to_rst(prefix, links=links, base_url=base_url))
+                    rst_item = item.to_rst(prefix, links=links, base_url=base_url)
                 elif item.tag in item_needing_fcache:
-                    active_items.append(item.to_rst(prefix=prefix, fcache=fcache))
+                    rst_item = item.to_rst(prefix=prefix, fcache=fcache)
                 else:
-                    active_items.append(item.to_rst(prefix))
+                    rst_item = item.to_rst(prefix)
             else:
-                active_items.append(str(item))
+                rst_item = str(item)
+            
+            rst_item = resize_list_text(rst_item, max_length)
+            active_items.append(rst_item)
+            
         return "\n".join(active_items) + "\n"
 
     @property
