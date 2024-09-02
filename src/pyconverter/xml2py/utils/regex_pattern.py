@@ -25,4 +25,4 @@ GET_GROUP = r"(?<=&)(.*?)(?=;)"
 GET_CLASSNAME = r"(\S+)(?=:)"
 GET_TYPENAME_1OPT = r"(?<=:)(.*)"
 GET_TYPENAME_2OPT = r"(?<=:)(.*?)(?=[A-Z][A-Z])"
-GET_IMPORTS = r"((import|from) [^\n]*)"
+GET_IMPORTS = r"^[^>>>]+(from [a-zA-Z0-9_.]* import [a-zA-Z0-9_.] as [a-zA-Z0-9_.]*\s|from [a-zA-Z0-9_.]* import [a-zA-Z0-9_.]*\s|import [a-zA-Z0-9_.]* as [a-zA-Z0-9_.]*\s|import [a-zA-Z0-9_.]*\s)" # noqa: E501

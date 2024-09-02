@@ -150,8 +150,9 @@ def import_handler(
     """
     needed_imports = ""
     for match in findalls:
-        needed_imports += f"{match[0]}\n"
-        additional_content = additional_content.replace(match[0], "").replace("\n\n", "\n")
+        print("MATCH : ", match)
+        needed_imports += f"{match}\n"
+        additional_content = additional_content.replace(match, "").replace("\n\n", "\n")
 
     with open(filename, "r+") as f:
         content = f.read()
