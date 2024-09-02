@@ -132,10 +132,8 @@ class CustomFunctions:
     @path.setter
     def path(self, path: Path) -> None:
         self._path = path
-        try:
-            path.is_dir()
-        except FileExistsError:
-            raise (FileExistsError, f"The path_functions {path} does not exist.")
+        # Check if the path exists
+        path.is_dir()
         self._py_names = []
         for filename in Path(path).glob("*.py"):
             py_name = filename.stem
