@@ -189,7 +189,7 @@ def copy_template_package(template_path: Path, new_package_path: Path, clean: bo
 
     clean : bool, optional
         Whether the directories in the path for the new package must be cleared before adding
-        new files. The default is ``False``.
+        new files. The default value is ``False``.
 
     Returns
     -------
@@ -369,20 +369,20 @@ def write_source(
     target_path : Path
         Path object to generate the new package to.
     path_custom_functions : Path, optional
-        Path object containing the customized functions. The default is ``None``.
+        Path object containing the customized functions. The default value is ``None``.
     template_path : Path, optional
         Path object of the template to use. If no path is provided, the default template is used.
     config_path : Path, optional
-        Path object of the configuration file. The default is ``Path(config.yaml)``.`.
+        Path object of the configuration file. The default value is ``Path(config.yaml)``.`.
     clean : bool, optional
         Whether the directories in the new package path must be cleared before adding
-        new files. The default is ``True``.
+        new files. The default value is ``True``.
     structured : bool, optional
-        Whether the package should be structured. The default is ``True``.
+        Whether the package should be structured. The default value is ``True``.
     check_structure_map : bool, optional
-        Whether the structure map must be checked. The default is ``False``.
+        Whether the structure map must be checked. The default value is ``False``.
     check_files : bool, optional
-        Whether the files must be checked. The default is ``False``.
+        Whether the files must be checked. The default value is ``False``.
 
     Returns
     -------
@@ -524,7 +524,7 @@ def write_docs(
         Dictionary with the following format:
         ``{'python_module_name': [{'python_class_name': python_names_list}]}``.
     config_path : Path, optional
-        Path object of the configuration file. The default is ``Path(config.yaml)``.
+        Path object of the configuration file. The default value is ``Path(config.yaml)``.
 
     Returns
     -------

@@ -27,7 +27,8 @@ from lxml.html import fromstring
 import yaml
 
 
-def parse_yaml(yaml_path: Path) -> None:
+
+def parse_yaml(yaml_path: Path) -> dict:
     """
     Parse a YAML file.
 
@@ -35,6 +36,11 @@ def parse_yaml(yaml_path: Path) -> None:
     ----------
     yaml_path : Path
         Path object of the YAML file.
+    
+    Returns
+    -------
+    dict
+        Dictionary with the content of the YAML file.
     """
     if yaml_path.is_file():
         with open(yaml_path, "r") as file:
