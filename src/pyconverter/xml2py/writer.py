@@ -466,21 +466,21 @@ def write_source(
             class_structure.append(command.py_name)
 
             package_structure[module_name][file_name] = [class_name, class_structure]
+            python_method = command.to_python(custom_functions, indent=4 * " ")
+
+            # Check if there are any imports to be added before the function definition.
+            reg_before_def = pat.BEFORE_DEF + f"{command.py_name})"
+            # Needs to be ``re.search`` and not ``re.findall`` for performance reasons
+            str_before_def = re.search(reg_before_def, python_method).group()
+            str_before_def = str_before_def.replace("\n    ", "")
 
             # Write the Python method to the class file
-            with open(file_path, "a", encoding="utf-8") as fid:
-                python_method = command.to_python(custom_functions, indent=4 * " ")
-
-                # Check if there are any imports to be added before the function definition.
-                str_before_def = re.findall(pat.BEFORE_DEF, python_method)[0]
-                output = re.findall(pat.GET_IMPORTS, str_before_def)
-                if len(output) == 0:
+            if str_before_def != "":
+                import_handler(file_path, python_method, str_before_def)
+            else:
+                with open(file_path, "a", encoding="utf-8") as fid:
                     fid.write(f"{python_method}\n")
                     fid.close()
-                else:
-                    fid.close()
-                    import_handler(file_path, python_method, output)
-
             all_commands.append(command.name)
 
     if check_structure_map:

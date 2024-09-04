@@ -20,10 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import logging as log
 from pathlib import Path
 from typing import Tuple
-
-import numpy as np
 
 
 def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str], list[str]]:
@@ -48,8 +47,9 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
     """
     pyfile = open(filename, "r")
     lines = pyfile.readlines()
+    pyfile.close()
+    bool_def = False
     bool_return = False
-    bool_notes = False
     bool_examples = False
     begin_docstring = False
     end_docstring = False
@@ -58,29 +58,32 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
     list_py_code = []
     list_import = []
     for line in lines:
-        if "import" in line:
+        if "import" in line and bool_def is False:
             list_import.append(line)
-        elif "Returns" in line and bool_return is False:
-            bool_return = True
-            list_py_returns.append(line.strip())
-        elif "Notes" in line and bool_notes is False:
-            bool_notes = True
-        elif "Examples" in line and bool_examples is False:
-            bool_examples = True
-            list_py_examples.append(line.strip())
+        elif "def" in line and bool_def is False:
+            bool_def = True
         elif '"""' in line and begin_docstring is False:
             begin_docstring = True
         elif '"""' in line and begin_docstring is True:
+            bool_return = False
+            bool_examples = False
             end_docstring = True
-        elif bool_return is True and np.all(
-            np.array([bool_notes, bool_examples, end_docstring]) == False
-        ):
+        elif "Returns\n" in line:
+            bool_return = True
+            bool_examples = False
             list_py_returns.append(line.strip())
-        elif bool_examples is True and end_docstring is False:
+        elif "Examples\n" in line:
+            bool_examples = True
+            bool_return = False
             list_py_examples.append(line.strip())
+        # Section order within docstrings: Returns, Notes, Examples
         elif end_docstring is True:
             list_py_code.append(line)
-    pyfile.close()
+        elif bool_examples is True:
+            list_py_examples.append(line.strip())
+        elif bool_return is True:
+            list_py_returns.append(line.strip())
+
     return list_py_returns, list_py_examples, list_py_code, list_import
 
 
@@ -121,6 +124,8 @@ class CustomFunctions:
                 self._py_examples[py_name] = list_py_examples
             if len(list_py_code) > 0:
                 self._py_code[py_name] = list_py_code
+            else:
+                log.warning(f"No code found in {filename}")
             if len(list_import) > 0:
                 self._lib_import[py_name] = list_import
 

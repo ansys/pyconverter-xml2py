@@ -134,7 +134,7 @@ def create_name_map(meta_command: list[str], yaml_file_path: Path) -> dict:
 def import_handler(
     filename: Path,
     additional_content: str,
-    findalls: list[tuple],
+    str_before_def: str,
 ) -> None:
     """
     Handle the imports in the Python file.
@@ -145,20 +145,15 @@ def import_handler(
         Path object of the Python file.
     additional_content : str
         Additional content to add to the Python file.
-    findalls : list[tuple]
-        List of tuples containing the imports to add to the Python file.
+    str_before_def : str
+        String before the function definition.
     """
-    needed_imports = ""
-    for match in findalls:
-        print("MATCH : ", match)
-        needed_imports += f"{match}\n"
-        additional_content = additional_content.replace(match, "").replace("\n\n", "\n")
+    additional_content = additional_content.replace(str_before_def, "").replace("\n\n", "\n")
 
     with open(filename, "r+") as f:
         content = f.read()
-        if needed_imports not in content:
-            f.seek(0, 0)
-            f.write(needed_imports + content + additional_content)
+        f.seek(0, 0)
+        f.write(str_before_def + content + additional_content)
 
 
 # ############################################################################

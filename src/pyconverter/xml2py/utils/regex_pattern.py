@@ -20,9 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-BEFORE_DEF = r"[\s\S]*?(?=def)"
+BEFORE_DEF = r"[\s\S]*?(?=def "
 GET_GROUP = r"(?<=&)(.*?)(?=;)"
 GET_CLASSNAME = r"(\S+)(?=:)"
 GET_TYPENAME_1OPT = r"(?<=:)(.*)"
 GET_TYPENAME_2OPT = r"(?<=:)(.*?)(?=[A-Z][A-Z])"
-GET_IMPORTS = r"^[^>>>]+(from [a-zA-Z0-9_.]* import [a-zA-Z0-9_.] as [a-zA-Z0-9_.]*\s|from [a-zA-Z0-9_.]* import [a-zA-Z0-9_.]*\s|import [a-zA-Z0-9_.]* as [a-zA-Z0-9_.]*\s|import [a-zA-Z0-9_.]*\s)" # noqa: E501
+# Not used for now, can be added in case of complications with imports in the future
+GET_IMPORTS = r"(?:(?:from [a-zA-Z0-9_.]* import [a-zA-Z0-9_.]* as [a-zA-Z0-9_.]*)|(?:from [a-zA-Z0-9_.]* import [a-zA-Z0-9_.]*)|(?:import [a-zA-Z0-9_.]* as [a-zA-Z0-9_.]*)|(?:import [a-zA-Z0-9_.]*)\s)"  # noqa: E501
