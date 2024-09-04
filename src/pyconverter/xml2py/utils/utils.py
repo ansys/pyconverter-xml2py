@@ -163,9 +163,8 @@ def import_handler(
             f.seek(0, 0)
             f.write(str_before_def + content + additional_content)
     else:
-        with open(filename, "r+") as f:
-            f.seek(0, 0)
-            f.write(content + additional_content)
+        with open(filename, "a") as f:
+            f.write(additional_content)
 
 
 # ############################################################################
