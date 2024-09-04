@@ -148,12 +148,24 @@ def import_handler(
     str_before_def : str
         String before the function definition.
     """
-    additional_content = additional_content.replace(str_before_def, "").replace("\n\n", "\n")
 
-    with open(filename, "r+") as f:
-        content = f.read()
-        f.seek(0, 0)
-        f.write(str_before_def + content + additional_content)
+    content = open(filename, "r").read()
+    list_imports = list(filter(None, str_before_def.split("\n")))
+    for import_line in list_imports:
+        if import_line in content:
+            list_imports.remove(import_line)
+        additional_content = additional_content.replace(import_line, "")
+
+    additional_content = additional_content.replace("\n\n", "\n")
+    if len(list_imports) > 0:
+        str_before_def = "\n".join(list_imports) + "\n\n"
+        with open(filename, "r+") as f:
+            f.seek(0, 0)
+            f.write(str_before_def + content + additional_content)
+    else:
+        with open(filename, "r+") as f:
+            f.seek(0, 0)
+            f.write(content + additional_content)
 
 
 # ############################################################################
