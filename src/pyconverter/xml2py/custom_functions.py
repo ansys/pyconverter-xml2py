@@ -45,9 +45,9 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
     List[str]
         List containing the library import section.
     """
-    pyfile = open(filename, "r")
-    lines = pyfile.readlines()
-    pyfile.close()
+    lines = None
+    with open(filename, "r") as pyfile:
+        lines = pyfile.readlines()
     bool_def = False
     bool_return = False
     bool_examples = False
