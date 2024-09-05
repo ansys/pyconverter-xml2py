@@ -39,7 +39,7 @@ def test_get_docstring_lists(path_custom_functions):
         list_py_code,
         list_import,
     ) = cf.get_docstring_lists(path_custom_function)
-    "list" in list_py_returns
+    "    list" in list_py_returns
     "Compute the distance between two keypoints." in list_py_examples
     'return parse.parse_kdist(self.run(f"KDIST,{kp1},{kp2}", **kwargs))' in list_py_code
     "import parse\n" in list_import
