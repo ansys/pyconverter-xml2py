@@ -27,7 +27,7 @@ from lxml.html import fromstring
 import yaml
 
 
-def parse_yaml(yaml_path: Path) -> None:
+def parse_yaml(yaml_path: Path) -> dict:
     """
     Parse a YAML file.
 
@@ -35,6 +35,11 @@ def parse_yaml(yaml_path: Path) -> None:
     ----------
     yaml_path : Path
         Path object of the YAML file.
+
+    Returns
+    -------
+    dict
+        Dictionary with the content of the YAML file.
     """
     if yaml_path.is_file():
         with open(yaml_path, "r") as file:
@@ -129,7 +134,7 @@ def create_name_map(meta_command: list[str], yaml_file_path: Path) -> dict:
 def import_handler(
     filename: Path,
     additional_content: str,
-    findalls: list[tuple],
+    str_before_def: str,
 ) -> None:
     """
     Handle the imports in the Python file.
@@ -140,18 +145,25 @@ def import_handler(
         Path object of the Python file.
     additional_content : str
         Additional content to add to the Python file.
-    findalls : list[tuple]
-        List of tuples containing the imports to add to the Python file.
+    str_before_def : str
+        String before the function definition.
     """
-    needed_imports = ""
-    for match in findalls:
-        needed_imports += f"{match[0]}\n"
-        additional_content = additional_content.replace(match[0], "").replace("\n\n", "\n")
 
-    with open(filename, "r+") as f:
-        content = f.read()
-        f.seek(0, 0)
-        f.write(needed_imports + content + additional_content)
+    content = open(filename, "r").read()
+    list_imports = list(filter(None, str_before_def.split("\n")))
+    for import_line in list_imports:
+        if import_line in content:
+            list_imports.remove(import_line)
+        additional_content = additional_content.replace(import_line, "")
+
+    if len(list_imports) > 0:
+        str_before_def = "\n".join(list_imports) + "\n\n"
+        with open(filename, "r+") as f:
+            f.seek(0, 0)
+            f.write(str_before_def + content + additional_content)
+    else:
+        with open(filename, "a") as f:
+            f.write(additional_content)
 
 
 # ############################################################################

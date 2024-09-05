@@ -189,7 +189,7 @@ def copy_template_package(template_path: Path, new_package_path: Path, clean: bo
 
     clean : bool, optional
         Whether the directories in the path for the new package must be cleared before adding
-        new files. The default is ``False``.
+        new files. The default value is ``False``.
 
     Returns
     -------
@@ -369,20 +369,20 @@ def write_source(
     target_path : Path
         Path object to generate the new package to.
     path_custom_functions : Path, optional
-        Path object containing the customized functions. The default is ``None``.
+        Path object containing the customized functions. The default value is ``None``.
     template_path : Path, optional
         Path object of the template to use. If no path is provided, the default template is used.
     config_path : Path, optional
-        Path object of the configuration file. The default is ``Path(config.yaml)``.`.
+        Path object of the configuration file. The default value is ``Path(config.yaml)``.`.
     clean : bool, optional
         Whether the directories in the new package path must be cleared before adding
-        new files. The default is ``True``.
+        new files. The default value is ``True``.
     structured : bool, optional
-        Whether the package should be structured. The default is ``True``.
+        Whether the package should be structured. The default value is ``True``.
     check_structure_map : bool, optional
-        Whether the structure map must be checked. The default is ``False``.
+        Whether the structure map must be checked. The default value is ``False``.
     check_files : bool, optional
-        Whether the files must be checked. The default is ``False``.
+        Whether the files must be checked. The default value is ``False``.
 
     Returns
     -------
@@ -466,21 +466,21 @@ def write_source(
             class_structure.append(command.py_name)
 
             package_structure[module_name][file_name] = [class_name, class_structure]
+            python_method = command.to_python(custom_functions, indent=4 * " ")
+
+            # Check if there are any imports to be added before the function definition.
+            reg_before_def = pat.BEFORE_DEF + f"{command.py_name})"
+            # Needs to be ``re.search`` and not ``re.findall`` for performance reasons
+            str_before_def = re.search(reg_before_def, python_method).group()
+            str_before_def = str_before_def.replace("\n    ", "")
 
             # Write the Python method to the class file
-            with open(file_path, "a", encoding="utf-8") as fid:
-                python_method = command.to_python(custom_functions, indent=4 * " ")
-
-                # Check if there are any imports to be added before the function definition.
-                str_before_def = re.findall(pat.BEFORE_DEF, python_method)[0]
-                output = re.findall(pat.GET_IMPORTS, str_before_def)
-                if len(output) == 0:
+            if str_before_def != "":
+                import_handler(file_path, python_method, str_before_def)
+            else:
+                with open(file_path, "a", encoding="utf-8") as fid:
                     fid.write(f"{python_method}\n")
                     fid.close()
-                else:
-                    fid.close()
-                    import_handler(file_path, python_method, output)
-
             all_commands.append(command.name)
 
     if check_structure_map:
@@ -524,7 +524,7 @@ def write_docs(
         Dictionary with the following format:
         ``{'python_module_name': [{'python_class_name': python_names_list}]}``.
     config_path : Path, optional
-        Path object of the configuration file. The default is ``Path(config.yaml)``.
+        Path object of the configuration file. The default value is ``Path(config.yaml)``.
 
     Returns
     -------
