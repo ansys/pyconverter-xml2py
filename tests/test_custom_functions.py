@@ -27,7 +27,7 @@ def test_customfunctions(custom_functions):
     assert "k" in custom_functions._py_names
     assert "    msg = self.run(command, **kwargs)\n" in custom_functions._py_code["k"]
     assert "import re\n" in custom_functions._lib_import["k"]
-    assert "list" in custom_functions._py_returns["kdist"]
+    assert "    list" in custom_functions._py_returns["kdist"]
     assert "Compute the distance between two keypoints." in custom_functions._py_examples["kdist"]
 
 
