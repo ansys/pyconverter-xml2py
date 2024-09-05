@@ -51,6 +51,7 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
     bool_def = False
     bool_return = False
     bool_examples = False
+    bool_notes = False
     begin_docstring = False
     end_docstring = False
     list_py_returns = []
@@ -71,11 +72,18 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
         elif "Returns\n" in line:
             bool_return = True
             bool_examples = False
+            bool_notes = False
             list_py_returns.append(line.strip())
         elif "Examples\n" in line:
             bool_examples = True
             bool_return = False
+            bool_notes = False
             list_py_examples.append(line.strip())
+        elif "Notes\n" in line:
+            bool_notes = True
+            bool_return = False
+            bool_examples = False
+            list_py_returns.append(line.strip())
         # Section order within docstrings: Returns, Notes, Examples
         elif end_docstring is True:
             list_py_code.append(line)
@@ -83,6 +91,8 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
             list_py_examples.append(line.strip())
         elif bool_return is True:
             list_py_returns.append(line.strip())
+        elif bool_notes is True:
+            pass  # Notes are obtained from the converter
 
     return list_py_returns, list_py_examples, list_py_code, list_import
 
