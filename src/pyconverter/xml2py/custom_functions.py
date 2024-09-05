@@ -90,7 +90,11 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
         elif bool_examples is True:
             list_py_examples.append(line.strip())
         elif bool_return is True:
-            list_py_returns.append(line.strip())
+            no_indent = ["int\n", "float\n", "str\n", "-------\n", "None\n", "bool\n"]
+            if any(n in line for n in no_indent):
+                list_py_returns.append(line.strip())
+            else:
+                list_py_returns.append(4 * " " + line.strip())
         elif bool_notes is True:
             pass  # Notes are obtained from the converter
 

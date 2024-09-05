@@ -156,7 +156,6 @@ def import_handler(
             list_imports.remove(import_line)
         additional_content = additional_content.replace(import_line, "")
 
-    additional_content = additional_content.replace("\n\n", "\n")
     if len(list_imports) > 0:
         str_before_def = "\n".join(list_imports) + "\n\n"
         with open(filename, "r+") as f:
