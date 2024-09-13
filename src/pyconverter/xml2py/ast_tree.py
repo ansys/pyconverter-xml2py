@@ -736,8 +736,13 @@ class Variablelist(Element):
                     rst_item = item.to_rst(indent=indent)
             else:
                 rst_item = str(item)
-
-            rst_item = resize_list_text(rst_item, max_length)
+            
+            if type(item) != str and len(item.children)>1 and type(item[1]) != str:
+                intersection_types = set(NO_RESIZE_LIST).intersection(set(item[1].children_types))
+                if len(intersection_types)==0:
+                    rst_item = resize_list_text(rst_item, max_length)
+            else:
+                rst_item = resize_list_text(rst_item, max_length)
             active_items.append(rst_item)
 
         return "\n".join(active_items) + "\n"
@@ -919,7 +924,7 @@ class VarlistEntry(Element):
 class Term(Element):
     """Provides the term element."""
 
-    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
 
         items = []
@@ -1946,14 +1951,57 @@ class ProductName(Element):
 #         pass
 #         # print(resize_length(self._description.to_rst(), max_length))
 
+class ArgumentList:
+    
+    def __init__(self, list_entry: VarlistEntry) -> None:
+        
+        self._list_entry = list_entry
+        self._arguments = []
+        self._parse_list_entry()
+    
+    def _parse_list_entry(self):
+        for item in self._list_entry:
+            if isinstance(item, VarlistEntry):
+                if len(Argument(item).multiple_args)>0:
+                    print("IT'S TRUE : ")
+                    print(Argument(item).multiple_args)
+                    for arg in Argument(item).multiple_args:
+                        self._arguments.append(arg)
+                else:
+                    self._arguments.append(Argument(item))
+    
+    @property
+    def arguments(self):
+        return self._arguments
+    
+    @arguments.setter
+    def arguments(self, argument):
+        self._arguments.append(argument)
 
 class Argument:
     """Argument object."""
 
-    def __init__(self, element):
-        self._name = element[0]
-        self._description = element[1]
+    def __init__(self, element:str | Element, description:Element | None=None) -> None:
+        if description is None:
+            name = element[0]
+            description = element[1]
+        else:
+            name = element
+        self._name = name
+        self._description = description
 
+    @property
+    def multiple_args(self):
+        additional_args = []
+        if "," in str(self._name):
+            for item_name in str(self._name).split(","):
+                print(item_name)
+                if item_name.strip() == "":
+                    continue
+                arg_name = item_name.strip()
+                additional_args.append(Argument(arg_name, self._description))    
+        return additional_args
+    
     def rec_find(self, _type: str, terms=None) -> Element | None:
         """Find the first type matching a given type string recursively."""
         for item in self:
@@ -1985,9 +2033,7 @@ class Argument:
             terms = varlist.terms
             if terms:
                 terms_numeric = [is_numeric(term) for term in terms]
-                if all(terms_numeric):
-                    parm_types = [int]
-                elif any(terms_numeric):
+                if any(terms_numeric):
                     parm_types = [int, str]
                 else:
                     parm_types = [str]
@@ -2009,6 +2055,15 @@ class Argument:
 
         if arg == "type":
             arg = "type_"
+        
+        elif "," in arg:
+            
+            for item_name in arg.split(","):
+                if item_name.strip() == "":
+                    continue
+                arg_name = item_name.strip()
+                Argument(arg_name, self._description)
+            
 
         return f"{arg}"
 
@@ -2019,11 +2074,11 @@ class Argument:
             description = self._description
         return resize_length(description, max_length, initial_indent=indent, subsequent_indent=indent, list=True)
 
-    def to_py_docstring(self, max_length=100, indent="", links=None, base_url=None) -> List[str]:
+    def to_py_docstring(self, max_length=100, indent="", links=None, base_url=None, fcache=None) -> List[str]:
         """Return a list of string to enable converting the element to an RST format."""
         
         docstring = [f"{indent}{self.py_arg_name} : {self.str_types(" or ")}"]
-        rst_description = self._description.to_rst(indent=indent, max_length = max_length, links=links, base_url=base_url)
+        rst_description = self._description.to_rst(indent=indent, max_length = max_length, links=links, base_url=base_url, fcache=fcache)
         if not "* " in rst_description:
             list_description = self.resized_description(rst_description, max_length, indent)
         else:
@@ -2034,8 +2089,12 @@ class Argument:
         return docstring
 
     def to_py_signature(self) -> str:
-        """Return the Python signature of the argument."""
-        return f"{self.py_arg_name}: {self.str_types(" | ")}"
+        """Return the Python signature of the argument."""        
+        if self.py_arg_name != "--" and self.py_arg_name != "–":
+            kwarg = f'{self.py_arg_name}: {self.str_types(" | ")}=""'
+        else:
+            kwarg = None   
+        return kwarg
 
 
 class XMLCommand(Element):
@@ -2089,39 +2148,23 @@ class XMLCommand(Element):
     def arg_desc(self) -> List[Argument]:
         """Argument object list of the command."""
         refsyn = self.rec_find("Refsynopsisdiv")
-        arguments = None
         # search by ID
+        arguments = []
         if refsyn is None:
-            arguments = []
             refsections = self.find_all("RefSection")
             for elem in refsections:
                 if (
                     elem.id is not None and "argdescript" in elem.id
                 ):
-                    for child in elem[1]:
-                        arguments.append(Argument(child))
-                    return arguments
+                    for child in elem:
+                        if isinstance(child, Variablelist):
+                            arguments = ArgumentList(child).arguments
+                            continue
         else:
-            # print("NUMBER OF CHILDREN : ", len(refsyn.children))
-            # for child in refsyn.children:
-            #     print("| TYPE : ", type(child))
-            #     print("| CHILD : ", child)
-            #     print("| NUMBER OF GRANDCHILDREN : ", len(child.children))
-            #     for gc in child.children:
-            #         print("|| TYPE : ", type(gc))
-            #         print("|| CHILD : ", gc)
-            #         print("|| NUMBER OF GREAT GRANDCHILDREN : ", len(gc.children))
-            #         for ggc in gc.children:
-            #             print("||| TYPE : ", type(ggc))
-            #             print("||| CHILD : ", ggc)
-            #             print("||| NUMBER OF GREAT GREAT GRANDCHILDREN : ", len(ggc.children))
-            #             for gggc in ggc.children:
-            #                 print("|||| TYPE : ", type(gggc))
-            #                 print("|||| CHILD : ", gggc)
-            #                 print("|||| NUMBER OF GREAT GREAT GREAT GRANDCHILDREN : ", len(gggc.children))
-                    
-            
-            arguments = [refsyn]
+            for elem in refsyn:
+                if isinstance(elem, Variablelist):
+                    arguments = ArgumentList(elem).arguments
+                    continue
         return arguments
 
     @property
@@ -2173,11 +2216,15 @@ class XMLCommand(Element):
         """Set the group of the command."""
         self._group = group
 
-    def py_signature(self, indent=""):
+    def py_signature(self, indent="") -> str:
         """Beginning of the Python command's definition."""
         args = ["self"]
-        kwargs = [f'{arg}=""' for arg in self.py_args if "--" not in arg]
-        arg_sig = ", ".join(args + kwargs)
+        if len(self.arg_desc) > 0:
+            for argument in self.arg_desc:
+                if argument.to_py_signature() is not None:
+                    args.append(argument.to_py_signature())
+        
+        arg_sig = ", ".join(args)
         return f"{indent}def {self.py_name}({arg_sig}, **kwargs):"
 
     def py_docstring(self, custom_functions, max_length=100):
@@ -2201,7 +2248,7 @@ class XMLCommand(Element):
         ):
             items += [""] + custom_functions.py_returns[self.py_name]
         if self.notes is not None:
-            items += [""] + self.py_notes
+            items += [""] + self.py_notes(max_length)
         if custom_functions is not None and (
             self.py_name in custom_functions.py_names
             and self.py_name in custom_functions.py_examples
@@ -2416,25 +2463,24 @@ class XMLCommand(Element):
 
         return docstr
 
-    @property
-    def py_notes(self):
+    def py_notes(self, max_length=100):
         """Python-formatted notes string."""
         lines = ["Notes", "-" * 5]
         if self.notes.tag in item_needing_all:
-            lines.append(
-                self.notes.to_rst(
+            notes = self.notes.to_rst(
                     links=self._links,
                     base_url=self._base_url,
                     fcache=self._fcache,
-                )
-            )
+                    )
         elif self.notes.tag in item_needing_links_base_url:
-            lines.append(self.notes.to_rst(links=self._links, base_url=self._base_url))
+            notes = self.notes.to_rst(links=self._links, base_url=self._base_url)
         elif self.notes.tag in item_needing_fcache:
-            lines.append(self.notes.to_rst(links=self._links, fcache=self._fcache))
+            notes = self.notes.to_rst(links=self._links, fcache=self._fcache)
         else:
-            lines.append(self.notes.to_rst())
+            notes = self.notes.to_rst()
 
+        notes = resize_length(notes, 100, list=True)
+        lines.extend(notes)
         return lines
 
     @property
@@ -2481,17 +2527,12 @@ class XMLCommand(Element):
     def py_parm(self, max_length=100, indent="", links=None, base_url=None, fcache=None):
         """Python parameter's string."""
         lines = []
-        if self.arg_desc is not None:
+        if len(self.arg_desc) > 0:
             lines.append("Parameters")
             lines.append("-" * 10)
-            print("COMMAND NAME : ", self.name)
             for argument in self.arg_desc:
-                if isinstance(argument, Argument):
-                    lines.extend(argument.to_py_docstring(max_length, indent, links, base_url))
-                elif isinstance(argument, Refsynopsisdiv):
-                    lines.extend(argument.to_rst(max_length=max_length, links=links, base_url=base_url, fcache=fcache).split("\n"))
+                lines.extend(argument.to_py_docstring(max_length, indent, links, base_url, fcache))
                 lines.append("")
-        print(lines)
         return lines
      
     # def py_parm(self, max_length=100):
