@@ -51,6 +51,35 @@ CONST = {
     '``"``': "``",
 }
 
+word_digit = [
+    'zero',
+    'one',
+    'two',
+    'three',
+    'four',
+    'five',
+    'six',
+    'seven',
+    'eight',
+    'nine',
+]
+
+superlatif = ["st", "nd", "rd", "th"]
+
+superlatif_digit = [
+    '',
+    'first',
+    'second',
+    'third',
+    'fourth',
+    'fifth',
+    'sixth',
+    'seventh',
+    'eighth',
+    'ninth',
+]
+
+
 CLEANUP = {
     ",, ": ", ",
     ", , ": ", ",
@@ -85,6 +114,31 @@ def to_py_name(name, name_map=None):
         return NAME_MAP_GLOB[name]
     else:
         return name
+
+def get_iter_values(name: str):
+    """Get the values of an iterator."""
+    output = re.search(r"([a-zA-Z_]*)(\d*)", name.strip())
+    groups = output.groups()
+    return groups[0], int(groups[1])
+
+def get_quant_iter_pos(name: str) -> tuple:
+    """
+    Get the values of a quantity iterator.
+    
+    Parameters
+    ----------
+    name : str
+        Name of the parameter containing the iterator.
+    
+    Returns
+    -------
+    tuple
+        Tuple containing the iteration value and the position of the iterator.
+    """
+    output = re.search(r"(?<=\+)\d*", name.strip()) # find the number after the '+'
+    iter = output.group()
+    position = output.span()
+    return int(iter), position
 
 
 # ############################################################################
@@ -1963,8 +2017,6 @@ class ArgumentList:
         for item in self._list_entry:
             if isinstance(item, VarlistEntry):
                 if len(Argument(item).multiple_args)>0:
-                    print("IT'S TRUE : ")
-                    print(Argument(item).multiple_args)
                     for arg in Argument(item).multiple_args:
                         self._arguments.append(arg)
                 else:
@@ -1994,12 +2046,54 @@ class Argument:
     def multiple_args(self):
         additional_args = []
         if "," in str(self._name):
-            for item_name in str(self._name).split(","):
-                print(item_name)
-                if item_name.strip() == "":
-                    continue
-                arg_name = item_name.strip()
-                additional_args.append(Argument(arg_name, self._description))    
+            split_name = str(self._name).split(",")
+            if ". . ." not in str(self._name) or "..." not in str(self._name):
+                for item_name in split_name:
+                    if item_name.strip() == "":
+                        continue
+                    arg_name = item_name.strip()
+                additional_args.append(Argument(arg_name, self._description))
+            else:
+                for i, item_name in enumerate(split_name):
+                    item_name = item_name.strip()
+                    if item_name == "":
+                        continue
+                    elif ". . ." in item_name or "..." in item_name:
+                        if "+" in split_name[i+1]:
+                            number_final_iter, (initial_pos_final, end_pos_final) = get_quant_iter_pos(split_name[i+1])
+                            if "+" in split_name[i-1]:
+                                number_prev_iter, (initial_pos_prev, end_pos_prev) = get_quant_iter_pos(split_name[i-1])
+                            else :
+                                number_prev_iter = 0
+                            
+                            for j in range(number_prev_iter+1, number_final_iter):
+                                arg_name = split_name[i+1].strip()
+                                arg_name = f"{arg_name[:initial_pos_final]}{j}{arg_name[end_pos_final:]}"
+                                additional_args.append(Argument(arg_name, self._description))
+                        else:
+                            print(repr(split_name[i-1]), repr(split_name[i+1]))
+                            k = i
+                            while split_name[k-1].strip() == "" and k-1 >= 0:
+                                k -= 1
+                                print(k, "SPLIT NAME : ", split_name[k-1].strip())
+                            if split_name[k-1].strip() == "":
+                                raise ValueError("The argument name is not consistent.")                                
+                            name_iter_prev, number_iter_prev = get_iter_values(split_name[k-1])
+                            name_iter_next, number_iter_next = get_iter_values(split_name[i+1])
+                            if name_iter_prev != name_iter_next:
+                                print(name_iter_prev, name_iter_next)
+                                logging.warning(f"The argument name is not consistent : {name_iter_prev} != {name_iter_next}")
+                                logging.info("Applying the longest name for the argument list as it's probably coming from a typography.")
+                                if len(name_iter_prev) > len(name_iter_next):
+                                    name_iter_next = name_iter_prev
+                                else:
+                                    name_iter_prev = name_iter_next
+                            else:
+                                for j in range(number_iter_prev+1, number_iter_next):
+                                    arg_name = f"{name_iter_prev}{j}"
+                                    additional_args.append(Argument(arg_name, self._description))
+                    else:
+                        additional_args.append(Argument(item_name, self._description))
         return additional_args
     
     def rec_find(self, _type: str, terms=None) -> Element | None:
@@ -2051,20 +2145,28 @@ class Argument:
     @property
     def py_arg_name(self) -> str:
         """Python-compatible term."""
-        arg = str(self._name).lower()
-
+        arg = str(self._name).lower().strip()
+        
+        if arg[0].isdigit():
+            if arg[1].isdigit():
+                raise ValueError(f"The code needs to be expanded to handle numbers")
+            elif arg[1:3] not in superlatif:
+                arg = f"{word_digit[int(arg[0])]}{arg[1:]}"
+            else:
+                arg = f"{superlatif_digit[int(arg[0])]}{arg[3:]}"
+        
+        arg = arg.replace("(" , "_").replace(")", "_").replace("+", "plus").replace("blank", "").replace("-", "_").replace("'", "")
+        arg = arg.strip()
+        
+        while len(arg) > 0 and arg[-1] == "_":
+            arg = arg[:-1]
+        
         if arg == "type":
             arg = "type_"
         
-        elif "," in arg:
-            
-            for item_name in arg.split(","):
-                if item_name.strip() == "":
-                    continue
-                arg_name = item_name.strip()
-                Argument(arg_name, self._description)
-            
-
+        elif arg == "class":
+            arg = "class_"
+        
         return f"{arg}"
 
     def resized_description(self, description: str|None=None, max_length: int =100, indent: str="") -> List[str]:
@@ -2076,21 +2178,23 @@ class Argument:
 
     def to_py_docstring(self, max_length=100, indent="", links=None, base_url=None, fcache=None) -> List[str]:
         """Return a list of string to enable converting the element to an RST format."""
-        
-        docstring = [f"{indent}{self.py_arg_name} : {self.str_types(" or ")}"]
-        rst_description = self._description.to_rst(indent=indent, max_length = max_length, links=links, base_url=base_url, fcache=fcache)
-        if not "* " in rst_description:
-            list_description = self.resized_description(rst_description, max_length, indent)
+        if self.py_arg_name not in ["--","–",""]:
+            docstring = [f"{indent}{self.py_arg_name} : {self.str_types(" or ")}"]
+            rst_description = self._description.to_rst(indent=indent, max_length = max_length, links=links, base_url=base_url, fcache=fcache)
+            if not "* " in rst_description:
+                list_description = self.resized_description(rst_description, max_length, indent)
+            else:
+                list_description = rst_description.split("\n")
+
+            docstring = [f"{indent}{self.py_arg_name} : {self.str_types(" or ")}"]
+            docstring.extend(list_description)
         else:
-            list_description = rst_description.split("\n")
-        
-        docstring = [f"{indent}{self.py_arg_name} : {self.str_types(" or ")}"]
-        docstring.extend(list_description)  
+            docstring = []
         return docstring
 
     def to_py_signature(self) -> str:
         """Return the Python signature of the argument."""        
-        if self.py_arg_name != "--" and self.py_arg_name != "–":
+        if self.py_arg_name not in ["--","–",""]:
             kwarg = f'{self.py_arg_name}: {self.str_types(" | ")}=""'
         else:
             kwarg = None   
@@ -2158,11 +2262,13 @@ class XMLCommand(Element):
                 ):
                     for child in elem:
                         if isinstance(child, Variablelist):
+                            print("COMMAND : ", self.name)
                             arguments = ArgumentList(child).arguments
                             continue
         else:
             for elem in refsyn:
                 if isinstance(elem, Variablelist):
+                    print("COMMAND : ", self.name)
                     arguments = ArgumentList(elem).arguments
                     continue
         return arguments
