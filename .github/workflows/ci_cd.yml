@@ -18,9 +18,9 @@ env:
   PACKAGE_NAME: 'pyconverter-xml2py'
   PACKAGE_NAMESPACE: 'pyconverter.xml2py'
   DOCUMENTATION_CNAME: 'pyconverter-xml2py.docs.pyansys.com'
-  RESET_PIP_CACHE: 0
-  RESET_AUTOSUMMARY_CACHE: 0
-  RESET_DOC_BUILD_CACHE: 0
+  RESET_PIP_CACHE: 10
+  RESET_AUTOSUMMARY_CACHE: 10
+  RESET_DOC_BUILD_CACHE: 10
   ON_CI: true
 
 concurrency:
