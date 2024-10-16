@@ -2378,7 +2378,7 @@ class Argument:
                 rst_description = textwrap.indent(rst_description, description_indent)
                 list_description = rst_description.split("\n")
 
-            docstring = [f"{indent}{self.py_arg_name} : {self.str_types(" or ")}"]
+            docstring = [f'{indent}{self.py_arg_name} : {self.str_types(" or ")}']
             docstring.extend(list_description)
         else:
             docstring = []
