@@ -1178,7 +1178,7 @@ class _Math(Element):
 class Math(_Math):
     """Provides the math element."""
 
-    def to_rst(self, indent=""):
+    def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         lines = ["", "", f"{indent}.. math::\n"]
         lines.append(textwrap.indent(self.equation, prefix=indent + " " * 4))
