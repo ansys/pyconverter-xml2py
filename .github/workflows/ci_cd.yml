@@ -14,13 +14,13 @@ on:
       - main
 
 env:
-  MAIN_PYTHON_VERSION: '3.10'
+  MAIN_PYTHON_VERSION: '3.12'
   PACKAGE_NAME: 'pyconverter-xml2py'
   PACKAGE_NAMESPACE: 'pyconverter.xml2py'
   DOCUMENTATION_CNAME: 'pyconverter-xml2py.docs.pyansys.com'
-  RESET_PIP_CACHE: 2
-  RESET_AUTOSUMMARY_CACHE: 2
-  RESET_DOC_BUILD_CACHE: 2
+  RESET_PIP_CACHE: 0
+  RESET_AUTOSUMMARY_CACHE: 0
+  RESET_DOC_BUILD_CACHE: 0
   ON_CI: true
 
 concurrency:
@@ -47,7 +47,6 @@ jobs:
         uses: ansys/actions/doc-style@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-
 
   smoke-tests:
     name: Build and Smoke tests (Linux)
