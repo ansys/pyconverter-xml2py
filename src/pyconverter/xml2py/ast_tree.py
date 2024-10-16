@@ -145,7 +145,7 @@ def get_quant_iter_pos(name: str) -> tuple:
 
     Parameters
     ----------
-    name : str
+    name: str
         Name of the parameter containing the iterator.
 
     Returns
@@ -1000,7 +1000,7 @@ class VarlistEntry(Element):
             if self.parm_types is not None:
                 ptype_str = " or ".join([parm_type.__name__ for parm_type in self.parm_types])
 
-                return f"{arg} : {ptype_str}"
+                return f"{arg}: {ptype_str}"
             return f"{arg}"
 
         if self.term.tag in item_needing_links_base_url:
@@ -2166,7 +2166,7 @@ class Argument:
     """Argument object."""
 
     def __init__(
-        self, element: str | Element, initial_argument: List, description: Element | None = None
+        self, element: str | Element, initial_argument: List, description: Element | str | None = None
     ) -> None:
         if description is None:
             if isinstance(element[0], Term):
@@ -2265,7 +2265,7 @@ class Argument:
                                 )
                                 if name_iter_prev != name_iter_next:
                                     logging.warning(
-                                        f"The argument name is not consistent : {name_iter_prev} != {name_iter_next}"  # noqa : E501
+                                        f"The argument name is not consistent: {name_iter_prev} != {name_iter_next}"  # noqa : E501
                                     )
                                     logging.info(
                                         "Applying the longest name for the argument list as it's probably coming from a typography."  # noqa : E501
@@ -2317,20 +2317,21 @@ class Argument:
         This is either a string, float, or integer (or some combination thereof).
 
         """
-        varlist = self._description.rec_find("Variablelist")
-
         parm_types = [str]
-        if varlist is not None:
-            terms = varlist.terms
-            if terms:
-                terms_numeric = [is_numeric(term) for term in terms]
-                if any(terms_numeric):
-                    parm_types = [int, str]
-                else:
-                    parm_types = [str]
+        if isinstance(self._description, Element):
+            varlist = self._description.rec_find("Variablelist")
 
-                # consider checking for bool
-                # terms_numeric = set(terms) == set(['1', '0'])
+            if varlist is not None:
+                terms = varlist.terms
+                if terms:
+                    terms_numeric = [is_numeric(term) for term in terms]
+                    if any(terms_numeric):
+                        parm_types = [int, str]
+                    else:
+                        parm_types = [str]
+
+                    # consider checking for bool
+                    # terms_numeric = set(terms) == set(['1', '0'])
 
         return parm_types
 
@@ -2365,10 +2366,13 @@ class Argument:
     ) -> List[str]:
         """Return a list of string to enable converting the element to an RST format."""
         if self.py_arg_name not in ["--", "–", ""]:
-            docstring = [f'{indent}{self.py_arg_name} : {self.str_types(" or ")}']
-            rst_description = self._description.to_rst(
-                indent=indent, max_length=max_length, links=links, base_url=base_url, fcache=fcache
-            )
+            docstring = [f'{indent}{self.py_arg_name}: {self.str_types(" or ")}']
+            if isinstance(self._description, str):
+                rst_description = self._description
+            else:
+                rst_description = self._description.to_rst(
+                    indent=indent, max_length=max_length, links=links, base_url=base_url, fcache=fcache
+                )
             description_indent = " " * 4 + indent
             if not "* " in rst_description:
                 list_description = self.resized_description(
@@ -2378,7 +2382,7 @@ class Argument:
                 rst_description = textwrap.indent(rst_description, description_indent)
                 list_description = rst_description.split("\n")
 
-            docstring = [f'{indent}{self.py_arg_name} : {self.str_types(" or ")}']
+            docstring = [f'{indent}{self.py_arg_name}: {self.str_types(" or ")}']
             docstring.extend(list_description)
         else:
             docstring = []
@@ -2464,8 +2468,15 @@ class XMLCommand(Element):
                         arguments = ArgumentList(elem, self.args)
                     else:
                         arguments += ArgumentList(elem, self.args)
-
+        
         if arguments is not None:
+            if len(arguments.py_arg_names) < len(arguments.initial_args):
+                for arg in arguments.initial_args:
+                    if arg not in arguments.py_arg_names:
+                        new_arg = Argument(arg, arguments.initial_args, "")
+                        if new_arg.py_arg_name != "":
+                            arguments.arguments.append(new_arg)
+        
             return arguments.arguments
 
         else:
@@ -2883,7 +2894,7 @@ class XMLCommand(Element):
 
         Parameters
         ----------
-        custom_functions : CustomFunctions, optional
+        custom_functions: CustomFunctions, optional
             Custom functions to add to the command. The default is ``None``.
         """
         if custom_functions is None or self.py_name not in custom_functions.py_names:
@@ -2905,9 +2916,9 @@ class XMLCommand(Element):
 
         Parameters
         ----------
-        custom_functions : CustomFunctions, optional
+        custom_functions: CustomFunctions, optional
             Custom functions to add to the command. The default is ``None``.
-        indent : str, optional
+        indent: str, optional
             Indentation of the Python function. The default is ``""``.
 
         Returns
