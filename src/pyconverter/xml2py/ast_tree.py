@@ -2365,7 +2365,7 @@ class Argument:
     ) -> List[str]:
         """Return a list of string to enable converting the element to an RST format."""
         if self.py_arg_name not in ["--", "–", ""]:
-            docstring = [f"{indent}{self.py_arg_name} : {self.str_types(" or ")}"]
+            docstring = [f'{indent}{self.py_arg_name} : {self.str_types(" or ")}']
             rst_description = self._description.to_rst(
                 indent=indent, max_length=max_length, links=links, base_url=base_url, fcache=fcache
             )
