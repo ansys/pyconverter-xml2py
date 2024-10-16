@@ -59,7 +59,7 @@ def convert(directory_path):
 
     Parameters
     ----------
-    directory_path : Path
+    directory_path: Path
         Path to the directory containing the XML files to convert.
 
     Returns
@@ -84,7 +84,7 @@ def convert(directory_path):
 
         Parameters
         ----------
-        xml_path : Path
+        xml_path: Path
             Path object of the directory containing the XML files to convert.
 
         Examples
@@ -159,7 +159,7 @@ def convert(directory_path):
     name_map = create_name_map(meta_command, Path("config.yaml"))
     ast.NameMap(name_map)
 
-    # TODO : accept conversion of a single command
+    # TODO: accept conversion of a single command
 
     # convert a single command
     # if command is not None:
@@ -181,13 +181,13 @@ def copy_template_package(template_path: Path, new_package_path: Path, clean: bo
 
     Parameters
     ----------
-    template_path : Path
+    template_path: Path
         Path object containing the directory to copy.
 
-    new_package_path : Path
+    new_package_path: Path
         Path object containing the directory where the new files and directorys are to be added.
 
-    clean : bool, optional
+    clean: bool, optional
         Whether the directories in the path for the new package must be cleared before adding
         new files. The default value is ``False``.
 
@@ -219,7 +219,7 @@ def write_global__init__file(library_path: Path) -> None:
 
     Parameters
     ----------
-    library_path : Path
+    library_path: Path
         Path object of the directory containing the generated package.
     """
     mod_file = library_path / "__init__.py"
@@ -245,7 +245,7 @@ def write__init__file(library_path: Path) -> None:
 
     Parameters
     ----------
-    library_path : Path
+    library_path: Path
         Path object of the directory containing the generated package.
     """
 
@@ -273,9 +273,9 @@ def get_library_path(new_package_path: Path, config_path: Path) -> Path:
 
     Parameters
     ----------
-    new_package_path : Path
+    new_package_path: Path
         Path objecy of the new package directory.
-    config_path : str
+    config_path: str
         Path to the configuration file.
 
     Returns
@@ -296,9 +296,9 @@ def get_module_info(library_path: Path, command: ast.XMLCommand) -> Tuple[str, s
 
     Parameters
     ----------
-    library_path : Path
+    library_path: Path
         Path object to the library directory.
-    command : ast.XMLCommand
+    command: ast.XMLCommand
         Command object.
 
     Returns
@@ -323,9 +323,9 @@ def get_class_info(initial_class_name: str, module_path: Path) -> Tuple[str, str
 
     Parameters
     ----------
-    initial_class_name : str
+    initial_class_name: str
         Initial class name.
-    module_path : Path
+    module_path: Path
         Path object of the module directory.
 
     Returns
@@ -360,28 +360,28 @@ def write_source(
 
     Parameters
     ----------
-    command_map : dict
+    command_map: dict
         Dictionary with the following format: ``{"initial_command_name": command_obj}``.
-    name_map : dict
+    name_map: dict
         Dictionary with the following format: ``{"initial_command_name": "python_name"}``.
-    xml_doc_path : Path
+    xml_doc_path: Path
         Path object containing the XML directory to convert.
-    target_path : Path
+    target_path: Path
         Path object to generate the new package to.
-    path_custom_functions : Path, optional
+    path_custom_functions: Path, optional
         Path object containing the customized functions. The default value is ``None``.
-    template_path : Path, optional
+    template_path: Path, optional
         Path object of the template to use. If no path is provided, the default template is used.
-    config_path : Path, optional
+    config_path: Path, optional
         Path object of the configuration file. The default value is ``Path(config.yaml)``.`.
-    clean : bool, optional
+    clean: bool, optional
         Whether the directories in the new package path must be cleared before adding
         new files. The default value is ``True``.
-    structured : bool, optional
+    structured: bool, optional
         Whether the package should be structured. The default value is ``True``.
-    check_structure_map : bool, optional
+    check_structure_map: bool, optional
         Whether the structure map must be checked. The default value is ``False``.
-    check_files : bool, optional
+    check_files: bool, optional
         Whether the files must be checked. The default value is ``False``.
 
     Returns
@@ -518,12 +518,12 @@ def write_docs(
 
     Parameters
     ----------
-    package_path : Path
+    package_path: Path
         Path object of the new package folder.
-    package_structure : dict, optional
+    package_structure: dict, optional
         Dictionary with the following format:
         ``{'python_module_name': [{'python_class_name': python_names_list}]}``.
-    config_path : Path, optional
+    config_path: Path, optional
         Path object of the configuration file. The default value is ``Path(config.yaml)``.
 
     Returns

@@ -33,7 +33,7 @@ def parse_yaml(yaml_path: Path) -> dict:
 
     Parameters
     ----------
-    yaml_path : Path
+    yaml_path: Path
         Path object of the YAML file.
 
     Returns
@@ -55,9 +55,9 @@ def get_config_data_value(yaml_path: Path, value: str) -> Union[str, dict, list,
 
     Parameters
     ----------
-    yaml_path : Path
+    yaml_path: Path
         Path object of the YAML file.
-    value : str
+    value: str
         Key to search for in the YAML file.
     """
     config_data = parse_yaml(yaml_path)
@@ -70,9 +70,9 @@ def create_name_map(meta_command: list[str], yaml_file_path: Path) -> dict:
 
     Parameters
     ----------
-    meta_command : list[str]
+    meta_command: list[str]
         List of command names.
-    yaml_file_path : Path
+    yaml_file_path: Path
         Path object of the YAML file.
 
     Returns
@@ -141,11 +141,11 @@ def import_handler(
 
     Parameters
     ----------
-    filename : Path
+    filename: Path
         Path object of the Python file.
-    additional_content : str
+    additional_content: str
         Additional content to add to the Python file.
-    str_before_def : str
+    str_before_def: str
         String before the function definition.
     """
 
@@ -177,7 +177,7 @@ def split_trail_alpha(text: str) -> Tuple[str, str]:
 
     Parameters
     ----------
-    text : str
+    text: str
         String to split.
     """
     for ii, char in enumerate(text):
@@ -195,7 +195,7 @@ def is_numeric(text: str) -> bool:
 
     Parameters
     ----------
-    text : str
+    text: str
         String to check.
 
     Returns
@@ -216,7 +216,7 @@ def get_refentry(filename: Path) -> list:
 
     Parameters
     ----------
-    filename : Path
+    filename: Path
         Path object of an XML file.
     """
     root = fromstring(open(filename, "rb").read())

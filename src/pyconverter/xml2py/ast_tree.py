@@ -2166,7 +2166,10 @@ class Argument:
     """Argument object."""
 
     def __init__(
-        self, element: str | Element, initial_argument: List, description: Element | str | None = None
+        self,
+        element: str | Element,
+        initial_argument: List,
+        description: Element | str | None = None,
     ) -> None:
         if description is None:
             if isinstance(element[0], Term):
@@ -2371,7 +2374,11 @@ class Argument:
                 rst_description = self._description
             else:
                 rst_description = self._description.to_rst(
-                    indent=indent, max_length=max_length, links=links, base_url=base_url, fcache=fcache
+                    indent=indent,
+                    max_length=max_length,
+                    links=links,
+                    base_url=base_url,
+                    fcache=fcache,
                 )
             description_indent = " " * 4 + indent
             if not "* " in rst_description:
@@ -2468,7 +2475,7 @@ class XMLCommand(Element):
                         arguments = ArgumentList(elem, self.args)
                     else:
                         arguments += ArgumentList(elem, self.args)
-        
+
         if arguments is not None:
             if len(arguments.py_arg_names) < len(arguments.initial_args):
                 for arg in arguments.initial_args:
@@ -2476,7 +2483,7 @@ class XMLCommand(Element):
                         new_arg = Argument(arg, arguments.initial_args, "")
                         if new_arg.py_arg_name != "":
                             arguments.arguments.append(new_arg)
-        
+
             return arguments.arguments
 
         else:

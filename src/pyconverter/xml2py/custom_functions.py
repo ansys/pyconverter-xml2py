@@ -31,7 +31,7 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
 
     Parameters
     ----------
-    filename : str
+    filename: str
         Path containing the Python file.
 
     Returns
