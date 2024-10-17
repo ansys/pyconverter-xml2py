@@ -2866,35 +2866,6 @@ class XMLCommand(Element):
                 lines.append("")
         return lines
 
-    # def py_parm(self, max_length=100):
-    #     """Python parameter's string."""
-    #     if self.arg_desc is not None:
-    #         lines = ["Parameters", "-" * 10]
-    #         for item in self.arg_desc:
-    #             if not isinstance(item, Variablelist):
-    #                 if isinstance(item, Element) and "Command Default" in str(item.title):
-    #                     continue
-    #             if isinstance(item, Element):
-    #                 if item.tag in item_needing_all:
-    #                     rst_item = (
-    #                         item.to_rst(
-    #                             links=self._links,
-    #                             base_url=self._base_url,
-    #                             fcache=self._fcache,
-    #                         )
-    #                     )
-    #                 elif item.tag in item_needing_links_base_url:
-    #                     rst_item =  item.to_rst(links=self._links, base_url=self._base_url)
-    #                 elif item.tag in item_needing_fcache:
-    #                     rst_item = item.to_rst(fcache=self._fcache)
-    #                 else:
-    #                     rst_item = item.to_rst()
-    #             else:
-    #                 rst_item = str(item)
-    #             lines.append(rst_item)
-    #         return lines
-    #     return []
-
     def py_source(self, custom_functions=None, indent=""):
         """
         Return the Python source.
