@@ -147,7 +147,6 @@ def to_py_arg_name(name: str) -> str:
         else:
             num_value = num(arg[0], to="ordinal")
             arg = f"{num_value}{arg[3:]}"
-        print(arg)
 
     if ("," in arg and "--" in arg) or arg == "–":
         return ""
@@ -675,6 +674,11 @@ class Paragraph(Element):
                 items.append(str_item)
 
         rst_item = " ".join(items) + "\n"
+        
+        if "Terminates the analysis if the" in rst_item:
+            print("RST in Paragraph : ")
+            print(rst_item)
+            print(type(item))
 
         return rst_item
 
@@ -837,19 +841,11 @@ class ProgramListing(Element):
         rst_item = header + textwrap.indent(source_code, prefix=indent + " " * 3) + "\n"
         return rst_item
 
-
-def resize_list_text(text, max_length=100):
-    lines = text.split("\n")
-    new_text = []
-    for line in lines:
-        n_line = len(re.match(r"^\s*", line).group())
-        if line.strip() and line.strip()[0] == "*":
-            n_line += 2
-        new_text.append(
-            resize_length(line, max_length, initial_indent="", subsequent_indent=" " * n_line)
-        )
-    return "\n".join(new_text)
-
+def resize_element_list(text, max_length=100):
+    element_list = re.finditer(r"^\* ", text)
+    subsequent_indent = " " * 2
+    element_list =resize_length(text, max_length, initial_indent="", subsequent_indent=subsequent_indent)
+    return element_list
 
 class Variablelist(Element):
     """Provides the variable list."""
@@ -883,10 +879,10 @@ class Variablelist(Element):
             if type(item) != str and len(item.children) > 1 and type(item[1]) != str:
                 intersection_types = set(NO_RESIZE_LIST).intersection(set(item[1].children_types))
                 if len(intersection_types) == 0:
-                    rst_item = resize_list_text(rst_item, max_length)
+                    rst_item = resize_element_list(rst_item, max_length)
 
             else:
-                rst_item = resize_list_text(rst_item, max_length)
+                rst_item = resize_element_list(rst_item, max_length)
             active_items.append(rst_item)
 
         return "\n".join(active_items) + "\n"
@@ -1038,6 +1034,10 @@ class VarlistEntry(Element):
                 if "GUI" not in sentence:
                     valid.append(sentence)
             rst = ". ".join(valid)
+        if "Terminates the analysis if the" in rst:
+            print("RST : ")
+            print(rst)
+        
         return rst
 
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
@@ -2657,10 +2657,10 @@ class XMLCommand(Element):
         is_dash_sign = False
         i = 0
         while i < len(lines):
-            if lines[i].lstrip().startswith("-"):
+            if lines[i].lstrip().startswith("--"):
                 if is_dash_sign == False:
                     is_dash_sign = True
-            elif lines[i].lstrip().startswith("="):
+            elif lines[i].lstrip().startswith("=="):
                 if is_equal_sign or is_dash_sign:
                     lines[i - 1] = "**" + lines[i - 1] + "**"
                     lines.pop(i)
