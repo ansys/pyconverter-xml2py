@@ -27,7 +27,7 @@ import warnings
 
 from lxml.etree import tostring
 from lxml.html import fromstring
-from num2words import num2words as num
+from inflect import engine
 from pyconverter.xml2py.utils.utils import is_numeric, split_trail_alpha
 import regex as re
 
@@ -137,17 +137,17 @@ def get_quant_iter_pos(name: str) -> tuple:
 def to_py_arg_name(name: str) -> str:
     """Python-compatible term"""
     arg = str(name).lower().strip()
-
+    p = engine()
     if arg[0].isdigit():
         if arg[1].isdigit():
             raise ValueError(f"The code needs to be expanded to handle numbers")
         elif arg[1:3] not in superlatif:
-            num_value = num(arg[0])
+            num_value = p.number_to_words(arg[0])
             arg = f"{num_value}{arg[1:]}"
         else:
-            num_value = num(arg[0], to="ordinal")
+            num_value = p.number_to_words(arg[:3])
             arg = f"{num_value}{arg[3:]}"
-
+    
     if ("," in arg and "--" in arg) or arg == "–":
         return ""
 
@@ -674,11 +674,6 @@ class Paragraph(Element):
                 items.append(str_item)
 
         rst_item = " ".join(items) + "\n"
-        
-        if "Terminates the analysis if the" in rst_item:
-            print("RST in Paragraph : ")
-            print(rst_item)
-            print(type(item))
 
         return rst_item
 
@@ -974,7 +969,7 @@ class VarlistEntry(Element):
             if self.parm_types is not None:
                 ptype_str = " or ".join([parm_type.__name__ for parm_type in self.parm_types])
 
-                return f"{arg}: {ptype_str}"
+                return f"{arg} : {ptype_str}"
             return f"{arg}"
 
         if self.term.tag in item_needing_links_base_url:
@@ -1034,9 +1029,6 @@ class VarlistEntry(Element):
                 if "GUI" not in sentence:
                     valid.append(sentence)
             rst = ". ".join(valid)
-        if "Terminates the analysis if the" in rst:
-            print("RST : ")
-            print(rst)
         
         return rst
 
@@ -2347,7 +2339,7 @@ class Argument:
     ) -> List[str]:
         """Return a list of string to enable converting the element to an RST format."""
         if self.py_arg_name not in ["--", "–", ""]:
-            docstring = [f'{indent}{self.py_arg_name}: {self.str_types(" or ")}']
+            docstring = [f'{indent}{self.py_arg_name} : {self.str_types(" or ")}']
             if isinstance(self._description, str):
                 rst_description = self._description
             else:
@@ -2367,7 +2359,7 @@ class Argument:
                 rst_description = textwrap.indent(rst_description, description_indent)
                 list_description = rst_description.split("\n")
 
-            docstring = [f'{indent}{self.py_arg_name}: {self.str_types(" or ")}']
+            docstring = [f'{indent}{self.py_arg_name} : {self.str_types(" or ")}']
             docstring.extend(list_description)
         else:
             docstring = []
@@ -2376,7 +2368,7 @@ class Argument:
     def to_py_signature(self) -> str:
         """Return the Python signature of the argument."""
         if self.py_arg_name not in ["--", "–", ""]:
-            kwarg = f'{self.py_arg_name}: {self.str_types(" | ")}=""'
+            kwarg = f'{self.py_arg_name} : {self.str_types(" | ")}=""'
         else:
             kwarg = None
         return kwarg
