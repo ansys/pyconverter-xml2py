@@ -22,12 +22,12 @@
 
 import logging
 import textwrap
-from num2words import num2words as num
 from typing import List
 import warnings
 
 from lxml.etree import tostring
 from lxml.html import fromstring
+from num2words import num2words as num
 from pyconverter.xml2py.utils.utils import is_numeric, split_trail_alpha
 import regex as re
 
@@ -142,9 +142,11 @@ def to_py_arg_name(name: str) -> str:
         if arg[1].isdigit():
             raise ValueError(f"The code needs to be expanded to handle numbers")
         elif arg[1:3] not in superlatif:
-            arg = f"{num(arg[0])}{arg[1:]}"
+            num_value = num(arg[0])
+            arg = f"{num_value}{arg[1:]}"
         else:
-            arg = f"{num(arg[0], to="ordinal")}{arg[3:]}"
+            num_value = num(arg[0], to="ordinal")
+            arg = f"{num_value}{arg[3:]}"
         print(arg)
 
     if ("," in arg and "--" in arg) or arg == "–":
@@ -2854,11 +2856,11 @@ class XMLCommand(Element):
         if custom_functions is None or self.py_name not in custom_functions.py_names:
 
             if len(self.arg_desc) > 0:
-                command = 'command = f"' + self.name 
+                command = 'command = f"' + self.name
                 for arg in self.arg_desc:
-                    command += ',{'
+                    command += ",{"
                     command += arg.py_arg_name
-                    command += '}'
+                    command += "}"
                 command += '"\n'
                 # ",{" + "},{".join(self.arg_desc.py_arg_name) + '}"\n'
             else:
