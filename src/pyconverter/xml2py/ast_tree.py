@@ -25,9 +25,9 @@ import textwrap
 from typing import List
 import warnings
 
+from inflect import engine
 from lxml.etree import tostring
 from lxml.html import fromstring
-from inflect import engine
 from pyconverter.xml2py.utils.utils import is_numeric, split_trail_alpha
 import regex as re
 
@@ -147,7 +147,7 @@ def to_py_arg_name(name: str) -> str:
         else:
             num_value = p.number_to_words(arg[:3])
             arg = f"{num_value}{arg[3:]}"
-    
+
     if ("," in arg and "--" in arg) or arg == "–":
         return ""
 
@@ -836,11 +836,15 @@ class ProgramListing(Element):
         rst_item = header + textwrap.indent(source_code, prefix=indent + " " * 3) + "\n"
         return rst_item
 
+
 def resize_element_list(text, max_length=100):
     element_list = re.finditer(r"^\* ", text)
     subsequent_indent = " " * 2
-    element_list =resize_length(text, max_length, initial_indent="", subsequent_indent=subsequent_indent)
+    element_list = resize_length(
+        text, max_length, initial_indent="", subsequent_indent=subsequent_indent
+    )
     return element_list
+
 
 class Variablelist(Element):
     """Provides the variable list."""
@@ -1029,7 +1033,7 @@ class VarlistEntry(Element):
                 if "GUI" not in sentence:
                     valid.append(sentence)
             rst = ". ".join(valid)
-        
+
         return rst
 
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
