@@ -22,6 +22,7 @@
 
 import logging
 import textwrap
+from num2words import num2words as num
 from typing import List
 import warnings
 
@@ -51,33 +52,7 @@ CONST = {
     '``"``': "``",
 }
 
-word_digit = [
-    "zero",
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-]
-
 superlatif = ["st", "nd", "rd", "th"]
-
-superlatif_digit = [
-    "",
-    "first",
-    "second",
-    "third",
-    "fourth",
-    "fifth",
-    "sixth",
-    "seventh",
-    "eighth",
-    "ninth",
-]
 
 
 CLEANUP = {
@@ -167,9 +142,10 @@ def to_py_arg_name(name: str) -> str:
         if arg[1].isdigit():
             raise ValueError(f"The code needs to be expanded to handle numbers")
         elif arg[1:3] not in superlatif:
-            arg = f"{word_digit[int(arg[0])]}{arg[1:]}"
+            arg = f"{num(arg[0])}{arg[1:]}"
         else:
-            arg = f"{superlatif_digit[int(arg[0])]}{arg[3:]}"
+            arg = f"{num(arg[0], to="ordinal")}{arg[3:]}"
+        print(arg)
 
     if ("," in arg and "--" in arg) or arg == "–":
         return ""
@@ -2190,6 +2166,11 @@ class Argument:
         self._initial_argument = initial_argument
 
     @property
+    def py_arg_name(self) -> str:
+        """Python-compatible term."""
+        return to_py_arg_name(self._name)
+
+    @property
     def is_arg_elipsis(self):
         """
         Check if the argument is an elipsis.
@@ -2342,11 +2323,6 @@ class Argument:
         """String representation of the parameter types."""
         ptype_str = join_str.join([parm_type.__name__ for parm_type in self.types])
         return ptype_str
-
-    @property
-    def py_arg_name(self) -> str:
-        """Python-compatible term."""
-        return to_py_arg_name(self._name)
 
     def resized_description(
         self, description: str | None = None, max_length: int = 100, indent: str = ""
@@ -2877,8 +2853,14 @@ class XMLCommand(Element):
         """
         if custom_functions is None or self.py_name not in custom_functions.py_names:
 
-            if len(self.py_args) > 0:
-                command = 'command = f"' + self.name + ",{" + "},{".join(self.py_args) + '}"\n'
+            if len(self.arg_desc) > 0:
+                command = 'command = f"' + self.name 
+                for arg in self.arg_desc:
+                    command += ',{'
+                    command += arg.py_arg_name
+                    command += '}'
+                command += '"\n'
+                # ",{" + "},{".join(self.arg_desc.py_arg_name) + '}"\n'
             else:
                 command = 'command = f"' + self.name + '"\n'
             return_command = "return self.run(command, **kwargs)\n"
