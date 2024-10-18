@@ -36,7 +36,7 @@ def test_convert(command_map, custom_functions):
         command_map["E"].py_source(custom_functions)
         == '    command = f"E,{i},{j},{k},{l},{m},{n},{o},{p}"\n    return self.run(command, **kwargs)\n'  # noqa : E501
     )
-    assert 'def zoom(self, wn="", lab="", x1="", y1="", x2="", y2="", **kwargs):\n    r"""Zooms a region of a display window.\n\n' in command_map[  # noqa : E501
+    assert 'def zoom(self, wn: str="", lab: str="", x1: str="", y1: str="", x2: str="", y2: str="", **kwargs):\n    r"""Zooms a region of a display window.\n\n' in command_map[  # noqa : E501
         "/ZOOM"
     ].to_python(
         custom_functions

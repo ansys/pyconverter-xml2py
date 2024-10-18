@@ -61,18 +61,18 @@ def get_paths(
 
     Parameters
     ----------
-    path : Path
+    path: Path
         Path object of the directory with the predefined format.
-    graph_path : Path, optional
+    graph_path: Path, optional
         Path object of the directory containing the graphics. The default is ``None``,
         in which case the XML predefined directory format is used.
-    link_path : Path, optional
+    link_path: Path, optional
         Path object of the directory containing the links. The default is ``None``,
         in which case the XML predefined directory format is used.
-    term_path : Path, optional
+    term_path: Path, optional
         Path object of the directory containing the terms. The default is ``None``,
         in which case the XML predefined directory format is used.
-    xml_path : Path, optional
+    xml_path: Path, optional
         Path object of the directory containing the XML files. The default is ``None``,
         in which case the XML predefined directory format is used.
 

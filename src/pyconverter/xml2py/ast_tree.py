@@ -22,8 +22,10 @@
 
 import logging
 import textwrap
+from typing import List
 import warnings
 
+from inflect import engine
 from lxml.etree import tostring
 from lxml.html import fromstring
 from pyconverter.xml2py.utils.utils import is_numeric, split_trail_alpha
@@ -50,6 +52,9 @@ CONST = {
     '``"``': "``",
 }
 
+superlatif = ["st", "nd", "rd", "th"]
+
+
 CLEANUP = {
     ",, ": ", ",
     ", , ": ", ",
@@ -61,11 +66,23 @@ CLEANUP = {
     "`` %": "%``",  # same
 }
 
+PY_ARG_CLEANUP = {
+    "(": "_",
+    ")": "_",
+    "+": "plus",
+    "blank": "",
+    "-": "_",
+    "'": "",
+    "caret1?": "",
+}
+
 # Map XML command to pycommand function
 NAME_MAP_GLOB = {}
 
 # XML commands to skip
 SKIP = {"*IF", "*ELSE", "C***", "*RETURN"}
+
+NO_RESIZE_LIST = ["Variablelist"]
 
 
 class NameMap:
@@ -84,6 +101,101 @@ def to_py_name(name, name_map=None):
         return NAME_MAP_GLOB[name]
     else:
         return name
+
+
+def get_iter_values(name: str):
+    """Get the values of an iterator."""
+    output = re.search(r"([a-zA-Z_]*)(\d*)", name.strip())
+    groups = output.groups()
+    name = groups[0]
+    iter = groups[1]
+    if iter == "":
+        iter = 0
+    return name, int(iter)
+
+
+def get_quant_iter_pos(name: str) -> tuple:
+    """
+    Get the values of a quantity iterator.
+
+    Parameters
+    ----------
+    name: str
+        Name of the parameter containing the iterator.
+
+    Returns
+    -------
+    tuple
+        Tuple containing the iteration value and the position of the iterator.
+    """
+    output = re.search(r"(?<=\+)\d*", name.strip())  # find the number after the '+'
+    iter = output.group()
+    position = output.span()
+    return int(iter), position
+
+
+def to_py_arg_name(name: str) -> str:
+    """Python-compatible term"""
+    arg = str(name).lower().strip()
+    p = engine()
+    if arg[0].isdigit():
+        if arg[1].isdigit():
+            raise ValueError(f"The code needs to be expanded to handle numbers")
+        elif arg[1:3] not in superlatif:
+            num_value = p.number_to_words(arg[0])
+            arg = f"{num_value}{arg[1:]}"
+        else:
+            num_value = p.number_to_words(arg[:3])
+            arg = f"{num_value}{arg[3:]}"
+
+    if ("," in arg and "--" in arg) or arg == "–":
+        return ""
+
+    for key, value in PY_ARG_CLEANUP.items():
+        arg = arg.replace(key, value)
+    arg = arg.strip()
+
+    while len(arg) > 0 and arg[-1] == "_":
+        arg = arg[:-1]
+
+    if arg == "type":
+        arg = "type_"
+
+    elif arg == "class":
+        arg = "class_"
+
+    return f"{arg}"
+
+
+def get_complete_args_from_initial_arg(
+    initial_args: List[str], elipsis_args: List[str]
+) -> List[str]:
+    # elipsis_args = ['Cname1', ' Cname2',' …'] or ['Cname1', '...', 'Cname6']
+    # initial_args = ['energytype', 'cname1', 'cname2', 'cname3', 'cname4', 'cname5', 'cname6']
+
+    first_arg_name = to_py_arg_name(elipsis_args[0])
+    name_without_iter, first_num = get_iter_values(first_arg_name)
+
+    complete_args = []
+    for i, arg in enumerate(initial_args):
+        if name_without_iter in arg:
+            complete_args.append(arg)
+
+    return complete_args
+
+
+def is_elipsis(name: str) -> bool:
+    """
+    Check if a name is an elipsis.
+
+    Returns
+    -------
+    bool
+        True if the argument is an elipsis, False otherwise.
+    """
+    if any(elips in name for elips in [". . .", "...", "…"]):
+        return True
+    return False
 
 
 # ############################################################################
@@ -202,7 +314,7 @@ class Element:
         """ID of the element."""
         return self._element.get("id")
 
-    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
@@ -211,19 +323,29 @@ class Element:
                     items.append(
                         item.to_rst(
                             indent,
+                            max_length=max_length,
                             links=links,
                             base_url=base_url,
                             fcache=fcache,
                         )
                     )
                 elif item.tag in item_needing_links_base_url:
-                    items.append(item.to_rst(indent, links=links, base_url=base_url))
+                    items.append(
+                        item.to_rst(indent, max_length=max_length, links=links, base_url=base_url)
+                    )
                 elif item.tag in item_needing_fcache:
-                    items.append(item.to_rst(indent=indent, fcache=fcache))
+                    items.append(item.to_rst(indent=indent, max_length=max_length, fcache=fcache))
                 else:
-                    items.append(item.to_rst(indent=indent))
+                    items.append(item.to_rst(indent=indent, max_length=max_length))
             else:
-                items.append(indent + str(item))
+                items.append(
+                    resize_length(
+                        str(item),
+                        max_length=max_length,
+                        initial_indent=indent,
+                        subsequent_indent=indent,
+                    )
+                )
         return " ".join(items)
 
     def rec_find(self, _type, terms=None):
@@ -281,17 +403,19 @@ class Element:
         return self._element.tag
 
 
-def resize_length(text, initial_indent, subsequent_indent, max_length=100):
+def resize_length(text, max_length=100, initial_indent="", subsequent_indent="", list=False):
     """Resize the length of a text."""
-
+    text = text.replace(" .", ".")
     wrapper = textwrap.TextWrapper(
         width=max_length,
         break_long_words=False,
         initial_indent=initial_indent,
         subsequent_indent=subsequent_indent,
-        drop_whitespace=False,
     )
-    return wrapper.fill(text=text)
+    if list is False:
+        return wrapper.fill(text=text)
+    else:
+        return wrapper.wrap(text=text)
 
 
 class ItemizedList(Element):
@@ -300,7 +424,7 @@ class ItemizedList(Element):
     def __repr__(self):
         return "\n".join([f"* {str(item).strip()}" for item in self])
 
-    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         lines = []
         for item in self:
@@ -314,7 +438,7 @@ class ItemizedList(Element):
                 elif item.tag in item_needing_fcache:
                     item_lines = item.to_rst(indent=indent, fcache=fcache).splitlines()
                 else:
-                    item_lines = item.to_rst(indent)
+                    item_lines = item.to_rst(indent).splitlines()
             else:
                 item_lines = str(item).splitlines()
 
@@ -328,23 +452,26 @@ class ItemizedList(Element):
                 rst_list.append(line)
                 for line in item_lines[1:]:
                     text = line.to_rst(indent) if isinstance(line, Element) else str(line)
-                    rst_list.append(textwrap.indent(text, prefix=indent + "  "))
+                    rst_list.append(textwrap.indent(text, prefix=indent))
 
             else:
                 rst_list = item_lines
 
-            # rst_list = resize_length(
-            #     rst_list,
-            #     initial_indent="",
-            #     subsequent_indent="",
-            #     max_length=max_length
-            # )
-            for i in range(len(rst_list)):
-                rst_list[i] = ponctuaction_whitespace(rst_list[i], ".")
-                rst_list[i] = ponctuaction_whitespace(rst_list[i], ",")
-                rst_list[i] = resize_length(rst_list[i], initial_indent="", subsequent_indent="")
+            new_rst_list = []
+            for line in rst_list:
+                line = ponctuaction_whitespace(line, ".")
+                line = ponctuaction_whitespace(line, ",")
+                new_rst_list.extend(
+                    resize_length(
+                        line,
+                        max_length=max_length,
+                        initial_indent=indent,
+                        subsequent_indent=indent,
+                        list=True,
+                    )
+                )
 
-            lines.extend(rst_list)
+            lines.extend(new_rst_list)
 
         # lists must have at least one line proceeding
         lines = ["", ""] + lines + [""]
@@ -380,14 +507,14 @@ class OrderedList(Element):
 
     def to_rst(self, indent="", max_length=100, links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
-        indent += "    "
+        # indent += " " * 4
         ordered_list = []
         for item in self:
             if item.tag in item_needing_links_base_url:
                 rst_item = item.to_rst(indent, links=links, base_url=base_url)
             else:
                 rst_item = item.to_rst(indent)
-            rst_item = re.sub(r"\s+", " ", rst_item)  # Remove extra whitespaces
+            rst_item = re.sub(r"\s+", " ", rst_item.lstrip())  # Remove extra whitespaces
             rst_item = ponctuaction_whitespace(
                 rst_item, "."
             )  # Remove extra whitespace before period
@@ -395,7 +522,7 @@ class OrderedList(Element):
                 rst_item, ","
             )  # Remove extra whitespace before comma
             resized_item = resize_length(
-                rst_item, initial_indent="", subsequent_indent="", max_length=max_length
+                rst_item, max_length=max_length, initial_indent="", subsequent_indent=""
             )
             ordered_list.append(resized_item)
         return "\n\n".join(ordered_list)
@@ -404,7 +531,7 @@ class OrderedList(Element):
 class ListItem(Element):
     """Provides the list item element."""
 
-    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
@@ -417,13 +544,20 @@ class ListItem(Element):
                         fcache=fcache,
                     )
                 elif item.tag in item_needing_links_base_url:
-                    rst_item = item.to_rst(indent=indent, links=links, base_url=base_url)
+                    rst_item = item.to_rst(
+                        indent=indent, max_length=max_length, links=links, base_url=base_url
+                    )
                 elif item.tag in item_needing_fcache:
-                    rst_item = item.to_rst(indent=indent, fcache=fcache)
+                    rst_item = item.to_rst(indent=indent, max_length=max_length, fcache=fcache)
                 else:
-                    rst_item = item.to_rst(indent=indent)
+                    rst_item = item.to_rst(indent=indent, max_length=max_length)
             else:
-                rst_item = str(item)
+                rst_item = resize_length(
+                    str(item),
+                    max_length=max_length,
+                    initial_indent=indent,
+                    subsequent_indent=indent,
+                )
 
             items.append(rst_item)
         return "\n".join(items)
@@ -432,7 +566,7 @@ class ListItem(Element):
 class FileName(Element):
     """Provides the filename element."""
 
-    def to_rst(self, indent=""):
+    def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         return f"``{self[0]}`` {self.tail}"
 
@@ -453,7 +587,7 @@ class OLink(Element):
         """Value for the ``targetdoc`` parameter contained in the OLink element."""
         return self.get("targetdoc")
 
-    def to_rst(self, indent="", links=None, base_url=None):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
         key = f"{self.targetptr}"
         if (links or base_url) is None:
@@ -501,6 +635,7 @@ class Paragraph(Element):
                         "\n\n"
                         + item.to_rst(
                             indent=indent,
+                            max_length=max_length,
                             links=links,
                             base_url=base_url,
                             fcache=fcache,
@@ -511,19 +646,32 @@ class Paragraph(Element):
                         items.append(
                             item.to_rst(
                                 indent=indent,
+                                max_length=max_length,
                                 links=links,
                                 base_url=base_url,
                                 fcache=fcache,
                             )
                         )
                     elif item.tag in item_needing_links_base_url:
-                        items.append(item.to_rst(indent=indent, links=links, base_url=base_url))
+                        items.append(
+                            item.to_rst(
+                                indent=indent, max_length=max_length, links=links, base_url=base_url
+                            )
+                        )
                     elif item.tag in item_needing_fcache:
-                        items.append(item.to_rst(indent=indent, fcache=fcache))
+                        items.append(
+                            item.to_rst(indent=indent, max_length=max_length, fcache=fcache)
+                        )
                     else:
-                        items.append(item.to_rst(indent=indent))
+                        items.append(item.to_rst(indent=indent, max_length=max_length))
             else:
-                items.append(str(item))
+                str_item = resize_length(
+                    str(item),
+                    max_length=max_length,
+                    initial_indent=indent,
+                    subsequent_indent=indent,
+                )
+                items.append(str_item)
 
         rst_item = " ".join(items) + "\n"
 
@@ -558,7 +706,7 @@ class Emphasis(Element):
         """Return the role parameter value contained in the Emphasis element."""
         return self._element.get("role")
 
-    def to_rst(self, indent="", links=None, base_url=None):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
 
         if self.role == "bold":
@@ -580,7 +728,14 @@ class Emphasis(Element):
                 else:
                     items.append(item.to_rst(indent))
             else:
-                items.append(str(item))
+                items.append(
+                    resize_length(
+                        str(item),
+                        max_length=max_length,
+                        initial_indent=indent,
+                        subsequent_indent=indent,
+                    )
+                )
 
         return content + " ".join(items)
 
@@ -654,7 +809,7 @@ class Replaceable(Element):
 
         return f"``{self.content[0].lower()}={parm}`` {tail}"
 
-    def to_rst(self, indent=""):
+    def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         if isinstance(self.prev_elem, Command):
             if any([self.content[0] in arg for arg in self.prev_elem.args]):
@@ -679,29 +834,23 @@ class ProgramListing(Element):
         header = f"\n\n{indent}.. code::\n\n"
         source_code = re.sub(r"[^\S\r\n]", " ", self.source)  # Remove extra whitespaces
         rst_item = header + textwrap.indent(source_code, prefix=indent + " " * 3) + "\n"
-        # rst_item = resize_length(
-        #   rst_item,
-        #   initial_indent="",
-        #   subsequent_indent="   !",
-        #   max_length=max_length,
-        #   replace_whitespace=False
-        # )
         return rst_item
 
 
-def resize_list_text(text, max_length=100):
-    lines = text.split("\n")
-    new_text = []
-    for line in lines:
-        n_line = len(re.match(r"^\s*", line).group())
-        if line.strip() and line.strip()[0] == "*":
-            n_line += 2
-        new_text.append(resize_length(line, "", " " * n_line, max_length))
-    return "\n".join(new_text)
+def resize_element_list(text, max_length=100):
+    element_list = re.finditer(r"^\* ", text)
+    subsequent_indent = " " * 2
+    element_list = resize_length(
+        text, max_length, initial_indent="", subsequent_indent=subsequent_indent
+    )
+    return element_list
 
 
 class Variablelist(Element):
     """Provides the variable list."""
+
+    def __init__(self, element):
+        super().__init__(element)
 
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
@@ -726,7 +875,13 @@ class Variablelist(Element):
             else:
                 rst_item = str(item)
 
-            rst_item = resize_list_text(rst_item, max_length)
+            if type(item) != str and len(item.children) > 1 and type(item[1]) != str:
+                intersection_types = set(NO_RESIZE_LIST).intersection(set(item[1].children_types))
+                if len(intersection_types) == 0:
+                    rst_item = resize_element_list(rst_item, max_length)
+
+            else:
+                rst_item = resize_element_list(rst_item, max_length)
             active_items.append(rst_item)
 
         return "\n".join(active_items) + "\n"
@@ -740,7 +895,7 @@ class Variablelist(Element):
 class RefSection(Element):
     """Provides the reference section element."""
 
-    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self[1:]:
@@ -878,30 +1033,31 @@ class VarlistEntry(Element):
                 if "GUI" not in sentence:
                     valid.append(sentence)
             rst = ". ".join(valid)
+
         return rst
 
-    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
-        indent += "    "
+        indent += " " * 4
         # if this is a parameter arg
         if self.is_arg:
+            # This is what needs to be modified in order to have the arg class
             lines = [f"{self.py_term(links=links, base_url=base_url)}"]
-            lines.append(
-                textwrap.indent(
-                    self.py_text(links=links, base_url=base_url, fcache=fcache),
-                    prefix=indent,
-                )
+            text = self.py_text(links=links, base_url=base_url, fcache=fcache)
+            text_list = resize_length(
+                text,
+                max_length=max_length,
+                initial_indent=indent,
+                subsequent_indent=indent,
+                list=True,
             )
+            lines.extend(text_list)
             return "\n".join(lines)
 
-        # term_text = [line.strip() for line in self.py_text.splitlines()]
-        # term_text = term_text[0] + '\n' + textwrap.indent('\n'.join(term_text[1:]), )
         py_term = self.py_term(links=links, base_url=base_url)
         if "``" in py_term:
             py_term = py_term.replace("``", "")
-        lines = [
-            f"* ``{py_term}`` - {textwrap.indent(self.py_text(links=links, base_url=base_url, fcache=fcache), indent)}"  # noqa : E501
-        ]
+        lines = [f"* ``{py_term}`` - {self.py_text(links=links, base_url=base_url, fcache=fcache)}"]
         text = "\n".join(lines)
         # if 'ID number to which this tip belongs' in text:
         # breakpoint()
@@ -911,7 +1067,7 @@ class VarlistEntry(Element):
 class Term(Element):
     """Provides the term element."""
 
-    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
 
         items = []
@@ -951,7 +1107,7 @@ class GuiMenuItem(Element):
 class SuperScript(Element):
     """Provides the superscript element."""
 
-    def to_rst(self, indent=""):
+    def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         return f":sup:`{self.content[0]}` {self.tail}"
 
@@ -996,7 +1152,7 @@ class _Math(Element):
 class Math(_Math):
     """Provides the math element."""
 
-    def to_rst(self, indent=""):
+    def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         lines = ["", "", f"{indent}.. math::\n"]
         lines.append(textwrap.indent(self.equation, prefix=indent + " " * 4))
@@ -1017,7 +1173,7 @@ class InlineEquation(_Math):
         """Return the tail of the element as a string."""
         return self.raw.split("</inlineequation>")[-1].replace("\n", "")
 
-    def to_rst(self, indent=""):
+    def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         return f":math:`{self.equation.strip()}` {self.tail}"
 
@@ -1068,7 +1224,7 @@ class Link(Element):
     def __repr__(self):
         return str(self.linkend)
 
-    def to_rst(self, indent="", links=None, base_url=None):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
         if (links or base_url) is None:
             logging.error(
@@ -1094,7 +1250,7 @@ class XRef(Link):
         """Tail of the element as a string."""
         return " ".join([str(item) for item in self._content])
 
-    def to_rst(self, indent=""):
+    def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         # disabled at the moment
         # return f':ref:`{self.linkend}`{self.tail}'
@@ -1116,7 +1272,7 @@ class Screen(Element):
 class Literal(Element):
     """Provides the literal output element."""
 
-    def to_rst(self, indent=""):
+    def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         return f"``{self.content[0]}`` {self.tail}"
 
@@ -1124,10 +1280,15 @@ class Literal(Element):
 class Caution(Element):
     """Provides the caution element."""
 
-    def to_rst(self, indent=""):
+    def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         lines = ["", "", ".. warning::"]
-        lines.append(textwrap.indent(str(self), prefix=indent + "   "))
+        indent = indent + " " * 4
+        lines.append(
+            resize_length(
+                str(self), max_length=max_length, initial_indent=indent, subsequent_indent=indent
+            )
+        )
         return "\n".join(lines)
 
 
@@ -1142,7 +1303,7 @@ class Graphic(Element):
             entityref = entityref.strip()
         return entityref
 
-    def to_rst(self, fcache, indent=""):
+    def to_rst(self, fcache, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
 
         if self.entityref is None:
@@ -1177,7 +1338,7 @@ class Note(Element):
 class BlockQuote(Element):
     """Provides the block quote element."""
 
-    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
         for item in self:
@@ -1186,19 +1347,29 @@ class BlockQuote(Element):
                     items.append(
                         item.to_rst(
                             indent,
+                            max_length=max_length,
                             links=links,
                             base_url=base_url,
                             fcache=fcache,
                         )
                     )
                 elif item.tag in item_needing_links_base_url:
-                    items.append(item.to_rst(indent, links=links, base_url=base_url))
+                    items.append(
+                        item.to_rst(indent, max_length=max_length, links=links, base_url=base_url)
+                    )
                 elif item.tag in item_needing_fcache:
-                    items.append(item.to_rst(indent=indent, fcache=fcache))
+                    items.append(item.to_rst(indent=indent, max_length=max_length, fcache=fcache))
                 else:
-                    items.append(item.to_rst(indent))
+                    items.append(item.to_rst(indent, max_length=max_length))
             else:
-                items.append(indent + str(item))
+                items.append(
+                    resize_length(
+                        str(item),
+                        max_length=max_length,
+                        initial_indent=indent,
+                        subsequent_indent=indent,
+                    )
+                )
         return "\n\n" + " ".join(items) + "\n\n"
 
 
@@ -1321,8 +1492,9 @@ class Table(Element):
         """TGroup."""
         return self.find("TGroup")
 
-    def to_rst(self, indent="", links=None, base_url=None):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
+        # For now, Tables don't support ``max_length``
         lines = []
         if self.title is not None:
             lines.append(f"{self.title}".strip())
@@ -1561,7 +1733,7 @@ class Command(Element):
             ref = f":ref:`{self.py_cmd}`"
         return ref
 
-    def to_rst(self, indent=""):
+    def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         if self.args and self.args[0] != "":
             return f"{self.sphinx_cmd} {self.tail_no_args}"
@@ -1572,7 +1744,7 @@ class Command(Element):
 class ComputerOutput(Element):
     """Provides the computer output element."""
 
-    def to_rst(self, indent=""):
+    def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         return f"``{self[0]}`` {self[1]}"
 
@@ -1590,7 +1762,7 @@ class Figure(Element):
         """First graphic element found in the figure element."""
         return self.rec_find("Graphic")
 
-    def to_rst(self, indent="", fcache=None):
+    def to_rst(self, indent="", max_length=100, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         graphic = self.graphic
         if graphic is not None and graphic.entityref is not None:
@@ -1738,7 +1910,7 @@ class TBody(Element):
 
     @property
     def rows(self):
-        """ "Return all the row elements found in the TBody element."""
+        """Return all the row elements found in the TBody element."""
         return self.find_all("Row")
 
     def to_rst(self, l_head, indent="", links=None, base_url=None):
@@ -1818,7 +1990,7 @@ class Row(Element):
         """Return a list to enable converting the element to an RST format."""
         row = []
         for entry in self.entry:
-            content = entry.to_rst(links=links, base_url=base_url)
+            content = entry.to_rst(links=links, base_url=base_url, indent="")
             content = content.replace("\n", "")
             content = content.replace("\r", "")
             row.append(content)
@@ -1861,7 +2033,6 @@ class THead(Element):
                 ini = 0
 
             row.append("")
-
             for i in range(ini, len(self.rows)):
                 rst_list = self.rows[i].to_rst_list(links=links, base_url=base_url)
                 l_rst_list = len(rst_list)
@@ -1920,6 +2091,293 @@ class ProductName(Element):
     pass
 
 
+class ArgumentList:
+    def __init__(self, list_entry: VarlistEntry, args: List) -> None:
+
+        self._list_entry = list_entry
+        self._arguments = []
+        self._initial_args = args
+        self._parse_list_entry()
+
+    def _parse_list_entry(self):
+        for item in self._list_entry:
+            if isinstance(item, VarlistEntry):
+                argument_obj = Argument(item, self._initial_args)
+                additional_args = argument_obj.multiple_args
+                if len(additional_args) > 0:
+                    for arg in additional_args:
+                        if arg.py_arg_name != "" and arg.py_arg_name not in self.py_arg_names:
+                            self._arguments.append(arg)
+
+                else:
+                    if argument_obj.py_arg_name != "":
+                        self._arguments.append(argument_obj)
+
+    def __iadd__(self, argument_list):
+        for arg in argument_list.arguments:
+            if arg.py_arg_name not in self.py_arg_names:
+                self._arguments.append(arg)
+        return self
+
+    @property
+    def arguments(self):
+        return self._arguments
+
+    @arguments.setter
+    def arguments(self, argument):
+        self._arguments.append(argument)
+
+    @property
+    def initial_args(self):
+        return self._initial_args
+
+    @property
+    def py_arg_names(self):
+        return [arg.py_arg_name for arg in self._arguments]
+
+
+class Argument:
+    """Argument object."""
+
+    def __init__(
+        self,
+        element: str | Element,
+        initial_argument: List,
+        description: Element | str | None = None,
+    ) -> None:
+        if description is None:
+            if isinstance(element[0], Term):
+                name = element[0]
+                description = element[1]
+
+            else:
+                i = 0
+                while not isinstance(element[i], Term) and i < len(element):
+                    i += 1
+                    name = element[i]
+                    description = element[i + 1]
+
+        else:
+            name = element
+        self._name = name
+        self._description = description
+        self._initial_argument = initial_argument
+
+    @property
+    def py_arg_name(self) -> str:
+        """Python-compatible term."""
+        return to_py_arg_name(self._name)
+
+    @property
+    def is_arg_elipsis(self):
+        """
+        Check if the argument is an elipsis.
+
+        Returns
+        -------
+        bool
+            True if the argument is an elipsis, False otherwise.
+        """
+        return is_elipsis(str(self._name))
+
+    @property
+    def multiple_args(self):
+        additional_args = []
+        if "," in str(self._name):
+            split_name = str(self._name).split(",")
+            if not self.is_arg_elipsis:
+                for item_name in split_name:
+                    arg_name = item_name.strip()
+                    if arg_name not in ["--", ""]:
+                        new_arg = Argument(arg_name, self._initial_argument, self._description)
+                        if new_arg.py_arg_name != "":
+                            additional_args.append(new_arg)
+            else:
+
+                complete_args = get_complete_args_from_initial_arg(
+                    elipsis_args=split_name, initial_args=self._initial_argument
+                )
+
+                if len(complete_args) > 0:
+                    for item in complete_args:
+                        new_arg = Argument(item, self._initial_argument, self._description)
+                        if new_arg.py_arg_name != "":
+                            additional_args.append(new_arg)
+
+                else:
+
+                    for i, item_name in enumerate(split_name):
+                        item_name = item_name.strip()
+                        if item_name == "":
+                            continue
+                        elif is_elipsis(item_name):
+
+                            if "+" in split_name[i + 1]:
+                                number_final_iter, (
+                                    initial_pos_final,
+                                    end_pos_final,
+                                ) = get_quant_iter_pos(split_name[i + 1])
+                                if "+" in split_name[i - 1]:
+                                    number_prev_iter, (
+                                        initial_pos_prev,
+                                        end_pos_prev,
+                                    ) = get_quant_iter_pos(split_name[i - 1])
+                                else:
+                                    number_prev_iter = 0
+
+                                for j in range(number_prev_iter + 1, number_final_iter):
+                                    arg_name = split_name[i + 1].strip()
+                                    arg_name = f"{arg_name[:initial_pos_final]}{j}{arg_name[end_pos_final:]}"  # noqa : E501
+                                    new_arg = Argument(
+                                        arg_name, self._initial_argument, self._description
+                                    )
+                                    if new_arg.py_arg_name != "":
+                                        additional_args.append(new_arg)
+                            else:
+                                k = i
+                                while split_name[k - 1].strip() == "" and k - 1 >= 0:
+                                    k -= 1
+                                if split_name[k - 1].strip() == "":
+                                    raise ValueError("The argument name is not consistent.")
+                                name_iter_prev, number_iter_prev = get_iter_values(
+                                    split_name[k - 1]
+                                )
+                                name_iter_next, number_iter_next = get_iter_values(
+                                    split_name[k + 1]
+                                )
+                                if name_iter_prev != name_iter_next:
+                                    logging.warning(
+                                        f"The argument name is not consistent: {name_iter_prev} != {name_iter_next}"  # noqa : E501
+                                    )
+                                    logging.info(
+                                        "Applying the longest name for the argument list as it's probably coming from a typography."  # noqa : E501
+                                    )
+                                    if len(name_iter_prev) > len(name_iter_next):
+                                        name_iter_next = name_iter_prev
+                                    else:
+                                        name_iter_prev = name_iter_next
+                                else:
+                                    if number_iter_next > 0:
+                                        for j in range(number_iter_prev + 1, number_iter_next):
+                                            arg_name = f"{name_iter_prev}{j}"
+                                            new_arg = Argument(
+                                                arg_name, self._initial_argument, self._description
+                                            )
+                                            if new_arg.py_arg_name != "":
+                                                additional_args.append(new_arg)
+                                    else:
+                                        additional_args.append(
+                                            Argument(
+                                                name_iter_next,
+                                                self._initial_argument,
+                                                self._description,
+                                            )
+                                        )
+
+        return additional_args
+
+    def rec_find(self, _type: str, terms=None) -> Element | None:
+        """Find the first type matching a given type string recursively."""
+        for item in self:
+            if type(item).__name__ == _type:
+                if _type == "Refname" or _type == "Refnamediv":
+                    item.terms = terms
+                return item
+            if isinstance(item, Element):
+                subitem = item.rec_find(_type)
+                if subitem is not None:
+                    return subitem
+        return None
+
+    @property
+    def types(self) -> List[type]:
+        """One or more parameter types.
+
+        This is guessed from any subvarlists. If unavailable, then it's guessed
+        from the description of the variable.
+
+        This is either a string, float, or integer (or some combination thereof).
+
+        """
+        parm_types = [str]
+        if isinstance(self._description, Element):
+            varlist = self._description.rec_find("Variablelist")
+
+            if varlist is not None:
+                terms = varlist.terms
+                if terms:
+                    terms_numeric = [is_numeric(term) for term in terms]
+                    if any(terms_numeric):
+                        parm_types = [int, str]
+                    else:
+                        parm_types = [str]
+
+                    # consider checking for bool
+                    # terms_numeric = set(terms) == set(['1', '0'])
+
+        return parm_types
+
+    def str_types(self, join_str: str) -> str:
+        """String representation of the parameter types."""
+        ptype_str = join_str.join([parm_type.__name__ for parm_type in self.types])
+        return ptype_str
+
+    def resized_description(
+        self, description: str | None = None, max_length: int = 100, indent: str = ""
+    ) -> List[str]:
+        """Resize the description to a maximum length."""
+        if description is None:
+            description = self._description
+
+        if "* " in description:
+            output = description.split("\n")
+        else:
+            output = resize_length(
+                description, max_length, initial_indent=indent, subsequent_indent=indent, list=True
+            )
+
+        return output
+
+    def to_py_docstring(
+        self, max_length=100, indent="", links=None, base_url=None, fcache=None
+    ) -> List[str]:
+        """Return a list of string to enable converting the element to an RST format."""
+        if self.py_arg_name not in ["--", "–", ""]:
+            docstring = [f'{indent}{self.py_arg_name} : {self.str_types(" or ")}']
+            if isinstance(self._description, str):
+                rst_description = self._description
+            else:
+                rst_description = self._description.to_rst(
+                    indent=indent,
+                    max_length=max_length,
+                    links=links,
+                    base_url=base_url,
+                    fcache=fcache,
+                )
+            description_indent = " " * 4 + indent
+            if not "* " in rst_description:
+                list_description = self.resized_description(
+                    rst_description, max_length, description_indent
+                )
+            else:
+                rst_description = textwrap.indent(rst_description, description_indent)
+                list_description = rst_description.split("\n")
+
+            docstring = [f'{indent}{self.py_arg_name} : {self.str_types(" or ")}']
+            docstring.extend(list_description)
+        else:
+            docstring = []
+        return docstring
+
+    def to_py_signature(self) -> str:
+        """Return the Python signature of the argument."""
+        if self.py_arg_name not in ["--", "–", ""]:
+            kwarg = f'{self.py_arg_name}: {self.str_types(" | ")}=""'
+        else:
+            kwarg = None
+        return kwarg
+
+
 class XMLCommand(Element):
     """Provides the XML command from the documentation."""
 
@@ -1968,24 +2426,42 @@ class XMLCommand(Element):
                     return item
 
     @property
-    def arg_desc(self):
-        """Each argument's description."""
+    def arg_desc(self) -> List[Argument]:
+        """Argument object list of the command."""
         refsyn = self.rec_find("Refsynopsisdiv")
-
         # search by ID
+        arguments = None
         if refsyn is None:
-            arg_desc = []
-            for elem in self.find_all("RefSection"):
-                if (
-                    elem.id is not None and "argdescript" in elem.id
-                ):  # need to be modified for extended docstrings
-                    arg_desc.append(elem)
-            if len(arg_desc) > 0:
-                return arg_desc
-            else:
-                return None
+            refsections = self.find_all("RefSection")
+            for elem in refsections:
+                if elem.id is not None and "argdescript" in elem.id:
+                    for child in elem:
+                        if isinstance(child, Variablelist):
+                            if arguments is None:
+                                arguments = ArgumentList(child, self.args)
+                            else:
+                                arguments += ArgumentList(child, self.args)
 
-        return refsyn
+        else:
+            for elem in refsyn:
+                if isinstance(elem, Variablelist):
+                    if arguments is None:
+                        arguments = ArgumentList(elem, self.args)
+                    else:
+                        arguments += ArgumentList(elem, self.args)
+
+        if arguments is not None:
+            if len(arguments.py_arg_names) < len(arguments.initial_args):
+                for arg in arguments.initial_args:
+                    if arg not in arguments.py_arg_names:
+                        new_arg = Argument(arg, arguments.initial_args, "")
+                        if new_arg.py_arg_name != "":
+                            arguments.arguments.append(new_arg)
+
+            return arguments.arguments
+
+        else:
+            return []
 
     @property
     def short_desc(self):
@@ -2036,15 +2512,19 @@ class XMLCommand(Element):
         """Set the group of the command."""
         self._group = group
 
-    def py_signature(self, indent=""):
+    def py_signature(self, indent="") -> str:
         """Beginning of the Python command's definition."""
         args = ["self"]
-        kwargs = [f'{arg}=""' for arg in self.py_args if "--" not in arg]
-        arg_sig = ", ".join(args + kwargs)
-        # print(self.py_parm)
+        arg_desc = self.arg_desc
+        if len(arg_desc) > 0:
+            for argument in arg_desc:
+                if argument.to_py_signature() is not None:
+                    args.append(argument.to_py_signature())
+
+        arg_sig = ", ".join(args)
         return f"{indent}def {self.py_name}({arg_sig}, **kwargs):"
 
-    def py_docstring(self, custom_functions):
+    def py_docstring(self, custom_functions, max_length=100):
         """Python docstring of the command."""
         xml_cmd = f"{self._terms['pn006p']} Command: `{self.name} <{self.url}>`_"
 
@@ -2058,14 +2538,16 @@ class XMLCommand(Element):
             else:
                 items += [""] + textwrap.wrap("Default: " + self.default.to_rst())
         if self.args is not None:
-            items += [""] + self.py_parm
+            items += [""] + self.py_parm(
+                max_length, links=self._links, base_url=self._base_url, fcache=self._fcache
+            )
         if custom_functions is not None and (
             self.py_name in custom_functions.py_names
             and self.py_name in custom_functions.py_returns
         ):
             items += [""] + custom_functions.py_returns[self.py_name]
         if self.notes is not None:
-            items += [""] + self.py_notes
+            items += [""] + self.py_notes(max_length)
         if custom_functions is not None and (
             self.py_name in custom_functions.py_names
             and self.py_name in custom_functions.py_examples
@@ -2171,10 +2653,10 @@ class XMLCommand(Element):
         is_dash_sign = False
         i = 0
         while i < len(lines):
-            if lines[i].lstrip().startswith("-"):
+            if lines[i].lstrip().startswith("--"):
                 if is_dash_sign == False:
                     is_dash_sign = True
-            elif lines[i].lstrip().startswith("="):
+            elif lines[i].lstrip().startswith("=="):
                 if is_equal_sign or is_dash_sign:
                     lines[i - 1] = "**" + lines[i - 1] + "**"
                     lines.pop(i)
@@ -2267,6 +2749,7 @@ class XMLCommand(Element):
         while "\n\n\n" in docstr:
             docstr = docstr.replace("\n\n\n", "\n\n")
 
+        docstr = re.sub(r"bgcolor=\S\S\S\S\S\S\S\S\S\S? ", "", docstr)
         docstr = re.sub(r"bgcolor=\S\S\S\S\S\S\S\S\S\S?", "", docstr)
         docstr = re.sub(r"_cellfont Shading=\S\S\S\S\S\S\S\S", "", docstr)
 
@@ -2280,55 +2763,29 @@ class XMLCommand(Element):
 
         return docstr
 
-    @property
-    def py_notes(self):
+    def py_notes(self, max_length=100):
         """Python-formatted notes string."""
         lines = ["Notes", "-" * 5]
         if self.notes.tag in item_needing_all:
-            lines.append(
-                self.notes.to_rst(
-                    links=self._links,
-                    base_url=self._base_url,
-                    fcache=self._fcache,
-                )
+            notes = self.notes.to_rst(
+                links=self._links,
+                base_url=self._base_url,
+                fcache=self._fcache,
             )
         elif self.notes.tag in item_needing_links_base_url:
-            lines.append(self.notes.to_rst(links=self._links, base_url=self._base_url))
+            notes = self.notes.to_rst(links=self._links, base_url=self._base_url)
         elif self.notes.tag in item_needing_fcache:
-            lines.append(self.notes.to_rst(links=self._links, fcache=self._fcache))
+            notes = self.notes.to_rst(links=self._links, fcache=self._fcache)
         else:
-            lines.append(self.notes.to_rst())
+            notes = self.notes.to_rst()
+
+        if "flat-table" not in "".join(notes) and ".. code::" not in "".join(notes):
+            notes = resize_length(notes, 100, list=True)
+            lines.extend(notes)
+        else:
+            lines.append(notes)
 
         return lines
-
-    @property
-    def py_parm(self):
-        """Python parameter's string."""
-        if self.arg_desc is not None:
-            lines = ["Parameters", "-" * 10]
-            for item in self.arg_desc:
-                if not isinstance(item, Variablelist):
-                    if isinstance(item, Element) and "Command Default" in str(item.title):
-                        continue
-                if isinstance(item, Element):
-                    if item.tag in item_needing_all:
-                        lines.append(
-                            item.to_rst(
-                                links=self._links,
-                                base_url=self._base_url,
-                                fcache=self._fcache,
-                            )
-                        )
-                    elif item.tag in item_needing_links_base_url:
-                        lines.append(item.to_rst(links=self._links, base_url=self._base_url))
-                    elif item.tag in item_needing_fcache:
-                        lines.append(item.to_rst(fcache=self._fcache))
-                    else:
-                        lines.append(item.to_rst())
-                else:
-                    lines.append(str(item))
-            return lines
-        return []
 
     @property
     def url(self):
@@ -2365,11 +2822,23 @@ class XMLCommand(Element):
         lines.append("Function signature:")
         lines.append(", ".join([f"{self.name}"] + self.args))
         lines.append("")
-        lines.append(str(self.arg_desc))
+        lines.append(str(self.arg_desc))  # TO DO: modify this
         lines.append("")
         lines.append(str(self.notes))
 
         return "\n".join(lines)
+
+    def py_parm(self, max_length=100, indent="", links=None, base_url=None, fcache=None):
+        """Python parameter's string."""
+        lines = []
+        arg_desc = self.arg_desc
+        if len(arg_desc) > 0:
+            lines.append("Parameters")
+            lines.append("-" * 10)
+            for argument in arg_desc:
+                lines.extend(argument.to_py_docstring(max_length, indent, links, base_url, fcache))
+                lines.append("")
+        return lines
 
     def py_source(self, custom_functions=None, indent=""):
         """
@@ -2377,13 +2846,19 @@ class XMLCommand(Element):
 
         Parameters
         ----------
-        custom_functions : CustomFunctions, optional
+        custom_functions: CustomFunctions, optional
             Custom functions to add to the command. The default is ``None``.
         """
         if custom_functions is None or self.py_name not in custom_functions.py_names:
 
-            if len(self.py_args) > 0:
-                command = 'command = f"' + self.name + ",{" + "},{".join(self.py_args) + '}"\n'
+            if len(self.arg_desc) > 0:
+                command = 'command = f"' + self.name
+                for arg in self.arg_desc:
+                    command += ",{"
+                    command += arg.py_arg_name
+                    command += "}"
+                command += '"\n'
+                # ",{" + "},{".join(self.arg_desc.py_arg_name) + '}"\n'
             else:
                 command = 'command = f"' + self.name + '"\n'
             return_command = "return self.run(command, **kwargs)\n"
@@ -2399,9 +2874,9 @@ class XMLCommand(Element):
 
         Parameters
         ----------
-        custom_functions : CustomFunctions, optional
+        custom_functions: CustomFunctions, optional
             Custom functions to add to the command. The default is ``None``.
-        indent : str, optional
+        indent: str, optional
             Indentation of the Python function. The default is ``""``.
 
         Returns
@@ -2433,7 +2908,7 @@ class XMLCommand(Element):
 class InformalTable(Element):
     """Provides the informal table element."""
 
-    def to_rst(self, indent=""):
+    def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         return "InformalTables need to be added."
 

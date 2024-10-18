@@ -146,21 +146,21 @@ into account and added to the Python docstring:
 
                 Parameters
                 ----------
-                nl1 : str
+                nl1: str
                     Number of the first line to be hit (touched by the end of the new line). If negative, assume ``P1`` (see below) is the second keypoint of the line instead of the first
-                nl2 : str
+                nl2: str
                     Number of the second line to be hit. If negative, assume ``P3`` is the second keypoint of the line instead of the first.
 
-                ang1 : str
+                ang1: str
                     Angle of intersection (usually zero or 180) of generated line with tangent to first line.
 
-                ang2 : str
+                ang2: str
                     Angle of intersection (usually zero or 180) of generated line with tangent to second line.
 
-                phit1 : str
+                phit1: str
                     Number to be assigned to keypoint generated at hit location on first line (defaults to lowest available keypoint number ( :ref:`numstr` )).
 
-                phit2 : str
+                phit2: str
                     Number to be assigned to keypoint generated at hit location on second line (defaults to lowest available keypoint number ( :ref:`numstr` )).
 
                 Returns
