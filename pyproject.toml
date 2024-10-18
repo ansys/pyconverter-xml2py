@@ -8,7 +8,7 @@ name = "pyconverter-xml2py"
 version = "0.3.dev0"
 description = "PyConverter-XML2Py converter."
 readme = "README.rst"
-requires-python = ">=3.8"
+requires-python = ">=3.10,<3.13"
 license = {file = "LICENSE"}
 authors = [
     {name = "ANSYS, Inc.", email = "pyansys.core@ansys.com"},
@@ -20,10 +20,9 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
     "click>=7.0,<9.0.0",
@@ -31,8 +30,7 @@ dependencies = [
     "pygithub>=1.59.1",
     "inflect>=7.0.0",
     "lxml>=4.9.3",
-    "numpy>=1.14.0,<1.25.0; python_version<'3.9'",
-    "numpy>=1.14.0; python_version>='3.9'",
+    "numpy>=1.14.0",
     "py-asciimath==0.3.0",
     "pylatexenc==2.10",
     "pyyaml>=5.1.0",
