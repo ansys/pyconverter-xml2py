@@ -8,7 +8,7 @@ name = "pyconverter-xml2py"
 version = "0.3.dev0"
 description = "PyConverter-XML2Py converter."
 readme = "README.rst"
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.10,<4"
 license = {file = "LICENSE"}
 authors = [
     {name = "ANSYS, Inc.", email = "pyansys.core@ansys.com"},
