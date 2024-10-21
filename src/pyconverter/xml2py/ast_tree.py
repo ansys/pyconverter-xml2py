@@ -2403,6 +2403,7 @@ class XMLCommand(Element):
         self._group = None
         self._is_archived = False
         self._refentry = refentry
+        self._max_length = 100
 
         # parse the command
         super().__init__(self._refentry, parse_children=not meta_only)
@@ -2524,7 +2525,7 @@ class XMLCommand(Element):
         arg_sig = ", ".join(args)
         return f"{indent}def {self.py_name}({arg_sig}, **kwargs):"
 
-    def py_docstring(self, custom_functions, max_length=100):
+    def py_docstring(self, custom_functions):
         """Python docstring of the command."""
         xml_cmd = f"{self._terms['pn006p']} Command: `{self.name} <{self.url}>`_"
 
@@ -2539,7 +2540,7 @@ class XMLCommand(Element):
                 items += [""] + textwrap.wrap("Default: " + self.default.to_rst())
         if self.args is not None:
             items += [""] + self.py_parm(
-                max_length, links=self._links, base_url=self._base_url, fcache=self._fcache
+                links=self._links, base_url=self._base_url, fcache=self._fcache
             )
         if custom_functions is not None and (
             self.py_name in custom_functions.py_names
@@ -2547,7 +2548,7 @@ class XMLCommand(Element):
         ):
             items += [""] + custom_functions.py_returns[self.py_name]
         if self.notes is not None:
-            items += [""] + self.py_notes(max_length)
+            items += [""] + self.py_notes()
         if custom_functions is not None and (
             self.py_name in custom_functions.py_names
             and self.py_name in custom_functions.py_examples
@@ -2763,24 +2764,25 @@ class XMLCommand(Element):
 
         return docstr
 
-    def py_notes(self, max_length=100):
+    def py_notes(self):
         """Python-formatted notes string."""
         lines = ["Notes", "-" * 5]
         if self.notes.tag in item_needing_all:
             notes = self.notes.to_rst(
+                max_length=self._max_length,
                 links=self._links,
                 base_url=self._base_url,
                 fcache=self._fcache,
             )
         elif self.notes.tag in item_needing_links_base_url:
-            notes = self.notes.to_rst(links=self._links, base_url=self._base_url)
+            notes = self.notes.to_rst(max_length=self._max_length, links=self._links, base_url=self._base_url)
         elif self.notes.tag in item_needing_fcache:
-            notes = self.notes.to_rst(links=self._links, fcache=self._fcache)
+            notes = self.notes.to_rst(max_length=self._max_length, links=self._links, fcache=self._fcache)
         else:
             notes = self.notes.to_rst()
 
         if "flat-table" not in "".join(notes) and ".. code::" not in "".join(notes):
-            notes = resize_length(notes, 100, list=True)
+            notes = resize_length(notes, self._max_length, list=True)
             lines.extend(notes)
         else:
             lines.append(notes)
@@ -2828,7 +2830,7 @@ class XMLCommand(Element):
 
         return "\n".join(lines)
 
-    def py_parm(self, max_length=100, indent="", links=None, base_url=None, fcache=None):
+    def py_parm(self, indent="", links=None, base_url=None, fcache=None):
         """Python parameter's string."""
         lines = []
         arg_desc = self.arg_desc
@@ -2836,7 +2838,7 @@ class XMLCommand(Element):
             lines.append("Parameters")
             lines.append("-" * 10)
             for argument in arg_desc:
-                lines.extend(argument.to_py_docstring(max_length, indent, links, base_url, fcache))
+                lines.extend(argument.to_py_docstring(self._max_length, indent, links, base_url, fcache))
                 lines.append("")
         return lines
 
