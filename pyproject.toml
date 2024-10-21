@@ -72,7 +72,7 @@ doc = [
     "sphinx-autodoc-typehints==2.4.4",
     "sphinx-copybutton==0.5.2",
     "sphinx-notfound-page==1.0.4",
-    "sphinx-gallery==0.17.1",
+    "sphinx-gallery==0.18.0",
 ]
 
 [tool.flit.module]
