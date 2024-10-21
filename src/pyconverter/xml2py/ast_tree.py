@@ -2372,7 +2372,7 @@ class Argument:
     def to_py_signature(self) -> str:
         """Return the Python signature of the argument."""
         if self.py_arg_name not in ["--", "–", ""]:
-            kwarg = f'{self.py_arg_name}: {self.str_types(" | ")}=""'
+            kwarg = f'{self.py_arg_name}: {self.str_types(" | ")} = ""'
         else:
             kwarg = None
         return kwarg
