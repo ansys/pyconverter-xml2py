@@ -34,6 +34,7 @@ def test_customfunctions(custom_functions):
 def test_get_docstring_lists(path_custom_functions):
     path_custom_function = path_custom_functions / "kdist.py"
     (
+        list_py_args,
         list_py_returns,
         list_py_examples,
         list_py_code,

@@ -24,6 +24,8 @@ import logging as log
 from pathlib import Path
 from typing import Tuple
 
+import regex as re
+
 
 def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str], list[str]]:
     """
@@ -54,6 +56,7 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
     bool_notes = False
     begin_docstring = False
     end_docstring = False
+    list_py_args = []
     list_py_returns = []
     list_py_examples = []
     list_py_code = []
@@ -63,6 +66,10 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
             list_import.append(line)
         elif "def" in line and bool_def is False:
             bool_def = True
+            split_def = line.split(",")
+            for split_arg in split_def:
+                if "=" in split_arg:
+                    list_py_args.append(re.search(r"\w*(?=\=)", split_arg).group())
         elif '"""' in line and begin_docstring is False:
             begin_docstring = True
         elif '"""' in line and begin_docstring is True:
@@ -98,7 +105,7 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
         elif bool_notes is True:
             pass  # Notes are obtained from the converter
 
-    return list_py_returns, list_py_examples, list_py_code, list_import
+    return list_py_args, list_py_returns, list_py_examples, list_py_code, list_import
 
 
 # ############################################################################
@@ -122,6 +129,7 @@ class CustomFunctions:
         if not Path(path).is_dir():
             raise (FileExistsError, f"The path_functions {path} does not exist.")
         self._py_names = []
+        self._py_args = {}
         self._py_returns = {}
         self._py_examples = {}
         self._py_code = {}
@@ -129,9 +137,15 @@ class CustomFunctions:
         for filename in Path(path).glob("*.py"):
             py_name = filename.stem
             self._py_names.append(py_name)
-            list_py_returns, list_py_examples, list_py_code, list_import = get_docstring_lists(
-                filename
-            )
+            (
+                list_py_args,
+                list_py_returns,
+                list_py_examples,
+                list_py_code,
+                list_import,
+            ) = get_docstring_lists(filename)
+            if len(list_py_args) > 0:
+                self._py_args[py_name] = list_py_args
             if len(list_py_returns) > 0:
                 self._py_returns[py_name] = list_py_returns
             if len(list_py_examples) > 0:
@@ -159,9 +173,15 @@ class CustomFunctions:
         for filename in Path(path).glob("*.py"):
             py_name = filename.stem
             self._py_names.append(py_name)
-            list_py_returns, list_py_examples, list_py_code, list_import = get_docstring_lists(
-                filename
-            )
+            (
+                list_py_args,
+                list_py_returns,
+                list_py_examples,
+                list_py_code,
+                list_import,
+            ) = get_docstring_lists(filename)
+            if len(list_py_args) > 0:
+                self._py_args[py_name] = list_py_args
             if len(list_py_returns) > 0:
                 self._py_returns[py_name] = list_py_returns
             if len(list_py_examples) > 0:
@@ -175,6 +195,11 @@ class CustomFunctions:
     def py_names(self) -> list:
         """List with all customized functions located in the folder."""
         return self._py_names
+
+    @property
+    def py_args(self) -> dict:
+        """Dictionary containing the python arguments if any."""
+        return self._py_args
 
     @property
     def py_returns(self) -> dict:
