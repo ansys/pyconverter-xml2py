@@ -33,7 +33,9 @@ def run_pre_commit(package_path) -> None:
     max_run = 10
     while cur_run < max_run and output != 0:
         cur_run += 1
-        output = os.system(f"pre-commit run --all-files --config {package_path}/.pre-commit-config.yaml")
+        output = os.system(
+            f"pre-commit run --all-files --config {package_path}/.pre-commit-config.yaml"
+        )
     if output != 0:
         raise RuntimeError("Pre-commit failed.")
     else:

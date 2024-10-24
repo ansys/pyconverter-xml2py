@@ -92,7 +92,9 @@ def get_paths(
         graph_path = path / "graphics"
         if not graph_path.is_dir():
             print(
-                f"WARNING: the path {graph_path} does not exist. Follow the predefined format or enter the graphic path manually."  # noqa : E501
+                f"WARNING: the path {graph_path} does not exist.",
+                "Follow the predefined format or enter the graphic",
+                "path manually.",  # noqa : E501
             )
 
     if link_path is None:
