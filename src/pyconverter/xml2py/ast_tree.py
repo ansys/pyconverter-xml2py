@@ -2519,6 +2519,7 @@ class XMLCommand(Element):
     def py_signature(self, custom_functions: CustomFunctions, indent="") -> str:
         """Beginning of the Python command's definition."""
         args = ["self"]
+        arg_desc = self.arg_desc
         if custom_functions is not None and (
             self.py_name in custom_functions.py_names and self.py_name in custom_functions.py_args
         ):
@@ -2529,7 +2530,6 @@ class XMLCommand(Element):
                 if new_arg is not None:
                     args.append(new_arg)
         else:
-            arg_desc = self.arg_desc
             if len(arg_desc) > 0:
                 for argument in arg_desc:
                     new_arg = to_py_signature(argument.py_arg_name, argument.types)
@@ -2554,7 +2554,7 @@ class XMLCommand(Element):
                 items += [""] + textwrap.wrap("Default: " + self.default.to_rst())
         if self.args is not None:
             items += [""] + self.py_parm(
-                links=self._links, base_url=self._base_url, fcache=self._fcache
+                custom_functions, links=self._links, base_url=self._base_url, fcache=self._fcache
             )
         if custom_functions is not None and (
             self.py_name in custom_functions.py_names
@@ -2562,7 +2562,7 @@ class XMLCommand(Element):
         ):
             items += [""] + custom_functions.py_returns[self.py_name]
         if self.notes is not None:
-            items += [""] + self.py_notes()
+            items += [""] + self.py_notes(custom_functions)
         if custom_functions is not None and (
             self.py_name in custom_functions.py_names
             and self.py_name in custom_functions.py_examples
@@ -2778,7 +2778,7 @@ class XMLCommand(Element):
 
         return docstr
 
-    def py_notes(self):
+    def py_notes(self, custom_functions: CustomFunctions = None):
         """Python-formatted notes string."""
         lines = ["Notes", "-" * 5]
         if self.notes.tag in item_needing_all:
@@ -2804,6 +2804,10 @@ class XMLCommand(Element):
             lines.extend(notes)
         else:
             lines.append(notes)
+
+        if custom_functions is not None and self.py_name in custom_functions.py_notes:
+            if len("\n".join(lines)) < len("\n".join(custom_functions.py_notes[self.py_name])):
+                lines = custom_functions.py_notes[self.py_name]
 
         return lines
 
@@ -2848,12 +2852,30 @@ class XMLCommand(Element):
 
         return "\n".join(lines)
 
-    def py_parm(self, indent="", links=None, base_url=None, fcache=None):
+    def py_parm(self, custom_functions=None, indent="", links=None, base_url=None, fcache=None):
         """Python parameter's string."""
         lines = []
         arg_desc = self.arg_desc
+
         if len(arg_desc) > 0:
             lines.append("Parameters")
+
+        if custom_functions is not None and self.py_name in custom_functions.py_names:
+            initial_py_arg_list = [argument.py_arg_name for argument in arg_desc]
+            if set(custom_functions.py_args[self.py_name]) == set(initial_py_arg_list):
+                if len(arg_desc) > 0:
+                    lines.append("-" * 10)
+                    for argument in arg_desc:
+                        lines.extend(
+                            argument.to_py_docstring(
+                                self._max_length, indent, links, base_url, fcache
+                            )
+                        )
+                        lines.append("")
+            else:
+                lines.extend(custom_functions.py_params[self.py_name])
+
+        elif len(arg_desc) > 0:
             lines.append("-" * 10)
             for argument in arg_desc:
                 lines.extend(
