@@ -2805,7 +2805,9 @@ class XMLCommand(Element):
         else:
             lines.append(notes)
 
-        if custom_functions is not None and self.py_name in custom_functions.py_notes:
+        if custom_functions is not None and (
+            self.py_name in custom_functions.py_names and self.py_name in custom_functions.py_notes
+        ):
             if len("\n".join(lines)) < len("\n".join(custom_functions.py_notes[self.py_name])):
                 lines = custom_functions.py_notes[self.py_name]
 
@@ -2860,7 +2862,9 @@ class XMLCommand(Element):
         if len(arg_desc) > 0:
             lines.append("Parameters")
 
-        if custom_functions is not None and self.py_name in custom_functions.py_names:
+        if custom_functions is not None and (
+            self.py_name in custom_functions.py_names and self.py_name in custom_functions.py_args
+        ):
             initial_py_arg_list = [argument.py_arg_name for argument in arg_desc]
             if set(custom_functions.py_args[self.py_name]) == set(initial_py_arg_list):
                 if len(arg_desc) > 0:
