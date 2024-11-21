@@ -11,6 +11,8 @@ rules:
 specific_command_mapping:
   "*DEL": stardel
   "C***": c
+  "/INQUIRE": inquire
 
 specific_classes:
   2D to 3D Analysis: Analysis 2D to 3D
+  Parameters: Parameter definition

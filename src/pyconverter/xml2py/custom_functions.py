@@ -73,9 +73,6 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
             for split_arg in split_def:
                 if "**kwarg" in split_arg:
                     break
-                elif ":" in split_arg:
-                    find = re.search(r"\w*(?=\:)", split_arg).group()
-                    list_py_args.append(find)
                 elif "=" in split_arg:
                     find = re.search(r"\w*(?=\=)", split_arg).group()
                     list_py_args.append(find)
