@@ -210,7 +210,7 @@ def copy_template_package(template_path: Path, new_package_path: Path, clean: bo
             shutil.copy(filename, new_package_path)
 
 
-def write_global__init__file(library_path: Path) -> None:
+def write_global__init__file(library_path: Path, config_path: Path) -> None:
     """
     Write the ``__init__.py`` file for the package generated.
 
@@ -219,10 +219,22 @@ def write_global__init__file(library_path: Path) -> None:
     library_path: Path
         Path object of the directory containing the generated package.
     """
-    mod_file = library_path / "__init__.py"
 
-    with open(mod_file, "w") as fid:
-        fid.write(f"from . import (\n")
+    subfolder_values = get_config_data_value(config_path, "subfolder")
+
+    if subfolder_values:
+        init_folder = library_path
+        for subfolder in subfolder_values:
+            init_folder = init_folder.parent
+        initial_imports = ".".join(subfolder_values)
+    else:
+        init_folder = library_path
+        initial_imports = ""
+
+    init_path = init_folder / "__init__.py"
+
+    with open(init_path, "w") as fid:
+        fid.write(f"from .{initial_imports} import (\n")
         for dir in library_path.iterdir():
             if dir.is_dir():
                 fid.write(f"    {dir.stem},\n")
@@ -259,7 +271,7 @@ def write__init__file(library_path: Path) -> None:
                     fid.close()
 
 
-def get_library_path(new_package_path: Path, config_path: Path) -> Path:
+def get_library_path(new_package_path: Path, config_path: Path, subfolder: bool = True) -> Path:
     """
     Get the desired library path with the following format:
     ``new_package_path/library_structure``.
@@ -283,6 +295,10 @@ def get_library_path(new_package_path: Path, config_path: Path) -> Path:
     library_name = get_config_data_value(config_path, "library_name_structured")
     if not "src" in library_name:
         library_name.insert(0, "src")
+    if subfolder:
+        subfolder_values = get_config_data_value(config_path, "subfolder")
+        if subfolder_values:
+            library_name.extend(subfolder_values)
     return new_package_path.joinpath(*library_name)
 
 
@@ -498,7 +514,7 @@ def write_source(
                         f"Failed to execute '{python_method}' from '{file_path}'."
                     ) from e
 
-    write_global__init__file(library_path)
+    write_global__init__file(library_path, config_path)
     write__init__file(library_path)
 
     logging.info(f"Commands written to {library_path}")
@@ -533,6 +549,9 @@ def write_docs(
     library_name = get_config_data_value(config_path, "library_name_structured")
     if library_name[0] == "src":
         library_name.pop(0)
+    subfolder_values = get_config_data_value(config_path, "subfolder")
+    if subfolder_values:
+        library_name.extend(subfolder_values)
     library_name = ".".join(library_name)
 
     doc_package_path = package_path / "doc" / "source"

@@ -2,6 +2,10 @@ library_name_structured: # Future name of the library
   - pyconverter
   - generatedcommands
 
+subfolder:
+  - subfolder
+  - subsubfolder
+
 new_package_name: package
 
 rules:
