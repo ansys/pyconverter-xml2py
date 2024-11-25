@@ -404,7 +404,7 @@ def write_source(
     new_package_name = get_config_data_value(config_path, "new_package_name")
     logging.info(f"Creating package {new_package_name}...")
     new_package_path = target_path / new_package_name
-    
+
     ignored_commands = set(get_config_data_value(config_path, "ignored_commands"))
 
     if clean:
