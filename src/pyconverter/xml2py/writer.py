@@ -49,9 +49,6 @@ CONST = {
     '``"``': "``",
 }
 
-# XML commands to skip
-SKIP_XML = {"*IF", "*ELSE", "*RETURN", "*DEL"}  # Equivalent to if, else, return, del
-
 
 def convert(directory_path):
     """
@@ -407,6 +404,8 @@ def write_source(
     new_package_name = get_config_data_value(config_path, "new_package_name")
     logging.info(f"Creating package {new_package_name}...")
     new_package_path = target_path / new_package_name
+    
+    ignored_commands = set(get_config_data_value(config_path, "ignored_commands"))
 
     if clean:
         if new_package_path.is_dir():
@@ -420,7 +419,7 @@ def write_source(
     if structured == False:
         package_structure = None
         for initial_command_name, command_obj in tqdm(command_map.items(), desc="Writing commands"):
-            if initial_command_name in SKIP_XML:
+            if initial_command_name in ignored_commands:
                 continue
             python_name = name_map[initial_command_name]
             path = library_path / f"{python_name}.py"
@@ -439,7 +438,7 @@ def write_source(
         all_commands = []
         specific_classes = get_config_data_value(config_path, "specific_classes")
         for command in tqdm(command_map.values(), desc="Writing commands"):
-            if command.name in SKIP_XML or command.group is None:
+            if command.name in ignored_commands or command.group is None:
                 continue
 
             module_name, initial_class_name, module_path = get_module_info(library_path, command)

@@ -13,6 +13,23 @@ specific_command_mapping:
   "C***": c
   "/INQUIRE": inquire
 
+ignored_commands:
+  - "*VWR"
+  - "*MWR"
+  - "C***"
+  - "*CFO"
+  - "*CRE"
+  - "*END"
+  - "/EOF"
+  - "*ASK"
+  - "*IF"
+  - "*ELSE"
+  - "CMAT"
+  - "*REP"
+  - "*RETURN"
+  - "LSRE"
+
+
 specific_classes:
   2D to 3D Analysis: Analysis 2D to 3D
   Parameters: Parameter definition

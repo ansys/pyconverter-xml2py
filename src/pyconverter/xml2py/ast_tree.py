@@ -80,9 +80,6 @@ PY_ARG_CLEANUP = {
 # Map XML command to pycommand function
 NAME_MAP_GLOB = {}
 
-# XML commands to skip
-SKIP = {"*IF", "*ELSE", "C***", "*RETURN"}
-
 NO_RESIZE_LIST = ["Variablelist"]
 
 
