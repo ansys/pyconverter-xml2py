@@ -220,7 +220,7 @@ def write_global__init__file(library_path: Path, config_path: Path) -> None:
         Path object of the directory containing the generated package.
     """
 
-    subfolder_values = get_config_data_value(config_path, "subfolder")
+    subfolder_values = get_config_data_value(config_path, "subfolders")
 
     if subfolder_values:
         init_folder = library_path
@@ -296,7 +296,7 @@ def get_library_path(new_package_path: Path, config_path: Path, subfolder: bool 
     if not "src" in library_name:
         library_name.insert(0, "src")
     if subfolder:
-        subfolder_values = get_config_data_value(config_path, "subfolder")
+        subfolder_values = get_config_data_value(config_path, "subfolders")
         if subfolder_values:
             library_name.extend(subfolder_values)
     return new_package_path.joinpath(*library_name)
@@ -549,7 +549,7 @@ def write_docs(
     library_name = get_config_data_value(config_path, "library_name_structured")
     if library_name[0] == "src":
         library_name.pop(0)
-    subfolder_values = get_config_data_value(config_path, "subfolder")
+    subfolder_values = get_config_data_value(config_path, "subfolders")
     if subfolder_values:
         library_name.extend(subfolder_values)
     library_name = ".".join(library_name)
