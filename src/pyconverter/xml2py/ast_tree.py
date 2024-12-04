@@ -135,7 +135,12 @@ def get_quant_iter_pos(name: str) -> tuple:
 def to_py_arg_name(name: str) -> str:
     """Python-compatible term"""
     arg = str(name).lower().strip()
-    p = engine()
+    if arg == "":
+        return arg
+    elif arg.isdigit():
+        return ""
+    if arg[0].isdigit():
+        p = engine()
     if arg[0].isdigit():
         if arg[1].isdigit():
             raise ValueError(f"The code needs to be expanded to handle numbers")
@@ -146,8 +151,11 @@ def to_py_arg_name(name: str) -> str:
             num_value = p.number_to_words(arg[:3])
             arg = f"{num_value}{arg[3:]}"
 
-    if ("," in arg and "--" in arg) or arg == "–":
-        return ""
+    if "--" in arg or arg == "–":
+        arg = arg.replace("--", "")
+        arg = arg.replace("–", "")
+        arg = arg.replace(" ", "")
+        return arg
 
     for key, value in PY_ARG_CLEANUP.items():
         arg = arg.replace(key, value)
@@ -204,7 +212,7 @@ def str_types(types, join_str: str) -> str:
 
 def to_py_signature(py_arg_name, types) -> str:
     """Return the Python signature of the argument."""
-    if py_arg_name not in ["--", "–", ""]:
+    if "," not in py_arg_name and py_arg_name != "":
         kwarg = f'{py_arg_name}: {str_types(types, " | ")} = ""'
     else:
         kwarg = None
@@ -2119,16 +2127,17 @@ class ArgumentList:
                 additional_args = argument_obj.multiple_args
                 if len(additional_args) > 0:
                     for arg in additional_args:
-                        if arg.py_arg_name != "" and arg.py_arg_name not in self.py_arg_names:
+                        arg_name = arg.py_arg_name
+                        if ("," in arg_name or arg_name == "") or (arg_name not in self.py_arg_names):
                             self._arguments.append(arg)
 
                 else:
-                    if argument_obj.py_arg_name != "":
-                        self._arguments.append(argument_obj)
+                    self._arguments.append(argument_obj)
 
     def __iadd__(self, argument_list):
         for arg in argument_list.arguments:
-            if arg.py_arg_name not in self.py_arg_names:
+            arg_name = arg.py_arg_name
+            if ("," not in arg_name or arg_name == "") or (arg_name not in self.py_arg_names):
                 self._arguments.append(arg)
         return self
 
@@ -2350,7 +2359,7 @@ class Argument:
         self, max_length=100, indent="", links=None, base_url=None, fcache=None
     ) -> List[str]:
         """Return a list of string to enable converting the element to an RST format."""
-        if self.py_arg_name not in ["--", "–", ""]:
+        if "," not in self.py_arg_name and self.py_arg_name != "":
             docstring = [f'{indent}{self.py_arg_name} : {str_types(self.types, " or ")}']
             if isinstance(self._description, str):
                 rst_description = self._description
@@ -2373,6 +2382,7 @@ class Argument:
 
             docstring = [f'{indent}{self.py_arg_name} : {str_types(self.types, " or ")}']
             docstring.extend(list_description)
+
         else:
             docstring = []
         return docstring
@@ -2442,6 +2452,8 @@ class XMLCommand(Element):
                                 arguments = ArgumentList(child, self.args)
                             else:
                                 arguments += ArgumentList(child, self.args)
+                            if self.py_name == "secmodif":
+                                print(arguments.py_arg_names)
 
         else:
             for elem in refsyn:
@@ -2450,14 +2462,20 @@ class XMLCommand(Element):
                         arguments = ArgumentList(elem, self.args)
                     else:
                         arguments += ArgumentList(elem, self.args)
+                    if self.py_name == "secmodif":
+                        print("HERE")
+                        print(arguments.py_arg_names)
 
+
+        # if self.py_name in ["secmodif", "dmat"]:
+        #     print(arguments.initial_args)
+        #     print(arguments.py_arg_names)
         if arguments is not None:
             if len(arguments.py_arg_names) < len(arguments.initial_args):
                 for arg in arguments.initial_args:
                     if arg not in arguments.py_arg_names:
                         new_arg = Argument(arg, arguments.initial_args, "")
-                        if new_arg.py_arg_name != "":
-                            arguments.arguments.append(new_arg)
+                        arguments.arguments.append(new_arg)
 
             return arguments.arguments
 
@@ -2899,9 +2917,15 @@ class XMLCommand(Element):
             if len(self.arg_desc) > 0:
                 command = 'command = f"' + self.name
                 for arg in self.arg_desc:
-                    command += ",{"
-                    command += arg.py_arg_name
-                    command += "}"
+                    name = arg.py_arg_name
+                    if "," in name:
+                        command += f",{name}"
+                    elif name == "":
+                        command += ","
+                    else:
+                        command += ",{"
+                        command += arg.py_arg_name
+                        command += "}"
                 command += '"\n'
                 # ",{" + "},{".join(self.arg_desc.py_arg_name) + '}"\n'
             else:
