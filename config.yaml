@@ -2,6 +2,10 @@ library_name_structured: # Future name of the library
   - pyconverter
   - generatedcommands
 
+subfolder:
+  - subfolder
+  - subsubfolder
+
 new_package_name: package
 
 rules:
@@ -11,6 +15,25 @@ rules:
 specific_command_mapping:
   "*DEL": stardel
   "C***": c
+  "/INQUIRE": inquire
+
+ignored_commands:
+  - "*VWR"
+  - "*MWR"
+  - "C***"
+  - "*CFO"
+  - "*CRE"
+  - "*END"
+  - "/EOF"
+  - "*ASK"
+  - "*IF"
+  - "*ELSE"
+  - "CMAT"
+  - "*REP"
+  - "*RETURN"
+  - "LSRE"
+
 
 specific_classes:
   2D to 3D Analysis: Analysis 2D to 3D
+  Parameters: Parameter definition

@@ -132,7 +132,11 @@ def config_path(cwd):
 
 @pytest.fixture
 def library_name_structured(config_path):
-    return get_config_data_value(config_path, "library_name_structured")
+    lib_structure = get_config_data_value(config_path, "library_name_structured")
+    subfolders = get_config_data_value(config_path, "subfolders")
+    if subfolders is not None:
+        lib_structure.extend(get_config_data_value(config_path, "subfolders"))
+    return lib_structure
 
 
 @pytest.fixture

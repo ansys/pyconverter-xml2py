@@ -10,7 +10,7 @@ project = "pyconverter-xml2py"
 copyright = f"(c) {datetime.now().year} ANSYS, Inc. All rights reserved"
 author = "ANSYS, Inc."
 release = version = __version__
-cname = os.getenv("DOCUMENTATION_CNAME", "<DEFAULT_CNAME>")
+cname = os.getenv("DOCUMENTATION_CNAME", "pyconverter-xml2py.docs.pyansys.com")
 switcher_version = get_version_match(__version__)
 
 REPOSITORY_NAME = "pyconverter-xml2py"
@@ -38,7 +38,7 @@ html_theme_options = {
     "icon_links": [
         {
             "name": "Support",
-            "url": "https://github.com/ansys/pyconverter-xml2py/discussions",
+            "url": f"https://github.com/{USERNAME}/{REPOSITORY_NAME}/discussions",
             "icon": "fa fa-comment fa-fw",
         },
     ],
@@ -54,9 +54,9 @@ html_theme_options = {
 
 html_context = {
     "display_github": True,  # Integrate GitHub
-    "github_user": "ansys",
+    "github_user": USERNAME,
     "github_repo": REPOSITORY_NAME,
-    "github_version": "main",
+    "github_version": BRANCH,
     "doc_path": "doc/source",
 }
 
@@ -65,13 +65,13 @@ extensions = [
     "ansys_sphinx_theme.extension.autoapi",
     "jupyter_sphinx",
     "numpydoc",
-    "sphinx.ext.autodoc",
     "sphinx_autodoc_typehints",
-    "sphinx.ext.intersphinx",
-    "sphinx.ext.extlinks",
-    "sphinx.ext.graphviz",
     "sphinx_copybutton",
     "sphinx_design",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.extlinks",
+    "sphinx.ext.graphviz",
+    "sphinx.ext.intersphinx",
 ]
 
 # Intersphinx mapping
