@@ -24,6 +24,8 @@ import logging as log
 from pathlib import Path
 from typing import Tuple
 
+import regex as re
+
 
 def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str], list[str]]:
     """
@@ -49,12 +51,16 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
     with open(filename, "r") as pyfile:
         lines = pyfile.readlines()
     bool_def = False
+    bool_param = False
     bool_return = False
-    bool_examples = False
     bool_notes = False
+    bool_examples = False
     begin_docstring = False
     end_docstring = False
+    list_py_args = []
+    list_py_params = []
     list_py_returns = []
+    list_py_notes = []
     list_py_examples = []
     list_py_code = []
     list_import = []
@@ -63,27 +69,45 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
             list_import.append(line)
         elif "def" in line and bool_def is False:
             bool_def = True
+            split_def = line.split(",")
+            for split_arg in split_def:
+                if "**kwarg" in split_arg:
+                    break
+                elif ":" in split_arg and "=" in split_arg:
+                    find = re.search(r"\w*(?=\:)", split_arg).group()
+                    list_py_args.append(find)
+                elif "=" in split_arg:
+                    find = re.search(r"\w*(?=\=)", split_arg).group()
+                    list_py_args.append(find)
         elif '"""' in line and begin_docstring is False:
             begin_docstring = True
         elif '"""' in line and begin_docstring is True:
             bool_return = False
             bool_examples = False
             end_docstring = True
+        elif "Parameters\n" in line:
+            bool_param = True
+            bool_return = False
+            bool_examples = False
+            bool_notes = False
         elif "Returns\n" in line:
             bool_return = True
+            bool_param = False
             bool_examples = False
             bool_notes = False
             list_py_returns.append(line.strip())
         elif "Examples\n" in line:
             bool_examples = True
+            bool_param = False
             bool_return = False
             bool_notes = False
             list_py_examples.append(line.strip())
         elif "Notes\n" in line:
             bool_notes = True
+            bool_param = False
             bool_return = False
             bool_examples = False
-            list_py_returns.append(line.strip())
+            list_py_notes.append(line.strip())
         # Section order within docstrings: Returns, Notes, Examples
         elif end_docstring is True:
             list_py_code.append(line)
@@ -96,9 +120,31 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
             else:
                 list_py_returns.append(4 * " " + line.strip())
         elif bool_notes is True:
-            pass  # Notes are obtained from the converter
+            list_py_notes.append(line.strip())  # Notes are obtained from the converter
+        elif bool_param is True:
+            no_indent = [
+                "int\n",
+                "float\n",
+                "str\n",
+                "-------\n",
+                "None\n",
+                "bool\n",
+                ", optional\n",
+            ]
+            if any(n in line for n in no_indent):
+                list_py_params.append(line.strip())
+            else:
+                list_py_params.append(4 * " " + line.strip())
 
-    return list_py_returns, list_py_examples, list_py_code, list_import
+    return (
+        list_py_args,
+        list_py_params,
+        list_py_returns,
+        list_py_notes,
+        list_py_examples,
+        list_py_code,
+        list_import,
+    )
 
 
 # ############################################################################
@@ -112,6 +158,7 @@ class CustomFunctions:
     def __init__(self):
         self._path = ""
         self._py_names = []
+        self._py_params = {}
         self._py_returns = {}
         self._py_examples = {}
         self._py_code = {}
@@ -122,18 +169,33 @@ class CustomFunctions:
         if not Path(path).is_dir():
             raise (FileExistsError, f"The path_functions {path} does not exist.")
         self._py_names = []
+        self._py_args = {}
+        self._py_params = {}
         self._py_returns = {}
+        self._py_notes = {}
         self._py_examples = {}
         self._py_code = {}
         self._lib_import = {}
         for filename in Path(path).glob("*.py"):
             py_name = filename.stem
             self._py_names.append(py_name)
-            list_py_returns, list_py_examples, list_py_code, list_import = get_docstring_lists(
-                filename
-            )
+            (
+                list_py_args,
+                list_py_params,
+                list_py_returns,
+                list_py_notes,
+                list_py_examples,
+                list_py_code,
+                list_import,
+            ) = get_docstring_lists(filename)
+            if len(list_py_args) > 0:
+                self._py_args[py_name] = list_py_args
+            if len(list_py_params) > 0:
+                self._py_params[py_name] = list_py_params
             if len(list_py_returns) > 0:
                 self._py_returns[py_name] = list_py_returns
+            if len(list_py_notes) > 0:
+                self._py_notes[py_name] = list_py_notes
             if len(list_py_examples) > 0:
                 self._py_examples[py_name] = list_py_examples
             if len(list_py_code) > 0:
@@ -159,11 +221,23 @@ class CustomFunctions:
         for filename in Path(path).glob("*.py"):
             py_name = filename.stem
             self._py_names.append(py_name)
-            list_py_returns, list_py_examples, list_py_code, list_import = get_docstring_lists(
-                filename
-            )
+            (
+                list_py_args,
+                list_py_params,
+                list_py_returns,
+                list_py_notes,
+                list_py_examples,
+                list_py_code,
+                list_import,
+            ) = get_docstring_lists(filename)
+            if len(list_py_args) > 0:
+                self._py_args[py_name] = list_py_args
+            if len(list_py_params) > 0:
+                self._py_params[py_name] = list_py_params
             if len(list_py_returns) > 0:
                 self._py_returns[py_name] = list_py_returns
+            if len(list_py_notes) > 0:
+                self._py_notes[py_name] = list_py_notes
             if len(list_py_examples) > 0:
                 self._py_examples[py_name] = list_py_examples
             if len(list_py_code) > 0:
@@ -177,6 +251,16 @@ class CustomFunctions:
         return self._py_names
 
     @property
+    def py_args(self) -> dict:
+        """Dictionary containing the python arguments if any."""
+        return self._py_args
+
+    @property
+    def py_params(self) -> dict:
+        """Dictionary containing the ``Parameters`` section if any."""
+        return self._py_params
+
+    @property
     def py_returns(self) -> dict:
         """Dictionary containing the ``Returns`` section if any."""
         return self._py_returns
@@ -185,6 +269,11 @@ class CustomFunctions:
     def py_examples(self) -> dict:
         """Dictionary containing the ``Examples`` section if any."""
         return self._py_examples
+
+    @property
+    def py_notes(self) -> dict:
+        """Dictionary containing the ``Notes`` section if any."""
+        return self._py_notes
 
     @property
     def py_code(self) -> dict:
