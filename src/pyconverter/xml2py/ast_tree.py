@@ -24,6 +24,7 @@ import logging
 import textwrap
 from typing import List
 import warnings
+from pathlib import Path
 
 from inflect import engine
 from lxml.etree import tostring
@@ -2113,8 +2114,9 @@ class ProductName(Element):
 
 
 class ArgumentList:
-    def __init__(self, list_entry: VarlistEntry, args: List) -> None:
+    def __init__(self, py_name: str, list_entry: VarlistEntry, args: List) -> None:
 
+        self._py_name = py_name
         self._list_entry = list_entry
         self._arguments = []
         self._initial_args = args
@@ -2137,7 +2139,7 @@ class ArgumentList:
     def __iadd__(self, argument_list):
         for arg in argument_list.arguments:
             arg_name = arg.py_arg_name
-            if ("," not in arg_name or arg_name == "") or (arg_name not in self.py_arg_names):
+            if ("," in arg_name or arg_name == "") or (arg_name not in self.py_arg_names):
                 self._arguments.append(arg)
         return self
 
@@ -2148,6 +2150,10 @@ class ArgumentList:
     @arguments.setter
     def arguments(self, argument):
         self._arguments.append(argument)
+    
+    @property
+    def py_name(self):
+        return self._py_name
 
     @property
     def initial_args(self):
@@ -2449,33 +2455,39 @@ class XMLCommand(Element):
                     for child in elem:
                         if isinstance(child, Variablelist):
                             if arguments is None:
-                                arguments = ArgumentList(child, self.args)
+                                arguments = ArgumentList(self.py_name, child, self.args)
                             else:
-                                arguments += ArgumentList(child, self.args)
-                            if self.py_name == "secmodif":
-                                print(arguments.py_arg_names)
+                                arguments += ArgumentList(self.py_name, child, self.args)
 
         else:
             for elem in refsyn:
                 if isinstance(elem, Variablelist):
                     if arguments is None:
-                        arguments = ArgumentList(elem, self.args)
+                        arguments = ArgumentList(self.py_name, elem, self.args)
                     else:
-                        arguments += ArgumentList(elem, self.args)
-                    if self.py_name == "secmodif":
-                        print("HERE")
-                        print(arguments.py_arg_names)
-
-
-        # if self.py_name in ["secmodif", "dmat"]:
-        #     print(arguments.initial_args)
-        #     print(arguments.py_arg_names)
+                        arguments += ArgumentList(self.py_name, elem, self.args)
+        
         if arguments is not None:
-            if len(arguments.py_arg_names) < len(arguments.initial_args):
-                for arg in arguments.initial_args:
-                    if arg not in arguments.py_arg_names:
-                        new_arg = Argument(arg, arguments.initial_args, "")
-                        arguments.arguments.append(new_arg)
+            if len(arguments.py_arg_names) != len(arguments.initial_args):
+                # This function needs a special treatment
+                if Path("args.txt").exists():
+                    with open("args.txt", "r") as f:
+                        for line in f:
+                            pass
+                        last_line = line
+                else:
+                    last_line = ""
+                with open("args.txt", "a") as f:
+                    if last_line != f"{arguments.py_arg_names}\n":
+                        f.write("--------------------------------------------------\n")
+                        f.write(f"{self.py_name}: {self.group}\n")
+                        f.write(f"{arguments.initial_args}\n")
+                        f.write(f"{arguments.py_arg_names}\n")
+                
+                # for arg in arguments.initial_args:
+                #     if arg not in arguments.py_arg_names:
+                #         new_arg = Argument(arg, arguments.initial_args, "")
+                #         arguments.arguments.append(new_arg)
 
             return arguments.arguments
 
