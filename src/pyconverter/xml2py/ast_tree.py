@@ -21,10 +21,10 @@
 # SOFTWARE.
 
 import logging
+from pathlib import Path
 import textwrap
 from typing import List
 import warnings
-from pathlib import Path
 
 from inflect import engine
 from lxml.etree import tostring
@@ -135,14 +135,14 @@ def get_quant_iter_pos(name: str) -> tuple:
 
 def to_py_arg_name(name: str) -> str:
     """Python-compatible term"""
-    arg = str(name).lower().strip()
-    if arg == "":
+    initial_arg = str(name).lower().strip()
+    arg = initial_arg
+    if arg in ["--", "–", ""]:
         return arg
     elif arg.isdigit():
         return ""
     if arg[0].isdigit():
         p = engine()
-    if arg[0].isdigit():
         if arg[1].isdigit():
             raise ValueError(f"The code needs to be expanded to handle numbers")
         elif arg[1:3] not in superlatif:
@@ -151,12 +151,6 @@ def to_py_arg_name(name: str) -> str:
         else:
             num_value = p.number_to_words(arg[:3])
             arg = f"{num_value}{arg[3:]}"
-
-    if "--" in arg or arg == "–":
-        arg = arg.replace("--", "")
-        arg = arg.replace("–", "")
-        arg = arg.replace(" ", "")
-        return arg
 
     for key, value in PY_ARG_CLEANUP.items():
         arg = arg.replace(key, value)
@@ -213,7 +207,7 @@ def str_types(types, join_str: str) -> str:
 
 def to_py_signature(py_arg_name, types) -> str:
     """Return the Python signature of the argument."""
-    if "," not in py_arg_name and py_arg_name != "":
+    if py_arg_name not in ["--", "–", ""]:
         kwarg = f'{py_arg_name}: {str_types(types, " | ")} = ""'
     else:
         kwarg = None
@@ -999,9 +993,9 @@ class VarlistEntry(Element):
             return f"{arg}"
 
         if self.term.tag in item_needing_links_base_url:
-            arg = self.term.to_rst(links=links, base_url=base_url).replace("--", "").strip()
+            arg = self.term.to_rst(links=links, base_url=base_url).strip()
         else:
-            arg = self.term.to_rst().replace("--", "").strip()
+            arg = self.term.to_rst().strip()
 
         # sanity check
         if "blank" in arg.lower():
@@ -1605,6 +1599,7 @@ class Refname(Element):
         cmd = cmd.replace("&fname2_arg;", self._terms["fname2_arg"])
         cmd = cmd.replace("&pn006p;", self._terms["pn006p"])
         cmd = cmd.replace("&ansysBrand;", self._terms["ansysBrand"])
+        cmd = cmd.replace("``", "")
         split_args = cmd.split(",")[1:]
         return split_args
 
@@ -1613,36 +1608,29 @@ class Refname(Element):
         """Command arguments."""
         args = []
         for item in self.raw_args:
-            orig_arg = str(item).replace(",", "")
-            arg = orig_arg.lower().replace("--", "").replace("–", "").replace("-", "_").strip()
-            if arg == "":
-                continue
-
-            if arg == "class":
-                arg = "class_"
-            elif arg == "type":
-                arg = "type_"
+            arg = to_py_arg_name(str(item))
 
             # simply check if we can use this as a valid Python kwarg
             try:
                 exec(f"{arg} = 1.0")
             except SyntaxError:
-                continue
+                arg = ""
 
             if "blank" in arg:
-                continue
+                arg = ""
 
             args.append(arg)
 
         # rename duplicate arguments
         if len(args) != len(set(args)):
             for arg in args:
-                i = 0
-                if args.count(arg) > 1:
-                    for j in range(len(args)):
-                        if args[j] == arg:
-                            args[j] = f"{arg}{i:d}"
-                            i += 1
+                if arg not in ["", "--", "–"]:
+                    i = 0
+                    if args.count(arg) > 1:
+                        for j in range(len(args)):
+                            if args[j] == arg:
+                                args[j] = f"{arg}{i:d}"
+                                i += 1
 
         return args
 
@@ -2130,7 +2118,7 @@ class ArgumentList:
                 if len(additional_args) > 0:
                     for arg in additional_args:
                         arg_name = arg.py_arg_name
-                        if ("," in arg_name or arg_name == "") or (arg_name not in self.py_arg_names):
+                        if (arg_name in self._initial_args) and (arg_name not in self.py_arg_names):
                             self._arguments.append(arg)
 
                 else:
@@ -2139,7 +2127,7 @@ class ArgumentList:
     def __iadd__(self, argument_list):
         for arg in argument_list.arguments:
             arg_name = arg.py_arg_name
-            if ("," in arg_name or arg_name == "") or (arg_name not in self.py_arg_names):
+            if (arg_name in self._initial_args) and (arg_name not in self.py_arg_names):
                 self._arguments.append(arg)
         return self
 
@@ -2150,7 +2138,7 @@ class ArgumentList:
     @arguments.setter
     def arguments(self, argument):
         self._arguments.append(argument)
-    
+
     @property
     def py_name(self):
         return self._py_name
@@ -2216,10 +2204,9 @@ class Argument:
             if not self.is_arg_elipsis:
                 for item_name in split_name:
                     arg_name = item_name.strip()
-                    if arg_name not in ["--", ""]:
-                        new_arg = Argument(arg_name, self._initial_argument, self._description)
-                        if new_arg.py_arg_name != "":
-                            additional_args.append(new_arg)
+                    new_arg = Argument(arg_name, self._initial_argument, self._description)
+                    if new_arg.py_arg_name != "":
+                        additional_args.append(new_arg)
             else:
 
                 complete_args = get_complete_args_from_initial_arg(
@@ -2303,19 +2290,6 @@ class Argument:
                                         )
 
         return additional_args
-
-    def rec_find(self, _type: str, terms=None) -> Element | None:
-        """Find the first type matching a given type string recursively."""
-        for item in self:
-            if type(item).__name__ == _type:
-                if _type == "Refname" or _type == "Refnamediv":
-                    item.terms = terms
-                return item
-            if isinstance(item, Element):
-                subitem = item.rec_find(_type)
-                if subitem is not None:
-                    return subitem
-        return None
 
     @property
     def types(self) -> List[type]:
@@ -2466,24 +2440,26 @@ class XMLCommand(Element):
                         arguments = ArgumentList(self.py_name, elem, self.args)
                     else:
                         arguments += ArgumentList(self.py_name, elem, self.args)
-        
+
+        arg_file = Path("args.txt")
+
         if arguments is not None:
             if len(arguments.py_arg_names) != len(arguments.initial_args):
                 # This function needs a special treatment
-                if Path("args.txt").exists():
-                    with open("args.txt", "r") as f:
+                if arg_file.exists():
+                    with open(arg_file, "r") as f:
                         for line in f:
                             pass
                         last_line = line
                 else:
                     last_line = ""
-                with open("args.txt", "a") as f:
+                with open(arg_file, "a") as f:
                     if last_line != f"{arguments.py_arg_names}\n":
                         f.write("--------------------------------------------------\n")
                         f.write(f"{self.py_name}: {self.group}\n")
                         f.write(f"{arguments.initial_args}\n")
                         f.write(f"{arguments.py_arg_names}\n")
-                
+
                 # for arg in arguments.initial_args:
                 #     if arg not in arguments.py_arg_names:
                 #         new_arg = Argument(arg, arguments.initial_args, "")
@@ -2930,9 +2906,7 @@ class XMLCommand(Element):
                 command = 'command = f"' + self.name
                 for arg in self.arg_desc:
                     name = arg.py_arg_name
-                    if "," in name:
-                        command += f",{name}"
-                    elif name == "":
+                    if name in ["--", "–", ""]:
                         command += ","
                     else:
                         command += ",{"
