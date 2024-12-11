@@ -83,6 +83,12 @@ NAME_MAP_GLOB = {}
 
 NO_RESIZE_LIST = ["Variablelist"]
 
+MISSING_ARGUMENT_DESCRIPTION = """The description of the argument is missing in the Python function.
+Please, refer to the product documentation for further information."""
+
+ADDITIONAL_ARGUMENT_DESCRIPTION = """Additional arguments can be passed to the intial command.
+Please, refer to the product documentation for further information."""
+
 
 class NameMap:
     def __init__(self, name_map):
@@ -138,6 +144,9 @@ def to_py_arg_name(name: str) -> str:
     initial_arg = str(name).lower().strip()
     arg = initial_arg
     if arg in ["--", "–", ""]:
+        return ""
+    elif "--" in arg:
+        arg = arg.replace("--", "")
         return arg
     elif arg.isdigit():
         return ""
@@ -207,7 +216,7 @@ def str_types(types, join_str: str) -> str:
 
 def to_py_signature(py_arg_name, types) -> str:
     """Return the Python signature of the argument."""
-    if py_arg_name not in ["--", "–", ""]:
+    if py_arg_name != "":
         kwarg = f'{py_arg_name}: {str_types(types, " | ")} = ""'
     else:
         kwarg = None
@@ -1624,7 +1633,7 @@ class Refname(Element):
         # rename duplicate arguments
         if len(args) != len(set(args)):
             for arg in args:
-                if arg not in ["", "--", "–"]:
+                if arg != "":
                     i = 0
                     if args.count(arg) > 1:
                         for j in range(len(args)):
@@ -2101,64 +2110,13 @@ class ProductName(Element):
     pass
 
 
-class ArgumentList:
-    def __init__(self, py_name: str, list_entry: VarlistEntry, args: List) -> None:
-
-        self._py_name = py_name
-        self._list_entry = list_entry
-        self._arguments = []
-        self._initial_args = args
-        self._parse_list_entry()
-
-    def _parse_list_entry(self):
-        for item in self._list_entry:
-            if isinstance(item, VarlistEntry):
-                argument_obj = Argument(item, self._initial_args)
-                additional_args = argument_obj.multiple_args
-                if len(additional_args) > 0:
-                    for arg in additional_args:
-                        arg_name = arg.py_arg_name
-                        if (arg_name in self._initial_args) and (arg_name not in self.py_arg_names):
-                            self._arguments.append(arg)
-
-                else:
-                    self._arguments.append(argument_obj)
-
-    def __iadd__(self, argument_list):
-        for arg in argument_list.arguments:
-            arg_name = arg.py_arg_name
-            if (arg_name in self._initial_args) and (arg_name not in self.py_arg_names):
-                self._arguments.append(arg)
-        return self
-
-    @property
-    def arguments(self):
-        return self._arguments
-
-    @arguments.setter
-    def arguments(self, argument):
-        self._arguments.append(argument)
-
-    @property
-    def py_name(self):
-        return self._py_name
-
-    @property
-    def initial_args(self):
-        return self._initial_args
-
-    @property
-    def py_arg_names(self):
-        return [arg.py_arg_name for arg in self._arguments]
-
-
 class Argument:
     """Argument object."""
 
     def __init__(
         self,
         element: str | Element,
-        initial_argument: List,
+        initial_arguments: List,
         description: Element | str | None = None,
     ) -> None:
         if description is None:
@@ -2177,7 +2135,7 @@ class Argument:
             name = element
         self._name = name
         self._description = description
-        self._initial_argument = initial_argument
+        self._initial_arguments = initial_arguments
 
     @property
     def py_arg_name(self) -> str:
@@ -2204,27 +2162,26 @@ class Argument:
             if not self.is_arg_elipsis:
                 for item_name in split_name:
                     arg_name = item_name.strip()
-                    new_arg = Argument(arg_name, self._initial_argument, self._description)
-                    if new_arg.py_arg_name != "":
-                        additional_args.append(new_arg)
+                    new_arg = Argument(arg_name, self._initial_arguments, self._description)
+                    additional_args.append(new_arg)
             else:
 
                 complete_args = get_complete_args_from_initial_arg(
-                    elipsis_args=split_name, initial_args=self._initial_argument
+                    elipsis_args=split_name, initial_args=self._initial_arguments
                 )
 
                 if len(complete_args) > 0:
                     for item in complete_args:
-                        new_arg = Argument(item, self._initial_argument, self._description)
-                        if new_arg.py_arg_name != "":
-                            additional_args.append(new_arg)
+                        new_arg = Argument(item, self._initial_arguments, self._description)
+                        additional_args.append(new_arg)
 
                 else:
 
                     for i, item_name in enumerate(split_name):
                         item_name = item_name.strip()
                         if item_name == "":
-                            continue
+                            new_arg = Argument(arg_name, self._initial_arguments, self._description)
+                            additional_args.append(new_arg)
                         elif is_elipsis(item_name):
 
                             if "+" in split_name[i + 1]:
@@ -2244,7 +2201,7 @@ class Argument:
                                     arg_name = split_name[i + 1].strip()
                                     arg_name = f"{arg_name[:initial_pos_final]}{j}{arg_name[end_pos_final:]}"  # noqa : E501
                                     new_arg = Argument(
-                                        arg_name, self._initial_argument, self._description
+                                        arg_name, self._initial_arguments, self._description
                                     )
                                     if new_arg.py_arg_name != "":
                                         additional_args.append(new_arg)
@@ -2276,15 +2233,14 @@ class Argument:
                                         for j in range(number_iter_prev + 1, number_iter_next):
                                             arg_name = f"{name_iter_prev}{j}"
                                             new_arg = Argument(
-                                                arg_name, self._initial_argument, self._description
+                                                arg_name, self._initial_arguments, self._description
                                             )
-                                            if new_arg.py_arg_name != "":
-                                                additional_args.append(new_arg)
+                                            additional_args.append(new_arg)
                                     else:
                                         additional_args.append(
                                             Argument(
                                                 name_iter_next,
-                                                self._initial_argument,
+                                                self._initial_arguments,
                                                 self._description,
                                             )
                                         )
@@ -2339,7 +2295,7 @@ class Argument:
         self, max_length=100, indent="", links=None, base_url=None, fcache=None
     ) -> List[str]:
         """Return a list of string to enable converting the element to an RST format."""
-        if "," not in self.py_arg_name and self.py_arg_name != "":
+        if self.py_arg_name != "":
             docstring = [f'{indent}{self.py_arg_name} : {str_types(self.types, " or ")}']
             if isinstance(self._description, str):
                 rst_description = self._description
@@ -2366,6 +2322,119 @@ class Argument:
         else:
             docstring = []
         return docstring
+
+
+class ArgumentList:
+    def __init__(self, py_name: str, list_entry: VarlistEntry, args: List) -> None:
+
+        self._py_name = py_name
+        self._list_entry = list_entry
+        self._arguments = []
+        self._additional_args = []
+        self._initial_args = args
+        self._parse_list_entry()
+
+    def _parse_list_entry(self):
+        "Parse the list entry to get the main arguments and the additional ones."
+        temp_args = {}
+        for item in self._list_entry:
+            if isinstance(item, VarlistEntry):
+                argument_obj = Argument(item, self._initial_args)
+                additional_args = argument_obj.multiple_args
+                if len(additional_args) > 0:
+                    for arg in additional_args:
+                        arg_name = arg.py_arg_name
+                        if (arg_name in self._initial_args) and (
+                            arg_name == "" or arg_name not in self.py_arg_names
+                        ):
+                            temp_args[arg_name] = arg
+
+                else:
+                    temp_args[argument_obj.py_arg_name] = argument_obj
+
+        for initial_arg in self._initial_args:
+            if initial_arg in temp_args.keys():
+                self._arguments.append(temp_args[initial_arg])
+            else:
+                self._arguments.append(
+                    Argument(initial_arg, self._initial_args, MISSING_ARGUMENT_DESCRIPTION)
+                )  # description is missing
+
+        is_additional_arg = False
+        if len(temp_args) != len(self._initial_args):
+            for arg in temp_args:
+                if arg not in self.py_arg_names:
+                    self._additional_args.append(temp_args[arg])
+                    is_additional_arg = True
+
+        if is_additional_arg and "addional_command_arg" not in self.py_arg_names:
+            self._arguments.append(
+                Argument(
+                    "addional_command_arg", self._initial_args, ADDITIONAL_ARGUMENT_DESCRIPTION
+                )
+            )
+
+    def __iadd__(self, argument_list):
+        temp_args = {}
+        for arg in argument_list.arguments:
+            arg_name = arg.py_arg_name
+            if (arg_name in self._initial_args) and (
+                arg_name == "" or arg_name not in self.py_arg_names
+            ):
+                temp_args[arg_name] = arg
+
+        for initial_arg in self._initial_args:
+            if initial_arg in temp_args.keys():
+                if initial_arg not in self.py_arg_names:
+                    self._arguments.append(temp_args[initial_arg])
+                else:
+                    self._arguments[self.py_arg_names.index(initial_arg)] = temp_args[initial_arg]
+            else:
+                if initial_arg not in self.py_arg_names:
+                    self._arguments.append(
+                        Argument(initial_arg, self._initial_args, MISSING_ARGUMENT_DESCRIPTION)
+                    )
+
+        is_additional_arg = False
+        if len(temp_args) != len(self._initial_args):
+            for arg in temp_args:
+                if arg not in self.py_arg_names:
+                    self._additional_args.append(temp_args[arg])
+                    is_additional_arg = True
+
+        if is_additional_arg and "addional_command_arg" not in self.py_arg_names:
+            self._arguments.append(
+                Argument(
+                    "addional_command_arg", self._initial_args, ADDITIONAL_ARGUMENT_DESCRIPTION
+                )
+            )
+
+        return self
+
+    @property
+    def arguments(self) -> List[Argument]:
+        "Return a list of Argument objects."
+        return self._arguments
+
+    @arguments.setter
+    def arguments(self, argument):
+        self._arguments.append(argument)
+
+    @property
+    def py_name(self):
+        return self._py_name
+
+    @property
+    def initial_args(self):
+        return self._initial_args
+
+    @property
+    def py_arg_names(self):
+        return [arg.py_arg_name for arg in self._arguments]
+
+    @property
+    def additional_args(self):
+        return self._additional_args
 
 
 class XMLCommand(Element):
@@ -2454,16 +2523,13 @@ class XMLCommand(Element):
                 else:
                     last_line = ""
                 with open(arg_file, "a") as f:
-                    if last_line != f"{arguments.py_arg_names}\n":
+                    if last_line != f"py_arg_name : {arguments.py_arg_names}\n":
                         f.write("--------------------------------------------------\n")
                         f.write(f"{self.py_name}: {self.group}\n")
+                        f.write("initial_args : ")
                         f.write(f"{arguments.initial_args}\n")
+                        f.write("py_arg_name : ")
                         f.write(f"{arguments.py_arg_names}\n")
-
-                # for arg in arguments.initial_args:
-                #     if arg not in arguments.py_arg_names:
-                #         new_arg = Argument(arg, arguments.initial_args, "")
-                #         arguments.arguments.append(new_arg)
 
             return arguments.arguments
 
@@ -2906,7 +2972,7 @@ class XMLCommand(Element):
                 command = 'command = f"' + self.name
                 for arg in self.arg_desc:
                     name = arg.py_arg_name
-                    if name in ["--", "–", ""]:
+                    if name == "":
                         command += ","
                     else:
                         command += ",{"
