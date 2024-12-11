@@ -1002,9 +1002,9 @@ class VarlistEntry(Element):
             return f"{arg}"
 
         if self.term.tag in item_needing_links_base_url:
-            arg = self.term.to_rst(links=links, base_url=base_url).strip()
+            arg = self.term.to_rst(links=links, base_url=base_url).replace("--", "").strip()
         else:
-            arg = self.term.to_rst().strip()
+            arg = self.term.to_rst().replace("--", "").strip()
 
         # sanity check
         if "blank" in arg.lower():
