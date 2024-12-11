@@ -2979,6 +2979,8 @@ class XMLCommand(Element):
                         command += arg.py_arg_name
                         command += "}"
                 command += '"\n'
+                while command != command.replace(',"', '"'): # remove extra commas at the end of the command
+                    command = command.replace(',"', '"')
                 # ",{" + "},{".join(self.arg_desc.py_arg_name) + '}"\n'
             else:
                 command = 'command = f"' + self.name + '"\n'
