@@ -2435,6 +2435,9 @@ class ArgumentList:
     @property
     def additional_args(self):
         return self._additional_args
+    
+    def remove_last_arg(self):
+        self._arguments.pop()
 
 
 class XMLCommand(Element):
@@ -2513,6 +2516,10 @@ class XMLCommand(Element):
         arg_file = Path("args.txt")
 
         if arguments is not None:
+            # Remove last argument if it's empty
+            while arguments.py_arg_names[-1] == "":
+                arguments.remove_last_arg()
+
             if len(arguments.py_arg_names) != len(arguments.initial_args):
                 # This function needs a special treatment
                 if arg_file.exists():
@@ -2979,9 +2986,6 @@ class XMLCommand(Element):
                         command += arg.py_arg_name
                         command += "}"
                 command += '"\n'
-                while command != command.replace(',"', '"'): # remove extra commas at the end of the command
-                    command = command.replace(',"', '"')
-                # ",{" + "},{".join(self.arg_desc.py_arg_name) + '}"\n'
             else:
                 command = 'command = f"' + self.name + '"\n'
             return_command = "return self.run(command, **kwargs)\n"
