@@ -2358,7 +2358,11 @@ class ArgumentList:
                 self._arguments.append(temp_args[initial_arg])
             else:
                 self._arguments.append(
-                    Argument(initial_arg, self._initial_args, MISSING_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"))
+                    Argument(
+                        initial_arg,
+                        self._initial_args,
+                        MISSING_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"),
+                    )
                 )  # description is missing
 
         is_additional_arg = False
@@ -2371,7 +2375,9 @@ class ArgumentList:
         if is_additional_arg and "addional_command_arg" not in self.py_arg_names:
             self._arguments.append(
                 Argument(
-                    "addional_command_arg", self._initial_args, ADDITIONAL_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}")
+                    "addional_command_arg",
+                    self._initial_args,
+                    ADDITIONAL_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"),
                 )
             )
 
@@ -2393,7 +2399,11 @@ class ArgumentList:
             else:
                 if initial_arg not in self.py_arg_names:
                     self._arguments.append(
-                        Argument(initial_arg, self._initial_args, MISSING_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"))
+                        Argument(
+                            initial_arg,
+                            self._initial_args,
+                            MISSING_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"),
+                        )
                     )
 
         is_additional_arg = False
@@ -2406,7 +2416,9 @@ class ArgumentList:
         if is_additional_arg and "addional_command_arg" not in self.py_arg_names:
             self._arguments.append(
                 Argument(
-                    "addional_command_arg", self._initial_args, ADDITIONAL_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}")
+                    "addional_command_arg",
+                    self._initial_args,
+                    ADDITIONAL_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"),
                 )
             )
 
@@ -2436,7 +2448,7 @@ class ArgumentList:
     @property
     def additional_args(self):
         return self._additional_args
-    
+
     def remove_last_arg(self):
         self._arguments.pop()
 
