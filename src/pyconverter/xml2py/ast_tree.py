@@ -84,10 +84,10 @@ NAME_MAP_GLOB = {}
 NO_RESIZE_LIST = ["Variablelist"]
 
 MISSING_ARGUMENT_DESCRIPTION = """The description of the argument is missing in the Python function.
-Please, refer to the product documentation for further information."""
+Please, refer to the `command documentation <url>`_ for further information."""
 
-ADDITIONAL_ARGUMENT_DESCRIPTION = """Additional arguments can be passed to the intial command.
-Please, refer to the product documentation for further information."""
+ADDITIONAL_ARGUMENT_DESCRIPTION = """Additional arguments can be passed to the initial command.
+Please, refer to the `command documentation <url>`_ for further information."""
 
 
 class NameMap:
@@ -2325,9 +2325,10 @@ class Argument:
 
 
 class ArgumentList:
-    def __init__(self, py_name: str, list_entry: VarlistEntry, args: List) -> None:
+    def __init__(self, py_name: str, url: str, list_entry: VarlistEntry, args: List) -> None:
 
         self._py_name = py_name
+        self._url = url
         self._list_entry = list_entry
         self._arguments = []
         self._additional_args = []
@@ -2357,7 +2358,7 @@ class ArgumentList:
                 self._arguments.append(temp_args[initial_arg])
             else:
                 self._arguments.append(
-                    Argument(initial_arg, self._initial_args, MISSING_ARGUMENT_DESCRIPTION)
+                    Argument(initial_arg, self._initial_args, MISSING_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"))
                 )  # description is missing
 
         is_additional_arg = False
@@ -2370,7 +2371,7 @@ class ArgumentList:
         if is_additional_arg and "addional_command_arg" not in self.py_arg_names:
             self._arguments.append(
                 Argument(
-                    "addional_command_arg", self._initial_args, ADDITIONAL_ARGUMENT_DESCRIPTION
+                    "addional_command_arg", self._initial_args, ADDITIONAL_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}")
                 )
             )
 
@@ -2392,7 +2393,7 @@ class ArgumentList:
             else:
                 if initial_arg not in self.py_arg_names:
                     self._arguments.append(
-                        Argument(initial_arg, self._initial_args, MISSING_ARGUMENT_DESCRIPTION)
+                        Argument(initial_arg, self._initial_args, MISSING_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"))
                     )
 
         is_additional_arg = False
@@ -2405,7 +2406,7 @@ class ArgumentList:
         if is_additional_arg and "addional_command_arg" not in self.py_arg_names:
             self._arguments.append(
                 Argument(
-                    "addional_command_arg", self._initial_args, ADDITIONAL_ARGUMENT_DESCRIPTION
+                    "addional_command_arg", self._initial_args, ADDITIONAL_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}")
                 )
             )
 
@@ -2501,17 +2502,17 @@ class XMLCommand(Element):
                     for child in elem:
                         if isinstance(child, Variablelist):
                             if arguments is None:
-                                arguments = ArgumentList(self.py_name, child, self.args)
+                                arguments = ArgumentList(self.py_name, self.url, child, self.args)
                             else:
-                                arguments += ArgumentList(self.py_name, child, self.args)
+                                arguments += ArgumentList(self.py_name, self.url, child, self.args)
 
         else:
             for elem in refsyn:
                 if isinstance(elem, Variablelist):
                     if arguments is None:
-                        arguments = ArgumentList(self.py_name, elem, self.args)
+                        arguments = ArgumentList(self.py_name, self.url, elem, self.args)
                     else:
-                        arguments += ArgumentList(self.py_name, elem, self.args)
+                        arguments += ArgumentList(self.py_name, self.url, elem, self.args)
 
         arg_file = Path("args.txt")
 
