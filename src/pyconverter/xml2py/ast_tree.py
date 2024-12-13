@@ -2510,13 +2510,12 @@ class XMLCommand(Element):
         if refsyn is None:
             refsections = self.find_all("RefSection")
             for elem in refsections:
-                if elem.id is not None and "argdescript" in elem.id:
-                    for child in elem:
-                        if isinstance(child, Variablelist):
-                            if arguments is None:
-                                arguments = ArgumentList(self.py_name, self.url, child, self.args)
-                            else:
-                                arguments += ArgumentList(self.py_name, self.url, child, self.args)
+                for child in elem:
+                    if isinstance(child, Variablelist):
+                        if arguments is None:
+                            arguments = ArgumentList(self.py_name, self.url, child, self.args)
+                        else:
+                            arguments += ArgumentList(self.py_name, self.url, child, self.args)
 
         else:
             for elem in refsyn:
