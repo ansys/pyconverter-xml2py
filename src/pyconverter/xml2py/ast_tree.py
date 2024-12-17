@@ -517,13 +517,18 @@ class Member(Element):
 
 
 def ponctuaction_whitespace(text, ponctuation):
-    extra_space = re.findall(f"\S\h+\{ponctuation}", text)
+    pattern = r"\S\h+\{ponctuation}".format(ponctuation=ponctuation)
+    extra_space = re.findall(pattern, text)
     if extra_space:
         for character in list(set(extra_space)):  # remove duplicates in extra_space list
-            assigned_character = "\)" if character[0] == ")" else character[0]
-            text = re.sub(
-                f"{assigned_character}\h+\{ponctuation}", f"{assigned_character}{ponctuation}", text
+            assigned_character = r"\)" if character[0] == ")" else character[0]
+            pattern = r"{assigned_character}\h+\{ponctuation}".format(
+                assigned_character=assigned_character, ponctuation=ponctuation
             )
+            repl = r"{assigned_character}{ponctuation}".format(
+                assigned_character=assigned_character, ponctuation=ponctuation
+            )
+            text = re.sub(pattern, repl, text)
     return text
 
 
@@ -2660,7 +2665,7 @@ class XMLCommand(Element):
 
         # final post-processing
         def replacer(match):
-            return match.group().replace("*", r"\*").replace("\\*", "\*")
+            return match.group().replace("*", r"\*").replace(r"\\*", r"\*")
 
         # sphinx doesn't like asterisk symbols
         docstr = re.sub(r"(?<=\S)\*|(\*\S)", replacer, docstr)
@@ -2716,7 +2721,7 @@ class XMLCommand(Element):
         docstr = re.sub(r"<CMD>[a-z0-9]*</CMD>", cmd_replacer, docstr)
 
         def pipe_replacer(match):
-            return match.group().replace("|", "\|")
+            return match.group().replace("|", r"\|")
 
         docstr = re.sub(r"\|(.*)\|", pipe_replacer, docstr)
 
