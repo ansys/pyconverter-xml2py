@@ -630,7 +630,7 @@ API documentation
 
 
 """
-                for python_command_name in method_list:
+                for python_command_name in sorted(method_list):
                     class_content += f"   {class_name}.{python_command_name}\n"
 
                 # Write the class file
