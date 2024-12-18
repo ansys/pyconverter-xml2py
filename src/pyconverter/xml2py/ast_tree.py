@@ -98,7 +98,22 @@ class NameMap:
 
 
 def to_py_name(name, name_map=None):
-    """Convert to a Python-compatible name."""
+    """
+    Return a Python-compatible name for a command using the global name map.
+
+    Parameters
+    ----------
+    name : str
+        Name of the command.
+
+    name_map : dict
+        Dictionary containing the name map.
+
+    Returns
+    -------
+    str
+        Python-compatible command name.
+    """
     if name_map is not None:
         global NAME_MAP_GLOB
         NAME_MAP_GLOB = name_map
@@ -109,7 +124,19 @@ def to_py_name(name, name_map=None):
 
 
 def get_iter_values(name: str):
-    """Get the values of an iterator."""
+    """
+    Get the values of an iterator.
+
+    Parameters
+    ----------
+    name : str
+        Name of the parameter containing the iterator.
+
+    Returns
+    -------
+    tuple(str, int)
+        Tuple containing the name of the iterator and the iteration value.
+    """
     output = re.search(r"([a-zA-Z_]*)(\d*)", name.strip())
     groups = output.groups()
     name = groups[0]
@@ -140,7 +167,19 @@ def get_quant_iter_pos(name: str) -> tuple:
 
 
 def to_py_arg_name(name: str) -> str:
-    """Python-compatible term"""
+    """
+    Return a Python-compatible name for an argument.
+
+    Parameters
+    ----------
+    name : str
+        Name of the argument.
+
+    Returns
+    -------
+    str
+        Python-compatible argument name.
+    """
     initial_arg = str(name).lower().strip()
     arg = initial_arg
     if arg in ["--", "–", ""]:
@@ -180,8 +219,29 @@ def to_py_arg_name(name: str) -> str:
 def get_complete_args_from_initial_arg(
     initial_args: List[str], elipsis_args: List[str]
 ) -> List[str]:
-    # elipsis_args = ['Cname1', ' Cname2',' …'] or ['Cname1', '...', 'Cname6']
-    # initial_args = ['energytype', 'cname1', 'cname2', 'cname3', 'cname4', 'cname5', 'cname6']
+    """
+    Get the complete argument list from a list with elipsis.
+
+    Parameters
+    ----------
+    initial_args : list
+        List of initial arguments.
+
+    elipsis_args : list
+        List of containing the elipsed arguments.
+
+    Returns
+    -------
+    list
+        List of complete pythonnic arguments.
+
+    Examples
+    --------
+    >>> initial_args = ['energytype', 'cname1', 'cname2', 'cname3', 'cname4', 'cname5', 'cname6']
+    >>> elipsis_args = ['Cname1', ' Cname2',' …']
+    >>> get_complete_args_from_initial_arg(initial_args, elipsis_args)
+    ['cname1', 'cname2', 'cname3', 'cname4', 'cname5', 'cname6']
+    """
 
     first_arg_name = to_py_arg_name(elipsis_args[0])
     name_without_iter, first_num = get_iter_values(first_arg_name)
@@ -209,18 +269,105 @@ def is_elipsis(name: str) -> bool:
 
 
 def str_types(types, join_str: str) -> str:
-    """String representation of the parameter types."""
+    """
+    String representation of the parameter types.
+
+    Parameters
+    ----------
+    types : list
+        List of types.
+
+    join_str : str
+        String to join the types.
+
+    Returns
+    -------
+    str
+        String representation of the parameter types.
+
+    Examples
+    --------
+    >>> types = [str, int, float]
+    >>> str_types(types, " | ")
+    'str | int | float'
+
+    >>> types = [str, int]
+    >>> str_types(types, " or ")
+    'str or int'
+    """
     ptype_str = join_str.join([parm_type.__name__ for parm_type in types])
     return ptype_str
 
 
 def to_py_signature(py_arg_name, types) -> str:
-    """Return the Python signature of the argument."""
+    """
+    Return the Python signature of the argument.
+
+    Parameters
+    ----------
+    py_arg_name : str
+        Python-compatible argument name.
+
+    types : list
+        List of types.
+
+    Returns
+    -------
+    str
+        Python signature of the argument.
+
+    Examples
+    --------
+    >>> py_arg_name = 'energytype'
+    >>> types = [str, int, float]
+    >>> to_py_signature(py_arg_name, types)
+    'energytype: str | int | float = ""'
+    """
     if py_arg_name != "":
         kwarg = f'{py_arg_name}: {str_types(types, " | ")} = ""'
     else:
         kwarg = None
     return kwarg
+
+
+def resize_length(text, max_length=100, initial_indent="", subsequent_indent="", list=False):
+    """
+    Resize the length of a text.
+
+    Parameters
+    ----------
+    text : str
+        Text to resize.
+
+    max_length : int
+        Maximum length of the text to be resized.
+
+    initial_indent : str
+        Initial indentation of the text.
+
+    subsequent_indent : str
+        Subsequent indentation of the text.
+
+    return_list : bool
+        If set to True, the function returns a list of strings.
+        Default is False.
+
+    Returns
+    -------
+    str or list
+        Resized text.
+    """
+    text = text.replace(" .", ".")
+    wrapper = textwrap.TextWrapper(
+        width=max_length,
+        break_long_words=False,
+        initial_indent=initial_indent,
+        subsequent_indent=subsequent_indent,
+    )
+    if list is False:
+        return wrapper.fill(text=text)
+    else:
+        return wrapper.wrap(text=text)
 
 
 # ############################################################################
@@ -426,21 +573,6 @@ class Element:
     def tag(self):
         """Element tag."""
         return self._element.tag
-
-
-def resize_length(text, max_length=100, initial_indent="", subsequent_indent="", list=False):
-    """Resize the length of a text."""
-    text = text.replace(" .", ".")
-    wrapper = textwrap.TextWrapper(
-        width=max_length,
-        break_long_words=False,
-        initial_indent=initial_indent,
-        subsequent_indent=subsequent_indent,
-    )
-    if list is False:
-        return wrapper.fill(text=text)
-    else:
-        return wrapper.wrap(text=text)
 
 
 class ItemizedList(Element):
@@ -861,7 +993,7 @@ class ProgramListing(Element):
 
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
-        header = f"\n\n{indent}.. code::\n\n"
+        header = f"\n\n{indent}.. code:: apdl\n\n"
         source_code = re.sub(r"[^\S\r\n]", " ", self.source)  # Remove extra whitespaces
         rst_item = header + textwrap.indent(source_code, prefix=indent + " " * 3) + "\n"
         return rst_item
