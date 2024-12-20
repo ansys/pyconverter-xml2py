@@ -358,16 +358,33 @@ def resize_length(text, max_length=100, initial_indent="", subsequent_indent="",
         Resized text.
     """
     text = text.replace(" .", ".")
+    while "\n\n\n" in text:
+        text = text.replace("\n\n\n", "\n\n")
+
     wrapper = textwrap.TextWrapper(
         width=max_length,
         break_long_words=False,
         initial_indent=initial_indent,
         subsequent_indent=subsequent_indent,
     )
-    if list is False:
-        return wrapper.fill(text=text)
+
+    if "\n\n" in text:
+        text = text.split("\n\n")
     else:
-        return wrapper.wrap(text=text)
+        text = [text]
+
+    for i, paragraph in enumerate(text):
+        text[i] = wrapper.fill(text=paragraph)
+
+    if len(text) > 1:
+        output = "\n\n".join(text)
+    else:
+        output = text[0]
+
+    if list is True:
+        output = output.splitlines()
+
+    return output
 
 
 # ############################################################################
@@ -669,7 +686,6 @@ class OrderedList(Element):
 
     def to_rst(self, indent="", max_length=100, links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
-        # indent += " " * 4
         ordered_list = []
         for item in self:
             if item.tag in item_needing_links_base_url:
@@ -835,7 +851,7 @@ class Paragraph(Element):
                 )
                 items.append(str_item)
 
-        rst_item = " ".join(items) + "\n"
+        rst_item = " ".join(items) + "\n\n"
 
         return rst_item
 
@@ -876,7 +892,7 @@ class Emphasis(Element):
             content = f"{self[0]} "
         elif self.role == "italic":
             # TODO: this isn't the correct way of making text itallic
-            content = f"`{self[0]}` "
+            content = f"{self[0]} "
         # elif self.role == 'var':
         # content = f"``{self[0]}`` "
         else:
@@ -999,11 +1015,12 @@ class ProgramListing(Element):
         return rst_item
 
 
-def resize_element_list(text, max_length=100):
+def resize_element_list(text, max_length=100, indent=""):
     element_list = re.finditer(r"^\* ", text)
-    subsequent_indent = " " * 2
+    initial_indent = indent + " "
+    subsequent_indent = indent + " " * 2
     element_list = resize_length(
-        text, max_length, initial_indent="", subsequent_indent=subsequent_indent
+        text, max_length, initial_indent=initial_indent, subsequent_indent=subsequent_indent
     )
     return element_list
 
@@ -1040,10 +1057,10 @@ class Variablelist(Element):
             if type(item) != str and len(item.children) > 1 and type(item[1]) != str:
                 intersection_types = set(NO_RESIZE_LIST).intersection(set(item[1].children_types))
                 if len(intersection_types) == 0:
-                    rst_item = resize_element_list(rst_item, max_length)
+                    rst_item = resize_element_list(rst_item, max_length, indent=indent)
 
             else:
-                rst_item = resize_element_list(rst_item, max_length)
+                rst_item = resize_element_list(rst_item, max_length, indent=indent)
             active_items.append(rst_item)
 
         return "\n".join(active_items) + "\n"
@@ -1740,11 +1757,9 @@ class Refname(Element):
     def raw_args(self):
         """Raws containing the command arguments."""
         cmd = str(self)
-        cmd = cmd.replace("&fname_arg;", self._terms["fname_arg"])
-        cmd = cmd.replace("&fname1_arg;", self._terms["fname1_arg"])
-        cmd = cmd.replace("&fname2_arg;", self._terms["fname2_arg"])
-        cmd = cmd.replace("&pn006p;", self._terms["pn006p"])
-        cmd = cmd.replace("&ansysBrand;", self._terms["ansysBrand"])
+        for term in self._terms.keys():
+            if type(self._terms[term]) == str:
+                cmd = cmd.replace(f"&{term};", self._terms[term])
         cmd = cmd.replace("``", "")
         split_args = cmd.split(",")[1:]
         return split_args
@@ -2419,32 +2434,26 @@ class Argument:
         if description is None:
             description = self._description
 
-        if "* " in description:
-            output = description.split("\n")
-        else:
-            output = resize_length(
-                description, max_length, initial_indent=indent, subsequent_indent=indent, list=True
-            )
+        output = resize_length(
+            description, max_length, initial_indent=indent, subsequent_indent=indent, list=True
+        )
 
         return output
 
-    def to_py_docstring(
-        self, max_length=100, indent="", links=None, base_url=None, fcache=None
-    ) -> List[str]:
+    def to_py_docstring(self, max_length=100, links=None, base_url=None, fcache=None) -> List[str]:
         """Return a list of string to enable converting the element to an RST format."""
         if self.py_arg_name != "":
-            docstring = [f'{indent}{self.py_arg_name} : {str_types(self.types, " or ")}']
+            docstring = [f'{self.py_arg_name} : {str_types(self.types, " or ")}']
             if isinstance(self._description, str):
                 rst_description = self._description
             else:
                 rst_description = self._description.to_rst(
-                    indent=indent,
                     max_length=max_length,
                     links=links,
                     base_url=base_url,
                     fcache=fcache,
                 )
-            description_indent = " " * 4 + indent
+            description_indent = " " * 4
             if not "* " in rst_description:
                 list_description = self.resized_description(
                     rst_description, max_length, description_indent
@@ -2453,11 +2462,12 @@ class Argument:
                 rst_description = textwrap.indent(rst_description, description_indent)
                 list_description = rst_description.split("\n")
 
-            docstring = [f'{indent}{self.py_arg_name} : {str_types(self.types, " or ")}']
+            docstring = [f'{self.py_arg_name} : {str_types(self.types, " or ")}']
             docstring.extend(list_description)
 
         else:
             docstring = []
+
         return docstring
 
 
@@ -2787,7 +2797,8 @@ class XMLCommand(Element):
         ):
             items += [""] + custom_functions.py_returns[self.py_name]
         if self.notes is not None:
-            items += [""] + self.py_notes(custom_functions)
+            items += [""]
+            items.extend(self.py_notes(custom_functions))
         if custom_functions is not None and (
             self.py_name in custom_functions.py_names
             and self.py_name in custom_functions.py_examples
@@ -3024,7 +3035,7 @@ class XMLCommand(Element):
         else:
             notes = self.notes.to_rst()
 
-        if "flat-table" not in "".join(notes) and ".. code::" not in "".join(notes):
+        if "flat-table" not in notes and ".. code::" not in notes:
             notes = resize_length(notes, self._max_length, list=True)
             lines.extend(notes)
         else:
@@ -3079,7 +3090,7 @@ class XMLCommand(Element):
 
         return "\n".join(lines)
 
-    def py_parm(self, custom_functions=None, indent="", links=None, base_url=None, fcache=None):
+    def py_parm(self, custom_functions=None, links=None, base_url=None, fcache=None):
         """Python parameter's string."""
         lines = []
         arg_desc = self.arg_desc
@@ -3096,9 +3107,7 @@ class XMLCommand(Element):
                     lines.append("-" * 10)
                     for argument in arg_desc:
                         lines.extend(
-                            argument.to_py_docstring(
-                                self._max_length, indent, links, base_url, fcache
-                            )
+                            argument.to_py_docstring(self._max_length, links, base_url, fcache)
                         )
                         lines.append("")
             else:
@@ -3107,9 +3116,7 @@ class XMLCommand(Element):
         elif len(arg_desc) > 0:
             lines.append("-" * 10)
             for argument in arg_desc:
-                lines.extend(
-                    argument.to_py_docstring(self._max_length, indent, links, base_url, fcache)
-                )
+                lines.extend(argument.to_py_docstring(self._max_length, links, base_url, fcache))
                 lines.append("")
         return lines
 
