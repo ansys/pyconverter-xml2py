@@ -220,6 +220,7 @@ def write_global__init__file(library_path: Path, config_path: Path) -> None:
         Path object of the directory containing the generated package.
     """
 
+    project_name = get_config_data_value(config_path, "project_name")
     subfolder_values = get_config_data_value(config_path, "subfolders")
 
     if subfolder_values:
@@ -244,7 +245,7 @@ def write_global__init__file(library_path: Path, config_path: Path) -> None:
         fid.write("except ModuleNotFoundError:\n")
         fid.write("    import importlib_metadata\n\n")
         fid.write("__version__ = importlib_metadata.version(__name__.replace('.', '-'))\n")
-        fid.write('"""PyConverter-GeneratedCommands version."""\n')
+        fid.write(f'"""{project_name} version."""\n')
     fid.close()
 
 
@@ -629,7 +630,7 @@ API documentation
 
 
 """
-                for python_command_name in method_list:
+                for python_command_name in sorted(method_list):
                     class_content += f"   {class_name}.{python_command_name}\n"
 
                 # Write the class file

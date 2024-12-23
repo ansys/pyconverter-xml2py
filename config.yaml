@@ -1,8 +1,10 @@
+project_name: PyConverter-GeneratedCommands # Name of the project
+
 library_name_structured: # Future name of the library
   - pyconverter
   - generatedcommands
 
-subfolder:
+subfolders:
   - subfolder
   - subsubfolder
 
