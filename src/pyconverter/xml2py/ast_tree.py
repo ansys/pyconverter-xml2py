@@ -2267,6 +2267,7 @@ class Argument:
 
     def __init__(
         self,
+        terms,
         element: str | Element,
         initial_arguments: List,
         description: Element | str | None = None,
@@ -2286,6 +2287,7 @@ class Argument:
         else:
             name = element
         self._name = name
+        self._terms = terms
         self._description = description
         self._initial_arguments = initial_arguments
 
@@ -2314,7 +2316,9 @@ class Argument:
             if not self.is_arg_elipsis:
                 for item_name in split_name:
                     arg_name = item_name.strip()
-                    new_arg = Argument(arg_name, self._initial_arguments, self._description)
+                    new_arg = Argument(
+                        self._terms, arg_name, self._initial_arguments, self._description
+                    )
                     additional_args.append(new_arg)
             else:
 
@@ -2324,7 +2328,9 @@ class Argument:
 
                 if len(complete_args) > 0:
                     for item in complete_args:
-                        new_arg = Argument(item, self._initial_arguments, self._description)
+                        new_arg = Argument(
+                            self._terms, item, self._initial_arguments, self._description
+                        )
                         additional_args.append(new_arg)
 
                 else:
@@ -2332,7 +2338,9 @@ class Argument:
                     for i, item_name in enumerate(split_name):
                         item_name = item_name.strip()
                         if item_name == "":
-                            new_arg = Argument(arg_name, self._initial_arguments, self._description)
+                            new_arg = Argument(
+                                self._terms, arg_name, self._initial_arguments, self._description
+                            )
                             additional_args.append(new_arg)
                         elif is_elipsis(item_name):
 
@@ -2353,7 +2361,10 @@ class Argument:
                                     arg_name = split_name[i + 1].strip()
                                     arg_name = f"{arg_name[:initial_pos_final]}{j}{arg_name[end_pos_final:]}"  # noqa : E501
                                     new_arg = Argument(
-                                        arg_name, self._initial_arguments, self._description
+                                        self._terms,
+                                        arg_name,
+                                        self._initial_arguments,
+                                        self._description,
                                     )
                                     if new_arg.py_arg_name != "":
                                         additional_args.append(new_arg)
@@ -2385,12 +2396,16 @@ class Argument:
                                         for j in range(number_iter_prev + 1, number_iter_next):
                                             arg_name = f"{name_iter_prev}{j}"
                                             new_arg = Argument(
-                                                arg_name, self._initial_arguments, self._description
+                                                self._terms,
+                                                arg_name,
+                                                self._initial_arguments,
+                                                self._description,
                                             )
                                             additional_args.append(new_arg)
                                     else:
                                         additional_args.append(
                                             Argument(
+                                                self._terms,
                                                 name_iter_next,
                                                 self._initial_arguments,
                                                 self._description,
@@ -2453,6 +2468,14 @@ class Argument:
                     base_url=base_url,
                     fcache=fcache,
                 )
+
+            # Replacing terms with their definitions
+            special_terms = re.findall(r"\&(\S+)\;", rst_description)
+            if len(special_terms) > 0:
+                for term in special_terms:
+                    if term in self._terms:
+                        rst_description = rst_description.replace(f"&{term};", self._terms[term])
+
             description_indent = " " * 4
             if not "* " in rst_description:
                 list_description = self.resized_description(
@@ -2472,10 +2495,13 @@ class Argument:
 
 
 class ArgumentList:
-    def __init__(self, py_name: str, url: str, list_entry: VarlistEntry, args: List) -> None:
+    def __init__(
+        self, py_name: str, url: str, terms: dict, list_entry: VarlistEntry, args: List
+    ) -> None:
 
         self._py_name = py_name
         self._url = url
+        self._terms = terms
         self._list_entry = list_entry
         self._arguments = []
         self._additional_args = []
@@ -2487,7 +2513,7 @@ class ArgumentList:
         temp_args = {}
         for item in self._list_entry:
             if isinstance(item, VarlistEntry):
-                argument_obj = Argument(item, self._initial_args)
+                argument_obj = Argument(self._terms, item, self._initial_args)
                 additional_args = argument_obj.multiple_args
                 if len(additional_args) > 0:
                     for arg in additional_args:
@@ -2506,6 +2532,7 @@ class ArgumentList:
             else:
                 self._arguments.append(
                     Argument(
+                        self._terms,
                         initial_arg,
                         self._initial_args,
                         MISSING_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"),
@@ -2522,6 +2549,7 @@ class ArgumentList:
         if is_additional_arg and "addional_command_arg" not in self.py_arg_names:
             self._arguments.append(
                 Argument(
+                    self._terms,
                     "addional_command_arg",
                     self._initial_args,
                     ADDITIONAL_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"),
@@ -2547,6 +2575,7 @@ class ArgumentList:
                 if initial_arg not in self.py_arg_names:
                     self._arguments.append(
                         Argument(
+                            self._terms,
                             initial_arg,
                             self._initial_args,
                             MISSING_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"),
@@ -2563,6 +2592,7 @@ class ArgumentList:
         if is_additional_arg and "addional_command_arg" not in self.py_arg_names:
             self._arguments.append(
                 Argument(
+                    self._terms,
                     "addional_command_arg",
                     self._initial_args,
                     ADDITIONAL_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"),
@@ -2660,17 +2690,25 @@ class XMLCommand(Element):
                 for child in elem:
                     if isinstance(child, Variablelist):
                         if arguments is None:
-                            arguments = ArgumentList(self.py_name, self.url, child, self.args)
+                            arguments = ArgumentList(
+                                self.py_name, self.url, self._terms, child, self.args
+                            )
                         else:
-                            arguments += ArgumentList(self.py_name, self.url, child, self.args)
+                            arguments += ArgumentList(
+                                self.py_name, self.url, self._terms, child, self.args
+                            )
 
         else:
             for elem in refsyn:
                 if isinstance(elem, Variablelist):
                     if arguments is None:
-                        arguments = ArgumentList(self.py_name, self.url, elem, self.args)
+                        arguments = ArgumentList(
+                            self.py_name, self.url, self._terms, elem, self.args
+                        )
                     else:
-                        arguments += ArgumentList(self.py_name, self.url, elem, self.args)
+                        arguments += ArgumentList(
+                            self.py_name, self.url, self._terms, elem, self.args
+                        )
 
         arg_file = Path("args.txt")
 
