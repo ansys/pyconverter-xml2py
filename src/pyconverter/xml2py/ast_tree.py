@@ -738,7 +738,10 @@ class ListItem(Element):
                 )
 
             items.append(rst_item)
-        return "\n".join(items)
+
+        rst_list_item = "\n".join(items)
+        rst_list_item = rst_list_item.replace("*", "\*")
+        return rst_list_item
 
 
 class FileName(Element):
@@ -889,7 +892,7 @@ class Emphasis(Element):
 
         if self.role == "bold":
             # TODO: this isn't the correct way of making text bold
-            content = f"{self[0]} "
+            content = f"**{self[0]}** "
         elif self.role == "italic":
             # TODO: this isn't the correct way of making text itallic
             content = f"{self[0]} "
@@ -1074,7 +1077,8 @@ class Variablelist(Element):
                 )
             active_items.append(rst_item)
 
-        return "\n".join(active_items) + "\n"
+        rst_varlist = "\n".join(active_items) + "\n"
+        return rst_varlist
 
     @property
     def terms(self):
@@ -1107,7 +1111,8 @@ class RefSection(Element):
                     items.append(item.to_rst(indent=indent))
             else:
                 items.append(str(item))
-        return "\n".join(items)
+        rst_refsection = "\n".join(items)
+        return rst_refsection
 
 
 class VarlistEntry(Element):
@@ -1247,7 +1252,8 @@ class VarlistEntry(Element):
         py_term = self.py_term(links=links, base_url=base_url)
         if "``" in py_term:
             py_term = py_term.replace("``", "")
-        lines = [f"* ``{py_term}`` - {self.py_text(links=links, base_url=base_url, fcache=fcache)}"]
+        py_text = self.py_text(links=links, base_url=base_url, fcache=fcache)
+        lines = [f"* ``{py_term}`` - {py_text}"]
         text = "\n".join(lines)
         # if 'ID number to which this tip belongs' in text:
         # breakpoint()
@@ -1666,7 +1672,8 @@ class TGroup(Element):
             if len(rst_tbody) > 0:
                 rows += rst_tbody
 
-        return "\n".join(rows)
+        rst_tgroup = "\n".join(rows)
+        return rst_tgroup
 
 
 class Table(Element):
@@ -2121,7 +2128,8 @@ class TBody(Element):
                 if type(row[1][0]) == Command:
                     command = f"   * - :ref:`{row[1][0].py_cmd}`"
                     rst_rows.append(command)
-                    strg = "     - " + str(row[2][0])
+                    row_content = str(row[2][0])
+                    strg = f"     - {row_content}"
                     rst_rows.append(strg)
 
         return rst_rows
@@ -2145,11 +2153,14 @@ class Entry(Element):
         for item in self:
             if isinstance(item, Element):
                 if item.tag in item_needing_links_base_url:
-                    items.append(item.to_rst(indent, links=links, base_url=base_url))
+                    entry_item = item.to_rst(indent, links=links, base_url=base_url)
                 else:
-                    items.append(item.to_rst(indent))
+                    entry_item= item.to_rst(indent)
             else:
-                items.append(str(item))
+                entry_item = str(item)
+                # entry_item = entry_item.replace("*", "\*")
+
+            items.append(entry_item)
 
         if self.morerows is not None:
             entry = f":rspan:`{content}` " + " ".join(items)
@@ -2855,12 +2866,12 @@ class XMLCommand(Element):
             items += [""] + custom_functions.py_examples[self.py_name]
         docstr = "\n".join(items)
 
-        # final post-processing
-        def replacer(match):
-            return match.group().replace("*", r"\*").replace(r"\\*", r"\*")
+        # # final post-processing
+        # def replacer(match):
+        #     return match.group().replace("*", r"\*").replace(r"\\*", r"\*")
 
-        # sphinx doesn't like asterisk symbols
-        docstr = re.sub(r"(?<=\S)\*|(\*\S)", replacer, docstr)
+        # # sphinx doesn't like asterisk symbols
+        # docstr = re.sub(r"(?<=\S)\*|(\*\S)", replacer, docstr)
 
         for key, value in CONST.items():
             docstr = docstr.replace(key, value)
