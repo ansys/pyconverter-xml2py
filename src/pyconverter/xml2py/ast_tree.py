@@ -1056,12 +1056,22 @@ class Variablelist(Element):
                 intersection_types = set(NO_RESIZE_LIST).intersection(set(item[1].children_types))
                 if len(intersection_types) == 0:
                     initial_indent = indent + " " * 2
-                    rst_item = resize_element_list(rst_item, max_length, initial_indent=initial_indent, subsequent_indent=initial_indent)
+                    rst_item = resize_element_list(
+                        rst_item,
+                        max_length,
+                        initial_indent=initial_indent,
+                        subsequent_indent=initial_indent,
+                    )
 
             else:
                 initial_indent = indent + " "
                 subsequent_indent = indent + " " * 2
-                rst_item = resize_element_list(rst_item, max_length, initial_indent=initial_indent, subsequent_indent=subsequent_indent)
+                rst_item = resize_element_list(
+                    rst_item,
+                    max_length,
+                    initial_indent=initial_indent,
+                    subsequent_indent=subsequent_indent,
+                )
             active_items.append(rst_item)
 
         return "\n".join(active_items) + "\n"
