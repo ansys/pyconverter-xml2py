@@ -1015,10 +1015,8 @@ class ProgramListing(Element):
         return rst_item
 
 
-def resize_element_list(text, max_length=100, indent=""):
+def resize_element_list(text, max_length=100, initial_indent="", subsequent_indent=""):
     element_list = re.finditer(r"^\* ", text)
-    initial_indent = indent + " "
-    subsequent_indent = indent + " " * 2
     element_list = resize_length(
         text, max_length, initial_indent=initial_indent, subsequent_indent=subsequent_indent
     )
@@ -1057,10 +1055,13 @@ class Variablelist(Element):
             if type(item) != str and len(item.children) > 1 and type(item[1]) != str:
                 intersection_types = set(NO_RESIZE_LIST).intersection(set(item[1].children_types))
                 if len(intersection_types) == 0:
-                    rst_item = resize_element_list(rst_item, max_length, indent=indent)
+                    initial_indent = indent + " " * 2
+                    rst_item = resize_element_list(rst_item, max_length, initial_indent=initial_indent, subsequent_indent=initial_indent)
 
             else:
-                rst_item = resize_element_list(rst_item, max_length, indent=indent)
+                initial_indent = indent + " "
+                subsequent_indent = indent + " " * 2
+                rst_item = resize_element_list(rst_item, max_length, initial_indent=initial_indent, subsequent_indent=subsequent_indent)
             active_items.append(rst_item)
 
         return "\n".join(active_items) + "\n"
