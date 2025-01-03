@@ -1,4 +1,4 @@
-# Copyright (C) 2024 ANSYS, Inc. and/or its affiliates.
+# Copyright (C) 2024 - 2025 ANSYS, Inc. and/or its affiliates.
 # SPDX-License-Identifier: MIT
 #
 #
@@ -387,6 +387,25 @@ def resize_length(text, max_length=100, initial_indent="", subsequent_indent="",
     return output
 
 
+def replace_asterisks(initial_text):
+
+    # Replace all * with \*
+    text = re.sub(
+        r"([^\*])(\*)([A-Z]+) ", r"\1" + r"\*" + r"\3 ", initial_text
+    )  # Replace ``*DIM`` configurations into ``\*DIM``
+    text = re.sub(
+        r"([^\*\s\\]+)(\*)([^\*\s]+)", r"\1\\2\3", text
+    )  # Replace ``fac1*fac2`` configurations into ``fac1\*fac2``
+    text = re.sub(
+        r"([^\*])(\*\*)(\*)([A-Z]+)(\*\*)([^\*])", r"\1\2" + r"\*" + r"\4\5\6", text
+    )  # Replace ``***DIM**`` configurations into ``**\*DIM**``
+    text = re.sub(
+        r"([^\*])(\*)(\*)([A-Z]+)(\*)([^\*])", r"\1\2" + r"\*" + r"\4\5\6", text
+    )  # Replace ``**DIM*`` configurations into ``*\*DIM*``
+
+    return text
+
+
 # ############################################################################
 # Element class
 # ############################################################################
@@ -633,8 +652,6 @@ class ItemizedList(Element):
 
             new_rst_list = []
             for line in rst_list:
-                line = ponctuaction_whitespace(line, ".")
-                line = ponctuaction_whitespace(line, ",")
                 new_rst_list.extend(
                     resize_length(
                         line,
@@ -649,7 +666,7 @@ class ItemizedList(Element):
 
         # lists must have at least one line proceeding
         lines = ["", ""] + lines + [""]
-        return "\n".join(lines)
+        return "\n\n".join(lines)
 
 
 class SimpleList(ItemizedList):
@@ -666,14 +683,19 @@ class Member(Element):
 
 
 def ponctuaction_whitespace(text, ponctuation):
-    pattern = r"\S\h+\{ponctuation}".format(ponctuation=ponctuation)
+    pattern = r".\S\h+\{ponctuation}".format(ponctuation=ponctuation)
     extra_space = re.findall(pattern, text)
     if extra_space:
         for character in list(set(extra_space)):  # remove duplicates in extra_space list
-            assigned_character = r"\)" if character[0] == ")" else character[0]
-            pattern = r"{assigned_character}\h+\{ponctuation}".format(
-                assigned_character=assigned_character, ponctuation=ponctuation
-            )
+            assigned_character = character[0]
+            if assigned_character in ["*", ")"]:
+                pattern = r"\{assigned_character}\h+\{ponctuation}".format(
+                    assigned_character=assigned_character, ponctuation=ponctuation
+                )
+            else:
+                pattern = r"{assigned_character}\h+\{ponctuation}".format(
+                    assigned_character=assigned_character, ponctuation=ponctuation
+                )
             repl = r"{assigned_character}{ponctuation}".format(
                 assigned_character=assigned_character, ponctuation=ponctuation
             )
@@ -693,12 +715,7 @@ class OrderedList(Element):
             else:
                 rst_item = item.to_rst(indent)
             rst_item = re.sub(r"\s+", " ", rst_item.lstrip())  # Remove extra whitespaces
-            rst_item = ponctuaction_whitespace(
-                rst_item, "."
-            )  # Remove extra whitespace before period
-            rst_item = ponctuaction_whitespace(
-                rst_item, ","
-            )  # Remove extra whitespace before comma
+
             resized_item = resize_length(
                 rst_item, max_length=max_length, initial_indent="", subsequent_indent=""
             )
@@ -740,7 +757,7 @@ class ListItem(Element):
             items.append(rst_item)
 
         rst_list_item = "\n".join(items)
-        rst_list_item = rst_list_item.replace("*", "\*")
+        # rst_list_item = rst_list_item.replace("*", "\*")
         return rst_list_item
 
 
@@ -889,13 +906,13 @@ class Emphasis(Element):
 
     def to_rst(self, indent="", max_length=100, links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
-
+        content = str(self[0])
         if self.role == "bold":
             # TODO: this isn't the correct way of making text bold
-            content = f"**{self[0]}** "
+            content = f"**{content}** "
         elif self.role == "italic":
             # TODO: this isn't the correct way of making text itallic
-            content = f"{self[0]} "
+            content = f"*{content}* "
         # elif self.role == 'var':
         # content = f"``{self[0]}`` "
         else:
@@ -1250,9 +1267,10 @@ class VarlistEntry(Element):
             return "\n".join(lines)
 
         py_term = self.py_term(links=links, base_url=base_url)
+        py_text = self.py_text(links=links, base_url=base_url, fcache=fcache)
+
         if "``" in py_term:
             py_term = py_term.replace("``", "")
-        py_text = self.py_text(links=links, base_url=base_url, fcache=fcache)
         lines = [f"* ``{py_term}`` - {py_text}"]
         text = "\n".join(lines)
         # if 'ID number to which this tip belongs' in text:
@@ -1694,13 +1712,13 @@ class Table(Element):
         # For now, Tables don't support ``max_length``
         lines = []
         if self.title is not None:
-            lines.append(f"{self.title}".strip())
-            lines.append((len(lines[-1]) * "="))
+            title = f"{self.title}".strip()
+            lines.append(f"**{title}**\n")
             lines.append("")
 
         if self.tgroup is not None:
-            a = self.tgroup
-            lines.append(a.to_rst(indent=indent, links=links, base_url=base_url))
+            rst_tgroup = self.tgroup.to_rst(indent=indent, links=links, base_url=base_url)
+            lines.append(rst_tgroup)
 
         return "\n".join(lines)
 
@@ -2155,10 +2173,9 @@ class Entry(Element):
                 if item.tag in item_needing_links_base_url:
                     entry_item = item.to_rst(indent, links=links, base_url=base_url)
                 else:
-                    entry_item= item.to_rst(indent)
+                    entry_item = item.to_rst(indent)
             else:
                 entry_item = str(item)
-                # entry_item = entry_item.replace("*", "\*")
 
             items.append(entry_item)
 
@@ -2499,7 +2516,7 @@ class Argument:
                         rst_description = rst_description.replace(f"&{term};", self._terms[term])
 
             description_indent = " " * 4
-            if not "* " in rst_description:
+            if not " * " in rst_description:
                 list_description = self.resized_description(
                     rst_description, max_length, description_indent
                 )
@@ -2866,13 +2883,6 @@ class XMLCommand(Element):
             items += [""] + custom_functions.py_examples[self.py_name]
         docstr = "\n".join(items)
 
-        # # final post-processing
-        # def replacer(match):
-        #     return match.group().replace("*", r"\*").replace(r"\\*", r"\*")
-
-        # # sphinx doesn't like asterisk symbols
-        # docstr = re.sub(r"(?<=\S)\*|(\*\S)", replacer, docstr)
-
         for key, value in CONST.items():
             docstr = docstr.replace(key, value)
         for key, value in CLEANUP.items():
@@ -2948,8 +2958,6 @@ class XMLCommand(Element):
                     return ""
                 return self._terms[term]
 
-        docstr = re.sub(r"&[\S]*?;", term_replacer, docstr)
-
         # final line by line cleanup
         lines = []
         for line in docstr.splitlines():
@@ -2958,23 +2966,6 @@ class XMLCommand(Element):
             if "Graphical picking is available only" in line:
                 continue
             lines.append(line)
-
-        # ensure the hierarchy of the titles
-        is_equal_sign = False
-        is_dash_sign = False
-        i = 0
-        while i < len(lines):
-            if lines[i].lstrip().startswith("--"):
-                if is_dash_sign == False:
-                    is_dash_sign = True
-            elif lines[i].lstrip().startswith("=="):
-                if is_equal_sign or is_dash_sign:
-                    lines[i - 1] = "**" + lines[i - 1] + "**"
-                    lines.pop(i)
-                if is_equal_sign == False:
-                    is_equal_sign = True
-
-            i += 1
 
         # ensure that lists begin with list-table
         i = 2
@@ -3063,6 +3054,11 @@ class XMLCommand(Element):
         docstr = re.sub(r"bgcolor=\S\S\S\S\S\S\S\S\S\S? ", "", docstr)
         docstr = re.sub(r"bgcolor=\S\S\S\S\S\S\S\S\S\S?", "", docstr)
         docstr = re.sub(r"_cellfont Shading=\S\S\S\S\S\S\S\S", "", docstr)
+        docstr = re.sub(r"Caret.+\?", "", docstr)
+        docstr = docstr.replace("–", "-")
+        docstr = replace_asterisks(docstr)
+        docstr = ponctuaction_whitespace(docstr, ".")  # Remove extra whitespace before period
+        docstr = ponctuaction_whitespace(docstr, ",")  # Remove extra whitespace before comma
 
         if self.is_archived == True:
             logging.info(f"{self.name} is an archived command.")
@@ -3095,11 +3091,12 @@ class XMLCommand(Element):
         else:
             notes = self.notes.to_rst()
 
-        if "flat-table" not in notes and ".. code::" not in notes:
-            notes = resize_length(notes, self._max_length, list=True)
-            lines.extend(notes)
-        else:
-            lines.append(notes)
+        to_be_resized = re.findall(r"^[^\.\s].+(?=\n)|(?<=\n)([^\.\s].+)(?=\n)", notes)
+
+        for item in to_be_resized:
+            resized_item = resize_length(item, self._max_length)
+            notes = notes.replace(item, resized_item)
+        lines.extend(notes.split("\n"))
 
         if custom_functions is not None and (
             self.py_name in custom_functions.py_names and self.py_name in custom_functions.py_notes
