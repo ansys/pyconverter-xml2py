@@ -32,6 +32,46 @@ import pyconverter.xml2py.version_variables as var
 from tqdm import tqdm
 
 
+def link_replacer(file, terms, docu_global, links, base_url, fcache):
+    with open(file, "r") as fid:
+        text = fid.read()
+        matches = re.findall(r"ENTITY([\S\s]*?)(?=\n)", text)
+        for match in matches:
+            item = ast.Element(fromstring(match)).to_rst(
+                links=links, base_url=base_url, fcache=fcache
+            )
+            key = item.split()[0]
+            text = (item.replace(key, "")).strip()
+            if not text.startswith("'"):
+                continue
+
+            text = text[1:-2].strip()
+
+            def term_replacer(match):
+                term = match.group()[1:-1]
+                if term in docu_global:
+                    _, key, cite_title = docu_global[term]
+                    if key in links:
+                        root_name, root_title, href, text = links[key]
+                        link = f"{base_url}{root_name}/{href}"
+                        link_text = terms.get(cite_title, root_title)
+                        return f"`{link_text} <{link}>`_"
+                else:
+                    if term not in terms:
+                        return match.group()
+                    return terms[term]
+
+            text = re.sub(r"&[\S]*;", term_replacer, text)
+
+            if key not in terms:
+                terms[key] = text
+
+    if "angcycsym" in terms:
+        print(terms["angcycsym"])
+
+    return terms
+
+
 def load_links(link_path: Path) -> dict:
     """Load all links.
 
@@ -136,7 +176,7 @@ def load_docu_global(term_path: Path) -> dict:
                 targetptrs = re.findall(r'targetptr="(\S*)"', line)
                 targetptr = targetptrs[0] if len(targetptrs) else None
 
-                citetitles = re.findall(r"<citetitle>&(\S*);</citetitle>", line)
+                citetitles = re.findall(r"<citetitle>&(\S*);<\/citetitle>", line)
                 citetitle = citetitles[0] if len(citetitles) else None
 
                 docu_global[entity_name] = (targetdoc, targetptr, citetitle)
@@ -249,37 +289,14 @@ def load_terms(
     # load manuals
     manual_path = term_path / "glb" / manual_file
     if manual_path.is_file():
-        with open(manual_path, "r") as fid:
-            text = fid.read()
-            matches = re.findall(r"ENTITY([\S\s]*?)<!", text)
-            for match in matches:
-                item = ast.Element(fromstring(match)).to_rst(
-                    links=links, base_url=base_url, fcache=fcache
-                )
-                key = item.split()[0]
-                text = item.replace(key, "").strip()
-                if not text.startswith("'"):
-                    continue
+        terms = link_replacer(manual_path, terms, docu_global, links, base_url, fcache)
+    else:
+        print("WARNING: No file found for defining terms.")
 
-                text = text[1:-2].strip()
-
-                def term_replacer(match):
-                    term = match.group()[1:-1]
-                    if term in docu_global:
-                        _, key, cite_title = docu_global[term]
-                        if key in links:
-                            root_name, root_title, href, text = links[key]
-                            link = f"{base_url}{root_name}/{href}"
-                            link_text = terms.get(cite_title, root_title)
-                            return f"`{link_text} <{link}>`_"
-                    else:
-                        if term not in terms:
-                            return match.group()
-                        return terms[term]
-
-                text = re.sub(r"&[\S]*;", term_replacer, text)
-
-                terms[key] = text
+    # load docu_global
+    docu_ent = term_path / "glb" / "docu_global.ent"
+    if docu_ent.is_file():
+        terms = link_replacer(docu_ent, terms, docu_global, links, base_url, fcache)
     else:
         print("WARNING: No file found for defining terms.")
 

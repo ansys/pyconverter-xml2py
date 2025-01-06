@@ -406,6 +406,41 @@ def replace_asterisks(initial_text):
     return text
 
 
+def replace_terms(text, terms):
+    """
+    Replace terms with their definitions.
+
+    Parameters
+    ----------
+    text : str
+        Text to replace terms.
+
+    terms : dict
+        Dictionary containing the terms and their definitions.
+
+    Returns
+    -------
+    str
+        Text with the terms replaced.
+    """
+    iter = 0
+    special_terms = re.findall(r"\&([^\-\;]+)\;", text)
+    stop = False
+    while len(special_terms) > 0 and not stop:
+        iter_special_terms = re.findall(r"\&([^\-\;]+)\;", text)
+        for term in special_terms:
+            if term in terms:
+                text = text.replace(f"&{term};", terms[term])
+        # Check if there are still special terms that can be replaced
+        if iter_special_terms == re.findall(r"\&([^\-\;]+)\;", text):
+            stop = True
+        else:
+            special_terms = iter_special_terms
+        iter += 1
+
+    return text
+
+
 # ############################################################################
 # Element class
 # ############################################################################
@@ -2511,13 +2546,7 @@ class Argument:
                     fcache=fcache,
                 )
 
-            # Replacing terms with their definitions
-            special_terms = re.findall(r"\&(\S+)\;", rst_description)
-            if len(special_terms) > 0:
-                for term in special_terms:
-                    if term in self._terms:
-                        rst_description = rst_description.replace(f"&{term};", self._terms[term])
-
+            rst_description = replace_terms(rst_description, self._terms)
             description_indent = " " * 4
             if not " * " in rst_description:
                 list_description = self.resized_description(
@@ -3071,6 +3100,8 @@ class XMLCommand(Element):
                 + "This command is archived in the latest version of the software.\n"
             )
 
+        # Final cleanup
+        docstr = replace_terms(docstr, self._terms)
         return docstr
 
     def py_notes(self, custom_functions: CustomFunctions = None):
@@ -3094,6 +3125,7 @@ class XMLCommand(Element):
         else:
             notes = self.notes.to_rst()
 
+        notes = replace_terms(notes, self._terms)
         to_be_resized = re.findall(r"^[^\.\s].+(?=\n)|(?<=\n)([^\.\s].+)(?=\n)", notes)
 
         for item in to_be_resized:
