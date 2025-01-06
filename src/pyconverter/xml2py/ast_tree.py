@@ -1937,7 +1937,10 @@ class Command(Element):
         if self.py_cmd == self.command:
             ref = f"``{self.py_cmd}``"
         else:
-            ref = f":ref:`{self.py_cmd}`"
+            if self.py_cmd in NAME_MAP_GLOB.keys():
+                ref = f":ref:`{self.py_cmd}`"
+            else:
+                ref = f"``{self.py_cmd}``"
         return ref
 
     def to_rst(self, indent="", max_length=100):

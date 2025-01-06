@@ -84,6 +84,7 @@ def create_name_map(meta_command: list[str], yaml_file_path: Path) -> dict:
     naive_names = []
     rules = get_config_data_value(yaml_file_path, "rules")
     specific_command_mapping = get_config_data_value(yaml_file_path, "specific_command_mapping")
+    ignored_commands = get_config_data_value(yaml_file_path, "ignored_commands")
     for ans_name in meta_command:
         ans_name = ans_name.lower()
         if not ans_name[0].isalnum():
@@ -97,6 +98,8 @@ def create_name_map(meta_command: list[str], yaml_file_path: Path) -> dict:
     for ans_name in meta_command:
         if ans_name in specific_command_mapping:
             py_name = specific_command_mapping[ans_name]
+        elif ans_name in ignored_commands:
+            continue
         else:
             lower_name = ans_name.lower()
             if not lower_name[0].isalnum():
