@@ -270,21 +270,21 @@ def load_terms(
 
     # TODO: use another file for this.
     # Manually adding terms value from warnings.
-    terms["sgr"] = ":math:`\sigma`"
-    terms["gt"] = ":math:`\sigma`"
+    terms["sgr"] = r":math:`\sigma`"
+    terms["gt"] = r":math:`\sigma`"
     terms["thgr"] = ":math:`<`"
     terms["phgr"] = ":math:`<`"
-    terms["ngr"] = ":math:`\phi`"
-    terms["agr"] = ":math:`\alpha`"
-    terms["OHgr"] = ":math:`\Omega`"
-    terms["phis"] = ":math:`\phi`"
-    terms["thetas"] = ":math:`\theta`"
+    terms["ngr"] = r":math:`\phi`"
+    terms["agr"] = r":math:`\alpha`"
+    terms["OHgr"] = r":math:`\Omega`"
+    terms["phis"] = r":math:`\phi`"
+    terms["thetas"] = r":math:`\theta`"
 
     # These are supposed to be uploaded automatically from the `character.ent` file
     terms["#13"] = "#13"
     terms["#160"] = "nbsp"
     terms["#215"] = "times"
-    terms["#934"] = ":math:`\Phi`"
+    terms["#934"] = r":math:`\Phi`"
 
     # load manuals
     manual_path = term_path / "glb" / manual_file
