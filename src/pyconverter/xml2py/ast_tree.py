@@ -3109,7 +3109,8 @@ class XMLCommand(Element):
             notes = self.notes.to_rst()
 
         notes = replace_terms(notes, self._terms)
-        to_be_resized = re.findall(r"^[^\.\s].+(?=\n)|(?<=\n)([^\.\s].+)(?=\n)", notes)
+        
+        to_be_resized = re.findall(r"^[^\.\s]?.+(?=\n)|(?<=\n)[^\.\s].+(?=\n)", notes)
 
         for item in to_be_resized:
             resized_item = resize_length(item, self._max_length)
