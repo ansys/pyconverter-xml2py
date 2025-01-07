@@ -2535,7 +2535,6 @@ class Argument:
     def to_py_docstring(self, max_length=100, links=None, base_url=None, fcache=None) -> List[str]:
         """Return a list of string to enable converting the element to an RST format."""
         if self.py_arg_name != "":
-            docstring = [f'{self.py_arg_name} : {str_types(self.types, " or ")}']
             if isinstance(self._description, str):
                 rst_description = self._description
             else:
@@ -2973,22 +2972,7 @@ class XMLCommand(Element):
         def trail_replacer(match):
             return match.group().replace("_", "")
 
-        docstr = re.sub(r"([^_|^`][A-Za-z0-9]*)_\s", trail_replacer, docstr)
-
-        def term_replacer(match):
-            term = match.group()[1:-1]
-            if term in self._docu_global:
-                _, key, cite_title = self._docu_global[term]
-                if key in self._links:
-                    root_name, root_title, href, text = self._links[key]
-                    link = f"{self._base_url}{root_name}/{href}"
-                    link_text = self._terms.get(cite_title, root_title)
-                    return f"`{link_text} <{link}>`_"
-            else:
-                if term not in self._terms:
-                    warnings.warn(f"term {term} not in terms")
-                    return ""
-                return self._terms[term]
+        docstr = re.sub(r"([^_|^`][A-Za-z0-9]*)_\s[^:]", trail_replacer, docstr)
 
         # final line by line cleanup
         lines = []
