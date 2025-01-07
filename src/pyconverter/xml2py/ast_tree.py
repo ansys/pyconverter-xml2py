@@ -390,13 +390,13 @@ def replace_asterisks(initial_text):
 
     # Replace all * with \*
     text = re.sub(
-        r"([^\*])(\*)([A-Z]+) ", r"\1" + r"\*" + r"\3 ", initial_text
+        r"([^\*])(\*)([A-Z]+)(\`|\s)", r"\1" + r"\*" + r"\3\4", initial_text
     )  # Replace ``*DIM`` configurations into ``\*DIM``
     text = re.sub(
         r"([^\*\s\\]+)(\*)([^\*\s]+)", r"\1\\2\3", text
     )  # Replace ``fac1*fac2`` configurations into ``fac1\*fac2``
     text = re.sub(
-        r"([^\*])(\*\*)(\*)([A-Z]+)(\*\*)([^\*])", r"\1\2" + r"\*" + r"\4\5\6", text
+        r"([^\*])(\*\*)(\*)(.*?)(\*\*)([^\*])", r"\1\2" + r"\*" + r"\4\5\6", text
     )  # Replace ``***DIM**`` configurations into ``**\*DIM**``
     text = re.sub(
         r"([^\*])(\*)(\*)([A-Z]+)(\*)([^\*])", r"\1\2" + r"\*" + r"\4\5\6", text
@@ -3071,7 +3071,12 @@ class XMLCommand(Element):
         docstr = re.sub(r"_cellfont Shading=\S\S\S\S\S\S\S\S", "", docstr)
         docstr = re.sub(r"Caret.+\?", "", docstr)
         docstr = docstr.replace("–", "-")
-        docstr = replace_asterisks(docstr)
+        if "*IF" in docstr:
+            print("BEFORE : ", docstr)
+            docstr = replace_asterisks(docstr)
+            print("AFTER : ", docstr)
+        else:
+            docstr = replace_asterisks(docstr)
         docstr = ponctuaction_whitespace(docstr, ".")  # Remove extra whitespace before period
         docstr = ponctuaction_whitespace(docstr, ",")  # Remove extra whitespace before comma
 
