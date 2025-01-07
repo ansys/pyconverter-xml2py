@@ -65,7 +65,9 @@ intersphinx_mapping = {
     #     "grpc": ("https://grpc.github.io/grpc/python/", None),
 }
 
-suppress_warning = ["misc.highlighting_failure"]
+suppress_warnings = [
+    "misc.highlighting_failure",  # Suppress highlighting failures
+]
 
 # Copy button customization ---------------------------------------------------
 # exclude traditional Python prompts from the copied code

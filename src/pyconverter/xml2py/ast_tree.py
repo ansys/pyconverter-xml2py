@@ -3071,12 +3071,7 @@ class XMLCommand(Element):
         docstr = re.sub(r"_cellfont Shading=\S\S\S\S\S\S\S\S", "", docstr)
         docstr = re.sub(r"Caret.+\?", "", docstr)
         docstr = docstr.replace("–", "-")
-        if "*IF" in docstr:
-            print("BEFORE : ", docstr)
-            docstr = replace_asterisks(docstr)
-            print("AFTER : ", docstr)
-        else:
-            docstr = replace_asterisks(docstr)
+        docstr = replace_asterisks(docstr)
         docstr = ponctuaction_whitespace(docstr, ".")  # Remove extra whitespace before period
         docstr = ponctuaction_whitespace(docstr, ",")  # Remove extra whitespace before comma
 
