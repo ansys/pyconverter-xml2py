@@ -24,7 +24,6 @@ import logging
 from pathlib import Path
 import textwrap
 from typing import List
-import warnings
 
 from inflect import engine
 from lxml.etree import tostring
