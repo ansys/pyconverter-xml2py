@@ -791,7 +791,6 @@ class ListItem(Element):
             items.append(rst_item)
 
         rst_list_item = "\n".join(items)
-        # rst_list_item = rst_list_item.replace("*", "\*")
         return rst_list_item
 
 
@@ -3047,6 +3046,8 @@ class XMLCommand(Element):
                                     else:
                                         lines[i] = lines[i].replace(l, name_link)
 
+        docstr = "\n".join(lines)
+        
         # remove repeated line breaks
         while "\n\n\n" in docstr:
             docstr = docstr.replace("\n\n\n", "\n\n")
