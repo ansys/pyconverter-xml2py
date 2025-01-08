@@ -1990,7 +1990,7 @@ class Command(Element):
         if self.py_cmd == self.command:
             ref = f"``{self.py_cmd}``"
         else:
-            if self.py_cmd in NAME_MAP_GLOB.keys():
+            if self.py_cmd in NAME_MAP_GLOB.values():
                 ref = f":ref:`{self.py_cmd}`"
             else:
                 ref = f"``{self.py_cmd}``"
