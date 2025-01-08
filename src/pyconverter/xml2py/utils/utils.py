@@ -96,10 +96,10 @@ def create_name_map(meta_command: list[str], yaml_file_path: Path) -> dict:
 
     # second pass for each name
     for ans_name in meta_command:
-        if ans_name in specific_command_mapping:
-            py_name = specific_command_mapping[ans_name]
-        elif ans_name in ignored_commands:
+        if ans_name in ignored_commands:
             continue
+        elif ans_name in specific_command_mapping:
+            py_name = specific_command_mapping[ans_name]
         else:
             lower_name = ans_name.lower()
             if not lower_name[0].isalnum():
