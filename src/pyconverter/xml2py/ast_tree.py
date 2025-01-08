@@ -1047,7 +1047,7 @@ class Replaceable(Element):
             if any([self.content[0] in arg for arg in self.prev_elem.args]):
                 rst_replaceable = f"{self.tail}"
         if self.is_equals:
-            rst_replaceable = self.content_equals            
+            rst_replaceable = self.content_equals
         return rst_replaceable
 
 
@@ -1066,21 +1066,21 @@ class ProgramListing(Element):
         header = f"\n\n{indent}.. code:: apdl\n\n"
         source_code = re.sub(r"[^\S\r\n]", " ", self.source)  # Remove extra whitespaces
         source_code = header + textwrap.indent(source_code, prefix=indent + " " * 3) + "\n\n"
-        
+
         items = []
-        
+
         for item in self:
             if isinstance(item, Element):
                 items += item.to_rst(indent=indent, max_length=max_length)
-            else: # if isinstance(item, str):
+            else:  # if isinstance(item, str):
                 item_in_source = re.search(r"\S+", item).group()
                 if item_in_source and item_in_source in source_code:
                     items += source_code
                 else:
                     items += item
-                    
-        rst_item = "".join(items)  
-        
+
+        rst_item = "".join(items)
+
         return rst_item
 
 
