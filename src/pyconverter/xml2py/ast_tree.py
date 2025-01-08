@@ -65,6 +65,9 @@ CLEANUP = {
     ",)": ")",
     "% ``": "``%",  # Ansys variable names should be pulled inside literals
     "`` %": "%``",  # same
+    "\xa0": " ",
+    "’": "``",
+    "∗": "*",
 }
 
 PY_ARG_CLEANUP = {
@@ -356,7 +359,6 @@ def resize_length(text, max_length=100, initial_indent="", subsequent_indent="",
     str or list
         Resized text.
     """
-    text = text.replace(" .", ".")
     while "\n\n\n" in text:
         text = text.replace("\n\n\n", "\n\n")
 
@@ -685,22 +687,28 @@ class ItemizedList(Element):
                 rst_list = item_lines
 
             new_rst_list = []
-            for line in rst_list:
-                new_rst_list.extend(
-                    resize_length(
-                        line,
-                        max_length=max_length,
-                        initial_indent=indent,
-                        subsequent_indent=indent,
-                        list=True,
-                    )
-                )
 
-            lines.extend(new_rst_list)
+            if ".. code::" in "\n".join(rst_list):
+                lines.extend(rst_list)
+
+            else:
+                for line in rst_list:
+                    new_rst_list.extend(
+                        resize_length(
+                            line,
+                            max_length=max_length,
+                            initial_indent=indent,
+                            subsequent_indent=indent,
+                            list=True,
+                        )
+                    )
+
+                lines.extend(new_rst_list)
 
         # lists must have at least one line proceeding
         lines = ["", ""] + lines + [""]
-        return "\n\n".join(lines)
+
+        return "\n".join(lines)
 
 
 class SimpleList(ItemizedList):
@@ -791,7 +799,6 @@ class ListItem(Element):
             items.append(rst_item)
 
         rst_list_item = "\n".join(items)
-        # rst_list_item = rst_list_item.replace("*", "\*")
         return rst_list_item
 
 
@@ -1064,9 +1071,7 @@ class ProgramListing(Element):
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         header = f"\n\n{indent}.. code:: apdl\n\n"
-        source_code = re.sub(r"[^\S\r\n]", " ", self.source)  # Remove extra whitespaces
-        source_code = header + textwrap.indent(source_code, prefix=indent + " " * 3) + "\n\n"
-
+        source_code = header + textwrap.indent(self.source, prefix=indent + " " * 3) + "\n\n"
         items = []
 
         for item in self:
@@ -1080,7 +1085,6 @@ class ProgramListing(Element):
                     items += item
 
         rst_item = "".join(items)
-
         return rst_item
 
 
@@ -3126,7 +3130,6 @@ class XMLCommand(Element):
             notes = self.notes.to_rst()
 
         notes = replace_terms(notes, self._terms)
-
         to_be_resized = re.findall(r"^[^\.\s].+(?=\n)|(?<=\n)[^\.\s].+(?=\n)", notes)
 
         for item in to_be_resized:
