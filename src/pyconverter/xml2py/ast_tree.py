@@ -3066,6 +3066,8 @@ class XMLCommand(Element):
                                     else:
                                         lines[i] = lines[i].replace(l, name_link)
 
+        docstr = "\n".join(lines)
+
         # remove repeated line breaks
         while "\n\n\n" in docstr:
             docstr = docstr.replace("\n\n\n", "\n\n")
