@@ -398,9 +398,9 @@ def replace_asterisks(initial_text):
     text = re.sub(
         r"([^\*])(\*\*)(\*)(.*?)(\*\*)([^\*])", r"\1\2" + r"\*" + r"\4\5\6", text
     )  # Replace ``***DIM**`` configurations into ``**\*DIM**``
-    text = re.sub(
-        r"([^\*])(\*)(\*)([A-Z]+)(\*)([^\*])", r"\1\2" + r"\*" + r"\4\5\6", text
-    )  # Replace ``**DIM*`` configurations into ``*\*DIM*``
+    # text = re.sub(
+    #     r"([^\*])(\*)(\*)([A-Z]+)(\*)([^\*])", r"\1\2" + r"\*" + r"\4\5\6", text
+    # )  # TODO: Replace ``**DIM*`` configurations into ``*\*DIM*``
 
     return text
 
@@ -791,6 +791,7 @@ class ListItem(Element):
             items.append(rst_item)
 
         rst_list_item = "\n".join(items)
+        # rst_list_item = rst_list_item.replace("*", "\*")
         return rst_list_item
 
 
@@ -941,15 +942,14 @@ class Emphasis(Element):
         """Return a string to enable converting the element to an RST format."""
         content = str(self[0])
         if self.role == "bold":
-            # TODO: this isn't the correct way of making text bold
             content = f"**{content}** "
-        elif self.role == "italic":
-            # TODO: this isn't the correct way of making text itallic
-            content = f"*{content}* "
+        # elif self.role == "italic":
+        #     # TODO: this isn't the correct way of making text itallic
+        #     content = f"{content} "
         # elif self.role == 'var':
         # content = f"``{self[0]}`` "
         else:
-            content = f"{self[0]} "
+            content = f"{content} "
 
         items = []
         for item in self[1:]:
@@ -1042,12 +1042,13 @@ class Replaceable(Element):
 
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
+        rst_replaceable = f"``{self.content[0]}`` {self.tail}"
         if isinstance(self.prev_elem, Command):
             if any([self.content[0] in arg for arg in self.prev_elem.args]):
-                return f"{self.tail}"
+                rst_replaceable = f"{self.tail}"
         if self.is_equals:
-            return self.content_equals
-        return f"``{self.content[0]}`` {self.tail}"
+            rst_replaceable = self.content_equals            
+        return rst_replaceable
 
 
 class ProgramListing(Element):
@@ -1064,7 +1065,22 @@ class ProgramListing(Element):
         """Return a string to enable converting the element to an RST format."""
         header = f"\n\n{indent}.. code:: apdl\n\n"
         source_code = re.sub(r"[^\S\r\n]", " ", self.source)  # Remove extra whitespaces
-        rst_item = header + textwrap.indent(source_code, prefix=indent + " " * 3) + "\n\n"
+        source_code = header + textwrap.indent(source_code, prefix=indent + " " * 3) + "\n\n"
+        
+        items = []
+        
+        for item in self:
+            if isinstance(item, Element):
+                items += item.to_rst(indent=indent, max_length=max_length)
+            else: # if isinstance(item, str):
+                item_in_source = re.search(r"\S+", item).group()
+                if item_in_source and item_in_source in source_code:
+                    items += source_code
+                else:
+                    items += item
+                    
+        rst_item = "".join(items)  
+        
         return rst_item
 
 
@@ -3046,8 +3062,6 @@ class XMLCommand(Element):
                                     else:
                                         lines[i] = lines[i].replace(l, name_link)
 
-        docstr = "\n".join(lines)
-
         # remove repeated line breaks
         while "\n\n\n" in docstr:
             docstr = docstr.replace("\n\n\n", "\n\n")
@@ -3073,6 +3087,7 @@ class XMLCommand(Element):
         docstr = re.sub(r"_cellfont Shading=\S\S\S\S\S\S\S\S", "", docstr)
         docstr = re.sub(r"Caret.+\?", "", docstr)
         docstr = docstr.replace("–", "-")
+        docstr = docstr.replace(". . .", "...")
         docstr = replace_asterisks(docstr)
         docstr = ponctuaction_whitespace(docstr, ".")  # Remove extra whitespace before period
         docstr = ponctuaction_whitespace(docstr, ",")  # Remove extra whitespace before comma
@@ -3112,7 +3127,7 @@ class XMLCommand(Element):
 
         notes = replace_terms(notes, self._terms)
 
-        to_be_resized = re.findall(r"^[^\.\s]?.+(?=\n)|(?<=\n)[^\.\s].+(?=\n)", notes)
+        to_be_resized = re.findall(r"^[^\.\s].+(?=\n)|(?<=\n)[^\.\s].+(?=\n)", notes)
 
         for item in to_be_resized:
             resized_item = resize_length(item, self._max_length)
