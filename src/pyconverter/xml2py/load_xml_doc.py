@@ -66,9 +66,6 @@ def link_replacer(file, terms, docu_global, links, base_url, fcache):
             if key not in terms:
                 terms[key] = text
 
-    if "angcycsym" in terms:
-        print(terms["angcycsym"])
-
     return terms
 
 

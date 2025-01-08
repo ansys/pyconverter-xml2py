@@ -1065,7 +1065,7 @@ class ProgramListing(Element):
         """Return a string to enable converting the element to an RST format."""
         header = f"\n\n{indent}.. code:: apdl\n\n"
         source_code = re.sub(r"[^\S\r\n]", " ", self.source)  # Remove extra whitespaces
-        rst_item = header + textwrap.indent(source_code, prefix=indent + " " * 3) + "\n"
+        rst_item = header + textwrap.indent(source_code, prefix=indent + " " * 3) + "\n\n"
         return rst_item
 
 
@@ -1929,7 +1929,7 @@ class Command(Element):
             if isinstance(self.next_elem, Replaceable):
                 cmd_args += str(self.next_elem[0])  # no tail
             elif len(self.tail) > 1 and self.tail[1] == " ":
-                # possible not coded as replacable
+                # possible not coded as replaceable
                 for word in words[1:]:
                     if word.upper() == word or is_numeric(word):
                         if not (word[-1].isalnum() or word[-1].isdigit()):
@@ -2994,19 +2994,6 @@ class XMLCommand(Element):
                 lines.insert(i + 1, "")
             i += 1
 
-        # ensure that lists end with a blank line
-        i = 0
-        while i < len(lines):
-            j = 1
-            if lines[i].lstrip().startswith("* -"):
-                while i + j < len(lines) - 1 and lines[i + j].lstrip().startswith("-"):
-                    j += 1
-                if not lines[i + j].lstrip().startswith("* -"):
-                    if i + j == len(lines) - 1:
-                        j += 1
-                    lines.insert(i + j, "")
-            i += j
-
         # ensure that two similar links are not in a similar file.
         i = 0
         link = []
@@ -3060,11 +3047,25 @@ class XMLCommand(Element):
                                     else:
                                         lines[i] = lines[i].replace(l, name_link)
 
-        docstr = "\n".join(lines)
-
         # remove repeated line breaks
         while "\n\n\n" in docstr:
             docstr = docstr.replace("\n\n\n", "\n\n")
+
+        lines = docstr.splitlines()
+
+        # ensure that lists end with a blank line
+        i = 0
+        while i < len(lines):
+            j = 1
+            if lines[i].lstrip().startswith("* -"):
+                while i + j < len(lines) - 1 and lines[i + j].lstrip().startswith("-"):
+                    j += 1
+                if not lines[i + j].lstrip().startswith("* -"):
+                    if i + j == len(lines) - 1:
+                        j += 1
+                    lines.insert(i + j, "")
+            i += j
+        docstr = "\n".join(lines)
 
         docstr = re.sub(r"bgcolor=\S\S\S\S\S\S\S\S\S\S? ", "", docstr)
         docstr = re.sub(r"bgcolor=\S\S\S\S\S\S\S\S\S\S?", "", docstr)
