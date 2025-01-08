@@ -210,11 +210,8 @@ def to_py_arg_name(name: str) -> str:
     while len(arg) > 0 and arg[-1] == "_":
         arg = arg[:-1]
 
-    if arg == "type":
-        arg = "type_"
-
-    elif arg == "class":
-        arg = "class_"
+    if arg in ["type", "class", "property", "format", "dir"]:
+        arg = f"{arg}_"
 
     return f"{arg}"
 
@@ -3242,7 +3239,7 @@ class XMLCommand(Element):
                         command += "}"
                 command += '"\n'
             else:
-                command = 'command = f"' + self.name + '"\n'
+                command = f'command = "{self.name}"\n'
             return_command = "return self.run(command, **kwargs)\n"
             source = textwrap.indent("".join([command, return_command]), prefix=" " * 4 + indent)
 
