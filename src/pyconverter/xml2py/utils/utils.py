@@ -64,6 +64,27 @@ def get_config_data_value(yaml_path: Path, value: str) -> Union[str, dict, list,
     return config_data.get(value)
 
 
+def get_warning_command_dict(yaml_path: Path) -> dict:
+    """
+    Get the list of commands that will raise a warning.
+
+    Parameters
+    ----------
+    yaml_path: Path
+        Path object of the YAML file.
+    """
+    warnings_ = get_config_data_value(yaml_path, "warnings")
+    warning_command_dict = {}
+    for warning_, command_list in warnings_.items():
+        for command in command_list:
+            try:
+                warning_command_dict[command].append(warning_)
+            except KeyError:
+                warning_command_dict[command] = [warning_]
+
+    return warning_command_dict
+
+
 def create_name_map(meta_command: list[str], yaml_file_path: Path) -> dict:
     """
     Create a mapping between the initial command name and the Python function name.

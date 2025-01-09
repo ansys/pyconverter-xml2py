@@ -2898,11 +2898,34 @@ class XMLCommand(Element):
         arg_sig = ", ".join(args)
         return f"{indent}def {self.py_name}({arg_sig}, **kwargs):"
 
-    def py_docstring(self, custom_functions: CustomFunctions) -> str:
-        """Python docstring of the command."""
+    def py_docstring(self, custom_functions: CustomFunctions, warning_command_dict: None) -> str:
+        """
+        Python docstring of the command.
+
+        Parameters
+        ----------
+
+        custom_functions : CustomFunctions
+            Custom functions object.
+
+        warning_command_dict: dict, optional
+            Dictionary of commands associated to a list of warnings.
+            The default is ``None``.
+
+
+        """
         xml_cmd = f"{self._terms['pn006p']} Command: `{self.name} <{self.url}>`_"
 
+        # ``warning_command_dict`` need to be added here
+
         items = [self.short_desc, "", xml_cmd]
+
+        if self.name in warning_command_dict.keys():
+            warnings_ = warning_command_dict[self.name]
+            for warning_ in warnings_:
+                warning_ = textwrap.indent(warning_, " " * 3)
+                items.extend([f"\n.. warning::\n{warning_}\n"])
+                print(items)
 
         if self.default is not None:
             if self.default.tag in item_needing_links_base_url:
@@ -3247,14 +3270,20 @@ class XMLCommand(Element):
             source = textwrap.indent("".join(custom_functions.py_code[self.py_name]), prefix=indent)
         return source
 
-    def to_python(self, custom_functions=None, indent=""):
+    def to_python(self, custom_functions=None, warning_command_dict=None, indent=""):
         """
         Return the complete Python definition of the command.
 
         Parameters
         ----------
         custom_functions: CustomFunctions, optional
-            Custom functions to add to the command. The default is ``None``.
+            Custom functions to add to the command.
+            The default is ``None``.
+
+        warning_command_dict: dict, optional
+            Dictionary of commands associated to a list of warnings.
+            The default is ``None``.
+
         indent: str, optional
             Indentation of the Python function. The default is ``""``.
 
@@ -3265,7 +3294,8 @@ class XMLCommand(Element):
         """
 
         docstr = textwrap.indent(
-            f'r"""{self.py_docstring(custom_functions)}\n"""', prefix=indent + " " * 4
+            f'r"""{self.py_docstring(custom_functions, warning_command_dict)}\n"""',
+            prefix=indent + " " * 4,
         )
         if custom_functions is not None and self.py_name in custom_functions.lib_import:
             imports = "\n".join(custom_functions.lib_import[self.py_name])

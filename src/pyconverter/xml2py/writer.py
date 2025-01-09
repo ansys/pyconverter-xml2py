@@ -35,6 +35,7 @@ from pyconverter.xml2py.utils.utils import (
     create_name_map,
     get_config_data_value,
     get_refentry,
+    get_warning_command_dict,
     import_handler,
 )
 import regex as re
@@ -430,6 +431,8 @@ def write_source(
 
     library_path = Path(get_library_path(new_package_path, config_path))
 
+    warning_command_dict = get_warning_command_dict(config_path)
+
     if not library_path.is_dir():
         library_path.mkdir(parents=True, exist_ok=True)
 
@@ -440,7 +443,7 @@ def write_source(
                 continue
             python_name = name_map[initial_command_name]
             path = library_path / f"{python_name}.py"
-            python_method = command_obj.to_python(custom_functions)
+            python_method = command_obj.to_python(custom_functions, warning_command_dict, indent="")
             try:
                 exec(python_method)
                 with open(path, "w", encoding="utf-8") as fid:
@@ -482,7 +485,9 @@ def write_source(
             class_structure.append(command.py_name)
 
             package_structure[module_name][file_name] = [class_name, class_structure]
-            python_method = command.to_python(custom_functions, indent=4 * " ")
+            python_method = command.to_python(
+                custom_functions, warning_command_dict, indent=4 * " "
+            )
 
             # Check if there are any imports to be added before the function definition.
             reg_before_def = pat.BEFORE_DEF + f"{command.py_name})"
