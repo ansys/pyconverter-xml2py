@@ -2925,7 +2925,6 @@ class XMLCommand(Element):
             for warning_ in warnings_:
                 warning_ = textwrap.indent(warning_, " " * 3)
                 items.extend([f"\n.. warning::\n{warning_}\n"])
-                print(items)
 
         if self.default is not None:
             if self.default.tag in item_needing_links_base_url:
