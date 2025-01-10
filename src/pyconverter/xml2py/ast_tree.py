@@ -2559,8 +2559,10 @@ class Argument:
                     fcache=fcache,
                 )
             rst_description = replace_terms(rst_description, self._terms)
-            rst_description = ponctuaction_whitespace(rst_description, ".")  # Remove extra whitespace before period
-            rst_description = ponctuaction_whitespace(rst_description, ",")  # Remove extra whitespace before comma
+            # Remove extra whitespace before period
+            rst_description = ponctuaction_whitespace(rst_description, ".")
+            # Remove extra whitespace before comma
+            rst_description = ponctuaction_whitespace(rst_description, ",")
 
             description_indent = " " * 4
             if not " * " in rst_description:
