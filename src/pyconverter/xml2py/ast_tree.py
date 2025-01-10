@@ -787,12 +787,7 @@ class ListItem(Element):
                 else:
                     rst_item = item.to_rst(indent=indent, max_length=max_length)
             else:
-                rst_item = resize_length(
-                    str(item),
-                    max_length=max_length,
-                    initial_indent=indent,
-                    subsequent_indent=indent,
-                )
+                rst_item = str(item)
 
             items.append(rst_item)
 
@@ -1127,13 +1122,13 @@ class Variablelist(Element):
                 intersection_types = set(NO_RESIZE_LIST).intersection(set(item[1].children_types))
                 if len(intersection_types) == 0:
                     initial_indent = indent + " " * 2
+                    subsequent_indent = initial_indent + " " * 2
                     rst_item = resize_element_list(
                         rst_item,
                         max_length,
                         initial_indent=initial_indent,
-                        subsequent_indent=initial_indent,
+                        subsequent_indent=subsequent_indent,
                     )
-
             else:
                 initial_indent = indent + " "
                 subsequent_indent = indent + " " * 2
@@ -1366,7 +1361,10 @@ class GuiLabel(Element):
 class GuiMenuItem(Element):
     """Provides the GUI menu item element."""
 
-    pass
+    def to_rst(self, indent="", max_length=100):
+        """Return a string to enable converting the element to an RST format."""
+        gui_rst = f"``{self[0]}`` {self.tail}"
+        return gui_rst
 
 
 class SuperScript(Element):
