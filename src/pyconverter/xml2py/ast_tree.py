@@ -2558,8 +2558,10 @@ class Argument:
                     base_url=base_url,
                     fcache=fcache,
                 )
-
             rst_description = replace_terms(rst_description, self._terms)
+            rst_description = ponctuaction_whitespace(rst_description, ".")  # Remove extra whitespace before period
+            rst_description = ponctuaction_whitespace(rst_description, ",")  # Remove extra whitespace before comma
+
             description_indent = " " * 4
             if not " * " in rst_description:
                 list_description = self.resized_description(
