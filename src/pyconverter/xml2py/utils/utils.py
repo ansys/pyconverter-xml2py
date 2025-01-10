@@ -75,12 +75,14 @@ def get_warning_command_dict(yaml_path: Path) -> dict:
     """
     warnings_ = get_config_data_value(yaml_path, "warnings")
     warning_command_dict = {}
-    for warning_, command_list in warnings_.items():
-        for command in command_list:
+    for warning_ in warnings_:
+        message = warning_["msg"]
+        commands = warning_["commands"]
+        for command in commands:
             try:
-                warning_command_dict[command].append(warning_)
+                warning_command_dict[command].append(message)
             except KeyError:
-                warning_command_dict[command] = [warning_]
+                warning_command_dict[command] = [message]
 
     return warning_command_dict
 

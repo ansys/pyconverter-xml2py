@@ -49,14 +49,19 @@ ignored_commands:
   - "*XPL" # Defined in ``mapdl_grpc.py``
 
 warnings:
-  "This command must be run using :func:`non_interactive <ansys.mapdl.core.Mapdl.non_interactive>`\nPlease visit `Unsupported Interactive Commands <https://mapdl.docs.pyansys.com/version/stable/user_guide/mapdl.html#unsupported-interactive-commands>`_\nfor further information.":
-    - "*CREATE"
-    - "CFOPEN"
-    - "CFCLOSE"
-    - "*VWRITE"
-    - "*MWRITE"
-    - "LSWRITE"
-    - "LSREAD"
+  - msg: 'This command must be run using :func:`non_interactive <ansys.mapdl.core.Mapdl.non_interactive>
+
+    Please visit `Unsupported Interactive Commands <https://mapdl.docs.pyansys.com/version/stable/user_guide/mapdl.html#unsupported-interactive-commands>`_
+    
+    for further information.'
+    commands:
+      - "*CREATE"
+      - "CFOPEN"
+      - "CFCLOSE"
+      - "*VWRITE"
+      - "*MWRITE"
+      - "LSWRITE"
+      - "LSREAD"
 
 
 specific_classes:
