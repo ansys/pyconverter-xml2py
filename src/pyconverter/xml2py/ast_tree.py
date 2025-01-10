@@ -1042,7 +1042,10 @@ class Replaceable(Element):
 
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
-        rst_replaceable = f"``{self.content[0]}`` {self.tail}"
+        tail = self.tail
+        if tail and "*" in tail:
+            tail = self.tail.replace("*", "\*")
+        rst_replaceable = f"``{self.content[0]}`` {tail}"
         if isinstance(self.prev_elem, Command):
             if any([self.content[0] in arg for arg in self.prev_elem.args]):
                 rst_replaceable = f"{self.tail}"
