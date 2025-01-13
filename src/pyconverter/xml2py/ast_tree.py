@@ -360,6 +360,11 @@ def resize_length(text, max_length=100, initial_indent="", subsequent_indent="",
     while "\n\n\n" in text:
         text = text.replace("\n\n\n", "\n\n")
 
+    # Remove extra whitespace before period
+    text = ponctuaction_whitespace(text, ".")
+    # Remove extra whitespace before comma
+    text = ponctuaction_whitespace(text, ",")
+
     wrapper = textwrap.TextWrapper(
         width=max_length,
         break_long_words=False,
@@ -723,12 +728,12 @@ class Member(Element):
 
 
 def ponctuaction_whitespace(text, ponctuation):
-    pattern = r".\S\h+\{ponctuation}".format(ponctuation=ponctuation)
+    pattern = r"\S\h+\{ponctuation}".format(ponctuation=ponctuation)
     extra_space = re.findall(pattern, text)
     if extra_space:
         for character in list(set(extra_space)):  # remove duplicates in extra_space list
             assigned_character = character[0]
-            if assigned_character in ["*", ")"]:
+            if assigned_character in ["*", ")", "?"]:
                 pattern = r"\{assigned_character}\h+\{ponctuation}".format(
                     assigned_character=assigned_character, ponctuation=ponctuation
                 )
@@ -860,6 +865,7 @@ class Paragraph(Element):
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
+        skip_resize = False
         for item in self:
             if isinstance(item, Element):
                 if isinstance(item, Variablelist):
@@ -873,6 +879,7 @@ class Paragraph(Element):
                             fcache=fcache,
                         )
                     )
+                    skip_resize = True
                 else:
                     if item.tag in item_needing_all:
                         items.append(
@@ -897,15 +904,17 @@ class Paragraph(Element):
                     else:
                         items.append(item.to_rst(indent=indent, max_length=max_length))
             else:
-                str_item = resize_length(
-                    str(item),
-                    max_length=max_length,
-                    initial_indent=indent,
-                    subsequent_indent=indent,
-                )
-                items.append(str_item)
+                items.append(str(item))
 
         rst_item = " ".join(items) + "\n\n"
+
+        if not skip_resize:
+            rst_item = resize_length(
+                rst_item,
+                max_length=max_length,
+                initial_indent=indent,
+                subsequent_indent=indent,
+            )
 
         return rst_item
 
@@ -2562,10 +2571,6 @@ class Argument:
                     fcache=fcache,
                 )
             rst_description = replace_terms(rst_description, self._terms)
-            # Remove extra whitespace before period
-            rst_description = ponctuaction_whitespace(rst_description, ".")
-            # Remove extra whitespace before comma
-            rst_description = ponctuaction_whitespace(rst_description, ",")
 
             description_indent = " " * 4
             if not " * " in rst_description:
@@ -3116,7 +3121,7 @@ class XMLCommand(Element):
         docstr = re.sub(r"bgcolor=\S\S\S\S\S\S\S\S\S\S? ", "", docstr)
         docstr = re.sub(r"bgcolor=\S\S\S\S\S\S\S\S\S\S?", "", docstr)
         docstr = re.sub(r"_cellfont Shading=\S\S\S\S\S\S\S\S", "", docstr)
-        docstr = re.sub(r"Caret.+\?", "", docstr)
+        docstr = re.sub(r"Caret.*\?", "", docstr)
         docstr = docstr.replace("–", "-")
         docstr = docstr.replace(". . .", "...")
         docstr = replace_asterisks(docstr)
