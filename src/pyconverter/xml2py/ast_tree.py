@@ -395,7 +395,7 @@ def replace_asterisks(initial_text):
 
     # Replace all * with \*
     text = re.sub(
-        r"([^\*])(\*)([A-Z]+)(\`|\s)", r"\1" + r"\*" + r"\3\4", initial_text
+        r"([^\*])(\*)([A-Z]+)(\`|\,|\.|\s)", r"\1" + r"\*" + r"\3\4", initial_text
     )  # Replace ``*DIM`` configurations into ``\*DIM``
     text = re.sub(
         r"([^\*\s\\]+)(\*)([^\*\s]+)", r"\1\\2\3", text
