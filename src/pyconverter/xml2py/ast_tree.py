@@ -1053,7 +1053,7 @@ class Replaceable(Element):
         """Return a string to enable converting the element to an RST format."""
         tail = self.tail
         if tail and "*" in tail:
-            tail = self.tail.replace("*", "\*")
+            tail = self.tail.replace("*", r"\*")
         rst_replaceable = f"``{self.content[0]}`` {tail}"
         if isinstance(self.prev_elem, Command):
             if any([self.content[0] in arg for arg in self.prev_elem.args]):
@@ -1578,7 +1578,7 @@ class Graphic(Element):
             entityref = entityref.strip()
         return entityref
 
-    def to_rst(self, fcache, indent="", max_length=100):
+    def to_rst(self, indent="", max_length=100, fcache=None):
         """Return a string to enable converting the element to an RST format."""
 
         if self.entityref is None:
@@ -3235,7 +3235,9 @@ class XMLCommand(Element):
                     lines.append("-" * 10)
                     for argument in arg_desc:
                         lines.extend(
-                            argument.to_py_docstring(self._max_length, links, base_url, fcache)
+                            argument.to_py_docstring(
+                                self._max_length, links=links, base_url=base_url, fcache=fcache
+                            )
                         )
                         lines.append("")
             else:
@@ -3244,7 +3246,11 @@ class XMLCommand(Element):
         elif len(arg_desc) > 0:
             lines.append("-" * 10)
             for argument in arg_desc:
-                lines.extend(argument.to_py_docstring(self._max_length, links, base_url, fcache))
+                lines.extend(
+                    argument.to_py_docstring(
+                        self._max_length, links=links, base_url=base_url, fcache=fcache
+                    )
+                )
                 lines.append("")
         return lines
 
