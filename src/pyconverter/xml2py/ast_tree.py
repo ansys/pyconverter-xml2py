@@ -68,6 +68,7 @@ CLEANUP = {
     "\xa0": " ",
     "’": "``",
     "∗": "*",
+    "−": "-",
     "…": "...",
 }
 
@@ -84,7 +85,7 @@ PY_ARG_CLEANUP = {
 # Map XML command to pycommand function
 NAME_MAP_GLOB = {}
 
-NO_RESIZE_LIST = ["Variablelist"]
+NO_RESIZE_LIST = ["Variablelist", "Caution", "XMLWarning", "ProgramListing", "Example"]
 
 MISSING_ARGUMENT_DESCRIPTION = """The description of the argument is missing in the Python function.
 Please, refer to the `command documentation <url>`_ for further information."""
@@ -357,6 +358,7 @@ def resize_length(text, max_length=100, initial_indent="", subsequent_indent="",
     str or list
         Resized text.
     """
+
     while "\n\n\n" in text:
         text = text.replace("\n\n\n", "\n\n")
 
@@ -391,7 +393,30 @@ def resize_length(text, max_length=100, initial_indent="", subsequent_indent="",
     return output
 
 
-def replace_asterisks(initial_text):
+def get_fragment_code(initial_text, pattern):
+    """
+    Split the text around a pattern.
+
+    Parameters
+    ----------
+    initial_text : str
+        Initial text to split.
+
+    pattern : str
+        Pattern to split the text.
+
+    Returns
+    -------
+    list
+        List of fragments.
+    """
+
+    # Split the text around code blocks
+    fragments = re.split(pattern, initial_text)
+    return fragments
+
+
+def replace_asterisks_without_code(initial_text):
 
     # Replace all * with \*
     text = re.sub(
@@ -408,6 +433,27 @@ def replace_asterisks(initial_text):
     # )  # TODO: Replace ``**DIM*`` configurations into ``*\*DIM*``
 
     return text
+
+
+def replace_asterisks(initial_text):
+
+    if ".. code::" in initial_text:
+        # Regex pattern that matches RST code blocks
+        pattern = r"(\s*\.\. code:: apdl\n\s*(?: +.+\n)+)"
+        fragments = get_fragment_code(initial_text, pattern)
+
+        # Process non-code fragments
+        for i in range(len(fragments)):
+            if not ".. code::" in fragments[i]:
+                fragments[i] = replace_asterisks_without_code(fragments[i])
+
+        # Join the fragments and return the result
+        output = "".join(fragments).strip()
+
+    else:
+        output = replace_asterisks_without_code(initial_text)
+
+    return output
 
 
 def replace_terms(text, terms):
@@ -865,7 +911,6 @@ class Paragraph(Element):
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
-        skip_resize = False
         for item in self:
             if isinstance(item, Element):
                 if isinstance(item, Variablelist):
@@ -879,7 +924,6 @@ class Paragraph(Element):
                             fcache=fcache,
                         )
                     )
-                    skip_resize = True
                 else:
                     if item.tag in item_needing_all:
                         items.append(
@@ -904,11 +948,19 @@ class Paragraph(Element):
                     else:
                         items.append(item.to_rst(indent=indent, max_length=max_length))
             else:
-                items.append(str(item))
+                items.append(
+                    resize_length(
+                        str(item),
+                        max_length=max_length,
+                        initial_indent=indent,
+                        subsequent_indent=indent,
+                    )
+                )
 
         rst_item = " ".join(items) + "\n\n"
 
-        if not skip_resize:
+        intersection_types = set(NO_RESIZE_LIST).intersection(set(self.children_types))
+        if len(intersection_types) == 0 and "* " not in rst_item:
             rst_item = resize_length(
                 rst_item,
                 max_length=max_length,
@@ -919,7 +971,7 @@ class Paragraph(Element):
         return rst_item
 
 
-class Phrase(Element):
+class Phrase(Paragraph):
     """Provides the phrase element."""
 
     def __repr__(self):
@@ -983,13 +1035,22 @@ class Emphasis(Element):
 class Example(Element):
     """Provides the example element."""
 
-    # def source(self):
-    #     """The program listing of the documentation."""
-    #     for item in self._content:
-    #         if isinstance(item, ProgramListing):
-    #             return item
-    #     return ""
-    pass
+    def to_rst(self, indent="", max_length=100):
+        rst_example = []
+        for item in self:
+            if isinstance(item, Title):
+                title = item.to_rst(indent=indent, max_length=max_length)
+                if not "Command" in item.children_types:
+                    rst_item = f"**{title}**"
+                else:
+                    rst_item = f"{title}"
+            elif isinstance(item, Element):
+                rst_item = item.to_rst(indent=indent, max_length=max_length)
+            else:
+                rst_item = str(item)
+            rst_example.append(rst_item)
+
+        return "\n".join(rst_example)
 
 
 class InformalExample(Element):
@@ -1069,9 +1130,12 @@ class ProgramListing(Element):
     @property
     def source(self):
         """Return the source value."""
-        if self._element.text is None:
-            return "\n".join(str(item) for item in self.content)
-        return self._element.text
+        text = self._element.text
+        if "Replaceable" in self.children_types:
+            text = " ".join([str(item) for item in self])
+        elif text is None:
+            text = "\n".join(str(item) for item in self.content)
+        return text
 
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
@@ -1080,7 +1144,10 @@ class ProgramListing(Element):
         items = []
 
         for item in self:
-            if isinstance(item, Element):
+            # Replaceable elements are handled in source code
+            if isinstance(item, Replaceable):
+                pass
+            elif isinstance(item, Element):
                 items += item.to_rst(indent=indent, max_length=max_length)
             else:  # if isinstance(item, str):
                 item_in_source = re.search(r"\S+", item).group()
@@ -1132,8 +1199,8 @@ class Variablelist(Element):
 
             if type(item) != str and len(item.children) > 1 and type(item[1]) != str:
                 intersection_types = set(NO_RESIZE_LIST).intersection(set(item[1].children_types))
-                if len(intersection_types) == 0:
-                    initial_indent = indent + " " * 2
+                if len(intersection_types) == 0 and "* " not in rst_item:
+                    initial_indent = indent
                     subsequent_indent = initial_indent + " " * 2
                     rst_item = resize_element_list(
                         rst_item,
@@ -1141,6 +1208,8 @@ class Variablelist(Element):
                         initial_indent=initial_indent,
                         subsequent_indent=subsequent_indent,
                     )
+                else:
+                    rst_item = textwrap.indent(rst_item, prefix=indent * 2)
             else:
                 initial_indent = indent + " "
                 subsequent_indent = indent + " " * 2
@@ -1308,32 +1377,33 @@ class VarlistEntry(Element):
 
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
-        indent += " " * 4
-        # if this is a parameter arg
-        if self.is_arg:
-            # This is what needs to be modified in order to have the arg class
-            lines = [f"{self.py_term(links=links, base_url=base_url)}"]
-            text = self.py_text(links=links, base_url=base_url, fcache=fcache)
-            text_list = resize_length(
-                text,
-                max_length=max_length,
-                initial_indent=indent,
-                subsequent_indent=indent,
-                list=True,
-            )
-            lines.extend(text_list)
-            return "\n".join(lines)
-
         py_term = self.py_term(links=links, base_url=base_url)
         py_text = self.py_text(links=links, base_url=base_url, fcache=fcache)
 
         if "``" in py_term:
             py_term = py_term.replace("``", "")
+
+        intersection_types = set(NO_RESIZE_LIST).intersection(self.text.children_types)
+        if len(intersection_types) == 0 and "* " not in py_text:
+            py_text = resize_length(
+                py_text, max_length=max_length, initial_indent=indent, subsequent_indent=indent
+            )
+
+        split_py_text = py_text.splitlines()
+
+        if len(split_py_text) > 1:
+
+            first_line = split_py_text[0]
+            rest_lines = split_py_text[1:]
+
+            rest_lines = textwrap.indent("\n".join(rest_lines), prefix=" " * 2)
+
+            py_text = f"{first_line}\n{rest_lines}"
+
         lines = [f"* ``{py_term}`` - {py_text}"]
-        text = "\n".join(lines)
-        # if 'ID number to which this tip belongs' in text:
-        # breakpoint()
-        return text
+        output = "\n".join(lines)
+
+        return output
 
 
 class Term(Element):
@@ -1532,7 +1602,7 @@ class XRef(Link):
         return self.tail
 
 
-class UserInput(Element):
+class UserInput(ProgramListing):
     """Provides the user input element."""
 
     pass
@@ -1564,6 +1634,7 @@ class Caution(Element):
                 str(self), max_length=max_length, initial_indent=indent, subsequent_indent=indent
             )
         )
+        lines.append("")
         return "\n".join(lines)
 
 
@@ -1637,15 +1708,18 @@ class BlockQuote(Element):
                 else:
                     items.append(item.to_rst(indent, max_length=max_length))
             else:
-                items.append(
-                    resize_length(
-                        str(item),
-                        max_length=max_length,
-                        initial_indent=indent,
-                        subsequent_indent=indent,
+                if "* " not in str(item):
+                    items.append(
+                        resize_length(
+                            str(item),
+                            max_length=max_length,
+                            initial_indent=indent,
+                            subsequent_indent=indent,
+                        )
                     )
-                )
-        return "\n\n" + " ".join(items) + "\n\n"
+                else:
+                    items.append(str(item))
+        return "\n\n" + "".join(items) + "\n\n"
 
 
 class RefMeta(Element):
@@ -2141,7 +2215,8 @@ class XMLType(Element):
     pass
 
 
-class XMLWarning(Element):
+class XMLWarning(Caution):
+    """XML Warning element are handled the same as Caution elements."""
 
     pass
 
@@ -2552,9 +2627,13 @@ class Argument:
         if description is None:
             description = self._description
 
-        output = resize_length(
-            description, max_length, initial_indent=indent, subsequent_indent=indent, list=True
-        )
+        if "* " not in description:
+            output = resize_length(
+                description, max_length, initial_indent=indent, subsequent_indent=indent, list=True
+            )
+        else:
+            output = textwrap.indent(description, indent)
+            output = output.split("\n")
 
         return output
 
@@ -2573,12 +2652,23 @@ class Argument:
             rst_description = replace_terms(rst_description, self._terms)
 
             description_indent = " " * 4
-            if not " * " in rst_description:
+
+            if isinstance(self._description, Element):
+                intersection_types = set(NO_RESIZE_LIST).intersection(
+                    set(self._description.children_types)
+                )
+                if len(intersection_types) == 0 and "* " not in rst_description:
+                    list_description = self.resized_description(
+                        rst_description, max_length, description_indent
+                    )
+                else:
+                    rst_description = textwrap.indent(rst_description, description_indent)
+                    list_description = rst_description.split("\n")
+            elif " * " not in rst_description:
                 list_description = self.resized_description(
                     rst_description, max_length, description_indent
                 )
             else:
-                rst_description = textwrap.indent(rst_description, description_indent)
                 list_description = rst_description.split("\n")
 
             docstring = [f'{self.py_arg_name} : {str_types(self.types, " or ")}']
@@ -2839,9 +2929,13 @@ class XMLCommand(Element):
     @property
     def short_desc(self):
         """Short description of the command."""
+        short_desc = ""
         if self._refname_div is not None:
-            return self._refname_div.purpose.to_rst(links=self._links, base_url=self._base_url)
-        return ""
+            short_desc = self._refname_div.purpose.to_rst(
+                links=self._links, base_url=self._base_url
+            )
+            short_desc = resize_length(short_desc, self._max_length)
+        return short_desc
 
     @property
     def _metadata(self):
@@ -2933,7 +3027,7 @@ class XMLCommand(Element):
         if self.name in warning_command_dict.keys():
             warnings_ = warning_command_dict[self.name]
             for warning_ in warnings_:
-                warning_ = textwrap.indent(warning_, " " * 3)
+                warning_ = textwrap.indent(warning_, " " * 4)
                 items.extend([f"\n.. warning::\n{warning_}\n"])
 
         if self.default is not None:
@@ -3132,8 +3226,8 @@ class XMLCommand(Element):
             logging.info(f"{self.name} is an archived command.")
             docstr = (
                 docstr
-                + "\n\n.. warning::\n\n"
-                + "This command is archived in the latest version of the software.\n"
+                + "\n\n.. warning::\n"
+                + "    This command is archived in the latest version of the software.\n"
             )
 
         # Final cleanup
@@ -3415,6 +3509,7 @@ parsers = {
     "example": Example,
     "command": Command,
     "title": Title,
+    "ttl": Title,
     "para": Paragraph,
     "table": Table,
     "orderedlist": OrderedList,
