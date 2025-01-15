@@ -1041,7 +1041,7 @@ class Example(Element):
             if isinstance(item, Title):
                 title = item.to_rst(indent=indent, max_length=max_length)
                 if not "Command" in item.children_types:
-                    rst_item = f"**{title}**"
+                    rst_item = f"**{title}**\n"
                 else:
                     rst_item = f"{title}"
             elif isinstance(item, Element):
