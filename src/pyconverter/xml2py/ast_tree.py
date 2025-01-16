@@ -3020,8 +3020,6 @@ class XMLCommand(Element):
         """
         xml_cmd = f"{self._terms['pn006p']} Command: `{self.name} <{self.url}>`_"
 
-        # ``warning_command_dict`` need to be added here
-
         items = [self.short_desc, "", xml_cmd]
 
         if self.name in warning_command_dict.keys():

@@ -109,7 +109,7 @@ def load_links(link_path: Path) -> dict:
                 if targetptr is not None and href is not None:
                     text = ""
                     if linkmap[0].tag == "ttl":
-                        text = str(linkmap[0])
+                        text = str(linkmap[0]).strip()
                     links[f"{targetptr}"] = (root_name, root_title, href, text)
 
         grab_links(linkmap)
