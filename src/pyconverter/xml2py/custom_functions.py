@@ -51,6 +51,7 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
     with open(filename, "r") as pyfile:
         lines = pyfile.readlines()
     bool_def = False
+    end_def = False
     bool_param = False
     bool_return = False
     bool_notes = False
@@ -65,19 +66,31 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
     list_py_code = []
     list_import = []
     for line in lines:
-        if "import" in line and bool_def is False:
+        if "import " in line and bool_def is False:
             list_import.append(line)
-        elif "def" in line and bool_def is False:
+        # Need to accept the case where the function is defined in multiple lines
+        elif "def " in line and bool_def is False:
             bool_def = True
+        if bool_def and not end_def:
+            if ")" in line:
+                end_def = True
             split_def = line.split(",")
             for split_arg in split_def:
-                if "**kwarg" in split_arg:
+                split_arg = split_arg.strip()
+                if "**kwarg" in split_arg or split_arg == "self":
+                    break
+                elif re.search(r"[a-zA-Z0-9_]+", split_arg) is None:
                     break
                 elif ":" in split_arg and "=" in split_arg:
                     find = re.search(r"\w*(?=\:)", split_arg).group()
                     list_py_args.append(find)
                 elif "=" in split_arg:
                     find = re.search(r"\w*(?=\=)", split_arg).group()
+                    list_py_args.append(find)
+                elif "def " in split_arg:
+                    pass
+                else:
+                    find = re.search(r"\S+", split_arg).group()
                     list_py_args.append(find)
         elif '"""' in line and begin_docstring is False:
             begin_docstring = True
