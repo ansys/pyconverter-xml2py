@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import logging
 from pathlib import Path
 from typing import Tuple, Union
 
@@ -83,6 +84,12 @@ def get_warning_command_dict(yaml_path: Path) -> dict:
                 warning_command_dict[command].append(message)
             except KeyError:
                 warning_command_dict[command] = [message]
+
+    if warning_command_dict == {}:
+        logging.info("No warning commands found in the YAML file.")
+
+    else:
+        logging.info("Warning commands found in the YAML file.")
 
     return warning_command_dict
 
