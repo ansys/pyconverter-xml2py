@@ -40,7 +40,8 @@ if CONV_EQN:
 else:
     pass
 
-logging.getLogger("py_asciimath.utils").setLevel("CRITICAL")
+logger = logging.getLogger("py_asciimath.utils")
+logger.setLevel(logging.INFO)
 
 
 # common statements used within the docs to avoid duplication
@@ -874,7 +875,7 @@ class OLink(Element):
         """Return a string to enable converting the element to an RST format."""
         key = f"{self.targetptr}"
         if (links or base_url) is None:
-            logging.error("ERROR in the links or the base_url definitions - OLink class.")
+            logger.error("ERROR in the links or the base_url definitions - OLink class.")
         if key in links:
             root_name, root_title, href, text = links[key]
             link = f"{base_url}{root_name}/{href}"
@@ -1572,7 +1573,7 @@ class Link(Element):
     def to_rst(self, indent="", max_length=100, links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
         if (links or base_url) is None:
-            logging.error(
+            logger.error(
                 "ERROR exists in the links or the 'base_url' definitions in the 'Link' class."
             )
         tail = " ".join([str(item) for item in self])
@@ -2559,10 +2560,10 @@ class Argument:
                                     split_name[k + 1]
                                 )
                                 if name_iter_prev != name_iter_next:
-                                    logging.warning(
+                                    logger.warning(
                                         f"The argument name is not consistent: {name_iter_prev} != {name_iter_next}"  # noqa : E501
                                     )
-                                    logging.info(
+                                    logger.info(
                                         "Applying the longest name for the argument list as it's probably coming from a typography."  # noqa : E501
                                     )
                                     if len(name_iter_prev) > len(name_iter_next):
@@ -3221,7 +3222,7 @@ class XMLCommand(Element):
         docstr = ponctuaction_whitespace(docstr, ",")  # Remove extra whitespace before comma
 
         if self.is_archived == True:
-            logging.info(f"{self.name} is an archived command.")
+            logger.info(f"{self.name} is an archived command.")
             docstr = (
                 docstr
                 + "\n\n.. warning::\n"

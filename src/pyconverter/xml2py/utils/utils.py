@@ -27,6 +27,9 @@ from typing import Tuple, Union
 from lxml.html import fromstring
 import yaml
 
+logger = logging.getLogger("py_asciimath.utils")
+logger.setLevel(logging.INFO)
+
 
 def parse_yaml(yaml_path: Path) -> dict:
     """
@@ -86,10 +89,10 @@ def get_warning_command_dict(yaml_path: Path) -> dict:
                 warning_command_dict[command] = [message]
 
     if warning_command_dict == {}:
-        logging.info("No warning commands found in the YAML file.")
+        logger.info("No warning commands found in the YAML file.")
 
     else:
-        logging.info("Warning commands found in the YAML file.")
+        logger.info("Warning commands found in the YAML file.")
 
     return warning_command_dict
 
