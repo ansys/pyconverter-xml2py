@@ -74,12 +74,15 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
         if bool_def and not end_def:
             if ")" in line:
                 end_def = True
+            # TODO: Union types are ignored for now
+            if re.search(r"\[(\w+, )+\w+\]", line) is not None:
+                line = re.sub(r"\[(\w+, )+\w+\]", "", line)
             split_def = line.split(",")
             for split_arg in split_def:
                 split_arg = split_arg.strip()
                 if "**kwarg" in split_arg or split_arg == "self":
                     break
-                elif re.search(r"[a-zA-Z0-9_]+", split_arg) is None:
+                elif re.search(r"\w+", split_arg) is None:
                     break
                 elif ":" in split_arg and "=" in split_arg:
                     find = re.search(r"\w*(?=\:)", split_arg).group()
