@@ -53,11 +53,11 @@ def secmodif(
         section.
 
     keyword : str
-        - If `Keyword = NORM`:
+        * If `Keyword = NORM`:
             SECMODIF,SECID, NORM, NX, NY, NZ, KCN
-        - If `Keyword = NAME`:
+        * If `Keyword = NAME`:
             SECMODIF,SECID, NAME, Name
-        - If `Keyword = JOIN`:
+        * If `Keyword = JOIN`:
             SECMODIF,SECID, JOIN, Option, dispPnltVal, RotPnltVal
 
     norm : str
