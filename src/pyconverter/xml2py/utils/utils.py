@@ -78,6 +78,9 @@ def get_warning_command_dict(yaml_path: Path) -> dict:
         Path object of the YAML file.
     """
     warnings_ = get_config_data_value(yaml_path, "warnings")
+    if warnings_ is None:
+        logger.info("No warning commands found in the YAML file.")
+        return {}
     warning_command_dict = {}
     for warning_ in warnings_:
         message = warning_["msg"]
