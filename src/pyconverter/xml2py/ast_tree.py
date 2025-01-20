@@ -1383,6 +1383,9 @@ class VarlistEntry(Element):
 
         if "``" in py_term:
             py_term = py_term.replace("``", "")
+        
+        if re.finditer(r"`.+`_", py_term) is None:
+            py_term = f"``{py_term}``"
 
         intersection_types = set(NO_RESIZE_LIST).intersection(self.text.children_types)
         if len(intersection_types) == 0 and "* " not in py_text:
@@ -1401,7 +1404,7 @@ class VarlistEntry(Element):
 
             py_text = f"{first_line}\n{rest_lines}"
 
-        lines = [f"* ``{py_term}`` - {py_text}"]
+        lines = [f"* {py_term} - {py_text}"]
         output = "\n".join(lines)
 
         return output

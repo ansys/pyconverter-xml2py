@@ -74,9 +74,16 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
         if bool_def and not end_def:
             if ")" in line:
                 end_def = True
+                line = re.search(r".+(?=\))", line)
+                if line is not None:
+                    line = line.group()
+                else:
+                    continue
             # TODO: Union types are ignored for now
             if re.search(r"\[(\w+, )+\w+\]", line) is not None:
                 line = re.sub(r"\[(\w+, )+\w+\]", "", line)
+            elif re.search(r'\[("\w*", )+"\w*"\]', line):
+                line = re.sub(r'\[("\w*", )+"\w*"\]', "", line)
             split_def = line.split(",")
             for split_arg in split_def:
                 split_arg = split_arg.strip()
