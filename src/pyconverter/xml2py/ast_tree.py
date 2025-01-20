@@ -1322,7 +1322,7 @@ class VarlistEntry(Element):
             arg = self.term.to_rst().replace("--", "").strip()
 
         # sanity check
-        if "blank" in arg.lower():
+        if arg.lower() == "blank":
             arg = ""
 
         if not is_numeric(arg):
@@ -1383,8 +1383,8 @@ class VarlistEntry(Element):
 
         if "``" in py_term:
             py_term = py_term.replace("``", "")
-        
-        if re.finditer(r"`.+`_", py_term) is None:
+
+        if re.search(r"`.+`_", py_term) is None:
             py_term = f"``{py_term}``"
 
         intersection_types = set(NO_RESIZE_LIST).intersection(self.text.children_types)
