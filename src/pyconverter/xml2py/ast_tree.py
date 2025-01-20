@@ -852,7 +852,10 @@ class FileName(Element):
 
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
-        return f"``{self[0]}`` {self.tail}"
+        content = self[0]
+        if "*" in content:
+            content = content.replace("*", r"\*")
+        return f":file:``{content}`` {self.tail}"
 
 
 class OLink(Element):
