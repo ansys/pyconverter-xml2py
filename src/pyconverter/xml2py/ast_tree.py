@@ -1634,7 +1634,7 @@ class Caution(Element):
 
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
-        lines = ["", "", ".. warning::"]
+        lines = ["", "", ".. warning::", ""]
         indent = indent + " " * 4
         lines.append(
             resize_length(
@@ -3033,7 +3033,7 @@ class XMLCommand(Element):
             warnings_ = warning_command_dict[self.name]
             for warning_ in warnings_:
                 warning_ = textwrap.indent(warning_, " " * 4)
-                items.extend([f"\n.. warning::\n{warning_}\n"])
+                items.extend([f"\n.. warning::\n\n{warning_}\n"])
 
         if self.default is not None:
             if self.default.tag in item_needing_links_base_url:
@@ -3231,7 +3231,7 @@ class XMLCommand(Element):
             logger.info(f"{self.name} is an archived command.")
             docstr = (
                 docstr
-                + "\n\n.. warning::\n"
+                + "\n\n.. warning::\n\n"
                 + "    This command is archived in the latest version of the software.\n"
             )
 
