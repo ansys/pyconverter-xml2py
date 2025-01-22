@@ -212,7 +212,7 @@ def to_py_arg_name(name: str) -> str:
     while len(arg) > 0 and arg[-1] == "_":
         arg = arg[:-1]
 
-    if arg in ["type", "class", "property", "format", "dir"]:
+    if arg in ["type", "class", "property", "format", "dir", "set", "iter"]:
         arg = f"{arg}_"
 
     return f"{arg}"
