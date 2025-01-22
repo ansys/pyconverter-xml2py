@@ -855,7 +855,7 @@ class FileName(Element):
         content = self[0]
         if "*" in content:
             content = content.replace("*", r"\*")
-        return f":file:``{content}`` {self.tail}"
+        return f":file:`{content}` {self.tail}"
 
 
 class OLink(Element):
