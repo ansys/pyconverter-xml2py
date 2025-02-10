@@ -474,20 +474,18 @@ def replace_terms(text, terms):
     str
         Text with the terms replaced.
     """
-    iter = 0
     special_terms = re.findall(r"\&([^\-\;]+)\;", text)
     stop = False
     while len(special_terms) > 0 and not stop:
-        iter_special_terms = re.findall(r"\&([^\-\;]+)\;", text)
         for term in special_terms:
             if term in terms:
                 text = text.replace(f"&{term};", terms[term])
-        # Check if there are still special terms that can be replaced
-        if iter_special_terms == re.findall(r"\&([^\-\;]+)\;", text):
+        iter_special_terms = re.findall(r"\&([^\-\;]+)\;", text)
+        # Check if there are remaining special terms that need to be replaced
+        if len(iter_special_terms) == 0 or iter_special_terms == special_terms:
             stop = True
         else:
             special_terms = iter_special_terms
-        iter += 1
 
     return text
 
@@ -1936,7 +1934,7 @@ class Refname(Element):
         """Raws containing the command arguments."""
         cmd = str(self)
         for term in self._terms.keys():
-            if type(self._terms[term]) == str:
+            if type(self._terms[term]) == str and f"&{term};" in cmd:
                 cmd = cmd.replace(f"&{term};", self._terms[term])
         cmd = cmd.replace("``", "")
         split_args = cmd.split(",")[1:]
