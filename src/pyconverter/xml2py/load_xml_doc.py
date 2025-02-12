@@ -173,7 +173,7 @@ def load_docu_global(term_path: Path) -> dict:
                 targetptrs = re.findall(r'targetptr="(\S*)"', line)
                 targetptr = targetptrs[0] if len(targetptrs) else None
 
-                citetitles = re.findall(r"<citetitle>&(\S*);<\/citetitle>", line)
+                citetitles = re.findall(r"<citetitle>(.*)<\/citetitle>", line)
                 citetitle = citetitles[0] if len(citetitles) else None
 
                 docu_global[entity_name] = (targetdoc, targetptr, citetitle)
@@ -283,17 +283,17 @@ def load_terms(
     terms["#215"] = "times"
     terms["#934"] = r":math:`\Phi`"
 
-    # load manuals
-    manual_path = term_path / "glb" / manual_file
-    if manual_path.is_file():
-        terms = link_replacer(manual_path, terms, docu_global, links, base_url, fcache)
-    else:
-        print("WARNING: No file found for defining terms.")
-
     # load docu_global
     docu_ent = term_path / "glb" / "docu_global.ent"
     if docu_ent.is_file():
         terms = link_replacer(docu_ent, terms, docu_global, links, base_url, fcache)
+    else:
+        print("WARNING: No file found for defining terms.")
+
+    # load manuals
+    manual_path = term_path / "glb" / manual_file
+    if manual_path.is_file():
+        terms = link_replacer(manual_path, terms, docu_global, links, base_url, fcache)
     else:
         print("WARNING: No file found for defining terms.")
 
