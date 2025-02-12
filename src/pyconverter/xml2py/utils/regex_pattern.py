@@ -28,6 +28,7 @@ GET_GROUP = r"(?<=&)(.*?)(?=;)"
 # Not used, can be added in case of complications with imports in the future
 GET_IMPORTS = r"(?:(?:from [a-zA-Z0-9_.]* import [a-zA-Z0-9_.]* as [a-zA-Z0-9_.]*)|(?:from [a-zA-Z0-9_.]* import [a-zA-Z0-9_.]*)|(?:import [a-zA-Z0-9_.]* as [a-zA-Z0-9_.]*)|(?:import [a-zA-Z0-9_.]*)\s)"  # noqa: E501
 GET_ITALIC_COMMANDS = r"([^\*])(\*)(\*)([A-Z]+)(\*)([^\*])"  # TODO: Not supported yet
+GET_LINES = r"^[^\.\s].+(?=\n)|(?<=\n)[^\.\s].+(?=\n)"
 GET_STAR_COMMANDS = r"([^\*])(\*)([A-Z]+)(\`|\,|\.|\s)"
 GET_STAR_FUNCTIONS = r"([^\*\s\\]+)(\*)([^\*\s]+)"
 GET_TYPENAME_1OPT = r"(?<=:)(.*)"
