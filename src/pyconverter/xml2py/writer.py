@@ -422,6 +422,7 @@ def write_source(
     new_package_name = get_config_data_value(config_path, "new_package_name")
     logging.info(f"Creating package {new_package_name}...")
     new_package_path = target_path / new_package_name
+    image_folder_path = get_config_data_value(config_path, "image_folder_path")
 
     ignored_commands = set(get_config_data_value(config_path, "ignored_commands"))
 
@@ -486,7 +487,10 @@ def write_source(
 
             package_structure[module_name][file_name] = [class_name, class_structure]
             python_method = command.to_python(
-                custom_functions, warning_command_dict, indent=4 * " "
+                custom_functions,
+                warning_command_dict,
+                indent=4 * " ",
+                image_folder_path=image_folder_path,
             )
 
             # Check if there are any imports to be added before the function definition.
@@ -528,7 +532,7 @@ def write_source(
     # Copy package files to the package directory
     copy_template_package(template_path, new_package_path, clean)
     graph_path = get_paths(xml_doc_path)[0]
-    shutil.copytree(graph_path, new_package_path / "doc" / "source" / "images")
+    shutil.copytree(graph_path, new_package_path / "doc" / "source" / image_folder_path)
     return package_structure
 
 

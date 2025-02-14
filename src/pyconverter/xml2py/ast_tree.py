@@ -501,6 +501,7 @@ class Element:
     def __init__(self, element, parse_children=True):
         self._element = element
         self._content = []
+        self._id = self._element.get("id")
 
         if element.text is not None:
             content = " ".join(element.text.split())
@@ -604,7 +605,12 @@ class Element:
     @property
     def id(self):
         """ID of the element."""
-        return self._element.get("id")
+        return self._id
+
+    @id.setter
+    def id(self, value):
+        """Set the ID of the element."""
+        self._id = value
 
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
@@ -904,6 +910,11 @@ class OLink(Element):
 class Paragraph(Element):
     """Provides the paragraph element."""
 
+    def __init__(self, element, parse_children=True):
+        super().__init__(element, parse_children)
+        if self.id:
+            self.id = self.id.replace(".", "_")
+
     def __repr__(self):
         lines = [""]
         lines.append(" ".join([str(item) for item in self._content]))
@@ -913,6 +924,8 @@ class Paragraph(Element):
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
+        if self.id:
+            items.append(f"\n.. _{self.id}:\n\n")
         for item in self:
             if isinstance(item, Element):
                 if isinstance(item, Variablelist):
@@ -1043,16 +1056,19 @@ class Example(Element):
             if isinstance(item, Title):
                 title = item.to_rst(indent=indent, max_length=max_length)
                 if not "Command" in item.children_types:
-                    rst_item = f"**{title}**\n"
+                    rst_item = f"**Example: {title}**\n"
                 else:
-                    rst_item = f"{title}"
+                    rst_item = f"Example: {title}\n"
             elif isinstance(item, Element):
                 rst_item = item.to_rst(indent=indent, max_length=max_length)
             else:
                 rst_item = str(item)
             rst_example.append(rst_item)
 
-        return "\n".join(rst_example)
+        if "returns the centroid x location of element" in "\n".join(rst_example):
+            print("\n".join(rst_example))
+
+        return textwrap.indent("\n".join(rst_example), " " * 2)
 
 
 class InformalExample(Element):
@@ -1235,9 +1251,16 @@ class Variablelist(Element):
 class RefSection(Element):
     """Provides the reference section element."""
 
+    def __init__(self, element, parse_children=True):
+        super().__init__(element, parse_children)
+        if self.id:
+            self.id = self.id.replace(".", "_")
+
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
+        if self.id:
+            items.append(f"\n.. _{self.id}:\n\n")
         for item in self[1:]:
             if isinstance(item, Element):
                 if item.tag in item_needing_all:
@@ -1385,7 +1408,7 @@ class VarlistEntry(Element):
         if "``" in py_term:
             py_term = py_term.replace("``", "")
 
-        if re.search(r"`.+`_", py_term) is None:
+        if re.search(r"`.+`_", py_term) is None and re.search(":ref:`", py_term) is None:
             py_term = f"``{py_term}``"
 
         intersection_types = set(NO_RESIZE_LIST).intersection(self.text.children_types)
@@ -1581,15 +1604,20 @@ class Link(Element):
                 "ERROR exists in the links or the 'base_url' definitions in the 'Link' class."
             )
         tail = " ".join([str(item) for item in self])
-        tail = self.tail.replace("\n", "")
+        tail = tail.replace("\n", "")
         if self.linkend in links:
             root_name, root_title, href, text = links[self._linkend]
             text = text.replace("\n", "")
             link = f"{base_url}{root_name}/{href}"
-            return f"`{text} <{link}>`_ {tail}"
-
-        # missing link...
-        return tail
+            output = f"`{text} <{link}>`_ {tail}"
+        # internal link
+        else:
+            linkend = (self.linkend).replace(".", "_")
+            if tail:
+                output = f":ref:`{tail} <{linkend}>`"
+            else:
+                output = f":ref:`{linkend}`"
+        return output
 
 
 class XRef(Link):
@@ -1654,8 +1682,10 @@ class Graphic(Element):
             entityref = entityref.strip()
         return entityref
 
-    def to_rst(self, indent="", max_length=100, fcache=None):
+    def to_rst(self, indent="", max_length=100, fcache=None, image_folder_path=None):
         """Return a string to enable converting the element to an RST format."""
+        if not image_folder_path:
+            image_folder_path = IMAGE_FOLDER_PATH
 
         if self.entityref is None:
             # probably a math graphics
@@ -1668,7 +1698,7 @@ class Graphic(Element):
 
         if self.entityref in fcache:
             filename = fcache[self.entityref]
-            text = f"\n\n{indent}.. figure:: ../../images/{filename}\n"
+            text = f"\n\n{indent}.. figure:: ../../{image_folder_path}/{filename}\n"
             return text
 
         return ""
@@ -2273,7 +2303,10 @@ class TBody(Element):
                 if type(row[0][0]) == Command:
                     command = f"   * - :ref:`{row[0][0].py_cmd}`"
                     rst_rows.append(command)
-                    strg = f"     - {row[1][0]}"
+                    if len(row) > 1:
+                        strg = f"     - {row[1][0]}"
+                    else:
+                        strg = f"     - {row}"
                     rst_rows.append(strg)
                     if l_head == 0 and i == 0:
                         l_head = 2
@@ -2847,9 +2880,12 @@ class XMLCommand(Element):
         self._is_archived = False
         self._refentry = refentry
         self._max_length = 100
+        self._notes = []
+        self._other_parameters = []
 
         # parse the command
         super().__init__(self._refentry, parse_children=not meta_only)
+        self.set_notes_and_other_parameters()
 
     @property
     def xml_filename(self):
@@ -2984,6 +3020,43 @@ class XMLCommand(Element):
         """Set the group of the command."""
         self._group = group
 
+    @property
+    def other_parameters(self):
+        """Other parameters of the command."""
+        return self._other_parameters
+
+    @other_parameters.setter
+    def other_parameters(self, other_parameters):
+        """Set the other parameters of the command."""
+        self._other_parameters = other_parameters
+
+    @property
+    def notes(self):
+        """Notes of the command."""
+        return self._notes
+
+    @notes.setter
+    def notes(self, notes):
+        """Set the notes of the command."""
+        self._notes = notes
+
+    def set_notes_and_other_parameters(self):
+        """Set the notes and other parameters of the command."""
+        other_parameters = []
+        notes = []
+        for item in self:
+            if item.title:
+                title = str(item.title).strip()
+                if "=" in title:
+                    other_parameters.append(item)
+                elif "Menu Paths" in title or "Argument Description" in title:
+                    continue
+                else:
+                    notes.append(item)
+
+        self.other_parameters = other_parameters
+        self.notes = notes
+
     def py_signature(self, custom_functions: CustomFunctions, indent="") -> str:
         """Beginning of the Python command's definition."""
         args = ["self"]
@@ -3006,6 +3079,16 @@ class XMLCommand(Element):
 
         arg_sig = ", ".join(args)
         return f"{indent}def {self.py_name}({arg_sig}, **kwargs):"
+
+    def custom_notes(self, custom_functions: CustomFunctions = None):
+        """Customized notes for the command."""
+        lines = []
+        if custom_functions is not None and (
+            self.py_name in custom_functions.py_names and self.py_name in custom_functions.py_notes
+        ):
+            if len("\n".join(lines)) < len("\n".join(custom_functions.py_notes[self.py_name])):
+                lines = custom_functions.py_notes[self.py_name]
+        return lines
 
     def py_docstring(self, custom_functions: CustomFunctions, warning_command_dict: None) -> str:
         """
@@ -3033,26 +3116,33 @@ class XMLCommand(Element):
                 warning_ = textwrap.indent(warning_, " " * 4)
                 items.extend([f"\n.. warning::\n\n{warning_}\n"])
 
-        if self.default is not None:
+        if self.default:
             if self.default.tag in item_needing_links_base_url:
                 items += [""] + textwrap.wrap(
                     "Default: " + self.default.to_rst(links=self._links, base_url=self._base_url)
                 )
             else:
                 items += [""] + textwrap.wrap("Default: " + self.default.to_rst())
-        if self.args is not None:
+        if self.args:
             items += [""] + self.py_parm(
                 custom_functions, links=self._links, base_url=self._base_url, fcache=self._fcache
             )
-        if custom_functions is not None and (
+        if custom_functions and (
             self.py_name in custom_functions.py_names
             and self.py_name in custom_functions.py_returns
         ):
             items += [""] + custom_functions.py_returns[self.py_name]
-        if self.notes is not None:
-            items += [""]
-            items.extend(self.py_notes(custom_functions))
-        if custom_functions is not None and (
+        custom_notes = self.custom_notes(custom_functions)
+        if not custom_notes:
+            if self.other_parameters:
+                items += [""]
+                items.extend(self.py_notes(self.other_parameters, "Other Parameters"))
+            if self.notes:
+                items += [""]
+                items.extend(self.py_notes(self.notes, "Notes"))
+        else:
+            items.extend(custom_notes)
+        if custom_functions and (
             self.py_name in custom_functions.py_names
             and self.py_name in custom_functions.py_examples
         ):
@@ -3230,40 +3320,38 @@ class XMLCommand(Element):
         docstr = replace_terms(docstr, self._terms)
         return docstr
 
-    def py_notes(self, custom_functions: CustomFunctions = None):
+    def py_notes(self, note_elem_list, section_title):
         """Python-formatted notes string."""
-        lines = ["Notes", "-" * 5]
-        if self.notes.tag in item_needing_all:
-            notes = self.notes.to_rst(
-                max_length=self._max_length,
-                links=self._links,
-                base_url=self._base_url,
-                fcache=self._fcache,
-            )
-        elif self.notes.tag in item_needing_links_base_url:
-            notes = self.notes.to_rst(
-                max_length=self._max_length, links=self._links, base_url=self._base_url
-            )
-        elif self.notes.tag in item_needing_fcache:
-            notes = self.notes.to_rst(
-                max_length=self._max_length, links=self._links, fcache=self._fcache
-            )
-        else:
-            notes = self.notes.to_rst()
+        lines = [section_title, "-" * len(section_title)]
+        for note in note_elem_list:
+            if note.title and str(note.title).strip() != section_title:
+                note_title = str(note.title).strip()
+                lines.append(f"**{note_title}**")
+            if note.tag in item_needing_all:
+                notes = note.to_rst(
+                    max_length=self._max_length,
+                    links=self._links,
+                    base_url=self._base_url,
+                    fcache=self._fcache,
+                )
+            elif note.tag in item_needing_links_base_url:
+                notes = note.to_rst(
+                    max_length=self._max_length, links=self._links, base_url=self._base_url
+                )
+            elif note.tag in item_needing_fcache:
+                notes = note.to_rst(
+                    max_length=self._max_length, links=self._links, fcache=self._fcache
+                )
+            else:
+                notes = note.to_rst()
 
-        notes = replace_terms(notes, self._terms)
-        to_be_resized = re.findall(regp.GET_LINES, notes)
+            notes = replace_terms(notes, self._terms)
+            to_be_resized = re.findall(regp.GET_LINES, notes)
 
-        for item in to_be_resized:
-            resized_item = resize_length(item, self._max_length)
-            notes = notes.replace(item, resized_item)
-        lines.extend(notes.split("\n"))
-
-        if custom_functions is not None and (
-            self.py_name in custom_functions.py_names and self.py_name in custom_functions.py_notes
-        ):
-            if len("\n".join(lines)) < len("\n".join(custom_functions.py_notes[self.py_name])):
-                lines = custom_functions.py_notes[self.py_name]
+            for item in to_be_resized:
+                resized_item = resize_length(item, self._max_length)
+                notes = notes.replace(item, resized_item)
+            lines.extend(notes.split("\n"))
 
         return lines
 
@@ -3285,13 +3373,6 @@ class XMLCommand(Element):
     @property
     def _refsynopsis(self):
         return self.find("Refsynopsisdiv")
-
-    @property
-    def notes(self):
-        """Notes of the command."""
-        for item in self:
-            if str(item.title).strip() == "Notes":
-                return item
 
     def __repr__(self):
         lines = [f"Original command: {self.name}"]
@@ -3375,7 +3456,13 @@ class XMLCommand(Element):
             source = textwrap.indent("".join(custom_functions.py_code[self.py_name]), prefix=indent)
         return source
 
-    def to_python(self, custom_functions=None, warning_command_dict=None, indent=""):
+    def to_python(
+        self,
+        custom_functions=None,
+        warning_command_dict=None,
+        indent="",
+        image_folder_path: Path = None,
+    ):
         """
         Return the complete Python definition of the command.
 
@@ -3397,6 +3484,10 @@ class XMLCommand(Element):
         str
             Python function of the command including the converted docstring.
         """
+
+        if image_folder_path is not None:
+            global IMAGE_FOLDER_PATH
+            IMAGE_FOLDER_PATH = image_folder_path
 
         docstr = textwrap.indent(
             f'r"""{self.py_docstring(custom_functions, warning_command_dict)}\n"""',

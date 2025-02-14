@@ -72,26 +72,33 @@ def test_write_source_with_custom_functions(
     package_path,
     path_custom_functions,
     library_name_structured,
+    image_folder_path,
 ):
     wrt.write_source(command_map, name_map, directory_path, cwd, path_custom_functions)
     if not "src" in library_name_structured:
         library_name_structured.insert(0, "src")
     cmd_path = package_path.joinpath(*library_name_structured)
     assert (cmd_path / "apdl" / "abbreviations.py").is_file()
-    assert (package_path / "doc" / "source" / "images").is_dir()
-    assert (package_path / "doc" / "source" / "images" / "gcmdrsymm1.png").is_file()
+    assert (package_path / "doc" / "source" / image_folder_path).is_dir()
+    assert (package_path / "doc" / "source" / image_folder_path / "gcmdrsymm1.png").is_file()
 
 
 def test_write_source_no_custom_function(
-    command_map, name_map, directory_path, cwd, package_path, library_name_structured
+    command_map,
+    name_map,
+    directory_path,
+    cwd,
+    package_path,
+    library_name_structured,
+    image_folder_path,
 ):
     wrt.write_source(command_map, name_map, directory_path, cwd)
     if not "src" in library_name_structured:
         library_name_structured.insert(0, "src")
     cmd_path = package_path.joinpath(*library_name_structured)
     assert (cmd_path / "apdl" / "abbreviations.py").is_file()
-    assert (package_path / "doc" / "source" / "images").is_dir()
-    assert (package_path / "doc" / "source" / "images" / "gcmdrsymm1.png").is_file()
+    assert (package_path / "doc" / "source" / image_folder_path).is_dir()
+    assert (package_path / "doc" / "source" / image_folder_path / "gcmdrsymm1.png").is_file()
 
 
 def test_write_docs(package_path, package_structure):

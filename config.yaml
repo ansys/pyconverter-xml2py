@@ -10,6 +10,8 @@ subfolders:
 
 new_package_name: package
 
+image_folder_path: ../images/_commands
+
 rules:
   "/": slash
   "*": star

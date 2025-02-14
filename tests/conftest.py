@@ -131,6 +131,11 @@ def config_path(cwd):
 
 
 @pytest.fixture
+def image_folder_path(cwd):
+    return get_config_data_value(cwd / "config.yaml", "image_folder_path")
+
+
+@pytest.fixture
 def library_name_structured(config_path):
     lib_structure = get_config_data_value(config_path, "library_name_structured")
     subfolders = get_config_data_value(config_path, "subfolders")
