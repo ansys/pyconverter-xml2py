@@ -2908,6 +2908,9 @@ class XMLCommand(Element):
             for item in self._refsynopsis:
                 if str(item.title).strip() == "Command Default":
                     return item
+        for refsection in self._refsections:
+            if refsection.title == "Command Default":
+                return refsection
 
     @property
     def arg_desc(self) -> List[Argument]:
@@ -3053,7 +3056,7 @@ class XMLCommand(Element):
                 title = str(item.title).strip()
                 if "=" in title:
                     other_parameters.append(item)
-                elif "Menu Paths" in title or "Argument Description" in title:
+                elif "Menu Paths" in title or title in ["Argument Description", "Command Default"]:
                     continue
                 else:
                     notes.append(item)
@@ -3124,11 +3127,11 @@ class XMLCommand(Element):
             if self.default.tag in item_needing_links_base_url:
                 items += [
                     "",
-                    "Default:",
+                    "**Command default:**",
                     self.default.to_rst(links=self._links, base_url=self._base_url),
                 ]
             else:
-                items += ["", "Default: ", self.default.to_rst()]
+                items += ["", "**Command default:**", self.default.to_rst()]
         if self.args:
             items += [""] + self.py_parm(
                 custom_functions, links=self._links, base_url=self._base_url, fcache=self._fcache
@@ -3379,6 +3382,10 @@ class XMLCommand(Element):
     @property
     def _refsynopsis(self):
         return self.find("Refsynopsisdiv")
+
+    @property
+    def _refsections(self):
+        return self.find_all("RefSection")
 
     def __repr__(self):
         lines = [f"Original command: {self.name}"]
