@@ -1072,9 +1072,6 @@ class Example(Element):
                 rst_item = str(item)
             rst_example.append(rst_item)
 
-        if "returns the centroid x location of element" in "\n".join(rst_example):
-            print("\n".join(rst_example))
-
         return textwrap.indent("\n".join(rst_example), " " * 2)
 
 
