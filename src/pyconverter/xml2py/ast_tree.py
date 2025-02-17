@@ -921,11 +921,18 @@ class Paragraph(Element):
         lines.append("\n")
         return "".join(lines)
 
+    @property
+    def revisionflag(self):
+        """Return the revision flag."""
+        return self.get("revisionflag")
+
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
         if self.id:
             items.append(f"\n.. _{self.id}:\n\n")
+        if self.revisionflag and self.revisionflag == "deleted":
+            return ""
         for item in self:
             if isinstance(item, Element):
                 if isinstance(item, Variablelist):
