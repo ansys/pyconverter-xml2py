@@ -3118,11 +3118,9 @@ class XMLCommand(Element):
 
         if self.default:
             if self.default.tag in item_needing_links_base_url:
-                items += [""] + textwrap.wrap(
-                    "Default: " + self.default.to_rst(links=self._links, base_url=self._base_url)
-                )
+                items += ["", "Default:", self.default.to_rst(links=self._links, base_url=self._base_url)]
             else:
-                items += [""] + textwrap.wrap("Default: " + self.default.to_rst())
+                items += ["", "Default: ", self.default.to_rst()]
         if self.args:
             items += [""] + self.py_parm(
                 custom_functions, links=self._links, base_url=self._base_url, fcache=self._fcache
