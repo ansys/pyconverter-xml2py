@@ -40,7 +40,7 @@ def test_load_fcache(graph_path):
 
 def test_load_docu_global(term_path):
     docu_global = lxd.load_docu_global(term_path)
-    assert docu_global["acpmdug"] == ("acp_md", "acp_md", "bk_acp_md")
+    assert docu_global["acpmdug"] == ("acp_md", "acp_md", "&bk_acp_md;")
 
 
 def test_load_terms(load_terms):
