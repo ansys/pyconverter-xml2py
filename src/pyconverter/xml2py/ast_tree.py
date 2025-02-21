@@ -3097,7 +3097,7 @@ class XMLCommand(Element):
                 lines = custom_functions.py_notes[self.py_name]
         return lines
 
-    def py_docstring(self, custom_functions: CustomFunctions, warning_command_dict: None) -> str:
+    def py_docstring(self, custom_functions: CustomFunctions, comment_command_dict: dict=None) -> str:
         """
         Python docstring of the command.
 
@@ -3107,21 +3107,20 @@ class XMLCommand(Element):
         custom_functions : CustomFunctions
             Custom functions object.
 
-        warning_command_dict: dict, optional
-            Dictionary of commands associated to a list of warnings.
+        comment_command_dict: dict, optional
+            Dictionary of commands associated to a list of comments with the
+            following format: ``{"command": [["message_type", "message"]}``.
             The default is ``None``.
-
-
         """
         xml_cmd = f"{self._terms['pn006p']} Command: `{self.name} <{self.url}>`_"
 
         items = [self.short_desc, "", xml_cmd]
 
-        if self.name in warning_command_dict.keys():
-            warnings_ = warning_command_dict[self.name]
-            for warning_ in warnings_:
-                warning_ = textwrap.indent(warning_, " " * 4)
-                items.extend([f"\n.. warning::\n\n{warning_}\n"])
+        if self.name in comment_command_dict.keys():
+            comments_ = comment_command_dict[self.name]
+            for (comment_type, comment_) in comments_:
+                comment_ = textwrap.indent(comment_, " " * 4)
+                items.extend([f"\n.. {comment_type}::\n\n{comment_}\n"])
 
         if self.default:
             if self.default.tag in item_needing_links_base_url:
@@ -3472,7 +3471,7 @@ class XMLCommand(Element):
     def to_python(
         self,
         custom_functions=None,
-        warning_command_dict=None,
+        comment_command_dict=None,
         indent="",
         image_folder_path: Path = None,
     ):
@@ -3485,8 +3484,9 @@ class XMLCommand(Element):
             Custom functions to add to the command.
             The default is ``None``.
 
-        warning_command_dict: dict, optional
-            Dictionary of commands associated to a list of warnings.
+        comment_command_dict: dict, optional
+            Dictionary of commands associated to a list of comments with the
+            following format: ``{"command": [["message_type", "message"]}``.
             The default is ``None``.
 
         indent: str, optional
@@ -3503,7 +3503,7 @@ class XMLCommand(Element):
             IMAGE_FOLDER_PATH = image_folder_path
 
         docstr = textwrap.indent(
-            f'r"""{self.py_docstring(custom_functions, warning_command_dict)}\n"""',
+            f'r"""{self.py_docstring(custom_functions, comment_command_dict)}\n"""',
             prefix=indent + " " * 4,
         )
         if custom_functions is not None and self.py_name in custom_functions.lib_import:

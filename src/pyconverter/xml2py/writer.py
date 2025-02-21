@@ -35,7 +35,7 @@ from pyconverter.xml2py.utils.utils import (
     create_name_map,
     get_config_data_value,
     get_refentry,
-    get_warning_command_dict,
+    get_comment_command_dict,
     import_handler,
 )
 import regex as re
@@ -432,7 +432,7 @@ def write_source(
 
     library_path = Path(get_library_path(new_package_path, config_path))
 
-    warning_command_dict = get_warning_command_dict(config_path)
+    comment_command_dict = get_comment_command_dict(config_path)
 
     if not library_path.is_dir():
         library_path.mkdir(parents=True, exist_ok=True)
@@ -444,7 +444,7 @@ def write_source(
                 continue
             python_name = name_map[initial_command_name]
             path = library_path / f"{python_name}.py"
-            python_method = command_obj.to_python(custom_functions, warning_command_dict, indent="")
+            python_method = command_obj.to_python(custom_functions, comment_command_dict, indent="")
             try:
                 exec(python_method)
                 with open(path, "w", encoding="utf-8") as fid:
@@ -488,7 +488,7 @@ def write_source(
             package_structure[module_name][file_name] = [class_name, class_structure]
             python_method = command.to_python(
                 custom_functions,
-                warning_command_dict,
+                comment_command_dict,
                 indent=4 * " ",
                 image_folder_path=image_folder_path,
             )

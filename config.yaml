@@ -50,12 +50,13 @@ ignored_commands:
   - "/DIRECTORY" # Defined in ``mapdl_core.py``
   - "*XPL" # Defined in ``mapdl_grpc.py``
 
-warnings:
-  - msg: 'This command must be run using :func:`non_interactive <ansys.mapdl.core.Mapdl.non_interactive>
+beginning_comments:
+  - msg: 'This command must be run using :func:`non_interactive <ansys.mapdl.core.Mapdl.non_interactive>`.
 
-    Please visit `Unsupported Interactive Commands <https://mapdl.docs.pyansys.com/version/stable/user_guide/mapdl.html#unsupported-interactive-commands>`_
+          Please visit `Unsupported Interactive Commands <https://mapdl.docs.pyansys.com/version/stable/user_guide/mapdl.html#unsupported-interactive-commands>`_
     
-    for further information.'
+          for further information.'
+    type: "warning"
     commands:
       - "*CREATE"
       - "CFOPEN"
@@ -65,6 +66,14 @@ warnings:
       - "LSWRITE"
       - "LSREAD"
 
+  - msg: 'Starting with PyMAPDL v0.66.0, you can use "P" as a second argument to select entities interactively. A window pops up
+          
+          allowing you to select, unselect, add or reselect entities depending on the first argument ``type_``. An array with
+          
+          the ids of new selection is returned when the window is closed.'
+    type: "note"
+    commands:
+     - "ASEL"
 
 specific_classes:
   2D to 3D Analysis: Analysis 2D to 3D

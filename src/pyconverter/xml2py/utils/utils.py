@@ -68,36 +68,42 @@ def get_config_data_value(yaml_path: Path, value: str) -> Union[str, dict, list,
     return config_data.get(value)
 
 
-def get_warning_command_dict(yaml_path: Path) -> dict:
+def get_comment_command_dict(yaml_path: Path) -> dict:
     """
-    Get the list of commands that will raise a warning.
+    Get a dictionnary of messages to be added as warning, note, or info at the beginning of
+    a command documentation.
 
     Parameters
     ----------
     yaml_path: Path
         Path object of the YAML file.
+
+    Returns
+    -------
+    dict
+        Dictionary of comment to be added with the following format: ``{"command": [["message_type", "message"]}``.
     """
-    warnings_ = get_config_data_value(yaml_path, "warnings")
-    if warnings_ is None:
-        logger.info("No warning commands found in the YAML file.")
-        return {}
-    warning_command_dict = {}
-    for warning_ in warnings_:
-        message = warning_["msg"]
-        commands = warning_["commands"]
-        for command in commands:
-            try:
-                warning_command_dict[command].append(message)
-            except KeyError:
-                warning_command_dict[command] = [message]
+    beginning_comments = get_config_data_value(yaml_path, "beginning_comments")
+    if beginning_comments is None:
+        logger.info("No comments to be added found in the YAML file.")
+    comment_command_dict = {}
+    if beginning_comments:
+        for comment_ in beginning_comments:
+            message = comment_["msg"]
+            comment_type = comment_["type"]
+            if comment_type not in ["note", "warning", "info"]:
+                raise ValueError(f"Comment type '{comment_type}' not supported. Use 'note', 'warning', or 'info'.")
+            commands = comment_["commands"]
+            for command in commands:
+                try:
+                    comment_command_dict[command].append([comment_type, message])
+                except KeyError:
+                    comment_command_dict[command] = [[comment_type, message]]
 
-    if warning_command_dict == {}:
-        logger.info("No warning commands found in the YAML file.")
+        if comment_command_dict == {}:
+            logger.info("No message found in the YAML file.")
 
-    else:
-        logger.info("Warning commands found in the YAML file.")
-
-    return warning_command_dict
+    return comment_command_dict
 
 
 def create_name_map(meta_command: list[str], yaml_file_path: Path) -> dict:
