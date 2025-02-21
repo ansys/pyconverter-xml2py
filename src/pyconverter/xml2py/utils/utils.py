@@ -83,12 +83,12 @@ def get_comment_command_dict(yaml_path: Path) -> dict:
     dict
         Dictionary of comment to be added with the following format: ``{"command": [["message_type", "message"]}``.
     """
-    beginning_comments = get_config_data_value(yaml_path, "beginning_comments")
-    if beginning_comments is None:
+    comments_ = get_config_data_value(yaml_path, "comments")
+    if comments_ is None:
         logger.info("No comments to be added found in the YAML file.")
     comment_command_dict = {}
-    if beginning_comments:
-        for comment_ in beginning_comments:
+    if comments_:
+        for comment_ in comments_:
             message = comment_["msg"]
             comment_type = comment_["type"]
             if comment_type not in ["note", "warning", "info"]:
