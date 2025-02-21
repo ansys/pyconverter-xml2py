@@ -3097,7 +3097,9 @@ class XMLCommand(Element):
                 lines = custom_functions.py_notes[self.py_name]
         return lines
 
-    def py_docstring(self, custom_functions: CustomFunctions, comment_command_dict: dict=None) -> str:
+    def py_docstring(
+        self, custom_functions: CustomFunctions, comment_command_dict: dict = None
+    ) -> str:
         """
         Python docstring of the command.
 

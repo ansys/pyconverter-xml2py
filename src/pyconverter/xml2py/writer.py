@@ -33,9 +33,9 @@ from pyconverter.xml2py.download import download_template
 import pyconverter.xml2py.utils.regex_pattern as pat
 from pyconverter.xml2py.utils.utils import (
     create_name_map,
+    get_comment_command_dict,
     get_config_data_value,
     get_refentry,
-    get_comment_command_dict,
     import_handler,
 )
 import regex as re

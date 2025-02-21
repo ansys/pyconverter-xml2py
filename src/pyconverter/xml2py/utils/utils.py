@@ -81,7 +81,8 @@ def get_comment_command_dict(yaml_path: Path) -> dict:
     Returns
     -------
     dict
-        Dictionary of comment to be added with the following format: ``{"command": [["message_type", "message"]}``.
+        Dictionary of comment to be added with the following format:
+        ``{"command": [["message_type", "message"]}``.
     """
     comments_ = get_config_data_value(yaml_path, "comments")
     if comments_ is None:
@@ -92,7 +93,9 @@ def get_comment_command_dict(yaml_path: Path) -> dict:
             message = comment_["msg"]
             comment_type = comment_["type"]
             if comment_type not in ["note", "warning", "info"]:
-                raise ValueError(f"Comment type '{comment_type}' not supported. Use 'note', 'warning', or 'info'.")
+                raise ValueError(
+                    f"Comment type '{comment_type}' not supported. Use 'note', 'warning', or 'info'."  # noqa: E501
+                )
             commands = comment_["commands"]
             for command in commands:
                 try:
