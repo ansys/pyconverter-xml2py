@@ -87,7 +87,14 @@ PY_ARG_CLEANUP = {
 # Map XML command to pycommand function
 NAME_MAP_GLOB = {}
 
-NO_RESIZE_LIST = ["Variablelist", "Caution", "XMLWarning", "ProgramListing", "Example"]
+NO_RESIZE_LIST = [
+    "Variablelist",
+    "ItemizedList",
+    "Caution",
+    "XMLWarning",
+    "ProgramListing",
+    "Example",
+]
 
 MISSING_ARGUMENT_DESCRIPTION = """The description of the argument is missing in the Python function.
 Please, refer to the `command documentation <url>`_ for further information."""
@@ -711,8 +718,19 @@ class ItemizedList(Element):
         """Return a string to enable converting the element to an RST format."""
         lines = []
         for item in self:
+            skip_resize = False
             if isinstance(item, Element):
-                if item.tag in item_needing_all:
+                if isinstance(item, (ListItem, Member)):
+                    item_lines = item.to_rst(indent, max_length, links, base_url, fcache)
+                    item_lines = resize_length(
+                        text=f"* {item_lines}",
+                        max_length=max_length,
+                        initial_indent=indent,
+                        subsequent_indent=" " * 2,
+                    )
+                    item_lines = [item_lines]
+                    skip_resize = True
+                elif item.tag in item_needing_all:
                     item_lines = item.to_rst(
                         indent, links=links, base_url=base_url, fcache=fcache
                     ).splitlines()
@@ -742,7 +760,7 @@ class ItemizedList(Element):
 
             new_rst_list = []
 
-            if ".. code::" in "\n".join(rst_list):
+            if ".. code::" in "\n".join(rst_list) or skip_resize:
                 lines.extend(rst_list)
 
             else:
@@ -775,7 +793,23 @@ class SimpleList(ItemizedList):
 class Member(Element):
     """Provides the member element for a simple itemized list."""
 
-    pass
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
+        rst_members = []
+        for item in self:
+            if isinstance(item, Element):
+                if item.tag in item_needing_all:
+                    rst_member = item.to_rst(indent, links=links, base_url=base_url, fcache=fcache)
+                elif item.tag in item_needing_links_base_url:
+                    rst_member = item.to_rst(indent, links=links, base_url=base_url)
+                elif item.tag in item_needing_fcache:
+                    rst_member = item.to_rst(indent=indent, fcache=fcache)
+                else:
+                    rst_member = item.to_rst(indent=indent)
+            else:
+                rst_member = str(item)
+            rst_members.append(rst_member)
+
+        return "\n".join(rst_members)
 
 
 def ponctuaction_whitespace(text, ponctuation):
@@ -1415,25 +1449,24 @@ class VarlistEntry(Element):
         if re.search(r"`.+`_", py_term) is None and re.search(":ref:`", py_term) is None:
             py_term = f"``{py_term}``"
 
+        output = f"* {py_term} - {py_text}"
+
         intersection_types = set(NO_RESIZE_LIST).intersection(self.text.children_types)
         if len(intersection_types) == 0 and "* " not in py_text:
-            py_text = resize_length(
-                py_text, max_length=max_length, initial_indent=indent, subsequent_indent=indent
+            output = resize_length(
+                output, max_length=max_length, initial_indent=indent, subsequent_indent=indent
             )
 
-        split_py_text = py_text.splitlines()
+        split_output = output.splitlines()
 
-        if len(split_py_text) > 1:
+        if len(split_output) > 1:
 
-            first_line = split_py_text[0]
-            rest_lines = split_py_text[1:]
+            first_line = split_output[0]
+            rest_lines = split_output[1:]
 
             rest_lines = textwrap.indent("\n".join(rest_lines), prefix=" " * 2)
 
-            py_text = f"{first_line}\n{rest_lines}"
-
-        lines = [f"* {py_term} - {py_text}"]
-        output = "\n".join(lines)
+            output = f"{first_line}\n{rest_lines}"
 
         return output
 
@@ -1634,9 +1667,7 @@ class XRef(Link):
 
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
-        # disabled at the moment
-        # return f':ref:`{self.linkend}`{self.tail}'
-        return self.tail
+        return f":ref:`{self.linkend}`{self.tail}"
 
 
 class UserInput(ProgramListing):
@@ -1885,12 +1916,15 @@ class Table(Element):
         """Return a string to enable converting the element to an RST format."""
         # For now, Tables don't support ``max_length``
         lines = []
-        if self.title is not None:
+        if self.id:
+            lines.append(f"\n.. _{self.id}:\n\n")
+
+        if self.title:
             title = f"{self.title}".strip()
             lines.append(f"**{title}**\n")
             lines.append("")
 
-        if self.tgroup is not None:
+        if self.tgroup:
             rst_tgroup = self.tgroup.to_rst(indent=indent, links=links, base_url=base_url)
             lines.append(rst_tgroup)
 
@@ -2360,13 +2394,17 @@ class Entry(Element):
 
             items.append(entry_item)
 
+        entry_content = " ".join(items)
+        entry_content = resize_length(
+            entry_content, max_length=100, initial_indent=indent, subsequent_indent=" " * 2
+        )
+
         if self.morerows is not None:
-            entry = f":rspan:`{content}` " + " ".join(items)
+            entry_content = f":rspan:`{content}` " + entry_content
 
-        else:
-            entry = " ".join(items)
-
-        return entry
+        print(entry_content)
+        # to be checked - not working
+        return entry_content
 
 
 class Row(Element):
