@@ -2376,7 +2376,7 @@ class Entry(Element):
         """Value for the ``morerows`` parameter contained in the entry element."""
         return self._element.get("morerows")
 
-    def to_rst(self, indent="", links=None, base_url=None, fcache=None):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
 
         if self.morerows is not None:
@@ -2395,14 +2395,14 @@ class Entry(Element):
             items.append(entry_item)
 
         entry_content = " ".join(items)
-        entry_content = resize_length(
-            entry_content, max_length=100, initial_indent=indent, subsequent_indent=" " * 2
-        )
+        # entry_content = resize_length(
+        #     entry_content, max_length=max_length, initial_indent=indent, subsequent_indent=" " * 2
+        # )
 
         if self.morerows is not None:
             entry_content = f":rspan:`{content}` " + entry_content
 
-        print(entry_content)
+            print(entry_content)
         # to be checked - not working
         return entry_content
 
@@ -2415,11 +2415,11 @@ class Row(Element):
         """Return all entry elements found in the row element."""
         return self.find_all("Entry")
 
-    def to_rst_list(self, indent="", links=None, base_url=None):
+    def to_rst_list(self, indent="", max_length=100, links=None, base_url=None):
         """Return a list to enable converting the element to an RST format."""
         row = []
         for entry in self.entry:
-            content = entry.to_rst(links=links, base_url=base_url, indent="")
+            content = entry.to_rst(max_length=max_length, links=links, base_url=base_url, indent="")
             content = content.replace("\n", "")
             content = content.replace("\r", "")
             row.append(content)
