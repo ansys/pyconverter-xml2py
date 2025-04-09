@@ -89,7 +89,7 @@ jobs:
   build-test:
     name: "Build and unit testing"
     runs-on: ubuntu-latest
-    needs: [smoke-tests]
+    needs: # [smoke-tests]
 
     steps:
       - name: "Install Git and checkout project"
