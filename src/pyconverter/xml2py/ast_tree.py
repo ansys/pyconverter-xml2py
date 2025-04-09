@@ -90,7 +90,7 @@ NAME_MAP_GLOB = {}
 NO_RESIZE_LIST = [
     "Variablelist",
     "ItemizedList",
-    "SimpleList"
+    "SimpleList",
     "Caution",
     "XMLWarning",
     "ProgramListing",
@@ -3121,13 +3121,17 @@ class XMLCommand(Element):
         arg_sig = ", ".join(args)
         return f"{indent}def {self.py_name}({arg_sig}, **kwargs):"
 
-    def custom_notes(self, custom_functions: CustomFunctions = None, automated_notes: List[str]= None) -> List[str]:
+    def custom_notes(
+        self, custom_functions: CustomFunctions = None, automated_notes: List[str] = None
+    ) -> List[str]:
         """Customized notes for the command."""
         lines = []
         if custom_functions is not None and (
             self.py_name in custom_functions.py_names and self.py_name in custom_functions.py_notes
         ):
-            if len("\n".join(automated_notes)) < len("\n".join(custom_functions.py_notes[self.py_name])):
+            if len("\n".join(automated_notes)) < len(
+                "\n".join(custom_functions.py_notes[self.py_name])
+            ):
                 lines = custom_functions.py_notes[self.py_name]
         return lines
 
@@ -3397,7 +3401,7 @@ class XMLCommand(Element):
                 resized_item = resize_length(item, self._max_length)
                 notes = notes.replace(item, resized_item)
             lines.extend(notes.split("\n"))
- 
+
         return lines
 
     @property
