@@ -39,7 +39,11 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
     Returns
     -------
     List[str]
+        List containing the docstring ``Parameters`` section.
+    List[str]
         List containing the docstring ``Returns`` section.
+    List[str]
+        List containing the docstring ``Notes`` section.
     List[str]
         List containing the docstring ``Examples`` section.
     List[str]

@@ -90,6 +90,7 @@ NAME_MAP_GLOB = {}
 NO_RESIZE_LIST = [
     "Variablelist",
     "ItemizedList",
+    "SimpleList"
     "Caution",
     "XMLWarning",
     "ProgramListing",
@@ -2395,15 +2396,10 @@ class Entry(Element):
             items.append(entry_item)
 
         entry_content = " ".join(items)
-        # entry_content = resize_length(
-        #     entry_content, max_length=max_length, initial_indent=indent, subsequent_indent=" " * 2
-        # )
 
         if self.morerows is not None:
             entry_content = f":rspan:`{content}` " + entry_content
 
-            print(entry_content)
-        # to be checked - not working
         return entry_content
 
 
@@ -3125,13 +3121,13 @@ class XMLCommand(Element):
         arg_sig = ", ".join(args)
         return f"{indent}def {self.py_name}({arg_sig}, **kwargs):"
 
-    def custom_notes(self, custom_functions: CustomFunctions = None):
+    def custom_notes(self, custom_functions: CustomFunctions = None, automated_notes: List[str]= None) -> List[str]:
         """Customized notes for the command."""
         lines = []
         if custom_functions is not None and (
             self.py_name in custom_functions.py_names and self.py_name in custom_functions.py_notes
         ):
-            if len("\n".join(lines)) < len("\n".join(custom_functions.py_notes[self.py_name])):
+            if len("\n".join(automated_notes)) < len("\n".join(custom_functions.py_notes[self.py_name])):
                 lines = custom_functions.py_notes[self.py_name]
         return lines
 
@@ -3180,14 +3176,15 @@ class XMLCommand(Element):
             and self.py_name in custom_functions.py_returns
         ):
             items += [""] + custom_functions.py_returns[self.py_name]
-        custom_notes = self.custom_notes(custom_functions)
+        automated_notes = self.py_notes(self.notes, "Notes")
+        custom_notes = self.custom_notes(custom_functions, automated_notes)
         if not custom_notes:
             if self.other_parameters:
                 items += [""]
                 items.extend(self.py_notes(self.other_parameters, "Other Parameters"))
             if self.notes:
                 items += [""]
-                items.extend(self.py_notes(self.notes, "Notes"))
+                items.extend(automated_notes)
         else:
             items.extend(custom_notes)
         if custom_functions and (
@@ -3400,7 +3397,7 @@ class XMLCommand(Element):
                 resized_item = resize_length(item, self._max_length)
                 notes = notes.replace(item, resized_item)
             lines.extend(notes.split("\n"))
-
+ 
         return lines
 
     @property
