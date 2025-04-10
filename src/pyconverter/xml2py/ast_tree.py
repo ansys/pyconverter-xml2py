@@ -2551,6 +2551,13 @@ class Argument:
         return to_py_arg_name(self._name)
 
     @property
+    def description(self) -> str:
+        """Description of the argument."""
+        if isinstance(self._description, str):
+            return self._description
+        return str(self._description)
+
+    @property
     def is_arg_elipsis(self):
         """
         Check if the argument is an elipsis.
@@ -2768,6 +2775,12 @@ class ArgumentList:
         self._arguments = []
         self._additional_args = []
         self._initial_args = args
+        self._missing_argument_description = MISSING_ARGUMENT_DESCRIPTION.replace(
+            "url", f"{self._url}"
+        )
+        self._additional_argument_description = ADDITIONAL_ARGUMENT_DESCRIPTION.replace(
+            "url", f"{self._url}"
+        )
         self._parse_list_entry()
 
     def _parse_list_entry(self):
@@ -2797,7 +2810,7 @@ class ArgumentList:
                         self._terms,
                         initial_arg,
                         self._initial_args,
-                        MISSING_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"),
+                        self._missing_argument_description,
                     )
                 )  # description is missing
 
@@ -2814,7 +2827,7 @@ class ArgumentList:
                     self._terms,
                     "addional_command_arg",
                     self._initial_args,
-                    ADDITIONAL_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"),
+                    self._additional_argument_description,
                 )
             )
 
@@ -2822,9 +2835,10 @@ class ArgumentList:
         temp_args = {}
         for arg in argument_list.arguments:
             arg_name = arg.py_arg_name
-            if (arg_name in self._initial_args) and (
-                arg_name == "" or arg_name not in self.py_arg_names
-            ):
+            if (arg_name in self._initial_args) and arg.description not in [
+                self._missing_argument_description,
+                self._additional_argument_description,
+            ]:
                 temp_args[arg_name] = arg
 
         for initial_arg in self._initial_args:
@@ -2840,7 +2854,7 @@ class ArgumentList:
                             self._terms,
                             initial_arg,
                             self._initial_args,
-                            MISSING_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"),
+                            self._missing_argument_description,
                         )
                     )
 
@@ -2857,7 +2871,7 @@ class ArgumentList:
                     self._terms,
                     "addional_command_arg",
                     self._initial_args,
-                    ADDITIONAL_ARGUMENT_DESCRIPTION.replace("url", f"{self._url}"),
+                    self._additional_argument_description,
                 )
             )
 
