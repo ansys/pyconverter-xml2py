@@ -2934,6 +2934,7 @@ class XMLCommand(Element):
         self._max_length = 100
         self._notes = []
         self._other_parameters = []
+        self._is_paragraph_in_arg_desc = False
 
         # parse the command
         super().__init__(self._refentry, parse_children=not meta_only)
@@ -2979,6 +2980,8 @@ class XMLCommand(Element):
                             arguments += ArgumentList(
                                 self.py_name, self.url, self._terms, child, self.args
                             )
+                    if isinstance(child, Paragraph):
+                        self._is_paragraph_in_arg_desc = True
 
         else:
             for elem in refsyn:
@@ -2991,6 +2994,8 @@ class XMLCommand(Element):
                         arguments += ArgumentList(
                             self.py_name, self.url, self._terms, elem, self.args
                         )
+                if isinstance(elem, Paragraph):
+                    self._is_paragraph_in_arg_desc = True
 
         arg_file = Path("args.txt")
 
@@ -3386,6 +3391,14 @@ class XMLCommand(Element):
     def py_notes(self, note_elem_list, section_title):
         """Python-formatted notes string."""
         lines = [section_title, "-" * len(section_title)]
+        if section_title == "Notes" and self._is_paragraph_in_arg_desc:
+            lines.append("")
+            lines.append(".. warning::")
+            lines.append(
+                "   This function contains specificities regarding the argument definitions."
+            )
+            lines.append(f"   Please refer to the `Ansys documentation <{self.url}`_")
+            lines.append("   for further explanations.")
         for note in note_elem_list:
             if note.title and str(note.title).strip() != section_title:
                 note_title = str(note.title).strip()
