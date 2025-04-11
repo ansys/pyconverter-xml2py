@@ -102,7 +102,7 @@ latex_elements = {}
 latex_documents = [
     (
         master_doc,
-        f"{project}-Documentation-{__version__}.tex",
+        f"{project}-documentation-{__version__}.tex",
         f"{project} Documentation",
         author,
         "manual",
