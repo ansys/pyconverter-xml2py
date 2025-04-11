@@ -26,7 +26,7 @@ from pathlib import Path
 from pyconverter.xml2py.custom_functions import CustomFunctions
 import pyconverter.xml2py.directory_format as ff
 import pyconverter.xml2py.load_xml_doc as lxd
-from pyconverter.xml2py.utils.utils import get_config_data_value, get_warning_command_dict
+from pyconverter.xml2py.utils.utils import get_comment_command_dict, get_config_data_value
 import pyconverter.xml2py.writer as wrt
 import pytest
 
@@ -150,5 +150,5 @@ def package_structure(command_map, name_map, directory_path, cwd, path_custom_fu
 
 
 @pytest.fixture
-def warning_command_dict(config_path):
-    return get_warning_command_dict(config_path)
+def comment_command_dict(config_path):
+    return get_comment_command_dict(config_path)
