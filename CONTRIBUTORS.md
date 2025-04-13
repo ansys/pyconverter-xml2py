@@ -2,7 +2,7 @@
 
 ## Project Lead
 
-* [Camille](https://github.com/clatapie)
+* [Camille Latapie](https://github.com/clatapie)
 
 ## Individual Contributors
 
