@@ -3395,6 +3395,7 @@ class XMLCommand(Element):
             warning_message = [
                 "",
                 ".. warning::",
+                "",
                 "   This function contains specificities regarding the argument definitions.",
                 "   Please refer to the `command documentation <{self.url}>`_",
                 "   for further explanations.",
