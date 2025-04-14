@@ -3398,6 +3398,8 @@ class XMLCommand(Element):
                 "   This function contains specificities regarding the argument definitions.",
                 "   Please refer to the `command documentation <{self.url}>`_",
                 "   for further explanations.",
+                "",
+                "",
             ]
             lines.extend(warning_message)
         for note in note_elem_list:
