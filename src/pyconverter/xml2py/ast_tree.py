@@ -3391,18 +3391,18 @@ class XMLCommand(Element):
     def py_notes(self, note_elem_list, section_title):
         """Python-formatted notes string."""
         lines = [section_title, "-" * len(section_title)]
-        if section_title == "Notes" and self._is_paragraph_in_arg_desc:
-            warning_message = [
-                "",
-                ".. warning::",
-                "",
-                "   This function contains specificities regarding the argument definitions.",
-                "   Please refer to the `command documentation <{self.url}>`_",
-                "   for further explanations.",
-                "",
-                "",
-            ]
-            lines.extend(warning_message)
+        # if section_title == "Notes" and self._is_paragraph_in_arg_desc:
+        # warning_message = [
+        #     "",
+        #     ".. warning::",
+        #     "",
+        #     "   This function contains specificities regarding the argument definitions.",
+        #     "   Please refer to the `command documentation <{self.url}>`_",
+        #     "   for further explanations.",
+        #     "",
+        #     "",
+        # ]
+        # lines.extend(warning_message)
         for note in note_elem_list:
             if note.title and str(note.title).strip() != section_title:
                 note_title = str(note.title).strip()
