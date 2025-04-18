@@ -84,6 +84,20 @@ PY_ARG_CLEANUP = {
     "caret1?": "",
 }
 
+FORBIDDEN_ARGUMENT_NAMES = [
+    "type",
+    "class",
+    "property",
+    "format",
+    "dir",
+    "set",
+    "iter",
+    "min",
+    "max",
+    "abs",
+    "int",
+]
+
 # Map XML command to pycommand function
 NAME_MAP_GLOB = {}
 
@@ -221,7 +235,7 @@ def to_py_arg_name(name: str) -> str:
     while len(arg) > 0 and arg[-1] == "_":
         arg = arg[:-1]
 
-    if arg in ["type", "class", "property", "format", "dir", "set", "iter"]:
+    if arg in FORBIDDEN_ARGUMENT_NAMES:
         arg = f"{arg}_"
 
     return f"{arg}"
@@ -3392,6 +3406,8 @@ class XMLCommand(Element):
         """Python-formatted notes string."""
         lines = [section_title, "-" * len(section_title)]
         if section_title == "Notes" and self._is_paragraph_in_arg_desc:
+            if not self.url:  # Check if self.url is valid
+                raise ValueError("The 'url' property is not properly initialized.")
             warning_message = [
                 "",
                 ".. warning::",
