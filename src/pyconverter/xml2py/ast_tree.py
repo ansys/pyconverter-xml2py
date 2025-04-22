@@ -947,8 +947,10 @@ class OLink(Element):
             tail = self.tail
             tail = tail.replace("\n", "")
             tail = tail.replace("\r", "")
+            for key, value in CONST.items():
+                tail = tail.replace(key, value)
 
-            rst_link = f"`{content} <{link}>`_ {self.tail}"
+            rst_link = f"`{content} <{link}>`_ {tail}"
 
         else:
             rst_link = super().to_rst(indent)
