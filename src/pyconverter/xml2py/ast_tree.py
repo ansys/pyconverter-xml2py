@@ -53,6 +53,8 @@ XML_CLEANUP = {
     "Caret1?": "",
     "Caret 40?": "",
     '``"``': "``",
+    "/_nolinebreak?": "",
+    "_nolinebreak?": "",
 }
 
 superlatif = ["st", "nd", "rd", "th"]
@@ -909,10 +911,9 @@ class FileName(Element):
         if "*" in content:
             content = content.replace("*", r"\*")
         output = f":file:`{content}` {self.tail}"
-        # need to be modified
+        # TODO: needs to fix the issue with the ``nnn.jpg`` file name
         if "nnn.jpg" in output:
-            print(content)
-            # stop
+            pass
         return output
 
 
@@ -1059,7 +1060,6 @@ class Phrase(Paragraph):
         """Return a string to enable converting the element to an RST format."""
         rst_phrase = super().to_rst(indent, max_length, links, base_url, fcache)
         rst_phrase = rst_phrase.replace("\n\n", "")
-        print(rst_phrase)
         return rst_phrase
 
 
