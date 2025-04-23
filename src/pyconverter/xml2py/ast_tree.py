@@ -46,7 +46,7 @@ logger.setLevel(logging.INFO)
 
 
 # common statements used within the docs to avoid duplication
-CONST = {
+XML_CLEANUP = {
     # "&thetas;": "θ",  # consider replacing with :math:`\theta`
     "Dtl?": "",
     "Caret?": "",
@@ -908,7 +908,12 @@ class FileName(Element):
         content = self[0]
         if "*" in content:
             content = content.replace("*", r"\*")
-        return f":file:`{content}` {self.tail}"
+        output = f":file:`{content}` {self.tail}"
+        # need to be modified
+        if "nnn.jpg" in output:
+            print(content)
+            # stop
+        return output
 
 
 class OLink(Element):
@@ -947,7 +952,7 @@ class OLink(Element):
             tail = self.tail
             tail = tail.replace("\n", "")
             tail = tail.replace("\r", "")
-            for key, value in CONST.items():
+            for key, value in XML_CLEANUP.items():
                 tail = tail.replace(key, value)
 
             rst_link = f"`{content} <{link}>`_ {tail}"
@@ -1050,11 +1055,21 @@ class Phrase(Paragraph):
     def __repr__(self):
         return " ".join([str(item) for item in self._content])
 
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
+        """Return a string to enable converting the element to an RST format."""
+        rst_phrase = super().to_rst(indent, max_length, links, base_url, fcache)
+        rst_phrase = rst_phrase.replace("\n\n", "")
+        print(rst_phrase)
+        return rst_phrase
+
 
 class Structname(Element):
     """Provides the structure name element."""
 
-    pass
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
+        """Return a string to enable converting the element to an RST format."""
+        rst_replaceable = f"``{self.content[0]}``{self.tail}"
+        return rst_replaceable
 
 
 class Title(Element):
@@ -1959,7 +1974,7 @@ class Refentrytitle(Element):
         items = []
         for item in self._content:
             item = str(item)
-            for key, value in CONST.items():
+            for key, value in XML_CLEANUP.items():
                 item = item.replace(key, value)
             items.append(item)
         return "".join(items)
@@ -3233,7 +3248,7 @@ class XMLCommand(Element):
             items += [""] + custom_functions.py_examples[self.py_name]
         docstr = "\n".join(items)
 
-        for key, value in CONST.items():
+        for key, value in XML_CLEANUP.items():
             docstr = docstr.replace(key, value)
         for key, value in CLEANUP.items():
             docstr = docstr.replace(key, value)
