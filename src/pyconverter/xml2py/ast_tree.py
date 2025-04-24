@@ -1617,7 +1617,8 @@ class InlineEquation(_Math):
 
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
-        return f":math:`{self.equation.strip()}` {self.tail}"
+        # TODO: ``self.equation.strip()`` needs to be enhanced (check \VCONE function)
+        return f":math:``{self.equation.strip()}`` {self.tail}"
 
 
 class SubScript(Element):
