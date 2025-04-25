@@ -927,7 +927,6 @@ class FileName(Element):
             output = f":file:`{self._filename}`{self._tail}"
         else:
             output = f":file:`{self._filename}` {self._tail}"
-        print(output)
         return output
 
 
@@ -3648,7 +3647,12 @@ class InformalTable(Element):
 
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
-        return "InformalTables need to be added."
+        output = """
+This command contains some tables and extra information which can be inspected in the original
+documentation pointed above.
+"""
+
+        return output
 
 
 parsers = {
