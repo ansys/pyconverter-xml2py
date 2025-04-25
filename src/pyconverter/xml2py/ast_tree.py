@@ -905,15 +905,29 @@ class ListItem(Element):
 class FileName(Element):
     """Provides the filename element."""
 
+    def __init__(self, element, parse_children=True):
+        super().__init__(element, parse_children)
+        self._tail = self.children[-1] if len(self) > 1 else None
+        self._filename = self.get_filename()
+
+    def get_filename(self):
+        """Get the filename."""
+        filename = []
+        for element in self:
+            filename.append(str(element))
+        filename = "".join(filename)
+        filename = filename.replace(str(self._tail), "")
+        if "*" in filename:
+            filename = filename.replace("*", r"\*")
+        return filename
+
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
-        content = self[0]
-        if "*" in content:
-            content = content.replace("*", r"\*")
-        output = f":file:`{content}` {self.tail}"
-        # TODO: needs to fix the issue with the ``nnn.jpg`` file name
-        if "nnn.jpg" in output:
-            pass
+        if self._tail and self._tail[0] in [",", ".", " "]:
+            output = f":file:`{self._filename}`{self._tail}"
+        else:
+            output = f":file:`{self._filename}` {self._tail}"
+        print(output)
         return output
 
 
