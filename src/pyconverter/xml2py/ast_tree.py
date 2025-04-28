@@ -74,6 +74,8 @@ CLEANUP = {
     "’": "``",
     "∗": "*",
     "−": "-",
+    "–": "-",
+    "â": "-",
     "…": "...",
 }
 
@@ -1041,9 +1043,11 @@ class Paragraph(Element):
                     else:
                         items.append(item.to_rst(indent=indent, max_length=max_length))
             else:
+                item = str(item)
+                item = item.replace("\n", " ")
                 items.append(
                     resize_length(
-                        str(item),
+                        item,
                         max_length=max_length,
                         initial_indent=indent,
                         subsequent_indent=indent,
@@ -1627,7 +1631,7 @@ class InlineEquation(_Math):
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         # TODO: ``self.equation.strip()`` needs to be enhanced (check \VCONE function)
-        return f":math:``{self.equation.strip()}`` {self.tail}"
+        return f":math:`{self.equation.strip()}` {self.tail}"
 
 
 class SubScript(Element):
@@ -3653,10 +3657,15 @@ class BridgeHead(Element):
         """Return a string to enable converting the element to an RST format."""
         subtitle = super().to_rst(indent=indent, max_length=max_length)
 
+        # Handling cases with the "*COMMAND_NAME" configuration
+        subtitle = replace_asterisks_without_code(subtitle)
+
         rst_output = []
         if self.id:
             rst_output.append(f"\n.. _{self.id}:\n")
-        rst_output.append(f"**{subtitle}**")
+        rst_output.append(f"{subtitle}")
+        rst_output.append("^" * len(subtitle))
+        rst_output.append("")
         return "\n".join(rst_output)
 
 
