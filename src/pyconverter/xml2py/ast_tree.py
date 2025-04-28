@@ -881,7 +881,7 @@ class ListItem(Element):
         items = []
 
         if self.id:
-            items.extend(["", f".. _{self.id}:", "", ""])
+            items.extend([f".. _{self.id}:", "", ""])
         for item in self:
             if isinstance(item, Element):
                 if item.tag in item_needing_all:
