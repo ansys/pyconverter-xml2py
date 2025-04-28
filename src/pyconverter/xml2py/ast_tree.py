@@ -1962,7 +1962,12 @@ class Table(Element):
 
         if self.title:
             title = f"{self.title}".strip()
-            lines.append(f"**{title}**\n")
+            lines.append(f"{title}")
+            if "*" in title:
+                length = len(title) + len(re.findall(r"\*", title))
+            else:
+                length = len(title)
+            lines.append("^" * length)
             lines.append("")
 
         if self.tgroup:
@@ -3657,14 +3662,16 @@ class BridgeHead(Element):
         """Return a string to enable converting the element to an RST format."""
         subtitle = super().to_rst(indent=indent, max_length=max_length)
 
-        # Handling cases with the "*COMMAND_NAME" configuration
-        subtitle = replace_asterisks_without_code(subtitle)
-
         rst_output = []
         if self.id:
             rst_output.append(f"\n.. _{self.id}:\n")
         rst_output.append(f"{subtitle}")
-        rst_output.append("^" * len(subtitle))
+        if "*" in subtitle:
+            length = len(subtitle) + len(re.findall(r"\*", subtitle))
+        else:
+            length = len(subtitle)
+
+        rst_output.append("-" * length)
         rst_output.append("")
         return "\n".join(rst_output)
 
