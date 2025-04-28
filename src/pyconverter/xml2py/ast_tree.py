@@ -1893,13 +1893,6 @@ def parse_children(element):
     return children
 
 
-def parse_text(element):
-    """Parse a paragraph element."""
-    if element is not None:
-        return " ".join(element.text_content().split())
-    return ""
-
-
 class TGroup(Element):
     """Provides the tgroup element, which contains the header and body rows of a table."""
 
@@ -3653,6 +3646,20 @@ documentation pointed above.
         return output
 
 
+class BridgeHead(Element):
+    """Provides the bridgehead element."""
+
+    def to_rst(self, indent="", max_length=100):
+        """Return a string to enable converting the element to an RST format."""
+        subtitle = super().to_rst(indent=indent, max_length=max_length)
+
+        rst_output = []
+        if self.id:
+            rst_output.append(f"\n.. _{self.id}:\n")
+        rst_output.append(f"**{subtitle}**")
+        return "\n".join(rst_output)
+
+
 parsers = {
     "sect1": Section1,
     "chapter": Chapter,
@@ -3736,7 +3743,7 @@ parsers = {
     "table": Table,
     "orderedlist": OrderedList,
     "variablelist": Variablelist,
-    "bridgehead": parse_text,
+    "bridgehead": BridgeHead,
     "informaltable": InformalTable,
     "blockquote": BlockQuote,
     "note": Note,
