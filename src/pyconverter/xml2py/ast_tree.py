@@ -55,6 +55,7 @@ XML_CLEANUP = {
     '``"``': "``",
     "/_nolinebreak?": "",
     "_nolinebreak?": "",
+    "nbsp": " ",
 }
 
 superlatif = ["st", "nd", "rd", "th"]
