@@ -527,6 +527,8 @@ class Element:
         self._element = element
         self._content = []
         self._id = self._element.get("id")
+        if self._id:
+            self._id = self._id.replace(".", "_")
 
         if element.text is not None:
             content = " ".join(element.text.split())
@@ -984,11 +986,6 @@ class OLink(Element):
 class Paragraph(Element):
     """Provides the paragraph element."""
 
-    def __init__(self, element, parse_children=True):
-        super().__init__(element, parse_children)
-        if self.id:
-            self.id = self.id.replace(".", "_")
-
     def __repr__(self):
         lines = [""]
         lines.append(" ".join([str(item) for item in self._content]))
@@ -1337,11 +1334,6 @@ class Variablelist(Element):
 
 class RefSection(Element):
     """Provides the reference section element."""
-
-    def __init__(self, element, parse_children=True):
-        super().__init__(element, parse_children)
-        if self.id:
-            self.id = self.id.replace(".", "_")
 
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
@@ -1693,7 +1685,7 @@ class Link(Element):
         tail = " ".join([str(item) for item in self])
         tail = tail.replace("\n", "")
         if self.linkend in links:
-            root_name, root_title, href, text = links[self._linkend]
+            root_name, root_title, href, text = links[self.linkend]
             text = text.replace("\n", "")
             link = f"{base_url}{root_name}/{href}"
             output = f"`{text} <{link}>`_ {tail}"
@@ -1717,7 +1709,9 @@ class XRef(Link):
 
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
-        return f":ref:`{self.linkend}`{self.tail}"
+        # internal links
+        linkend = (self.linkend).replace(".", "_")
+        return f":ref:`{linkend}`{self.tail}"
 
 
 class UserInput(ProgramListing):
