@@ -862,12 +862,12 @@ class OrderedList(Element):
                 rst_item = item.to_rst(indent, links=links, base_url=base_url)
             else:
                 rst_item = item.to_rst(indent)
-            rst_item = re.sub(r"\s+", " ", rst_item.lstrip())  # Remove extra whitespaces
 
             resized_item = resize_length(
                 rst_item, max_length=max_length, initial_indent="", subsequent_indent=""
             )
             ordered_list.append(resized_item)
+
         return "\n\n".join(ordered_list)
 
 
@@ -877,6 +877,9 @@ class ListItem(Element):
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
+
+        if self.id:
+            items.extend(["", f".. _{self.id}:", "", ""])
         for item in self:
             if isinstance(item, Element):
                 if item.tag in item_needing_all:
