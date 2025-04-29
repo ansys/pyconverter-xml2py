@@ -1967,7 +1967,7 @@ class Table(Element):
                 length = len(title) + len(re.findall(r"\*", title))
             else:
                 length = len(title)
-            lines.append('*' * length)
+            lines.append("*" * length)
             lines.append("")
 
         if self.tgroup:
