@@ -1967,7 +1967,7 @@ class Table(Element):
                 length = len(title) + len(re.findall(r"\*", title))
             else:
                 length = len(title)
-            lines.append("^" * length)
+            lines.append('*' * length)
             lines.append("")
 
         if self.tgroup:
@@ -3671,7 +3671,7 @@ class BridgeHead(Element):
         else:
             length = len(subtitle)
 
-        rst_output.append("-" * length)
+        rst_output.append("^" * length)
         rst_output.append("")
         return "\n".join(rst_output)
 

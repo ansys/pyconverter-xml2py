@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-GET_BOLD_COMMANDS = r"([^\*])(\*\*)(\*)(.*?)(\*\*)([^\*])"
+GET_BOLD_COMMANDS = r"([^\*])(\*\*)(\*)([^*\n]*?)(\*\*)([^\*])"
 BEFORE_DEF = r"[\s\S]*?(?=def "
 GET_CLASSNAME = r"(\S+)(?=:)"
 GET_CODE_BLOCK = r"(\s*\.\. code:: apdl\n\s*(?: +.+\n)+)"
