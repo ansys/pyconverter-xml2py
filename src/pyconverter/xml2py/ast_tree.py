@@ -90,17 +90,18 @@ PY_ARG_CLEANUP = {
 }
 
 FORBIDDEN_ARGUMENT_NAMES = [
-    "type",
+    "abs",
     "class",
-    "property",
-    "format",
     "dir",
-    "set",
+    "eval",
+    "format",
+    "int",
     "iter",
     "min",
     "max",
-    "abs",
-    "int",
+    "property",
+    "set",
+    "type",
 ]
 
 # Map XML command to pycommand function
@@ -2991,6 +2992,11 @@ class XMLCommand(Element):
         return self._xml_filename
 
     @property
+    def py_name(self):
+        """Python-compatible name."""
+        return to_py_name(self.name)
+
+    @property
     def args(self):
         """Command arguments."""
         return self._refname_div.refname.args
@@ -3044,6 +3050,13 @@ class XMLCommand(Element):
 
         arg_file = Path("args.txt")
 
+        if self.py_name == "tbft":
+            print("tbft")
+            print(arguments)
+            print("refsyn : ", refsyn)
+            if refsyn is None:
+                print("refsections : ", refsections)
+
         if arguments is not None:
             # Remove last argument if it's empty
             while arguments.py_arg_names[-1] == "":
@@ -3095,11 +3108,6 @@ class XMLCommand(Element):
     def name(self):
         """Name of the XML command."""
         return self._metadata.refentry_title
-
-    @property
-    def py_name(self):
-        """Python-compatible name."""
-        return to_py_name(self.name)
 
     @property
     def py_args(self):
