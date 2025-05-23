@@ -459,7 +459,7 @@ def write_source(
         all_commands = []
         specific_classes = get_config_data_value(config_path, "specific_classes")
         for command in tqdm(
-            sorted(command_map.values(), key=lambda cmd: cmd.name), desc="Writing commands"
+            sorted(command_map.values(), key=lambda cmd: cmd.py_name), desc="Writing commands"
         ):
             if command.name in ignored_commands or command.group is None:
                 continue
