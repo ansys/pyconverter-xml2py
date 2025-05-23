@@ -95,6 +95,7 @@ FORBIDDEN_ARGUMENT_NAMES = [
     "dir",
     "eval",
     "format",
+    "id",
     "int",
     "iter",
     "min",
