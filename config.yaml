@@ -50,6 +50,7 @@ ignored_commands:
   - "/DIRECTORY" # Defined in ``mapdl_core.py``
   - "*XPL" # Defined in ``mapdl_grpc.py``
   - "PLOT"
+  - "/EXIT" # Defined in ``mapdl_core.py``
 
 comments:
   - msg: 'This command must be run using :func:`non_interactive <ansys.mapdl.core.Mapdl.non_interactive>`.
