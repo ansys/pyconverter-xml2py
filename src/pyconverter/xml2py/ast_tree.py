@@ -1057,6 +1057,8 @@ class Paragraph(Element):
                 )
 
         rst_item = " ".join(items) + "\n\n"
+        for key, value in CLEANUP.items():
+            rst_item = rst_item.replace(key, value)
 
         intersection_types = set(NO_RESIZE_LIST).intersection(set(self.children_types))
         if len(intersection_types) == 0 and "* " not in rst_item:
@@ -2202,9 +2204,10 @@ class Command(Element):
     def to_rst(self, indent="", max_length=100):
         """Return a string to enable converting the element to an RST format."""
         if self.args and self.args[0] != "":
-            return f"{self.sphinx_cmd} {self.tail_no_args}"
+            output = f"{self.sphinx_cmd} {self.tail_no_args}"
         else:
-            return f"{self.sphinx_cmd} {self.tail}"
+            output = f"{self.sphinx_cmd} {self.tail}"
+        return output
 
 
 class ComputerOutput(Element):
@@ -3051,12 +3054,12 @@ class XMLCommand(Element):
 
         arg_file = Path("args.txt")
 
-        if self.py_name == "tbft":
-            print("tbft")
-            print(arguments)
-            print("refsyn : ", refsyn)
-            if refsyn is None:
-                print("refsections : ", refsections)
+        # if self.py_name == "tbft":
+        #     print("tbft")
+        #     print(arguments)
+        #     print("refsyn : ", refsyn)
+        #     if refsyn is None:
+        #         print("refsections : ", refsections)
 
         if arguments is not None:
             # Remove last argument if it's empty
