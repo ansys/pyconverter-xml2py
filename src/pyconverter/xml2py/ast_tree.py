@@ -2466,8 +2466,8 @@ class Row(Element):
         row = []
         for entry in self.entry:
             content = entry.to_rst(max_length=max_length, links=links, base_url=base_url, indent="")
-            content = content.replace("\n", "")
-            content = content.replace("\r", "")
+            content = content.replace("\n", " ")
+            content = content.replace("\r", " ")
             row.append(content)
         return row
 
