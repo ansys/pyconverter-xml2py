@@ -1619,7 +1619,7 @@ class Math(_Math):
         return "\n".join(lines)
 
 
-class InlineEquation(_Math):
+class InlineEquation(Math):
     """Provides the inline equation element."""
 
     def __init__(self, element):
@@ -2294,7 +2294,7 @@ class Important(Element):
     pass
 
 
-class InformalEquation(Element):
+class InformalEquation(Math):
 
     pass
 
@@ -3827,7 +3827,6 @@ item_needing_fcache = {
     "informalfigure": InformalFigure,
     "variablelist": Variablelist,
     "blockquote": BlockQuote,
-    "informalequation": InformalEquation,
 }
 
 item_needing_all = {
