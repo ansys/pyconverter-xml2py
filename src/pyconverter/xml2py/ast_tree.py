@@ -1004,8 +1004,6 @@ class Paragraph(Element):
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
         items = []
-        if self.id:
-            items.append(f"\n.. _{self.id}:\n\n")
         if self.revisionflag and self.revisionflag == "deleted":
             return ""
         for item in self:
@@ -1057,6 +1055,9 @@ class Paragraph(Element):
                 )
 
         rst_item = " ".join(items) + "\n\n"
+        if self.id:
+            rst_item = f"\n.. _{self.id}:\n\n" + rst_item
+
         for key, value in CLEANUP.items():
             rst_item = rst_item.replace(key, value)
 
