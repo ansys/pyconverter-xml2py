@@ -1610,7 +1610,8 @@ class _Math(Element):
     @property
     def equation(self):
         """Return the equation related to the math element."""
-        return self.content[0][1:-1]
+        # return self.content[0][1:-1]
+        return "The equation is not available. Please refer to the original documentation."
 
 
 class Math(_Math):
