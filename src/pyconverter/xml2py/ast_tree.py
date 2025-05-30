@@ -1090,7 +1090,7 @@ class Structname(Element):
 
     def to_rst(self, indent="", max_length=100, links=None, base_url=None, fcache=None):
         """Return a string to enable converting the element to an RST format."""
-        rst_replaceable = f"``{self.content[0]}``{self.tail}"
+        rst_replaceable = f"``{self.content[0]}`` {self.tail}"
         return rst_replaceable
 
 
@@ -1538,9 +1538,14 @@ class Term(Element):
             else:
                 items.append(str(item))
 
+        if len(items) > 1:
+            if ":" in items:
+                items = [item for item in items if ":" not in item]
+
         text = ", ".join(items)
         if text.endswith("–"):
             text = text[:-1]
+
         return text
 
     def __repr__(self):
