@@ -68,8 +68,8 @@ CLEANUP = {
     " , ": ", ",
     ", )": ")",
     ",)": ")",
-    "% ``": "``%",  # Ansys variable names should be pulled inside literals
-    "`` %": "%``",  # same
+    "% ``": "``",  # Removing percentage sign before `` in the text - rendering issue
+    "`` %": "``",  # Removing percentage sign after `` in the text - rendering issue
     "\xa0": " ",
     "’": "``",
     "∗": "*",
