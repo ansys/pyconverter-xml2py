@@ -394,9 +394,9 @@ def resize_length(text, max_length=100, initial_indent="", subsequent_indent="",
         text = text.replace("\n\n\n", "\n\n")
 
     # Remove extra whitespace before period
-    text = ponctuaction_whitespace(text, ".")
+    text = ponctuation_whitespace(text, ".")
     # Remove extra whitespace before comma
-    text = ponctuaction_whitespace(text, ",")
+    text = ponctuation_whitespace(text, ",")
 
     wrapper = textwrap.TextWrapper(
         width=max_length,
@@ -836,22 +836,26 @@ class Member(Element):
         return "\n".join(rst_members)
 
 
-def ponctuaction_whitespace(text, ponctuation):
-    pattern = r"\S\h+\{ponctuation}".format(ponctuation=ponctuation)
+def ponctuation_whitespace(text, ponctuation):
+    pattern = r".\S\h+\{ponctuation}".format(ponctuation=ponctuation)
     extra_space = re.findall(pattern, text)
     if extra_space:
         for character in list(set(extra_space)):  # remove duplicates in extra_space list
-            assigned_character = character[0]
-            if assigned_character in ["*", ")", "?"]:
-                pattern = r"\{assigned_character}\h+\{ponctuation}".format(
-                    assigned_character=assigned_character, ponctuation=ponctuation
-                )
-            else:
-                pattern = r"{assigned_character}\h+\{ponctuation}".format(
-                    assigned_character=assigned_character, ponctuation=ponctuation
-                )
-            repl = r"{assigned_character}{ponctuation}".format(
-                assigned_character=assigned_character, ponctuation=ponctuation
+            char_minus_2 = character[0]
+            char_minus_1 = character[1]
+            if char_minus_1 in ["*", ")", "?", "+"]:
+                char_minus_1 = f"\{char_minus_1}"
+            if char_minus_2 in ["*", ")", "?", "+"]:
+                char_minus_2 = f"\{char_minus_2}"
+            pattern = r"{char_minus_2}{char_minus_1}\h+\{ponctuation}".format(
+                char_minus_2=char_minus_2, char_minus_1=char_minus_1, ponctuation=ponctuation
+            )
+            if len(char_minus_1) > 1:
+                char_minus_1 = char_minus_1[1]
+            if len(char_minus_2) > 1:
+                char_minus_2 = char_minus_2[1]
+            repl = r"{char_minus_2}{char_minus_1}{ponctuation}".format(
+                char_minus_2=char_minus_2, char_minus_1=char_minus_1, ponctuation=ponctuation
             )
             text = re.sub(pattern, repl, text)
     return text
@@ -3061,13 +3065,6 @@ class XMLCommand(Element):
 
         arg_file = Path("args.txt")
 
-        # if self.py_name == "tbft":
-        #     print("tbft")
-        #     print(arguments)
-        #     print("refsyn : ", refsyn)
-        #     if refsyn is None:
-        #         print("refsections : ", refsections)
-
         if arguments is not None:
             # Remove last argument if it's empty
             while arguments.py_arg_names[-1] == "":
@@ -3437,8 +3434,8 @@ class XMLCommand(Element):
         docstr = docstr.replace("–", "-")
         docstr = docstr.replace(". . .", "...")
         docstr = replace_asterisks(docstr)
-        docstr = ponctuaction_whitespace(docstr, ".")  # Remove extra whitespace before period
-        docstr = ponctuaction_whitespace(docstr, ",")  # Remove extra whitespace before comma
+        docstr = ponctuation_whitespace(docstr, ".")  # Remove extra whitespace before period
+        docstr = ponctuation_whitespace(docstr, ",")  # Remove extra whitespace before comma
 
         if self.is_archived == True:
             logger.info(f"{self.name} is an archived command.")
