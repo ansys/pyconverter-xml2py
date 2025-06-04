@@ -91,6 +91,7 @@ PY_ARG_CLEANUP = {
 
 FORBIDDEN_ARGUMENT_NAMES = [
     "abs",
+    "char",
     "class",
     "dir",
     "eval",
@@ -98,6 +99,7 @@ FORBIDDEN_ARGUMENT_NAMES = [
     "id",
     "int",
     "iter",
+    "list",
     "min",
     "max",
     "property",
