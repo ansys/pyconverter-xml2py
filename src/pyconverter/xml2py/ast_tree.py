@@ -839,25 +839,35 @@ class Member(Element):
 
 
 def ponctuation_whitespace(text, ponctuation):
-    pattern = r".\S\h+\{ponctuation}".format(ponctuation=ponctuation)
+    pattern = r".+\S\h+\{ponctuation}".format(ponctuation=ponctuation)
     extra_space = re.findall(pattern, text)
     if extra_space:
         for character in list(set(extra_space)):  # remove duplicates in extra_space list
-            char_minus_2 = character[0]
-            char_minus_1 = character[1]
-            if char_minus_1 in ["*", ")", "?", "+"]:
-                char_minus_1 = f"\{char_minus_1}"
-            if char_minus_2 in ["*", ")", "?", "+"]:
-                char_minus_2 = f"\{char_minus_2}"
-            pattern = r"{char_minus_2}{char_minus_1}\h+\{ponctuation}".format(
-                char_minus_2=char_minus_2, char_minus_1=char_minus_1, ponctuation=ponctuation
+            before_space = character[:-1].strip()
+            regex_before_space = before_space
+            if "*" in before_space:
+                regex_before_space = regex_before_space.replace("*", r"\*")
+            if "?" in before_space:
+                regex_before_space = regex_before_space.replace("?", r"\?")
+            if "+" in before_space:
+                regex_before_space = regex_before_space.replace("+", r"\+")
+            if ")" in before_space:
+                regex_before_space = regex_before_space.replace(")", r"\)")
+            if "(" in before_space:
+                regex_before_space = regex_before_space.replace("(", r"\(")
+            if "[" in before_space:
+                regex_before_space = regex_before_space.replace("[", r"\[")
+            if "]" in before_space:
+                regex_before_space = regex_before_space.replace("]", r"\]")
+            if "." in before_space:
+                regex_before_space = regex_before_space.replace(".", r"\.")
+            if "$" in before_space:
+                regex_before_space = regex_before_space.replace("$", r"\$")
+            pattern = r"{regex_before_space}\h+\{ponctuation}".format(
+                regex_before_space=regex_before_space, ponctuation=ponctuation
             )
-            if len(char_minus_1) > 1:
-                char_minus_1 = char_minus_1[1]
-            if len(char_minus_2) > 1:
-                char_minus_2 = char_minus_2[1]
-            repl = r"{char_minus_2}{char_minus_1}{ponctuation}".format(
-                char_minus_2=char_minus_2, char_minus_1=char_minus_1, ponctuation=ponctuation
+            repl = r"{before_space}{ponctuation}".format(
+                before_space=before_space, ponctuation=ponctuation
             )
             text = re.sub(pattern, repl, text)
     return text
