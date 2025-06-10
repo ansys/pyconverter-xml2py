@@ -1000,11 +1000,6 @@ class OLink(Element):
         else:
             rst_link = super().to_rst(indent)
 
-        if self.targetptr == "a4iQxq2c8mcm":
-            print("RST LINK : ", rst_link)
-            print("key in links : ", key in links)
-            stop
-
         return rst_link
 
 
