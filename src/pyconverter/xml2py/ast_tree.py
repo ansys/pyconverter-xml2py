@@ -981,8 +981,8 @@ class OLink(Element):
             root_name, root_title, href, text = links[key]
             link = f"{base_url}{root_name}/{href}"
             content = self.text_content
-            content = content.replace("\n", "")
-            content = content.replace("\r", "")
+            content = content.replace("\n", " ")
+            content = content.replace("\r", " ")
             while "  " in content:
                 content = content.replace("  ", " ")
             if len(content) > 1 and content[0] == "":
@@ -999,6 +999,11 @@ class OLink(Element):
 
         else:
             rst_link = super().to_rst(indent)
+
+        if self.targetptr == "a4iQxq2c8mcm":
+            print("RST LINK : ", rst_link)
+            print("key in links : ", key in links)
+            stop
 
         return rst_link
 
