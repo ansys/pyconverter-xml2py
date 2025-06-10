@@ -1742,7 +1742,7 @@ class XRef(Link):
         """Return a string to enable converting the element to an RST format."""
         # internal links
         linkend = (self.linkend).replace(".", "_")
-        return f":ref:`{linkend}`{self.tail}"
+        return f":ref:`{linkend}` {self.tail}"
 
 
 class UserInput(ProgramListing):
