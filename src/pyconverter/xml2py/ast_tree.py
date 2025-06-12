@@ -1013,6 +1013,14 @@ class Paragraph(Element):
         return "".join(lines)
 
     @property
+    def rubric_name(self):
+        """Return the rubric name."""
+        rubric_name = None
+        if self.id:
+            rubric_name = self.id.replace("_", " ")
+        return rubric_name
+
+    @property
     def revisionflag(self):
         """Return the revision flag."""
         return self.get("revisionflag")
@@ -1072,7 +1080,9 @@ class Paragraph(Element):
 
         rst_item = " ".join(items) + "\n\n"
         if self.id:
-            rst_item = f"\n.. _{self.id}:\n\n" + rst_item
+            # Sphinx requires a rubric header for cross-referencing a paragraph
+            header = f".. _{self.id}:\n\n" + f".. rubric:: {self.rubric_name}\n\n"
+            rst_item = header + rst_item
 
         for key, value in CLEANUP.items():
             rst_item = rst_item.replace(key, value)
