@@ -1013,14 +1013,6 @@ class Paragraph(Element):
         return "".join(lines)
 
     @property
-    def rubric_name(self):
-        """Return the rubric name."""
-        rubric_name = None
-        if self.id:
-            rubric_name = self.id.replace("_", " ")
-        return rubric_name
-
-    @property
     def revisionflag(self):
         """Return the revision flag."""
         return self.get("revisionflag")
@@ -1043,6 +1035,8 @@ class Paragraph(Element):
                             fcache=fcache,
                         )
                     )
+                elif isinstance(item, SubScript):
+                    items[-1] = items[-1] + item.to_rst(indent=indent, max_length=max_length)
                 else:
                     if item.tag in item_needing_all:
                         items.append(
@@ -1079,10 +1073,6 @@ class Paragraph(Element):
                 )
 
         rst_item = " ".join(items) + "\n\n"
-        if self.id:
-            # Sphinx requires a rubric header for cross-referencing a paragraph
-            header = f".. _{self.id}:\n\n" + f".. rubric:: {self.rubric_name}\n\n"
-            rst_item = header + rst_item
 
         for key, value in CLEANUP.items():
             rst_item = rst_item.replace(key, value)
@@ -1095,6 +1085,24 @@ class Paragraph(Element):
                 initial_indent=indent,
                 subsequent_indent=indent,
             )
+
+        if self.id:
+            # Sphinx requires a rubric header for cross-referencing a paragraph
+            header = f".. _{self.id}:\n\n"
+            item = rst_item.splitlines()
+            header_candidate = item[0].strip()
+            if header_candidate.startswith("**") and "**Command default:**" not in header_candidate:
+                if header_candidate.endswith("**"):
+                    # If the first line is a title, we add it as a rubric
+                    header = header + f".. rubric:: {header_candidate}\n\n"
+                    rst_item = header + "\n".join(item[1:])
+                elif not header_candidate.endswith("**") and "``" in header_candidate:
+                    header_candidate = header_candidate.replace("**", "")
+                    header_candidate = header_candidate.replace("``", "")
+                    header_candidate = f"**{header_candidate}**"
+                    # If the first line is a title, we add it as a rubric
+                    header = header + f".. rubric:: {header_candidate}\n\n"
+                    rst_item = header + "\n".join(item[1:])
 
         return rst_item
 
@@ -1638,7 +1646,7 @@ class _Math(Element):
     def equation(self):
         """Return the equation related to the math element."""
         # return self.content[0][1:-1]
-        return "equation_not_available"
+        return "equation not available"
 
 
 class Math(_Math):
@@ -1676,6 +1684,10 @@ class SubScript(Element):
 
     def __init__(self, element):
         super().__init__(element)
+
+    def to_rst(self, indent="", max_length=100):
+        """Return a string to enable converting the element to an RST format."""
+        return f":sub:`{self.content[0]}` {self.tail}"
 
 
 class InlineGraphic(Element):
