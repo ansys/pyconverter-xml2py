@@ -1355,6 +1355,14 @@ class Variablelist(Element):
                     )
                 else:
                     rst_item = textwrap.indent(rst_item, prefix=indent * 2)
+            # if the last item is a string, then it should be out of the list
+            elif isinstance(item, str) and item == self[-1]:
+                rst_item = resize_element_list(
+                    rst_item,
+                    max_length,
+                    initial_indent=indent,
+                    subsequent_indent=indent,
+                )
             else:
                 initial_indent = indent + " "
                 subsequent_indent = indent + " " * 2
