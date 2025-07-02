@@ -35,6 +35,7 @@ from pyconverter.xml2py.utils.utils import (
     create_name_map,
     get_comment_command_dict,
     get_config_data_value,
+    get_library_path,
     get_refentry,
     import_handler,
 )
@@ -273,37 +274,6 @@ def write__init__file(library_path: Path) -> None:
                     fid.close()
 
 
-def get_library_path(new_package_path: Path, config_path: Path, subfolder: bool = True) -> Path:
-    """
-    Get the desired library path with the following format:
-    ``new_package_path/library_structure``.
-
-    For instance, if ``library_name_structured`` in the ``config.yaml`` file is
-    ``["pyconverter", "generatedcommands"]``, the function returns
-    ``new_package_path/pyconverter/generatedcommands``.
-
-    Parameters
-    ----------
-    new_package_path: Path
-        Path objecy of the new package directory.
-    config_path: str
-        Path to the configuration file.
-
-    Returns
-    -------
-    Path
-        Path object of the new library structure.
-    """
-    library_name = get_config_data_value(config_path, "library_name_structured")
-    if not "src" in library_name:
-        library_name.insert(0, "src")
-    if subfolder:
-        subfolder_values = get_config_data_value(config_path, "subfolders")
-        if subfolder_values:
-            library_name.extend(subfolder_values)
-    return new_package_path.joinpath(*library_name)
-
-
 def get_module_info(library_path: Path, command: ast.XMLCommand) -> Tuple[str, str, Path]:
     """
     Get the module name, class name, and module path from command
@@ -430,7 +400,7 @@ def write_source(
         if new_package_path.is_dir():
             shutil.rmtree(new_package_path)
 
-    library_path = Path(get_library_path(new_package_path, config_path))
+    library_path = get_library_path(new_package_path, config_path)
 
     comment_command_dict = get_comment_command_dict(config_path)
 

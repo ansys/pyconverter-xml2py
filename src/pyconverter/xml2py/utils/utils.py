@@ -68,6 +68,37 @@ def get_config_data_value(yaml_path: Path, value: str) -> Union[str, dict, list,
     return config_data.get(value)
 
 
+def get_library_path(new_package_path: Path, config_path: Path, subfolder: bool = True) -> Path:
+    """
+    Get the desired library path with the following format:
+    ``new_package_path/library_structure``.
+
+    For instance, if ``library_name_structured`` in the ``config.yaml`` file is
+    ``["pyconverter", "generatedcommands"]``, the function returns
+    ``new_package_path/pyconverter/generatedcommands``.
+
+    Parameters
+    ----------
+    new_package_path: Path
+        Path object of the new package directory.
+    config_path: str
+        Path to the configuration file.
+
+    Returns
+    -------
+    Path
+        Path object of the new library structure.
+    """
+    library_name = get_config_data_value(config_path, "library_name_structured")
+    if not "src" in library_name:
+        library_name.insert(0, "src")
+    if subfolder:
+        subfolder_values = get_config_data_value(config_path, "subfolders")
+        if subfolder_values:
+            library_name.extend(subfolder_values)
+    return new_package_path.joinpath(*library_name)
+
+
 def get_comment_command_dict(yaml_path: Path) -> dict:
     """
     Get a dictionnary of messages to be added as warning, note, or info at the beginning of
