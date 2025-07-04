@@ -1,4 +1,4 @@
-# Copyright (C) 2024 ANSYS, Inc. and/or its affiliates.
+# Copyright (C) 2023 - 2025 ANSYS, Inc. and/or its affiliates.
 # SPDX-License-Identifier: MIT
 #
 #
@@ -26,7 +26,7 @@ from pathlib import Path
 from pyconverter.xml2py.custom_functions import CustomFunctions
 import pyconverter.xml2py.directory_format as ff
 import pyconverter.xml2py.load_xml_doc as lxd
-from pyconverter.xml2py.utils.utils import get_config_data_value
+from pyconverter.xml2py.utils.utils import get_comment_command_dict, get_config_data_value
 import pyconverter.xml2py.writer as wrt
 import pytest
 
@@ -131,6 +131,11 @@ def config_path(cwd):
 
 
 @pytest.fixture
+def image_folder_path(cwd):
+    return get_config_data_value(cwd / "config.yaml", "image_folder_path")
+
+
+@pytest.fixture
 def library_name_structured(config_path):
     lib_structure = get_config_data_value(config_path, "library_name_structured")
     subfolders = get_config_data_value(config_path, "subfolders")
@@ -142,3 +147,8 @@ def library_name_structured(config_path):
 @pytest.fixture
 def package_structure(command_map, name_map, directory_path, cwd, path_custom_functions):
     return wrt.write_source(command_map, name_map, directory_path, cwd, path_custom_functions)
+
+
+@pytest.fixture
+def comment_command_dict(config_path):
+    return get_comment_command_dict(config_path)
