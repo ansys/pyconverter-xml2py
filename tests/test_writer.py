@@ -1,4 +1,4 @@
-# Copyright (C) 2024 ANSYS, Inc. and/or its affiliates.
+# Copyright (C) 2023 - 2025 ANSYS, Inc. and/or its affiliates.
 # SPDX-License-Identifier: MIT
 #
 #
@@ -26,7 +26,7 @@ import pyconverter.xml2py.writer as wrt
 import pytest
 
 
-def test_convert(command_map, custom_functions):
+def test_convert(command_map, custom_functions, comment_command_dict):
     assert command_map["/XFRM"].name == "/XFRM"
     assert (
         "Original command: WRITE\n\nShort Description:\nWrites the radiation matrix file.\n\nFunction signature:\nWRITE,"  # noqa : E501
@@ -39,9 +39,9 @@ def test_convert(command_map, custom_functions):
     assert 'def zoom(self, wn: str = "", lab: str = "", x1: str = "", y1: str = "", x2: str = "", y2: str = "", **kwargs):\n    r"""Zooms a region of a display window.\n\n' in command_map[  # noqa : E501
         "/ZOOM"
     ].to_python(
-        custom_functions
+        custom_functions, comment_command_dict
     )
-    assert "import re" in command_map["K"].to_python(custom_functions)
+    assert "import re" in command_map["K"].to_python(custom_functions, comment_command_dict)
 
 
 def test_copy_template_package(cwd):
@@ -72,26 +72,33 @@ def test_write_source_with_custom_functions(
     package_path,
     path_custom_functions,
     library_name_structured,
+    image_folder_path,
 ):
     wrt.write_source(command_map, name_map, directory_path, cwd, path_custom_functions)
     if not "src" in library_name_structured:
         library_name_structured.insert(0, "src")
     cmd_path = package_path.joinpath(*library_name_structured)
     assert (cmd_path / "apdl" / "abbreviations.py").is_file()
-    assert (package_path / "doc" / "source" / "images").is_dir()
-    assert (package_path / "doc" / "source" / "images" / "gcmdrsymm1.png").is_file()
+    assert (package_path / "doc" / "source" / image_folder_path).is_dir()
+    assert (package_path / "doc" / "source" / image_folder_path / "gcmdrsymm1.png").is_file()
 
 
 def test_write_source_no_custom_function(
-    command_map, name_map, directory_path, cwd, package_path, library_name_structured
+    command_map,
+    name_map,
+    directory_path,
+    cwd,
+    package_path,
+    library_name_structured,
+    image_folder_path,
 ):
     wrt.write_source(command_map, name_map, directory_path, cwd)
     if not "src" in library_name_structured:
         library_name_structured.insert(0, "src")
     cmd_path = package_path.joinpath(*library_name_structured)
     assert (cmd_path / "apdl" / "abbreviations.py").is_file()
-    assert (package_path / "doc" / "source" / "images").is_dir()
-    assert (package_path / "doc" / "source" / "images" / "gcmdrsymm1.png").is_file()
+    assert (package_path / "doc" / "source" / image_folder_path).is_dir()
+    assert (package_path / "doc" / "source" / image_folder_path / "gcmdrsymm1.png").is_file()
 
 
 def test_write_docs(package_path, package_structure):
