@@ -16,6 +16,7 @@ env:
   RESET_PIP_CACHE_2: 1
   RESET_AUTOSUMMARY_CACHE_2: 1
   RESET_DOC_BUILD_CACHE_2: 1
+  MAIN_PYTHON_VERSION: '3.12'
 
 
 jobs:
@@ -29,7 +30,7 @@ jobs:
       - name: "Setup Python"
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ inputs.MAIN_PYTHON_VERSION }}
+          python-version: ${{ env.MAIN_PYTHON_VERSION }}
       
       - name: "Cache pip"
         uses: actions/cache@v4
@@ -80,7 +81,7 @@ jobs:
       - name: PyAnsys code style checks
         uses: ansys/actions/code-style@v8
         with:
-          python-version: ${{ inputs.MAIN_PYTHON_VERSION }}
+          python-version: ${{ env.MAIN_PYTHON_VERSION }}
           use-python-cache: false
 
 
@@ -98,9 +99,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: Python-pyconverter-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ inputs.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
+          key: Python-pyconverter-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
-            Python-pyconverter-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ inputs.MAIN_PYTHON_VERSION }}
+            Python-pyconverter-generatedcommands-v${{ env.RESET_PIP_CACHE_2 }}-${{ env.MAIN_PYTHON_VERSION }}
       
       - name: "Install pyconverter-generatedcommands"
         run: |
@@ -130,7 +131,7 @@ jobs:
       - name: "Run Ansys documentation building action"
         uses: ansys/actions/doc-build@v8
         with:
-          python-version: ${{ inputs.MAIN_PYTHON_VERSION }}
+          python-version: ${{ env.MAIN_PYTHON_VERSION }}
           checkout: false
           sphinxopts: -j auto
           check-links: false
