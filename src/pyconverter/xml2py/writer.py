@@ -1,4 +1,4 @@
-# Copyright (C) 2024 ANSYS, Inc. and/or its affiliates.
+# Copyright (C) 2023 - 2025 ANSYS, Inc. and/or its affiliates.
 # SPDX-License-Identifier: MIT
 #
 #
@@ -33,7 +33,9 @@ from pyconverter.xml2py.download import download_template
 import pyconverter.xml2py.utils.regex_pattern as pat
 from pyconverter.xml2py.utils.utils import (
     create_name_map,
+    get_comment_command_dict,
     get_config_data_value,
+    get_library_path,
     get_refentry,
     import_handler,
 )
@@ -220,6 +222,7 @@ def write_global__init__file(library_path: Path, config_path: Path) -> None:
         Path object of the directory containing the generated package.
     """
 
+    project_name = get_config_data_value(config_path, "project_name")
     subfolder_values = get_config_data_value(config_path, "subfolders")
 
     if subfolder_values:
@@ -244,7 +247,7 @@ def write_global__init__file(library_path: Path, config_path: Path) -> None:
         fid.write("except ModuleNotFoundError:\n")
         fid.write("    import importlib_metadata\n\n")
         fid.write("__version__ = importlib_metadata.version(__name__.replace('.', '-'))\n")
-        fid.write('"""PyConverter-GeneratedCommands version."""\n')
+        fid.write(f'"""{project_name} version."""\n')
     fid.close()
 
 
@@ -269,37 +272,6 @@ def write__init__file(library_path: Path) -> None:
                             fid.write(f"    {file.stem},\n")
                     fid.write(")\n")
                     fid.close()
-
-
-def get_library_path(new_package_path: Path, config_path: Path, subfolder: bool = True) -> Path:
-    """
-    Get the desired library path with the following format:
-    ``new_package_path/library_structure``.
-
-    For instance, if ``library_name_structured`` in the ``config.yaml`` file is
-    ``["pyconverter", "generatedcommands"]``, the function returns
-    ``new_package_path/pyconverter/generatedcommands``.
-
-    Parameters
-    ----------
-    new_package_path: Path
-        Path objecy of the new package directory.
-    config_path: str
-        Path to the configuration file.
-
-    Returns
-    -------
-    Path
-        Path object of the new library structure.
-    """
-    library_name = get_config_data_value(config_path, "library_name_structured")
-    if not "src" in library_name:
-        library_name.insert(0, "src")
-    if subfolder:
-        subfolder_values = get_config_data_value(config_path, "subfolders")
-        if subfolder_values:
-            library_name.extend(subfolder_values)
-    return new_package_path.joinpath(*library_name)
 
 
 def get_module_info(library_path: Path, command: ast.XMLCommand) -> Tuple[str, str, Path]:
@@ -420,6 +392,7 @@ def write_source(
     new_package_name = get_config_data_value(config_path, "new_package_name")
     logging.info(f"Creating package {new_package_name}...")
     new_package_path = target_path / new_package_name
+    image_folder_path = get_config_data_value(config_path, "image_folder_path")
 
     ignored_commands = set(get_config_data_value(config_path, "ignored_commands"))
 
@@ -427,7 +400,9 @@ def write_source(
         if new_package_path.is_dir():
             shutil.rmtree(new_package_path)
 
-    library_path = Path(get_library_path(new_package_path, config_path))
+    library_path = get_library_path(new_package_path, config_path)
+
+    comment_command_dict = get_comment_command_dict(config_path)
 
     if not library_path.is_dir():
         library_path.mkdir(parents=True, exist_ok=True)
@@ -439,7 +414,7 @@ def write_source(
                 continue
             python_name = name_map[initial_command_name]
             path = library_path / f"{python_name}.py"
-            python_method = command_obj.to_python(custom_functions)
+            python_method = command_obj.to_python(custom_functions, comment_command_dict, indent="")
             try:
                 exec(python_method)
                 with open(path, "w", encoding="utf-8") as fid:
@@ -453,7 +428,9 @@ def write_source(
         package_structure = {}
         all_commands = []
         specific_classes = get_config_data_value(config_path, "specific_classes")
-        for command in tqdm(command_map.values(), desc="Writing commands"):
+        for command in tqdm(
+            sorted(command_map.values(), key=lambda cmd: cmd.py_name), desc="Writing commands"
+        ):
             if command.name in ignored_commands or command.group is None:
                 continue
 
@@ -481,7 +458,12 @@ def write_source(
             class_structure.append(command.py_name)
 
             package_structure[module_name][file_name] = [class_name, class_structure]
-            python_method = command.to_python(custom_functions, indent=4 * " ")
+            python_method = command.to_python(
+                custom_functions,
+                comment_command_dict,
+                indent=4 * " ",
+                image_folder_path=image_folder_path,
+            )
 
             # Check if there are any imports to be added before the function definition.
             reg_before_def = pat.BEFORE_DEF + f"{command.py_name})"
@@ -522,7 +504,7 @@ def write_source(
     # Copy package files to the package directory
     copy_template_package(template_path, new_package_path, clean)
     graph_path = get_paths(xml_doc_path)[0]
-    shutil.copytree(graph_path, new_package_path / "doc" / "source" / "images")
+    shutil.copytree(graph_path, new_package_path / "doc" / "source" / image_folder_path)
     return package_structure
 
 
@@ -629,7 +611,7 @@ API documentation
 
 
 """
-                for python_command_name in method_list:
+                for python_command_name in sorted(method_list):
                     class_content += f"   {class_name}.{python_command_name}\n"
 
                 # Write the class file

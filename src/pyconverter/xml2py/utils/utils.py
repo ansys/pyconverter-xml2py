@@ -1,4 +1,4 @@
-# Copyright (C) 2024 ANSYS, Inc. and/or its affiliates.
+# Copyright (C) 2023 - 2025 ANSYS, Inc. and/or its affiliates.
 # SPDX-License-Identifier: MIT
 #
 #
@@ -20,11 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import logging
 from pathlib import Path
 from typing import Tuple, Union
 
 from lxml.html import fromstring
 import yaml
+
+logger = logging.getLogger("py_asciimath.utils")
+logger.setLevel(logging.INFO)
 
 
 def parse_yaml(yaml_path: Path) -> dict:
@@ -64,6 +68,78 @@ def get_config_data_value(yaml_path: Path, value: str) -> Union[str, dict, list,
     return config_data.get(value)
 
 
+def get_library_path(new_package_path: Path, config_path: Path, subfolder: bool = True) -> Path:
+    """
+    Get the desired library path with the following format:
+    ``new_package_path/library_structure``.
+
+    For instance, if ``library_name_structured`` in the ``config.yaml`` file is
+    ``["pyconverter", "generatedcommands"]``, the function returns
+    ``new_package_path/pyconverter/generatedcommands``.
+
+    Parameters
+    ----------
+    new_package_path: Path
+        Path object of the new package directory.
+    config_path: str
+        Path to the configuration file.
+
+    Returns
+    -------
+    Path
+        Path object of the new library structure.
+    """
+    library_name = get_config_data_value(config_path, "library_name_structured")
+    if not "src" in library_name:
+        library_name.insert(0, "src")
+    if subfolder:
+        subfolder_values = get_config_data_value(config_path, "subfolders")
+        if subfolder_values:
+            library_name.extend(subfolder_values)
+    return new_package_path.joinpath(*library_name)
+
+
+def get_comment_command_dict(yaml_path: Path) -> dict:
+    """
+    Get a dictionnary of messages to be added as warning, note, or info at the beginning of
+    a command documentation.
+
+    Parameters
+    ----------
+    yaml_path: Path
+        Path object of the YAML file.
+
+    Returns
+    -------
+    dict
+        Dictionary of comment to be added with the following format:
+        ``{"command": [["message_type", "message"]}``.
+    """
+    comments_ = get_config_data_value(yaml_path, "comments")
+    if comments_ is None:
+        logger.info("No comments to be added found in the YAML file.")
+    comment_command_dict = {}
+    if comments_:
+        for comment_ in comments_:
+            message = comment_["msg"]
+            comment_type = comment_["type"]
+            if comment_type not in ["note", "warning", "info"]:
+                raise ValueError(
+                    f"Comment type '{comment_type}' not supported. Use 'note', 'warning', or 'info'."  # noqa: E501
+                )
+            commands = comment_["commands"]
+            for command in commands:
+                try:
+                    comment_command_dict[command].append([comment_type, message])
+                except KeyError:
+                    comment_command_dict[command] = [[comment_type, message]]
+
+        if comment_command_dict == {}:
+            logger.info("No message found in the YAML file.")
+
+    return comment_command_dict
+
+
 def create_name_map(meta_command: list[str], yaml_file_path: Path) -> dict:
     """
     Create a mapping between the initial command name and the Python function name.
@@ -84,6 +160,7 @@ def create_name_map(meta_command: list[str], yaml_file_path: Path) -> dict:
     naive_names = []
     rules = get_config_data_value(yaml_file_path, "rules")
     specific_command_mapping = get_config_data_value(yaml_file_path, "specific_command_mapping")
+    ignored_commands = get_config_data_value(yaml_file_path, "ignored_commands")
     for ans_name in meta_command:
         ans_name = ans_name.lower()
         if not ans_name[0].isalnum():
@@ -95,7 +172,9 @@ def create_name_map(meta_command: list[str], yaml_file_path: Path) -> dict:
 
     # second pass for each name
     for ans_name in meta_command:
-        if ans_name in specific_command_mapping:
+        if ans_name in ignored_commands:
+            continue
+        elif ans_name in specific_command_mapping:
             py_name = specific_command_mapping[ans_name]
         else:
             lower_name = ans_name.lower()

@@ -1,12 +1,16 @@
+project_name: PyConverter-GeneratedCommands # Name of the project
+
 library_name_structured: # Future name of the library
   - pyconverter
   - generatedcommands
 
-subfolder:
+subfolders:
   - subfolder
   - subsubfolder
 
 new_package_name: package
+
+image_folder_path: ../images/_commands
 
 rules:
   "/": slash
@@ -18,21 +22,60 @@ specific_command_mapping:
   "/INQUIRE": inquire
 
 ignored_commands:
-  - "*VWR"
-  - "*MWR"
-  - "C***"
-  - "*CFO"
-  - "*CRE"
-  - "*END"
-  - "/EOF"
+  # Non-available commands - PyMAPDL user guide
   - "*ASK"
-  - "*IF"
+  - "*VEDIT"
+  - "/ERASE"
+  - "ERASE"
+  - "HELP"
+  - "HELPDISP"
+  - "NOERASE"
+  - "*CYCLE"
+  - "*DO"
+  - "*DOWHILE"
   - "*ELSE"
-  - "CMAT"
-  - "*REP"
+  - "*ELSEIF"
+  - "*ENDDO"
+  - "*ENDIF"
+  - "*GO"
+  - "*IF"
+  - "*REPEAT"
   - "*RETURN"
-  - "LSRE"
+  - "*DEL"
+  - "/BATCH"
+  - "/EOF"
+  - "UNDO"
+  # Additional commands to ignore
+  - "C***"
+  - "/DIRECTORY" # Defined in ``mapdl_core.py``
+  - "*XPL" # Defined in ``mapdl_grpc.py``
+  - "PLOT"
+  - "/EXIT" # Defined in ``mapdl_core.py``
 
+comments:
+  - msg: 'This command must be run using :func:`non_interactive <ansys.mapdl.core.Mapdl.non_interactive>`.
+
+          Please visit `Unsupported Interactive Commands <https://mapdl.docs.pyansys.com/version/stable/user_guide/mapdl.html#unsupported-interactive-commands>`_
+    
+          for further information.'
+    type: "warning"
+    commands:
+      - "*CREATE"
+      - "CFOPEN"
+      - "CFCLOSE"
+      - "*VWRITE"
+      - "*MWRITE"
+      - "LSWRITE"
+      - "LSREAD"
+
+  - msg: 'Starting with PyMAPDL v0.66.0, you can use "P" as a second argument to select entities interactively. A window pops up
+          
+          allowing you to select, unselect, add or reselect entities depending on the first argument ``type_``. An array with
+          
+          the ids of new selection is returned when the window is closed.'
+    type: "note"
+    commands:
+     - "ASEL"
 
 specific_classes:
   2D to 3D Analysis: Analysis 2D to 3D
