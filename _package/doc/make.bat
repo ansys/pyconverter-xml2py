@@ -57,5 +57,16 @@ goto end
 :help
 %SPHINXBUILD% -M help %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
 
+:pdf
+%SPHINXBUILD% -M latex %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+cd "%BUILDDIR%\latex"
+for %%f in (*.tex) do (
+pdflatex "%%f" --interaction=nonstopmode)
+if NOT EXIST pyconverter-generatedcommands-documentation.pdf (
+	Echo "no pdf generated!"
+	exit /b 1)
+Echo "pdf generated!"
+goto end
+
 :end
 popd
