@@ -1,4 +1,4 @@
-# Copyright (C) 2024 ANSYS, Inc. and/or its affiliates.
+# Copyright (C) 2023 - 2025 ANSYS, Inc. and/or its affiliates.
 # SPDX-License-Identifier: MIT
 #
 #
@@ -40,7 +40,7 @@ def test_load_fcache(graph_path):
 
 def test_load_docu_global(term_path):
     docu_global = lxd.load_docu_global(term_path)
-    assert docu_global["acpmdug"] == ("acp_md", "acp_md", "bk_acp_md")
+    assert docu_global["acpmdug"] == ("acp_md", "acp_md", "&bk_acp_md;")
 
 
 def test_load_terms(load_terms):
