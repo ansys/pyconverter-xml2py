@@ -1,4 +1,4 @@
-# This is the list of {project-name}'s significant contributors.
+# This is the list of PyConverter-XML2Py's significant contributors.
 #
 # This file does not necessarily list everyone who has contributed code.
 #
