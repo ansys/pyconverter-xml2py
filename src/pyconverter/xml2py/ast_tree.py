@@ -2118,16 +2118,26 @@ class Refname(Element):
         for item in self.raw_args:
             arg = to_py_arg_name(str(item))
 
-            # simply check if we can use this as a valid Python kwarg
-            try:
-                exec(f"{arg} = 1.0")
-            except SyntaxError:
+            if "blank" in arg or arg == "":
+                # if the argument is not a valid Python identifier, then skip it
                 arg = ""
+                args.append(arg)
 
-            if "blank" in arg:
-                arg = ""
+            elif " or " in arg:
+                arg = arg.split(" or ")[0].strip()
+                args.append(arg)
 
-            args.append(arg)
+            elif arg in ["...", ". . ."]:
+                # Elipsis, needs to be skipped
+                pass
+
+            elif arg.isidentifier() is False:
+                raise ValueError(
+                    f"Invalid argument '{arg}' in refname element: {self._element.tag}"
+                )
+
+            else:
+                args.append(arg)
 
         # rename duplicate arguments
         if len(args) != len(set(args)):
