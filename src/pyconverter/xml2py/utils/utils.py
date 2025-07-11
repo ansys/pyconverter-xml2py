@@ -300,3 +300,25 @@ def get_refentry(filename: Path) -> list:
     """
     root = fromstring(open(filename, "rb").read())
     return list(root.iterfind(".//refentry"))
+
+
+def is_valid_method(method: str) -> bool:
+    """Check if a method is valid Python code.
+
+    Parameters
+    ----------
+    method: str
+        The method source code as a string.
+        It needs to be already indented for class context.
+
+    Returns
+    -------
+    bool
+        ``True`` if the method is valid Python code, ``False`` otherwise.
+    """
+    dummy_class = f"class Dummy:\n{method}"
+    try:
+        compile(dummy_class, "<string>", "exec")
+        return True
+    except SyntaxError as e:
+        return False
