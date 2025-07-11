@@ -49,7 +49,7 @@ tests = [
     "numpy==2.2.6",
     "parse==1.20.2",
     "pytest==8.3.4",
-    "pytest-cov==6.0.0",
+    "pytest-cov==6.2.1",
     "pytest-rerunfailures==15.0",
     "pyyaml==6.0.2",
     "regex==2024.11.6",
