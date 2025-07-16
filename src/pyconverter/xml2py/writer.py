@@ -22,6 +22,7 @@
 
 import logging
 from pathlib import Path
+import py_compile
 import shutil
 from typing import Tuple, Union
 
@@ -38,6 +39,7 @@ from pyconverter.xml2py.utils.utils import (
     get_library_path,
     get_refentry,
     import_handler,
+    is_valid_method,
 )
 import regex as re
 from tqdm import tqdm
@@ -236,7 +238,7 @@ def write_global__init__file(library_path: Path, config_path: Path) -> None:
 
     init_path = init_folder / "__init__.py"
 
-    with open(init_path, "w") as fid:
+    with open(init_path, "w", encoding="utf-8") as fid:
         fid.write(f"from .{initial_imports} import (\n")
         for dir in library_path.iterdir():
             if dir.is_dir():
@@ -265,7 +267,7 @@ def write__init__file(library_path: Path) -> None:
         if dir.is_dir():
             listdir = list(dir.iterdir())
             if len(listdir) > 0:
-                with open(dir / "__init__.py", "w") as fid:
+                with open(dir / "__init__.py", "w", encoding="utf-8") as fid:
                     fid.write(f"from . import (\n")
                     for file in listdir:
                         if file.name.endswith(".py"):
@@ -415,15 +417,15 @@ def write_source(
             python_name = name_map[initial_command_name]
             path = library_path / f"{python_name}.py"
             python_method = command_obj.to_python(custom_functions, comment_command_dict, indent="")
-            try:
-                exec(python_method)
+            # Check the Python method is valid before writing it to the file
+            if is_valid_method(python_method):
                 with open(path, "w", encoding="utf-8") as fid:
                     fid.write(f"{python_method}\n")
-            except Exception as e:
-                raise RuntimeError(f"Failed to execute {python_name}.py") from e
-
+            else:
+                logging.warning(
+                    f"Invalid Python method for {initial_command_name}: {python_method}"
+                )
     else:
-        import subprocess
 
         package_structure = {}
         all_commands = []
@@ -490,7 +492,7 @@ def write_source(
             for class_name, _ in package_structure[module_name].items():
                 file_path = library_path / module_name / f"{class_name}.py"
                 try:
-                    subprocess.run(["python", str(file_path)])
+                    py_compile.compile(str(file_path))
                 except Exception as e:
                     raise RuntimeError(
                         f"Failed to execute '{python_method}' from '{file_path}'."
@@ -553,7 +555,7 @@ API documentation
 
     # Write the main doc file
     doc_src = doc_package_path / "docs.rst"
-    with open(doc_src, "w") as fid:
+    with open(doc_src, "w", encoding="utf-8") as fid:
         fid.write(doc_src_content)
 
     if package_structure is not None:
@@ -588,7 +590,7 @@ API documentation
             module_folder = doc_package_path / module_folder_name
             module_folder.mkdir(parents=True, exist_ok=True)
             module_file = module_folder / "index.rst"
-            with open(module_file, "w") as fid:
+            with open(module_file, "w", encoding="utf-8") as fid:
                 fid.write(module_content)
 
             for class_file_name, (class_name, method_list) in class_map.items():
@@ -616,7 +618,7 @@ API documentation
 
                 # Write the class file
                 class_file = module_folder / f"{class_file_name}.rst"
-                with open(class_file, "w") as fid:
+                with open(class_file, "w", encoding="utf-8") as fid:
                     fid.write(class_content)
 
     return doc_src
