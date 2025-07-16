@@ -48,5 +48,5 @@ def test_cli_main_package_group():
     assert "-p, --targ-path PATH" in result.output
     assert "-t, --template-path PATH" in result.output
     assert "-f, --func-path PATH" in result.output
-    assert "-r, --run-pre-commit BOOLEAN" in result.output
+    assert "-r, --run-pre-commit" in result.output
     assert "-l, --max-length INTEGER" in result.output

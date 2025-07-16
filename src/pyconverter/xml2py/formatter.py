@@ -23,7 +23,10 @@
 """This module contains the functions to format the generated docstrings with
 `Black <black_>`_."""
 
-import os
+from pathlib import Path
+
+# Subprocess is needed to run pre-commit hooks.
+import subprocess
 
 
 def run_pre_commit(package_path) -> None:
@@ -31,11 +34,21 @@ def run_pre_commit(package_path) -> None:
     output = 1
     cur_run = 0
     max_run = 10
+    pre_commit_file = package_path / Path(".pre-commit-config.yaml")
+    if not pre_commit_file.exists():
+        raise FileNotFoundError(f"Pre-commit configuration file not found at {pre_commit_file}.")
     while cur_run < max_run and output != 0:
         cur_run += 1
-        output = os.system(
-            f"pre-commit run --all-files --config {package_path}/.pre-commit-config.yaml"
-        )
+        output = subprocess.run(
+            [
+                "pre-commit",
+                "run",
+                "--all-files",
+                "--config",
+                str(pre_commit_file),
+            ],
+            capture_output=True,
+        ).returncode
     if output != 0:
         raise RuntimeError("Pre-commit failed.")
     else:

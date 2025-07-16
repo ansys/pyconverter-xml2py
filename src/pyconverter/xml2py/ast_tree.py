@@ -2118,16 +2118,26 @@ class Refname(Element):
         for item in self.raw_args:
             arg = to_py_arg_name(str(item))
 
-            # simply check if we can use this as a valid Python kwarg
-            try:
-                exec(f"{arg} = 1.0")
-            except SyntaxError:
+            if "blank" in arg or arg == "":
+                # if the argument is not a valid Python identifier, then skip it
                 arg = ""
+                args.append(arg)
 
-            if "blank" in arg:
-                arg = ""
+            elif " or " in arg:
+                arg = arg.split(" or ")[0].strip()
+                args.append(arg)
 
-            args.append(arg)
+            elif arg in ["...", ". . ."]:
+                # Elipsis, needs to be skipped
+                pass
+
+            elif arg.isidentifier() is False:
+                raise ValueError(
+                    f"Invalid argument '{arg}' in refname element: {self._element.tag}"
+                )
+
+            else:
+                args.append(arg)
 
         # rename duplicate arguments
         if len(args) != len(set(args)):
@@ -3115,13 +3125,13 @@ class XMLCommand(Element):
             if len(arguments.py_arg_names) != len(arguments.initial_args):
                 # This function needs a special treatment
                 if arg_file.exists():
-                    with open(arg_file, "r") as f:
+                    with open(arg_file, "r", encoding="utf-8") as f:
                         for line in f:
                             pass
                         last_line = line
                 else:
                     last_line = ""
-                with open(arg_file, "a") as f:
+                with open(arg_file, "a", encoding="utf-8") as f:
                     if last_line != f"py_arg_name : {arguments.py_arg_names}\n":
                         f.write("--------------------------------------------------\n")
                         f.write(f"{self.py_name}: {self.group}\n")

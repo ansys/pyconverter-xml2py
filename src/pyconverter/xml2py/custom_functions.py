@@ -52,7 +52,7 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
         List containing the library import section.
     """
     lines = None
-    with open(filename, "r") as pyfile:
+    with open(filename, "r", encoding="utf-8") as pyfile:
         lines = pyfile.readlines()
     bool_def = False
     end_def = False
