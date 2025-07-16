@@ -50,7 +50,7 @@ def directory_path(ghdir):
     if os.environ.get("ON_CI", "").lower() == "true":
         directory_path = Path(ghdir) / "mapdl-cmd-doc"
     else:
-        directory_path = Path.cwd().parent / "mapdl-cmd-doc"
+        directory_path = Path.cwd().parent.parent / "ansys-internal" / "mapdl-cmd-doc"
         directory_path = directory_path.resolve()
     return directory_path
 

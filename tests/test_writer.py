@@ -103,7 +103,7 @@ def test_write_source_no_custom_function(
 
 def test_write_docs(package_path, package_structure):
     doc_src = wrt.write_docs(package_path, package_structure)
-    file = open(doc_src, "r")
+    file = open(doc_src, "r", encoding="utf-8")
     content = file.read()
     file.close()
     assert "API documentation" in content
