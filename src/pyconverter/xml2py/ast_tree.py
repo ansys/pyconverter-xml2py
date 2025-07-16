@@ -3125,13 +3125,13 @@ class XMLCommand(Element):
             if len(arguments.py_arg_names) != len(arguments.initial_args):
                 # This function needs a special treatment
                 if arg_file.exists():
-                    with open(arg_file, "r") as f:
+                    with open(arg_file, "r", encoding="utf-8") as f:
                         for line in f:
                             pass
                         last_line = line
                 else:
                     last_line = ""
-                with open(arg_file, "a") as f:
+                with open(arg_file, "a", encoding="utf-8") as f:
                     if last_line != f"py_arg_name : {arguments.py_arg_names}\n":
                         f.write("--------------------------------------------------\n")
                         f.write(f"{self.py_name}: {self.group}\n")

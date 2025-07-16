@@ -33,7 +33,7 @@ from tqdm import tqdm
 
 
 def link_replacer(file, terms, docu_global, links, base_url, fcache):
-    with open(file, "r") as fid:
+    with open(file, "r", encoding="utf-8") as fid:
         text = fid.read()
         matches = re.findall(r"ENTITY([\S\s]*?)(?=\n)", text)
         for match in matches:
@@ -158,7 +158,7 @@ def load_docu_global(term_path: Path) -> dict:
     docu_ent = term_path / "glb" / "docu_global.ent"
 
     docu_global = {}
-    with open(docu_ent, "r") as fid:
+    with open(docu_ent, "r", encoding="utf-8") as fid:
         lines = fid.read().splitlines()
 
         # have to write our own interperter here since this is non-standard lxml
@@ -230,7 +230,7 @@ def load_terms(
 
     variable_path = term_path / "glb" / variable_file
     if variable_path.is_file():
-        with open(variable_path, "r") as fid:
+        with open(variable_path, "r", encoding="utf-8") as fid:
             lines = fid.read().splitlines()
 
         # have to write our own interperter here since this is non-standard lxml
@@ -251,7 +251,7 @@ def load_terms(
 
     global_terms_path = term_path / "glb" / global_terms_file
     if global_terms_path.is_file():
-        with open(global_terms_path, "r") as fid:
+        with open(global_terms_path, "r", encoding="utf-8") as fid:
             lines = fid.read().splitlines()
 
             for line in lines:
@@ -302,7 +302,7 @@ def load_terms(
     if ent_dir.is_dir():
         isoams_dat = list(ent_dir.glob("*.ent"))
         for filename in isoams_dat:
-            with open(filename, "r") as fid:
+            with open(filename, "r", encoding="utf-8") as fid:
                 lines = fid.read().splitlines()
                 # have to write our own interperter here since this is non-standard lxml
                 for line in lines:
@@ -319,7 +319,7 @@ def load_terms(
     # load group code
     group_code_terms_path = term_path / group_code_file
     if group_code_terms_path.is_file():
-        with open(group_code_terms_path, "r") as fid:
+        with open(group_code_terms_path, "r", encoding="utf-8") as fid:
             lines = fid.read().splitlines()
 
         for line in lines:

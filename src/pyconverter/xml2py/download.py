@@ -38,7 +38,7 @@ def download(c: ContentFile, out: Path) -> None:
     r = requests.get(c.download_url, timeout=10)
     output_path = out / c.path
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "wb") as f:
+    with open(output_path, "wb", encoding="utf-8") as f:
         print(f"downloading {c.path} to {out}")
         f.write(r.content)
 

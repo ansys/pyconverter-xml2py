@@ -238,7 +238,7 @@ def write_global__init__file(library_path: Path, config_path: Path) -> None:
 
     init_path = init_folder / "__init__.py"
 
-    with open(init_path, "w") as fid:
+    with open(init_path, "w", encoding="utf-8") as fid:
         fid.write(f"from .{initial_imports} import (\n")
         for dir in library_path.iterdir():
             if dir.is_dir():
@@ -267,7 +267,7 @@ def write__init__file(library_path: Path) -> None:
         if dir.is_dir():
             listdir = list(dir.iterdir())
             if len(listdir) > 0:
-                with open(dir / "__init__.py", "w") as fid:
+                with open(dir / "__init__.py", "w", encoding="utf-8") as fid:
                     fid.write(f"from . import (\n")
                     for file in listdir:
                         if file.name.endswith(".py"):
@@ -555,7 +555,7 @@ API documentation
 
     # Write the main doc file
     doc_src = doc_package_path / "docs.rst"
-    with open(doc_src, "w") as fid:
+    with open(doc_src, "w", encoding="utf-8") as fid:
         fid.write(doc_src_content)
 
     if package_structure is not None:
@@ -590,7 +590,7 @@ API documentation
             module_folder = doc_package_path / module_folder_name
             module_folder.mkdir(parents=True, exist_ok=True)
             module_file = module_folder / "index.rst"
-            with open(module_file, "w") as fid:
+            with open(module_file, "w", encoding="utf-8") as fid:
                 fid.write(module_content)
 
             for class_file_name, (class_name, method_list) in class_map.items():
@@ -618,7 +618,7 @@ API documentation
 
                 # Write the class file
                 class_file = module_folder / f"{class_file_name}.rst"
-                with open(class_file, "w") as fid:
+                with open(class_file, "w", encoding="utf-8") as fid:
                     fid.write(class_content)
 
     return doc_src

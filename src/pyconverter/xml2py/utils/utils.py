@@ -46,7 +46,7 @@ def parse_yaml(yaml_path: Path) -> dict:
         Dictionary with the content of the YAML file.
     """
     if yaml_path.is_file():
-        with open(yaml_path, "r") as file:
+        with open(yaml_path, "r", encoding="utf-8") as file:
             data = yaml.safe_load(file)
         return data
     else:
@@ -228,7 +228,7 @@ def import_handler(
         String before the function definition.
     """
 
-    content = open(filename, "r").read()
+    content = open(filename, "r", encoding="utf-8").read()
     list_imports = list(filter(None, str_before_def.split("\n")))
     for import_line in list_imports:
         if import_line in content:
@@ -237,11 +237,11 @@ def import_handler(
 
     if len(list_imports) > 0:
         str_before_def = "\n".join(list_imports) + "\n\n"
-        with open(filename, "r+") as f:
+        with open(filename, "r+", encoding="utf-8") as f:
             f.seek(0, 0)
             f.write(str_before_def + content + additional_content)
     else:
-        with open(filename, "a") as f:
+        with open(filename, "a", encoding="utf-8") as f:
             f.write(additional_content)
 
 
