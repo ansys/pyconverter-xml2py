@@ -1,0 +1,433 @@
+
+
+
+
+
+
+The ``utils.py`` module
+=======================
+
+.. py:module:: src.pyconverter.xml2py.utils.utils
+
+
+Summary
+-------
+
+
+
+
+
+
+
+
+.. py:currentmodule:: utils
+.. tab-set::
+
+
+
+
+
+
+
+    .. tab-item:: Functions
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+
+          * - :py:obj:`~parse_yaml`
+            - Parse a YAML file.
+
+
+          * - :py:obj:`~get_config_data_value`
+            - Return the value of a specific key in the YAML file.
+
+
+          * - :py:obj:`~get_library_path`
+            - Get the desired library path with the following format:
+
+
+          * - :py:obj:`~get_comment_command_dict`
+            - Get a dictionnary of messages to be added as warning, note, or info at the beginning of
+
+
+          * - :py:obj:`~create_name_map`
+            - Create a mapping between the initial command name and the Python function name.
+
+
+          * - :py:obj:`~import_handler`
+            - Handle the imports in the Python file.
+
+
+          * - :py:obj:`~split_trail_alpha`
+            - Split a string based on the last tailing non-alphanumeric character.
+
+
+          * - :py:obj:`~is_numeric`
+            - Return ``True`` when a string is numeric.
+
+
+          * - :py:obj:`~get_refentry`
+            - Get the reference entry from an XML file.
+
+
+          * - :py:obj:`~is_valid_method`
+            - Check if a method is valid Python code.
+
+
+
+    .. tab-item:: Attributes
+
+        .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+
+          * - :py:obj:`~logger`
+            - 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Module detail
+-------------
+
+.. py:function:: parse_yaml(yaml_path: pathlib.Path) -> dict
+
+   
+   Parse a YAML file.
+
+
+   :Parameters:
+
+       **yaml_path: Path**
+           Path object of the YAML file.
+
+
+
+   :Returns:
+
+       :class:`python:dict`
+           Dictionary with the content of the YAML file.
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: get_config_data_value(yaml_path: pathlib.Path, value: str) -> Union[str, dict, list, None]
+
+   
+   Return the value of a specific key in the YAML file.
+
+
+   :Parameters:
+
+       **yaml_path: Path**
+           Path object of the YAML file.
+
+       **value: str**
+           Key to search for in the YAML file.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: get_library_path(new_package_path: pathlib.Path, config_path: pathlib.Path, subfolder: bool = True) -> pathlib.Path
+
+   
+   Get the desired library path with the following format:
+   ``new_package_path/library_structure``.
+
+   For instance, if ``library_name_structured`` in the ``config.yaml`` file is
+   ``["pyconverter", "generatedcommands"]``, the function returns
+   ``new_package_path/pyconverter/generatedcommands``.
+
+   :Parameters:
+
+       **new_package_path: Path**
+           Path object of the new package directory.
+
+       **config_path: str**
+           Path to the configuration file.
+
+
+
+   :Returns:
+
+       :obj:`Path`
+           Path object of the new library structure.
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: get_comment_command_dict(yaml_path: pathlib.Path) -> dict
+
+   
+   Get a dictionnary of messages to be added as warning, note, or info at the beginning of
+   a command documentation.
+
+
+   :Parameters:
+
+       **yaml_path: Path**
+           Path object of the YAML file.
+
+
+
+   :Returns:
+
+       :class:`python:dict`
+           Dictionary of comment to be added with the following format:
+           ``{"command": [["message_type", "message"]}``.
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: create_name_map(meta_command: list[str], yaml_file_path: pathlib.Path) -> dict
+
+   
+   Create a mapping between the initial command name and the Python function name.
+
+
+   :Parameters:
+
+       **meta_command: list[str]**
+           List of command names.
+
+       **yaml_file_path: Path**
+           Path object of the YAML file.
+
+
+
+   :Returns:
+
+       :class:`python:dict`
+           Dictionary with the following format: ``{"initial_command_name": "python_name"}``.
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: import_handler(filename: pathlib.Path, additional_content: str, str_before_def: str) -> None
+
+   
+   Handle the imports in the Python file.
+
+
+   :Parameters:
+
+       **filename: Path**
+           Path object of the Python file.
+
+       **additional_content: str**
+           Additional content to add to the Python file.
+
+       **str_before_def: str**
+           String before the function definition.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: split_trail_alpha(text: str) -> Tuple[str, str]
+
+   
+   Split a string based on the last tailing non-alphanumeric character.
+
+
+   :Parameters:
+
+       **text: str**
+           String to split.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: is_numeric(text: str) -> bool
+
+   
+   Return ``True`` when a string is numeric.
+
+
+   :Parameters:
+
+       **text: str**
+           String to check.
+
+
+
+   :Returns:
+
+       :ref:`bool <python:bltin-boolean-values>`
+           ``True`` if the string is numeric.
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: get_refentry(filename: pathlib.Path) -> list
+
+   
+   Get the reference entry from an XML file.
+
+
+   :Parameters:
+
+       **filename: Path**
+           Path object of an XML file.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: is_valid_method(method: str) -> bool
+
+   
+   Check if a method is valid Python code.
+
+
+   :Parameters:
+
+       **method: str**
+           The method source code as a string.
+           It needs to be already indented for class context.
+
+
+
+   :Returns:
+
+       :ref:`bool <python:bltin-boolean-values>`
+           ``True`` if the method is valid Python code, ``False`` otherwise.
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:data:: logger
+
+
+
