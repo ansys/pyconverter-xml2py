@@ -50,7 +50,7 @@ tests = [
     "parse==1.20.2",
     "pytest==8.3.4",
     "pytest-cov==6.2.1",
-    "pytest-rerunfailures==15.0",
+    "pytest-rerunfailures==15.1",
     "pyyaml==6.0.2",
     "regex==2024.11.6",
 ]
