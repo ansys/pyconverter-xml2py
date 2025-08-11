@@ -219,7 +219,7 @@ jobs:
   package:
     name: Package library
     runs-on: ubuntu-latest
-    needs: [doc-build, build-test, actions-security]
+    needs: [doc-build, build-test]
     steps:
       - name: Build library source and wheel artifacts
         uses: ansys/actions/build-library@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
