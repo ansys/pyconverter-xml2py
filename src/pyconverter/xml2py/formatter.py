@@ -51,7 +51,7 @@ def run_pre_commit(package_path) -> None:
                 str(pre_commit_file),
             ],
             capture_output=True,
-        ).returncode # nosec B603 B607
+        ).returncode  # nosec B603 B607
     if output != 0:
         raise RuntimeError("Pre-commit failed.")
     else:
