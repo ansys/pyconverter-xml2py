@@ -52,7 +52,7 @@ tests = [
     "pytest-cov==6.2.1",
     "pytest-rerunfailures==15.1",
     "pyyaml==6.0.2",
-    "regex==2024.11.6",
+    "regex==2025.7.34",
 ]
 doc = [
     "Sphinx==8.2.3",
@@ -67,7 +67,7 @@ doc = [
     "parse==1.20.2",
     "pypandoc==1.15",
     "pytest-sphinx==0.6.3",
-    "regex==2024.11.6",
+    "regex==2025.7.34",
     "sphinx-autobuild==2024.10.3",
     "sphinx-autodoc-typehints==3.2.0",
     "sphinx-copybutton==0.5.2",
