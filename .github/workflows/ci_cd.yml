@@ -23,6 +23,10 @@ env:
   RESET_DOC_BUILD_CACHE: 10
   ON_CI: true
 
+permissions:
+  contents: read
+  pull-requests: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -108,6 +112,8 @@ jobs:
     steps:
       - name: "Install Git and checkout project"
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: "Setup Python"
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
@@ -120,7 +126,7 @@ jobs:
           sudo apt-get install pandoc
 
       - name: "Cache pip"
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: ~/.cache/pip
           key: Python-v${{ env.RESET_PIP_CACHE }}-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
@@ -135,6 +141,7 @@ jobs:
           ref: feat/pyconverter-xml2py-predifined-format
           token: ${{ secrets.MAPDL_CMD_DOC_TOKEN }}
           path: mapdl-cmd-doc
+          persist-credentials: false
 
       - name: "Unit testing requirements installation"  
         run: |
@@ -143,7 +150,7 @@ jobs:
       - name: "Unit testing"
         run: |
           pytest -v --durations=10 --maxfail=10 \
-            --reruns 7 --reruns-delay 3 --ghdir ${{ github.workspace }}\
+            --reruns 7 --reruns-delay 3 --ghdir ${GITHUB_WORKSPACE}\
             --cov=pyconverter.xml2py --cov-report=xml:coverage.xml --cov-report=html\
             --cov-report term
 
@@ -167,6 +174,8 @@ jobs:
     steps:
       - name: "Install Git and checkout project"
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: "Setup Python"
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
@@ -174,7 +183,7 @@ jobs:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
       - name: "Cache pip"
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: ~/.cache/pip
           key: Python-pyconverter.xml2py-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
@@ -192,7 +201,7 @@ jobs:
           echo "pyconverter.xml2py version is: $(python -c 'from pyconverter.xml2py import __version__; print(__version__)')"
     
       - name: "Cache docs build directory"
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: doc/_build
           key: doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
@@ -200,7 +209,7 @@ jobs:
             doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}
 
       - name: "Cache autosummary"
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: doc/source/**/_autosummary/**/*.rst
           key: autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
@@ -277,6 +286,8 @@ jobs:
     # Deploy release documentation when creating a new tag
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs: [release, release-pypi]
     steps:
       - name: "Deploy the stable documentation"
@@ -293,6 +304,8 @@ jobs:
     # Deploy development only when merging to main
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs: [package]
     steps:
       - name: "Deploy the latest documentation"
