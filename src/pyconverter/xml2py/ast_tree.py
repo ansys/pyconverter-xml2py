@@ -55,6 +55,8 @@ XML_CLEANUP = {
     '``"``': "``",
     "/_nolinebreak?": "",
     "/_nolinebreak ?": "",
+    "_nolinebreak?": "",
+    "_nolinebreak ?": "",
     "nbsp": " ",
 }
 
