@@ -54,8 +54,7 @@ XML_CLEANUP = {
     "Caret 40?": "",
     '``"``': "``",
     "/_nolinebreak?": "",
-    "_nolinebreak ?": "",
-    "_nolinebreak?": "",
+    "/_nolinebreak ?": "",
     "nbsp": " ",
 }
 
