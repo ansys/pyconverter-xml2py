@@ -1,6 +1,8 @@
 Getting started
 ===============
 
+.. _installation:
+
 Installation
 ------------
 
@@ -22,6 +24,20 @@ For developers
 Installing the ``pyconverter-xml2py`` package in developer mode allows you to modify the source and enhance it.
 For contribution guidelines, see :ref:`Contribute <ref_contributing>`.
 
+Quick Start
+-----------
+
+Once installed, you can use PyConverter-XML2Py via the command line interface:
+
+.. code:: bash
+
+    # Check version
+    pyconverter-xml2py version
+
+    # Convert XML documentation to Python package
+    pyconverter-xml2py package -x /path/to/xml/docs
+
+For detailed CLI documentation, see the :doc:`../user_guide/cli` section.
 
 Post issues
 -----------
