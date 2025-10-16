@@ -698,7 +698,7 @@ class Element:
         """Find the first type matching a given type string."""
         for item in self:
             if type(item).__name__ == _type:
-                if _type == "Refname" or _type == "Refnamediv":
+                if _type == "Refname":
                     if terms == None:
                         logging.error("ERROR: terms are not defined for a 'Refname' class.")
                     item.terms = terms
@@ -710,7 +710,9 @@ class Element:
         items = []
         for item in self:
             if type(item).__name__ == _type:
-                if _type == "Refname" or _type == "Refnamediv":
+                if _type == "Refname":
+                    if not terms:
+                        logging.error("ERROR: terms are not defined for a 'Refname' class.")
                     item.terms = terms
                 items.append(item)
             elif recursive and isinstance(item, Element):
@@ -3116,6 +3118,15 @@ class XMLCommand(Element):
                             )
                     if isinstance(child, Paragraph):
                         self._is_paragraph_in_arg_desc = True
+
+        # Check whether arguments have been caught
+        if not arguments:
+            refnamediv = self.find("Refnamediv")
+            available_arguments = refnamediv[0].get_children_by_type("Replaceable")
+            if available_arguments:
+                arguments = ArgumentList(
+                    self.py_name, self.url, self._terms, available_arguments, self.args
+                )
 
         arg_file = Path("args.txt")
 
