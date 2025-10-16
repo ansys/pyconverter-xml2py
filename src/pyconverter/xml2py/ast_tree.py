@@ -3087,7 +3087,21 @@ class XMLCommand(Element):
         refsyn = self.rec_find("Refsynopsisdiv")
         # search by ID
         arguments = None
-        if refsyn is None:
+        if refsyn and "Variablelist" in refsyn.children_types:
+            for elem in refsyn:
+                if isinstance(elem, Variablelist):
+                    if arguments is None:
+                        arguments = ArgumentList(
+                            self.py_name, self.url, self._terms, elem, self.args
+                        )
+                    else:
+                        arguments += ArgumentList(
+                            self.py_name, self.url, self._terms, elem, self.args
+                        )
+                if isinstance(elem, Paragraph):
+                    self._is_paragraph_in_arg_desc = True
+
+        else:
             refsections = self.find_all("RefSection")
             for elem in refsections:
                 for child in elem:
@@ -3102,20 +3116,6 @@ class XMLCommand(Element):
                             )
                     if isinstance(child, Paragraph):
                         self._is_paragraph_in_arg_desc = True
-
-        else:
-            for elem in refsyn:
-                if isinstance(elem, Variablelist):
-                    if arguments is None:
-                        arguments = ArgumentList(
-                            self.py_name, self.url, self._terms, elem, self.args
-                        )
-                    else:
-                        arguments += ArgumentList(
-                            self.py_name, self.url, self._terms, elem, self.args
-                        )
-                if isinstance(elem, Paragraph):
-                    self._is_paragraph_in_arg_desc = True
 
         arg_file = Path("args.txt")
 
