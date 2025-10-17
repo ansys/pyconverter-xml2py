@@ -23,6 +23,10 @@ env:
   RESET_DOC_BUILD_CACHE: 10
   ON_CI: true
 
+permissions:
+  contents: read
+  pull-requests: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -34,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: PyAnsys code style checks
-        uses: ansys/actions/code-style@v10
+        uses: ansys/actions/code-style@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
@@ -44,10 +48,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: PyAnsys documentation style checks
-        uses: ansys/actions/doc-style@v10
+        uses: ansys/actions/doc-style@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+
+  vulnerabilities:
+    name: "Check library vulnerabilities"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Check library vulnerabilities with default mode"
+        uses: ansys/actions/check-vulnerabilities@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        with:
+          python-version: ${{ env.MAIN_PYTHON_VERSION }}
+          token: ${{ secrets.PYANSYS_CI_BOT_TOKEN }}
+          python-package-name: ${{ env.PACKAGE_NAME }}
+          dev-mode: ${{ github.ref != 'refs/heads/main' }}
+
+  actions-security:
+    name: "Check actions security"
+    runs-on: ubuntu-latest
+    needs: [vulnerabilities]
+    steps:
+      - uses: ansys/actions/check-actions-security@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        with:
+          generate-summary: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          auditing-level: 'high'
+          trust-ansys-actions: true
 
   smoke-tests: # Needs to be re-enabled prior to release
     name: Build and Smoke tests (Linux)
@@ -60,7 +88,7 @@ jobs:
 
     steps:
       - name: Build wheelhouse and perform smoke test
-        uses: ansys/actions/build-wheelhouse@v10
+        uses: ansys/actions/build-wheelhouse@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
         with:
           library-name: ${{ env.PACKAGE_NAME }}
           operating-system: ${{ runner.os }}
@@ -80,7 +108,7 @@ jobs:
 
     steps:
       - name: Build wheelhouse and perform smoke test
-        uses: ansys/actions/build-wheelhouse@v10
+        uses: ansys/actions/build-wheelhouse@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
         with:
           library-name: ${{ env.PACKAGE_NAME }}
           operating-system: ${{ matrix.os }}
@@ -94,10 +122,12 @@ jobs:
 
     steps:
       - name: "Install Git and checkout project"
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: "Setup Python"
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
@@ -107,21 +137,22 @@ jobs:
           sudo apt-get install pandoc
 
       - name: "Cache pip"
-        uses: actions/cache@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: ~/.cache/pip
           key: Python-v${{ env.RESET_PIP_CACHE }}-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
             Python-v${{ env.RESET_PIP_CACHE }}-${{ runner.os }}
     
-      # The token will expire in 2024.
+      # The token will expire in 2025.
       - name: "Checkout mapdl-cmd-doc repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           repository: ansys-internal/mapdl-cmd-doc
           ref: feat/pyconverter-xml2py-predifined-format
           token: ${{ secrets.MAPDL_CMD_DOC_TOKEN }}
           path: mapdl-cmd-doc
+          persist-credentials: false
 
       - name: "Unit testing requirements installation"  
         run: |
@@ -130,18 +161,18 @@ jobs:
       - name: "Unit testing"
         run: |
           pytest -v --durations=10 --maxfail=10 \
-            --reruns 7 --reruns-delay 3 --ghdir ${{ github.workspace }}\
+            --reruns 7 --reruns-delay 3 --ghdir ${GITHUB_WORKSPACE}\
             --cov=pyconverter.xml2py --cov-report=xml:coverage.xml --cov-report=html\
             --cov-report term
 
       - name: "Upload coverage to Codecov"
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
         with:
           name: coverage.xml
           flags: coverage
 
       - name: Upload coverage artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: coverage.xml
           path: ./coverage.xml
@@ -153,15 +184,17 @@ jobs:
     needs: [doc-style]
     steps:
       - name: "Install Git and checkout project"
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: "Setup Python"
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
       - name: "Cache pip"
-        uses: actions/cache@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: ~/.cache/pip
           key: Python-pyconverter.xml2py-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
@@ -179,7 +212,7 @@ jobs:
           echo "pyconverter.xml2py version is: $(python -c 'from pyconverter.xml2py import __version__; print(__version__)')"
     
       - name: "Cache docs build directory"
-        uses: actions/cache@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: doc/_build
           key: doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
@@ -187,7 +220,7 @@ jobs:
             doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}
 
       - name: "Cache autosummary"
-        uses: actions/cache@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: doc/source/**/_autosummary/**/*.rst
           key: autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
@@ -195,7 +228,7 @@ jobs:
             autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}
 
       - name: "Run Ansys documentation building action"
-        uses: ansys/actions/doc-build@v10
+        uses: ansys/actions/doc-build@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
           checkout: false
@@ -209,45 +242,54 @@ jobs:
     needs: [doc-build, build-test]
     steps:
       - name: Build library source and wheel artifacts
-        uses: ansys/actions/build-library@v10
+        uses: ansys/actions/build-library@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
         with:
           library-name: ${{ env.PACKAGE_NAME }}
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
 
-  doc-deploy-dev:
-    name: "Deploy development documentation"
-    # Deploy development only when merging to main
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    needs: [package]
-    steps:
-      - name: "Deploy the latest documentation"
-        uses: ansys/actions/doc-deploy-dev@v10
-        with:
-            cname: ${{ env.DOCUMENTATION_CNAME }}
-            token: ${{ secrets.GITHUB_TOKEN }}
-            bot-user: ${{ secrets.PYANSYS_CI_BOT_USERNAME }}
-            bot-email: ${{ secrets.PYANSYS_CI_BOT_EMAIL }}
-
-
   release:
-    name: "Release project to public PyPI and GitHub"
+    name: "Release project to GitHub"
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags')
-    needs:  [package, smoke-tests-macos-windows]
+    needs: [package]
     runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+      contents: write
     steps:
-    - name: "Release to the public PyPI repository"
-      uses: ansys/actions/release-pypi-public@v10
-      with:
-        library-name: ${{ env.PACKAGE_NAME }}
-        twine-username: "__token__"
-        twine-token: ${{ secrets.PYPI_TOKEN }}
+      - name: Release to GitHub
+        uses: ansys/actions/release-github@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          library-name: ${{ env.PACKAGE_NAME }}
+          add-artifact-attestation-notes: true
 
-    - name: "Release to GitHub"
-      uses: ansys/actions/release-github@v10
-      with:
-        library-name: ${{ env.PACKAGE_NAME }}
+
+  release-pypi:
+    name: "Release project to PyPI"
+    if: ${{ github.event_name == 'push' && contains(github.ref, 'refs/tags') }}
+    needs: [package]
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+
+      - name: "Download the library artifacts from build-library step"
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
+        with:
+          name: ${{ env.PACKAGE_NAME }}-artifacts
+          path: ${{ env.PACKAGE_NAME }}-artifacts
+
+      - name: "Upload artifacts to PyPI using trusted publisher"
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
+        with:
+          repository-url: "https://upload.pypi.org/legacy/"
+          print-hash: true
+          packages-dir: ${{ env.PACKAGE_NAME }}-artifacts
+          skip-existing: false
 
 
   doc-deploy-stable:
@@ -255,10 +297,30 @@ jobs:
     # Deploy release documentation when creating a new tag
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags')
     runs-on: ubuntu-latest
-    needs: [release]
+    permissions:
+      contents: write
+    needs: [release, release-pypi]
     steps:
       - name: "Deploy the stable documentation"
-        uses: ansys/actions/doc-deploy-stable@v10
+        uses: ansys/actions/doc-deploy-stable@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        with:
+            cname: ${{ env.DOCUMENTATION_CNAME }}
+            token: ${{ secrets.GITHUB_TOKEN }}
+            bot-user: ${{ secrets.PYANSYS_CI_BOT_USERNAME }}
+            bot-email: ${{ secrets.PYANSYS_CI_BOT_EMAIL }}
+
+
+  doc-deploy-dev:
+    name: "Deploy development documentation"
+    # Deploy development only when merging to main
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs: [package]
+    steps:
+      - name: "Deploy the latest documentation"
+        uses: ansys/actions/doc-deploy-dev@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
         with:
             cname: ${{ env.DOCUMENTATION_CNAME }}
             token: ${{ secrets.GITHUB_TOKEN }}
