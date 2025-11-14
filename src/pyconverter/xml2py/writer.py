@@ -176,7 +176,7 @@ def convert(directory_path):
     return command_map, name_map
 
 
-def copy_template_package(template_path: Path, new_package_path: Path, clean: bool = False) -> Path:
+def copy_template_package(template_path: Path, new_package_path: Path) -> Path:
     """
     Add files and directory from a template directory path to a new path.
 
@@ -187,10 +187,6 @@ def copy_template_package(template_path: Path, new_package_path: Path, clean: bo
 
     new_package_path: Path
         Path object containing the directory where the new files and directorys are to be added.
-
-    clean: bool, optional
-        Whether the directories in the path for the new package must be cleared before adding
-        new files. The default value is ``False``.
 
     Returns
     -------
@@ -204,12 +200,8 @@ def copy_template_package(template_path: Path, new_package_path: Path, clean: bo
     for filename in filename_list:
         new_path_dir = new_package_path / filename.name
         if filename.is_dir():
-            if not new_path_dir.is_dir():
-                new_path_dir.mkdir(parents=True, exist_ok=True)
-            elif new_path_dir.is_dir() and clean:
-                shutil.rmtree(new_path_dir)
-                new_path_dir.mkdir(parents=True)
-            copy_template_package(filename, new_path_dir, clean)
+            new_path_dir.mkdir(parents=True, exist_ok=True)
+            copy_template_package(filename, new_path_dir)
         else:
             shutil.copy(filename, new_package_path)
 
@@ -330,6 +322,55 @@ def get_class_info(initial_class_name: str, module_path: Path) -> Tuple[str, str
     return class_name, file_name, file_path
 
 
+def add_additional_source_files(
+    template_path: Path,
+    package_structure: dict,
+    config_path: Path,
+) -> dict:
+    """
+    Add additional source files to the package structure if specified in the config.
+
+    Parameters
+    ----------
+    template_path: Path
+        Path object of the template directory.
+    package_structure: dict
+        Dictionary representing the package structure.
+    config_path: Path
+        Path object of the configuration file.
+
+    Returns
+    -------
+    dict | None
+        Updated package structure or None if no additional files were added.
+    """
+    is_additional_files = get_config_data_value(config_path, "additional_source_files")
+    if is_additional_files:
+        # Get all the python files in the template source directory
+        template_source_path = template_path / "src"
+        additional_files = list(template_source_path.glob("**/*.py"))
+        if len(additional_files) > 0:
+            for file_path in additional_files:
+                relative_path = file_path.relative_to(template_source_path)
+                parts = relative_path.parts
+                if len(parts) < 2:
+                    continue  # Skip files that are not in a module folder
+                module_name = parts[-2]
+                class_file_name = parts[-1][:-3]  # Remove .py extension
+                class_name = class_file_name.title().replace("_", "")
+                if module_name not in package_structure:
+                    package_structure[module_name] = {}
+                if class_file_name not in package_structure[module_name]:
+                    package_structure[module_name][class_file_name] = [class_name, []]
+                # read the content of the additional file and update the class structure
+                with open(file_path, "r", encoding="utf-8") as fid:
+                    content = fid.read()
+                method_names = re.findall(pat.DEF_METHOD, content)
+                package_structure[module_name][class_file_name][1].extend(method_names)
+                print(module_name, class_file_name, class_name, method_names)
+    return package_structure
+
+
 def write_source(
     command_map: dict,
     name_map: dict,
@@ -342,7 +383,7 @@ def write_source(
     structured: bool = True,
     check_structure_map: bool = False,
     check_files: bool = True,
-) -> Tuple[list, dict]:
+) -> dict | None:
     """Write out XML commands as Python source files.
 
     Parameters
@@ -373,8 +414,6 @@ def write_source(
 
     Returns
     -------
-    list
-        List of module names created.
     dict
         Dictionary with the following format:
         ``{'python_module_name': [{'python_class_name': python_names_list}]}``.
@@ -410,7 +449,7 @@ def write_source(
         library_path.mkdir(parents=True, exist_ok=True)
 
     if structured == False:
-        package_structure = None
+        package_structure = {}
         for initial_command_name, command_obj in tqdm(command_map.items(), desc="Writing commands"):
             if initial_command_name in ignored_commands:
                 continue
@@ -482,6 +521,20 @@ def write_source(
                     fid.close()
             all_commands.append(command.name)
 
+    logging.info(f"Commands written to {library_path}")
+
+    # Copy package files to the package directory
+    copy_template_package(template_path, new_package_path)
+    graph_path = get_paths(xml_doc_path)[0]
+    shutil.copytree(graph_path, new_package_path / "doc" / "source" / image_folder_path)
+
+    # Added at the end for addional source files
+    write_global__init__file(library_path, config_path)
+    write__init__file(library_path)
+
+    # Update package_structure if needed
+    package_structure = add_additional_source_files(template_path, package_structure, config_path)
+
     if check_structure_map:
         for command_name in name_map.keys():
             if command_name not in all_commands:
@@ -498,15 +551,6 @@ def write_source(
                         f"Failed to execute '{python_method}' from '{file_path}'."
                     ) from e
 
-    write_global__init__file(library_path, config_path)
-    write__init__file(library_path)
-
-    logging.info(f"Commands written to {library_path}")
-
-    # Copy package files to the package directory
-    copy_template_package(template_path, new_package_path, clean)
-    graph_path = get_paths(xml_doc_path)[0]
-    shutil.copytree(graph_path, new_package_path / "doc" / "source" / image_folder_path)
     return package_structure
 
 

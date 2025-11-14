@@ -25,6 +25,7 @@ BEFORE_DEF = r"[\s\S]*?(?=def "
 GET_CLASSNAME = r"(\S+)(?=:)"
 GET_CODE_BLOCK = r"(\s*\.\. code:: apdl\n\s*(?: +.+\n)+)"
 GET_GROUP = r"(?<=&)(.*?)(?=;)"
+DEF_METHOD = r"def (\w+)\s*\(.*\):"
 # Not used, can be added in case of complications with imports in the future
 GET_IMPORTS = r"(?:(?:from [a-zA-Z0-9_.]* import [a-zA-Z0-9_.]* as [a-zA-Z0-9_.]*)|(?:from [a-zA-Z0-9_.]* import [a-zA-Z0-9_.]*)|(?:import [a-zA-Z0-9_.]* as [a-zA-Z0-9_.]*)|(?:import [a-zA-Z0-9_.]*)\s)"  # noqa: E501
 GET_ITALIC_COMMANDS = r"([^\*])(\*)(\*)([A-Z]+)(\*)([^\*])"  # TODO: Not supported yet
