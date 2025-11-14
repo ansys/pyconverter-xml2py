@@ -130,6 +130,10 @@ Please, refer to the `command documentation <url>`_ for further information."""
 
 
 class NameMap:
+    """
+    Map XML command names to Python function names.
+    """
+
     def __init__(self, name_map):
         self.name_map = name_map
         global NAME_MAP_GLOB
@@ -1630,6 +1634,10 @@ class Code(Element):
 
 
 class _Math(Element):
+    """
+    Provides the math element.
+    """
+
     def __init__(self, element):
         self._element = element
         self._content = []

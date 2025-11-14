@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 """
-pyconverter.xml2py
+PyConverter-XML2Py
 """
 
 try:
@@ -30,4 +30,4 @@ except ModuleNotFoundError:
     import importlib_metadata
 
 __version__ = importlib_metadata.version(__name__.replace(".", "-"))
-"""pyconverter.xml2py version."""
+"""PyConverter-XML2Py version."""
