@@ -12,8 +12,6 @@ new_package_name: package
 
 image_folder_path: ../images/_commands
 
-additional_source_files: true
-
 rules:
   "/": slash
   "*": star

@@ -344,30 +344,28 @@ def add_additional_source_files(
     dict | None
         Updated package structure or None if no additional files were added.
     """
-    is_additional_files = get_config_data_value(config_path, "additional_source_files")
-    if is_additional_files:
-        # Get all the python files in the template source directory
-        template_source_path = template_path / "src"
-        additional_files = list(template_source_path.glob("**/*.py"))
-        if len(additional_files) > 0:
-            for file_path in additional_files:
-                relative_path = file_path.relative_to(template_source_path)
-                parts = relative_path.parts
-                if len(parts) < 2:
-                    continue  # Skip files that are not in a module folder
-                module_name = parts[-2]
-                class_file_name = parts[-1][:-3]  # Remove .py extension
-                class_name = class_file_name.title().replace("_", "")
-                if module_name not in package_structure:
-                    package_structure[module_name] = {}
-                if class_file_name not in package_structure[module_name]:
-                    package_structure[module_name][class_file_name] = [class_name, []]
-                # read the content of the additional file and update the class structure
-                with open(file_path, "r", encoding="utf-8") as fid:
-                    content = fid.read()
-                method_names = re.findall(pat.DEF_METHOD, content)
-                package_structure[module_name][class_file_name][1].extend(method_names)
-                print(module_name, class_file_name, class_name, method_names)
+    # Get all the python files in the template source directory
+    template_source_path = template_path / "src"
+    additional_files = list(template_source_path.glob("**/*.py"))
+    if len(additional_files) > 0:
+        for file_path in additional_files:
+            relative_path = file_path.relative_to(template_source_path)
+            parts = relative_path.parts
+            if len(parts) < 2:
+                continue  # Skip files that are not in a module folder
+            module_name = parts[-2]
+            class_file_name = parts[-1][:-3]  # Remove .py extension
+            class_name = class_file_name.title().replace("_", "")
+            if module_name not in package_structure:
+                package_structure[module_name] = {}
+            if class_file_name not in package_structure[module_name]:
+                package_structure[module_name][class_file_name] = [class_name, []]
+            # read the content of the additional file and update the class structure
+            with open(file_path, "r", encoding="utf-8") as fid:
+                content = fid.read()
+            method_names = re.findall(pat.DEF_METHOD, content)
+            package_structure[module_name][class_file_name][1].extend(method_names)
+            print(module_name, class_file_name, class_name, method_names)
     return package_structure
 
 
