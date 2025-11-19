@@ -365,7 +365,6 @@ def add_additional_source_files(
                 content = fid.read()
             method_names = re.findall(pat.DEF_METHOD, content)
             package_structure[module_name][class_file_name][1].extend(method_names)
-            print(module_name, class_file_name, class_name, method_names)
     return package_structure
 
 

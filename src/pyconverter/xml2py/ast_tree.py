@@ -848,32 +848,33 @@ def ponctuation_whitespace(text, ponctuation):
     if extra_space:
         for character in list(set(extra_space)):  # remove duplicates in extra_space list
             before_space = character[:-1].strip()
-            regex_before_space = before_space
-            if "*" in before_space:
-                regex_before_space = regex_before_space.replace("*", r"\*")
-            if "?" in before_space:
-                regex_before_space = regex_before_space.replace("?", r"\?")
-            if "+" in before_space:
-                regex_before_space = regex_before_space.replace("+", r"\+")
-            if ")" in before_space:
-                regex_before_space = regex_before_space.replace(")", r"\)")
-            if "(" in before_space:
-                regex_before_space = regex_before_space.replace("(", r"\(")
-            if "[" in before_space:
-                regex_before_space = regex_before_space.replace("[", r"\[")
-            if "]" in before_space:
-                regex_before_space = regex_before_space.replace("]", r"\]")
-            if "." in before_space:
-                regex_before_space = regex_before_space.replace(".", r"\.")
-            if "$" in before_space:
-                regex_before_space = regex_before_space.replace("$", r"\$")
-            pattern = r"{regex_before_space}\h+\{ponctuation}".format(
-                regex_before_space=regex_before_space, ponctuation=ponctuation
-            )
-            repl = r"{before_space}{ponctuation}".format(
-                before_space=before_space, ponctuation=ponctuation
-            )
-            text = re.sub(pattern, repl, text)
+            if before_space[:2] != ".." and before_space[-2:] != "::":  # skip RST directives
+                regex_before_space = before_space
+                if "*" in before_space:
+                    regex_before_space = regex_before_space.replace("*", r"\*")
+                if "?" in before_space:
+                    regex_before_space = regex_before_space.replace("?", r"\?")
+                if "+" in before_space:
+                    regex_before_space = regex_before_space.replace("+", r"\+")
+                if ")" in before_space:
+                    regex_before_space = regex_before_space.replace(")", r"\)")
+                if "(" in before_space:
+                    regex_before_space = regex_before_space.replace("(", r"\(")
+                if "[" in before_space:
+                    regex_before_space = regex_before_space.replace("[", r"\[")
+                if "]" in before_space:
+                    regex_before_space = regex_before_space.replace("]", r"\]")
+                if "." in before_space:
+                    regex_before_space = regex_before_space.replace(".", r"\.")
+                if "$" in before_space:
+                    regex_before_space = regex_before_space.replace("$", r"\$")
+                pattern = r"{regex_before_space}\h+\{ponctuation}".format(
+                    regex_before_space=regex_before_space, ponctuation=ponctuation
+                )
+                repl = r"{before_space}{ponctuation}".format(
+                    before_space=before_space, ponctuation=ponctuation
+                )
+                text = re.sub(pattern, repl, text)
     return text
 
 
