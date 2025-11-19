@@ -49,6 +49,9 @@ logger.setLevel(logging.INFO)
 XML_CLEANUP = {
     # "&thetas;": "θ",  # consider replacing with :math:`\theta`
     "Dtl?": "",
+    "Caret? ": "",
+    "Caret1? ": "",
+    "Caret 40? ": "",
     "Caret?": "",
     "Caret1?": "",
     "Caret 40?": "",
