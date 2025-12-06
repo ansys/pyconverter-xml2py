@@ -1,0 +1,100 @@
+
+
+
+
+
+
+:class:`SubScript`
+==================
+
+
+.. py:class:: src.pyconverter.xml2py.ast_tree.SubScript(element)
+
+   Bases: :py:obj:`Element`
+
+
+   
+   Provides the subscript element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+.. py:currentmodule:: SubScript
+
+Overview
+--------
+
+.. tab-set::
+
+
+
+   .. tab-item:: Methods
+
+      .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~to_rst`
+            - Return a string to enable converting the element to an RST format.
+
+
+
+
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import SubScript
+
+
+
+Method detail
+-------------
+
+.. py:method:: to_rst(indent='', max_length=100)
+
+   
+   Return a string to enable converting the element to an RST format.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+
