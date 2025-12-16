@@ -137,7 +137,7 @@ jobs:
           sudo apt-get install pandoc
 
       - name: "Cache pip"
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: ~/.cache/pip
           key: Python-v${{ env.RESET_PIP_CACHE }}-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
@@ -194,7 +194,7 @@ jobs:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
       - name: "Cache pip"
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: ~/.cache/pip
           key: Python-pyconverter.xml2py-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
@@ -212,7 +212,7 @@ jobs:
           echo "pyconverter.xml2py version is: $(python -c 'from pyconverter.xml2py import __version__; print(__version__)')"
     
       - name: "Cache docs build directory"
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: doc/_build
           key: doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
@@ -220,7 +220,7 @@ jobs:
             doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}
 
       - name: "Cache autosummary"
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: doc/source/**/_autosummary/**/*.rst
           key: autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
