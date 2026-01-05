@@ -34,7 +34,7 @@ dependencies = [
 
 [project.optional-dependencies]
 doc = [
-    "Sphinx==8.2.3",
+    "Sphinx==9.1.0",
     "build>= 0.10.0",
     "jupyter_sphinx==0.5.3",
     "linuxdoc==20240924",
