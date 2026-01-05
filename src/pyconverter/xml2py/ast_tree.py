@@ -49,6 +49,9 @@ logger.setLevel(logging.INFO)
 XML_CLEANUP = {
     # "&thetas;": "θ",  # consider replacing with :math:`\theta`
     "Dtl?": "",
+    "Caret? ": "",
+    "Caret1? ": "",
+    "Caret 40? ": "",
     "Caret?": "",
     "Caret1?": "",
     "Caret 40?": "",
@@ -253,17 +256,17 @@ def to_py_arg_name(name: str) -> str:
 
 
 def get_complete_args_from_initial_arg(
-    initial_args: List[str], elipsis_args: List[str]
+    initial_args: List[str], ellipsis_args: List[str]
 ) -> List[str]:
     """
-    Get the complete argument list from a list with elipsis.
+    Get the complete argument list from a list with ellipsis.
 
     Parameters
     ----------
     initial_args : list
         List of initial arguments.
 
-    elipsis_args : list
+    ellipsis_args : list
         List of containing the elipsed arguments.
 
     Returns
@@ -274,14 +277,12 @@ def get_complete_args_from_initial_arg(
     Examples
     --------
     >>> initial_args = ['energytype', 'cname1', 'cname2', 'cname3', 'cname4', 'cname5', 'cname6']
-    >>> elipsis_args = ['Cname1', ' Cname2',' …']
-    >>> get_complete_args_from_initial_arg(initial_args, elipsis_args)
+    >>> ellipsis_args = ['Cname1', ' Cname2',' …']
+    >>> get_complete_args_from_initial_arg(initial_args, ellipsis_args)
     ['cname1', 'cname2', 'cname3', 'cname4', 'cname5', 'cname6']
     """
-
-    first_arg_name = to_py_arg_name(elipsis_args[0])
-    name_without_iter, first_num = get_iter_values(first_arg_name)
-
+    first_arg_name = to_py_arg_name(ellipsis_args[0])
+    name_without_iter, _ = get_iter_values(first_arg_name)
     complete_args = []
     for i, arg in enumerate(initial_args):
         if name_without_iter in arg:
@@ -290,14 +291,14 @@ def get_complete_args_from_initial_arg(
     return complete_args
 
 
-def is_elipsis(name: str) -> bool:
+def is_ellipsis(name: str) -> bool:
     """
-    Check if a name is an elipsis.
+    Check if a name is an ellipsis.
 
     Returns
     -------
     bool
-        True if the argument is an elipsis, False otherwise.
+        True if the argument is an ellipsis, False otherwise.
     """
     if any(elips in name for elips in [". . .", "...", "…"]):
         return True
@@ -848,32 +849,33 @@ def ponctuation_whitespace(text, ponctuation):
     if extra_space:
         for character in list(set(extra_space)):  # remove duplicates in extra_space list
             before_space = character[:-1].strip()
-            regex_before_space = before_space
-            if "*" in before_space:
-                regex_before_space = regex_before_space.replace("*", r"\*")
-            if "?" in before_space:
-                regex_before_space = regex_before_space.replace("?", r"\?")
-            if "+" in before_space:
-                regex_before_space = regex_before_space.replace("+", r"\+")
-            if ")" in before_space:
-                regex_before_space = regex_before_space.replace(")", r"\)")
-            if "(" in before_space:
-                regex_before_space = regex_before_space.replace("(", r"\(")
-            if "[" in before_space:
-                regex_before_space = regex_before_space.replace("[", r"\[")
-            if "]" in before_space:
-                regex_before_space = regex_before_space.replace("]", r"\]")
-            if "." in before_space:
-                regex_before_space = regex_before_space.replace(".", r"\.")
-            if "$" in before_space:
-                regex_before_space = regex_before_space.replace("$", r"\$")
-            pattern = r"{regex_before_space}\h+\{ponctuation}".format(
-                regex_before_space=regex_before_space, ponctuation=ponctuation
-            )
-            repl = r"{before_space}{ponctuation}".format(
-                before_space=before_space, ponctuation=ponctuation
-            )
-            text = re.sub(pattern, repl, text)
+            if before_space[:2] != ".." and before_space[-2:] != "::":  # skip RST directives
+                regex_before_space = before_space
+                if "*" in before_space:
+                    regex_before_space = regex_before_space.replace("*", r"\*")
+                if "?" in before_space:
+                    regex_before_space = regex_before_space.replace("?", r"\?")
+                if "+" in before_space:
+                    regex_before_space = regex_before_space.replace("+", r"\+")
+                if ")" in before_space:
+                    regex_before_space = regex_before_space.replace(")", r"\)")
+                if "(" in before_space:
+                    regex_before_space = regex_before_space.replace("(", r"\(")
+                if "[" in before_space:
+                    regex_before_space = regex_before_space.replace("[", r"\[")
+                if "]" in before_space:
+                    regex_before_space = regex_before_space.replace("]", r"\]")
+                if "." in before_space:
+                    regex_before_space = regex_before_space.replace(".", r"\.")
+                if "$" in before_space:
+                    regex_before_space = regex_before_space.replace("$", r"\$")
+                pattern = r"{regex_before_space}\h+\{ponctuation}".format(
+                    regex_before_space=regex_before_space, ponctuation=ponctuation
+                )
+                repl = r"{before_space}{ponctuation}".format(
+                    before_space=before_space, ponctuation=ponctuation
+                )
+                text = re.sub(pattern, repl, text)
     return text
 
 
@@ -2133,7 +2135,7 @@ class Refname(Element):
 
             elif arg in ["...", ". . ."]:
                 # Elipsis, needs to be skipped
-                pass
+                args.append("...")
 
             elif arg.isidentifier() is False:
                 raise ValueError(
@@ -2153,6 +2155,21 @@ class Refname(Element):
                             if args[j] == arg:
                                 args[j] = f"{arg}{i:d}"
                                 i += 1
+
+        # Handle ellipsis expansion
+        if "..." in args:
+            ellipsis_index = args.index("...")
+            previous_arg = args[ellipsis_index - 1]
+            next_arg = args[ellipsis_index + 1]
+            name_without_iter, previous_iter = get_iter_values(previous_arg)
+            _, next_iter = get_iter_values(next_arg)
+            if previous_iter and next_iter:
+                expanded_args = []
+                for i in range(previous_iter + 1, next_iter):
+                    expanded_args.append(name_without_iter + str(i))
+                args = args[:ellipsis_index] + expanded_args + args[ellipsis_index + 1 :]
+            else:  # one of them is not iterable - ``xn`` for instance
+                args.remove("...")
 
         return args
 
@@ -2661,6 +2678,16 @@ class Argument:
         self._terms = terms
         self._description = description
         self._initial_arguments = initial_arguments
+        if "VAL1" in self._initial_arguments:
+            print(self._initial_arguments)
+
+    # def fix_initial_arguments(self, initial_arguments: List) -> None:
+    #     """Fix the initial arguments."""
+    #     # All arguments are present, need to add the missing ones
+    #     _, start_iter = get_iter_values(ellipsis_args[0])
+    #     _, end_iter = get_iter_values(ellipsis_args[-1])
+    #     for i in range(start_iter, end_iter + 1):
+    #         complete_args.append(f"{name_without_iter}{i}")
 
     @property
     def py_arg_name(self) -> str:
@@ -2675,23 +2702,23 @@ class Argument:
         return str(self._description)
 
     @property
-    def is_arg_elipsis(self):
+    def is_arg_ellipsis(self):
         """
-        Check if the argument is an elipsis.
+        Check if the argument is an ellipsis.
 
         Returns
         -------
         bool
-            True if the argument is an elipsis, False otherwise.
+            True if the argument is an ellipsis, False otherwise.
         """
-        return is_elipsis(str(self._name))
+        return is_ellipsis(str(self._name))
 
     @property
     def multiple_args(self):
         additional_args = []
         if "," in str(self._name):
             split_name = str(self._name).split(",")
-            if not self.is_arg_elipsis:
+            if not self.is_arg_ellipsis:
                 for item_name in split_name:
                     arg_name = item_name.strip()
                     new_arg = Argument(
@@ -2699,9 +2726,8 @@ class Argument:
                     )
                     additional_args.append(new_arg)
             else:
-
                 complete_args = get_complete_args_from_initial_arg(
-                    elipsis_args=split_name, initial_args=self._initial_arguments
+                    ellipsis_args=split_name, initial_args=self._initial_arguments
                 )
 
                 if len(complete_args) > 0:
@@ -2720,7 +2746,7 @@ class Argument:
                                 self._terms, arg_name, self._initial_arguments, self._description
                             )
                             additional_args.append(new_arg)
-                        elif is_elipsis(item_name):
+                        elif is_ellipsis(item_name):
 
                             if "+" in split_name[i + 1]:
                                 number_final_iter, (
