@@ -39,6 +39,10 @@ repos:
   - id: add-license-headers
     args:
     - --start_year=2023
+    exclude: |
+        (?x)^(
+            _package/.*
+        )$
 
 # this validates our github workflow files
 - repo: https://github.com/python-jsonschema/check-jsonschema

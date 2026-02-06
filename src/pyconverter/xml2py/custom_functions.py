@@ -27,7 +27,9 @@ from typing import Tuple
 import regex as re
 
 
-def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str], list[str]]:
+def get_docstring_lists(
+    filename: str,
+) -> Tuple[list[str], list[str], list[str], list[str], list[str], list[str], list[str]]:
     """
     Get lists of strings depending on Python file sections.
 

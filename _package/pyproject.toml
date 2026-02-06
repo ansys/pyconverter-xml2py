@@ -30,6 +30,7 @@ classifiers = [
 dependencies = [
     "importlib-metadata >=4.0",
     "flit>=3.8.0",
+    "ansys-mapdl-core>=0.66.0",
 ]
 
 [project.optional-dependencies]
