@@ -1,0 +1,49 @@
+
+
+
+
+
+
+:class:`XMLWarning`
+===================
+
+
+.. py:class:: src.pyconverter.xml2py.ast_tree.XMLWarning(element, parse_children=True)
+
+   Bases: :py:obj:`Caution`
+
+
+   
+   XML Warning element are handled the same as Caution elements.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import XMLWarning
+
+
+
+
+
