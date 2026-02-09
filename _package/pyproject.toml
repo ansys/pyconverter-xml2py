@@ -34,7 +34,7 @@ dependencies = [
 
 [project.optional-dependencies]
 doc = [
-    "Sphinx==8.2.3",
+    "Sphinx==9.1.0",
     "build>= 0.10.0",
     "jupyter_sphinx==0.5.3",
     "linuxdoc==20240924",
@@ -43,7 +43,7 @@ doc = [
     "pandas==2.3.3",
     "parse==1.20.2",
     "pydata_sphinx_theme==0.16.1",
-    "pypandoc==1.16",
+    "pypandoc==1.16.2",
     "pytest-sphinx==0.6.3",
     "pyyaml==6.0.3",
     "sphinx-autobuild==2024.10.3",

@@ -10,6 +10,8 @@ updates:
       - "dependencies"
 
   - package-ecosystem: "pip" # See documentation for possible values
+    cooldown:
+      default-days: 10 # Fallback cooldown if no specific rule applies
     directory: "/_package/" # Location of package manifests
     insecure-external-code-execution: allow
     schedule:
@@ -19,6 +21,8 @@ updates:
       - "dependencies"
 
   - package-ecosystem: "github-actions"
+    cooldown:
+      default-days: 10 # Fallback cooldown if no specific rule applies
     directory: "/"
     schedule:
       interval: "weekly"
