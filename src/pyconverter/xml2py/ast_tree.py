@@ -1804,15 +1804,23 @@ class Literal(Element):
 class Caution(Element):
     """Provides the caution element."""
 
-    def to_rst(self, indent="", max_length=100):
+    def to_rst(self, indent="", links=None, base_url=None, max_length=100):
         """Return a string to enable converting the element to an RST format."""
         lines = ["", "", ".. warning::", ""]
         indent = indent + " " * 4
-        lines.append(
-            resize_length(
-                str(self), max_length=max_length, initial_indent=indent, subsequent_indent=indent
+        rst_items = []
+        for item in self:
+            rst_items.append(
+                item.to_rst(indent="", links=links, base_url=base_url, max_length=max_length)
             )
+        rst_items = "".join(rst_items)
+        added_lines = resize_length(
+            rst_items, max_length=max_length, initial_indent=indent, subsequent_indent=indent
         )
+        if isinstance(added_lines, str):
+            lines.append(added_lines)
+        else:
+            lines.extend(added_lines)
         lines.append("")
         return "\n".join(lines)
 
@@ -3906,6 +3914,8 @@ item_needing_links_base_url = {
     "highlights": Highlights,
     "important": Important,
     "footnote": Footnote,
+    "warning": XMLWarning,
+    "caution": Caution,
 }
 
 item_needing_fcache = {
