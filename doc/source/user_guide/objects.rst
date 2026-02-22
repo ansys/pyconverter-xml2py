@@ -24,7 +24,7 @@ command:
 Tables
 ------
 
-Tables are rendered correctly in the documentation. They do not need to have
+Tables render correctly in the documentation. They do not need to have
 a specific format because the converter uses `flat-tables <flat_tables_>`_.
 
 .. figure:: ./images/tables_doc.png
@@ -37,4 +37,4 @@ a specific format because the converter uses `flat-tables <flat_tables_>`_.
 Links
 -----
 
-Internal and external links are both rendered correctly.
+Internal and external links both render correctly.
