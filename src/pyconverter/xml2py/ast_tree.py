@@ -2689,14 +2689,6 @@ class Argument:
         if "VAL1" in self._initial_arguments:
             print(self._initial_arguments)
 
-    # def fix_initial_arguments(self, initial_arguments: List) -> None:
-    #     """Fix the initial arguments."""
-    #     # All arguments are present, need to add the missing ones
-    #     _, start_iter = get_iter_values(ellipsis_args[0])
-    #     _, end_iter = get_iter_values(ellipsis_args[-1])
-    #     for i in range(start_iter, end_iter + 1):
-    #         complete_args.append(f"{name_without_iter}{i}")
-
     @property
     def py_arg_name(self) -> str:
         """Python-compatible term."""

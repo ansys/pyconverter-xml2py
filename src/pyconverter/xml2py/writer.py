@@ -380,7 +380,7 @@ def write_source(
     structured: bool = True,
     check_structure_map: bool = False,
     check_files: bool = True,
-) -> dict | None:
+) -> dict:
     """Write out XML commands as Python source files.
 
     Parameters
