@@ -34,6 +34,7 @@ from pyconverter.xml2py.download import download_template
 import pyconverter.xml2py.utils.regex_pattern as pat
 from pyconverter.xml2py.utils.utils import (
     create_name_map,
+    get_base_class_for_pattern,
     get_comment_command_dict,
     get_config_data_value,
     get_library_path,
@@ -488,8 +489,21 @@ def write_source(
             # Create the class file and structure if it doesn't exist yet
             if not file_path.is_file():
                 class_structure = []
+
+                # Check if this class should inherit from a base class
+                base_class_info = get_base_class_for_pattern(config_path, module_name, class_name)
+
                 with open(file_path, "w", encoding="utf-8") as fid:
-                    fid.write(f"class {class_name}:\n")
+                    # Write import statement if base class is configured
+                    if base_class_info:
+                        import_stmt = (
+                            f"from {base_class_info['module']} "
+                            f"import {base_class_info['class_name']}\n\n"
+                        )
+                        fid.write(import_stmt)
+                        fid.write(f"class {class_name}({base_class_info['class_name']}):\n")
+                    else:
+                        fid.write(f"class {class_name}:\n")
             else:
                 # Get the class structure
                 class_structure = package_structure[module_name][file_name][1]
