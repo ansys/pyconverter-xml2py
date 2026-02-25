@@ -243,8 +243,7 @@ Base class inheritance
 **Type:** Object with ``rules`` list
 
 **Description:** Configures pattern-based inheritance for generated classes. This
-allows generated classes to inherit from a base class, enabling shared functionality
-and integration with existing frameworks.
+allows generated classes to inherit from a base class.
 
 **Structure:**
 
