@@ -327,9 +327,13 @@ def add_additional_source_files(
     template_path: Path,
     package_structure: dict,
     config_path: Path,
+    library_path: Path,
 ) -> dict:
     """
-    Add additional source files to the package structure if specified in the config.
+    Add additional source files to the package structure from the template.
+    
+    This function handles pre-existing Python files at any depth in the template
+    directory structure, allowing them to coexist with generated files.
 
     Parameters
     ----------
@@ -339,33 +343,98 @@ def add_additional_source_files(
         Dictionary representing the package structure.
     config_path: Path
         Path object of the configuration file.
+    library_path: Path
+        Path object of the library directory where files are generated.
 
     Returns
     -------
-    dict | None
-        Updated package structure or None if no additional files were added.
+    dict
+        Updated package structure.
     """
-    # Get all the python files in the template source directory
-    template_source_path = template_path / "src"
-    additional_files = list(template_source_path.glob("**/*.py"))
+    # Calculate the equivalent path in the template directory
+    # library_path format: package/src/pyconverter/generatedcommands/subfolder/subsubfolder/
+    # We need to find the corresponding path in the template
+
+    # Extract the library structure from the library_path
+    library_name_structured = get_config_data_value(config_path, "library_name_structured")
+    if not library_name_structured:
+        logging.info("No library structure defined in config. Skipping addition of template source files.")
+        return package_structure
+
+    subfolder_values = get_config_data_value(config_path, "subfolders")
+
+    # Build the template library path by reconstructing from template_path
+    template_library_path = template_path / "src"
+    for part in library_name_structured:
+        template_library_path = template_library_path / part
+    if subfolder_values:
+        for subfolder in subfolder_values:
+            template_library_path = template_library_path / subfolder
+
+    if not template_library_path.exists():
+        logging.info("Template library path does not exist. Skipping addition of template source files.")
+        return package_structure
+
+    # Find all Python files in the template library path
+    additional_files = list(template_library_path.glob("**/*.py"))
+
     if len(additional_files) > 0:
         for file_path in additional_files:
-            relative_path = file_path.relative_to(template_source_path)
+            # Skip __init__.py files as they're handled separately
+            if file_path.name == "__init__.py":
+                continue
+  
+            # Get relative path from the template library path
+            try:
+                relative_path = file_path.relative_to(template_library_path)
+            except ValueError:
+                continue
+
             parts = relative_path.parts
-            if len(parts) < 2:
-                continue  # Skip files that are not in a module folder
-            module_name = parts[-2]
+
+            # Determine the module name (parent directory)
+            if len(parts) == 1:
+                # File is directly in the library root, skip it
+                continue
+
+            # Get the module path (all parts except the filename)
+            module_parts = parts[:-1]
+            module_name = module_parts[0] if len(module_parts) == 1 else "/".join(module_parts)
+
+            # For nested structures, use only the immediate parent as module name
+            immediate_module = parts[-2]
+
+            # Get the class/file name
             class_file_name = parts[-1][:-3]  # Remove .py extension
             class_name = class_file_name.title().replace("_", "")
-            if module_name not in package_structure:
-                package_structure[module_name] = {}
-            if class_file_name not in package_structure[module_name]:
-                package_structure[module_name][class_file_name] = [class_name, []]
-            # read the content of the additional file and update the class structure
-            with open(file_path, "r", encoding="utf-8") as fid:
-                content = fid.read()
-            method_names = re.findall(pat.DEF_METHOD, content)
-            package_structure[module_name][class_file_name][1].extend(method_names)
+
+            # Initialize module in package structure if it doesn't exist
+            if immediate_module not in package_structure:
+                package_structure[immediate_module] = {}
+
+            # Add file to package structure if not already there
+            if class_file_name not in package_structure[immediate_module]:
+                package_structure[immediate_module][class_file_name] = [class_name, []]
+
+            # Read the content from template and copy to library_path
+            try:
+                # Construct the destination path using library_path
+                dest_module_path = library_path / immediate_module
+                dest_module_path.mkdir(parents=True, exist_ok=True)
+                dest_file_path = dest_module_path / f"{class_file_name}.py"
+
+                # Copy file if it doesn't exist in destination
+                if not dest_file_path.exists():
+                    shutil.copy(file_path, dest_file_path)
+
+                # Read the content and extract method names
+                with open(dest_file_path, "r", encoding="utf-8") as fid:
+                    content = fid.read()
+                method_names = re.findall(pat.DEF_METHOD, content)
+                package_structure[immediate_module][class_file_name][1].extend(method_names)
+            except Exception as e:
+                logging.warning(f"Could not process {file_path}: {e}")
+
     return package_structure
 
 
@@ -544,7 +613,9 @@ def write_source(
     write__init__file(library_path)
 
     # Update package_structure if needed
-    package_structure = add_additional_source_files(template_path, package_structure, config_path)
+    package_structure = add_additional_source_files(
+        template_path, package_structure, config_path, library_path
+    )
 
     if check_structure_map:
         for command_name in name_map.keys():
