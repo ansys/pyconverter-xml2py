@@ -331,7 +331,7 @@ def add_additional_source_files(
 ) -> dict:
     """
     Add additional source files to the package structure from the template.
-    
+
     This function handles pre-existing Python files at any depth in the template
     directory structure, allowing them to coexist with generated files.
 
@@ -358,7 +358,9 @@ def add_additional_source_files(
     # Extract the library structure from the library_path
     library_name_structured = get_config_data_value(config_path, "library_name_structured")
     if not library_name_structured:
-        logging.info("No library structure defined in config. Skipping addition of template source files.")
+        logging.info(
+            "No library structure defined in config. Skipping addition of template source files."
+        )
         return package_structure
 
     subfolder_values = get_config_data_value(config_path, "subfolders")
@@ -372,7 +374,9 @@ def add_additional_source_files(
             template_library_path = template_library_path / subfolder
 
     if not template_library_path.exists():
-        logging.info("Template library path does not exist. Skipping addition of template source files.")
+        logging.info(
+            "Template library path does not exist. Skipping addition of template source files."
+        )
         return package_structure
 
     # Find all Python files in the template library path
@@ -383,7 +387,7 @@ def add_additional_source_files(
             # Skip __init__.py files as they're handled separately
             if file_path.name == "__init__.py":
                 continue
-  
+
             # Get relative path from the template library path
             try:
                 relative_path = file_path.relative_to(template_library_path)
