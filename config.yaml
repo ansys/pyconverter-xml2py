@@ -87,17 +87,6 @@ base_class:
   # Use "*" for wildcards, e.g., "apdl/*" matches all classes in apdl module
   # Rules are evaluated in order - first match wins
   rules:
-    # Example: Specific class gets a special base class (checked first)
-    - pattern: "prep7/Meshing"
-      module: "ansys.mapdl.core._commands.prep"
-      class_name: "PrepBase"
-    
-    # Example: Specific module inheritance
-    - pattern: "apdl/*"
-      module: "ansys.mapdl.core._commands.apdl"
-      class_name: "APDLBase"
-    
-    # Example: Make all classes inherit from BaseCommandClass (fallback)
     - pattern: "*"
       module: "ansys.mapdl.core._commands"
       class_name: "CommandsBase"
