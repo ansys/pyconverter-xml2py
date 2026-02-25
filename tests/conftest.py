@@ -105,7 +105,7 @@ def base_class_test_config(tmp_path):
     """
     Create a temporary config.yaml file for testing base class inheritance
     without using the general config.yaml file.
-    
+
     Returns
     -------
     Path
@@ -124,12 +124,12 @@ base_class:
     - pattern: "prep7/Meshing"
       module: "ansys.mapdl.core._commands.prep"
       class_name: "PrepBase"
-    
+
     # Specific module inheritance
     - pattern: "apdl/*"
       module: "ansys.mapdl.core._commands.apdl"
       class_name: "APDLBase"
-    
+
     # Make all classes inherit from BaseCommandClass (fallback)
     - pattern: "*"
       module: "ansys.mapdl.core._commands"
@@ -145,7 +145,7 @@ def base_class_empty_config(tmp_path):
     """
     Create a temporary config.yaml file with no base class rules
     for testing the default behavior.
-    
+
     Returns
     -------
     Path
