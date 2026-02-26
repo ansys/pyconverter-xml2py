@@ -3356,7 +3356,7 @@ class XMLCommand(Element):
         if not custom_notes:
             if self.other_parameters:
                 items += [""]
-                items.extend(self.py_notes(self.other_parameters, "Other Parameters"))
+                items.extend(self.py_notes(self.other_parameters, "Command Specifications"))
             if self.notes:
                 items += [""]
                 items.extend(automated_notes)
