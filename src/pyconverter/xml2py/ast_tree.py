@@ -3356,7 +3356,7 @@ class XMLCommand(Element):
         if not custom_notes:
             if self.other_parameters:
                 items += [""]
-                items.extend(self.py_notes(self.other_parameters, "Other Parameters\n"))
+                items.extend(self.py_notes(self.other_parameters, "Other Parameters"))
             if self.notes:
                 items += [""]
                 items.extend(automated_notes)
@@ -3542,7 +3542,7 @@ class XMLCommand(Element):
 
     def py_notes(self, note_elem_list, section_title):
         """Python-formatted notes string."""
-        lines = [section_title, "-" * len(section_title)]
+        lines = [section_title, "-" * len(section_title), ""]
         if section_title == "Notes" and self._is_paragraph_in_arg_desc:
             if not self.url:  # Check if self.url is valid
                 raise ValueError("The 'url' property is not properly initialized.")
