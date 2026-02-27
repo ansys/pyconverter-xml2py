@@ -1774,11 +1774,22 @@ class XRef(Link):
         """Tail of the element as a string."""
         return " ".join([str(item) for item in self._content])
 
-    def to_rst(self, indent="", max_length=100):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
-        # internal links
-        linkend = (self.linkend).replace(".", "_")
-        return f":ref:`{linkend}` {self.tail}"
+        if (links or base_url) is None:
+            logger.error(
+                "ERROR exists in the links or the 'base_url' definitions in the 'Link' class."
+            )
+        if self.linkend in links:
+            root_name, root_title, href, text = links[self.linkend]
+            text = text.replace("\n", "")
+            link = f"{base_url}{root_name}/{href}"
+            output = f"`{text} <{link}>`_ {self.tail}"
+        else:
+            # internal links
+            linkend = (self.linkend).replace(".", "_")
+            output = f":ref:`{linkend}` {self.tail}"
+        return output
 
 
 class UserInput(ProgramListing):
@@ -3915,6 +3926,7 @@ item_needing_links_base_url = {
     "footnote": Footnote,
     "warning": XMLWarning,
     "caution": Caution,
+    "xref": XRef,
 }
 
 item_needing_fcache = {
