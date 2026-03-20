@@ -629,7 +629,12 @@ def write_source(
     if check_files:
         for module_name in package_structure.keys():
             for class_name, _ in package_structure[module_name].items():
-                file_path = library_path / module_name / f"{class_name}.py"
+                if (
+                    module_name == library_path.name
+                ):  # happens when the file is directly under library_path without a module folder
+                    file_path = library_path / f"{class_name}.py"
+                else:
+                    file_path = library_path / module_name / f"{class_name}.py"
                 try:
                     py_compile.compile(str(file_path))
                 except Exception as e:
