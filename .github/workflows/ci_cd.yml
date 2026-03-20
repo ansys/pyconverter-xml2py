@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: PyAnsys code style checks
-        uses: ansys/actions/code-style@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        uses: ansys/actions/code-style@21c9de9bee9692173780696d4a39964f20b9cfa3 # v10.1.5
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: PyAnsys documentation style checks
-        uses: ansys/actions/doc-style@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        uses: ansys/actions/doc-style@21c9de9bee9692173780696d4a39964f20b9cfa3 # v10.1.5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Check library vulnerabilities with default mode"
-        uses: ansys/actions/check-vulnerabilities@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        uses: ansys/actions/check-vulnerabilities@21c9de9bee9692173780696d4a39964f20b9cfa3 # v10.1.5
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
           token: ${{ secrets.PYANSYS_CI_BOT_TOKEN }}
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [vulnerabilities]
     steps:
-      - uses: ansys/actions/check-actions-security@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+      - uses: ansys/actions/check-actions-security@21c9de9bee9692173780696d4a39964f20b9cfa3 # v10.1.5
         with:
           generate-summary: true
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -88,7 +88,7 @@ jobs:
 
     steps:
       - name: Build wheelhouse and perform smoke test
-        uses: ansys/actions/build-wheelhouse@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        uses: ansys/actions/build-wheelhouse@21c9de9bee9692173780696d4a39964f20b9cfa3 # v10.1.5
         with:
           library-name: ${{ env.PACKAGE_NAME }}
           operating-system: ${{ runner.os }}
@@ -108,7 +108,7 @@ jobs:
 
     steps:
       - name: Build wheelhouse and perform smoke test
-        uses: ansys/actions/build-wheelhouse@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        uses: ansys/actions/build-wheelhouse@21c9de9bee9692173780696d4a39964f20b9cfa3 # v10.1.5
         with:
           library-name: ${{ env.PACKAGE_NAME }}
           operating-system: ${{ matrix.os }}
@@ -127,7 +127,7 @@ jobs:
           persist-credentials: false
 
       - name: "Setup Python"
-        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
@@ -137,7 +137,7 @@ jobs:
           sudo apt-get install pandoc
 
       - name: "Cache pip"
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: ~/.cache/pip
           key: Python-v${{ env.RESET_PIP_CACHE }}-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
@@ -166,13 +166,13 @@ jobs:
             --cov-report term
 
       - name: "Upload coverage to Codecov"
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         with:
           name: coverage.xml
           flags: coverage
 
       - name: Upload coverage artifacts
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: coverage.xml
           path: ./coverage.xml
@@ -189,12 +189,12 @@ jobs:
           persist-credentials: false
 
       - name: "Setup Python"
-        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
       - name: "Cache pip"
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: ~/.cache/pip
           key: Python-pyconverter.xml2py-v${{ env.RESET_PIP_CACHE }}-${{ env.MAIN_PYTHON_VERSION }}-${{ hashFiles('pyproject.toml') }}
@@ -212,7 +212,7 @@ jobs:
           echo "pyconverter.xml2py version is: $(python -c 'from pyconverter.xml2py import __version__; print(__version__)')"
     
       - name: "Cache docs build directory"
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: doc/_build
           key: doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
@@ -220,7 +220,7 @@ jobs:
             doc-build-pyconverter-xml2py-v${{ env.RESET_DOC_BUILD_CACHE }}-${{ env.PYCONVERTER_VERSION }}
 
       - name: "Cache autosummary"
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3 # zizmor: ignore[cache-poisoning]
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v4.2.3 # zizmor: ignore[cache-poisoning]
         with:
           path: doc/source/**/_autosummary/**/*.rst
           key: autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}-${{ github.sha }}
@@ -228,7 +228,7 @@ jobs:
             autosummary-pyconverter-xml2py-v${{ env.RESET_AUTOSUMMARY_CACHE }}-${{ env.PYCONVERTER_VERSION }}
 
       - name: "Run Ansys documentation building action"
-        uses: ansys/actions/doc-build@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        uses: ansys/actions/doc-build@21c9de9bee9692173780696d4a39964f20b9cfa3 # v10.1.5
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
           checkout: false
@@ -242,7 +242,7 @@ jobs:
     needs: [doc-build, build-test]
     steps:
       - name: Build library source and wheel artifacts
-        uses: ansys/actions/build-library@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        uses: ansys/actions/build-library@21c9de9bee9692173780696d4a39964f20b9cfa3 # v10.1.5
         with:
           library-name: ${{ env.PACKAGE_NAME }}
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
@@ -259,7 +259,7 @@ jobs:
       contents: write
     steps:
       - name: Release to GitHub
-        uses: ansys/actions/release-github@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        uses: ansys/actions/release-github@21c9de9bee9692173780696d4a39964f20b9cfa3 # v10.1.5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           library-name: ${{ env.PACKAGE_NAME }}
@@ -302,7 +302,7 @@ jobs:
     needs: [release, release-pypi]
     steps:
       - name: "Deploy the stable documentation"
-        uses: ansys/actions/doc-deploy-stable@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        uses: ansys/actions/doc-deploy-stable@21c9de9bee9692173780696d4a39964f20b9cfa3 # v10.1.5
         with:
             cname: ${{ env.DOCUMENTATION_CNAME }}
             token: ${{ secrets.GITHUB_TOKEN }}
@@ -320,7 +320,7 @@ jobs:
     needs: [package]
     steps:
       - name: "Deploy the latest documentation"
-        uses: ansys/actions/doc-deploy-dev@1096998b81f7ebdea116b683e11f3a8bda759ca6 # v10.0.14
+        uses: ansys/actions/doc-deploy-dev@21c9de9bee9692173780696d4a39964f20b9cfa3 # v10.1.5
         with:
             cname: ${{ env.DOCUMENTATION_CNAME }}
             token: ${{ secrets.GITHUB_TOKEN }}
