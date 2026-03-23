@@ -20,9 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import fnmatch
 import logging
 from pathlib import Path
-from typing import Tuple, Union
+from typing import Dict, Optional, Tuple, Union
 
 from lxml.html import fromstring
 import yaml
@@ -66,6 +67,92 @@ def get_config_data_value(yaml_path: Path, value: str) -> Union[str, dict, list,
     """
     config_data = parse_yaml(yaml_path)
     return config_data.get(value)
+
+
+def get_base_class_config(config_path: Path) -> dict:
+    """
+    Get base class configuration from config file.
+
+    Parameters
+    ----------
+    config_path: Path
+        Path object of the configuration YAML file.
+
+    Returns
+    -------
+    dict
+        Base class configuration dictionary with 'rules' key, or empty dict if not configured.
+    """
+    base_class_config = get_config_data_value(config_path, "base_class")
+    if base_class_config is None:
+        return {}
+    return base_class_config
+
+
+def get_base_class_for_pattern(
+    config_path: Path, module_name: str, class_name: str
+) -> Optional[Dict[str, str]]:
+    """
+    Determine if a class should inherit based on pattern matching.
+
+    Patterns are matched against "module_name/class_name" format.
+    First matching rule wins.
+
+    Parameters
+    ----------
+    config_path: Path
+        Path object of the configuration YAML file.
+    module_name: str
+        Module name (e.g., "apdl", "prep7").
+    class_name: str
+        Class name (e.g., "Abbreviations", "Meshing").
+
+    Returns
+    -------
+    dict or None
+        Dictionary with 'module' and 'class_name' keys if inheritance should be applied,
+        None if no pattern matches.
+
+    Examples
+    --------
+    >>> get_base_class_for_pattern(config_path, "apdl", "Abbreviations")
+    {'module': 'ansys.mapdl.core', 'class_name': 'BaseCommandClass'}
+    >>> get_base_class_for_pattern(config_path, "database", "Save")
+    None
+    """
+    base_class_config = get_base_class_config(config_path)
+
+    # If no base_class config or no rules, return None
+    if not base_class_config or "rules" not in base_class_config:
+        return None
+
+    rules = base_class_config.get("rules", [])
+    if not rules:
+        return None
+
+    # Construct the full path for matching: "module_name/class_name"
+    full_path = f"{module_name}/{class_name}"
+
+    # Iterate through rules and find first match
+    for rule in rules:
+        if not isinstance(rule, dict):
+            continue
+
+        pattern = rule.get("pattern")
+        if not pattern:
+            continue
+
+        # Use fnmatch for wildcard pattern matching
+        if fnmatch.fnmatch(full_path, pattern):
+            # Found a match, return the base class info
+            base_module = rule.get("module")
+            base_class_name = rule.get("class_name")
+
+            if base_module and base_class_name:
+                return {"module": base_module, "class_name": base_class_name}
+
+    # No matching pattern found
+    return None
 
 
 def get_library_path(new_package_path: Path, config_path: Path, subfolder: bool = True) -> Path:

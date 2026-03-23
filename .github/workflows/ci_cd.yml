@@ -206,10 +206,10 @@ jobs:
           pip install --upgrade pip
           pip install .[doc]
       
-      - name: "Retrieve pyconverter.xml2py version"
+      - name: "Retrieve PyConverter.XML2Py version"
         run: |
           echo "PYCONVERTER_VERSION=$(python -c 'from pyconverter.xml2py import __version__; print(__version__)')" >> $GITHUB_ENV
-          echo "pyconverter.xml2py version is: $(python -c 'from pyconverter.xml2py import __version__; print(__version__)')"
+          echo "PyConverter.XML2Py version is: $(python -c 'from pyconverter.xml2py import __version__; print(__version__)')"
     
       - name: "Cache docs build directory"
         uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v4.2.3 # zizmor: ignore[cache-poisoning]

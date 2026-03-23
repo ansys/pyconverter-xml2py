@@ -1774,11 +1774,22 @@ class XRef(Link):
         """Tail of the element as a string."""
         return " ".join([str(item) for item in self._content])
 
-    def to_rst(self, indent="", max_length=100):
+    def to_rst(self, indent="", max_length=100, links=None, base_url=None):
         """Return a string to enable converting the element to an RST format."""
-        # internal links
-        linkend = (self.linkend).replace(".", "_")
-        return f":ref:`{linkend}` {self.tail}"
+        if (links or base_url) is None:
+            logger.error(
+                "ERROR exists in the links or the 'base_url' definitions in the 'Link' class."
+            )
+        if self.linkend in links:
+            root_name, root_title, href, text = links[self.linkend]
+            text = text.replace("\n", "")
+            link = f"{base_url}{root_name}/{href}"
+            output = f"`{text} <{link}>`_ {self.tail}"
+        else:
+            # internal links
+            linkend = (self.linkend).replace(".", "_")
+            output = f":ref:`{linkend}` {self.tail}"
+        return output
 
 
 class UserInput(ProgramListing):
@@ -3354,12 +3365,19 @@ class XMLCommand(Element):
         automated_notes = self.py_notes(self.notes, "Notes")
         custom_notes = self.custom_notes(custom_functions, automated_notes)
         if not custom_notes:
-            if self.other_parameters:
-                items += [""]
-                items.extend(self.py_notes(self.other_parameters, "Other Parameters"))
             if self.notes:
                 items += [""]
                 items.extend(automated_notes)
+                if self.other_parameters:
+                    items += [""]
+                    items.extend(
+                        self.py_notes(self.other_parameters, "Command Specifications", "~")
+                    )
+            elif self.other_parameters:
+                items += [""]
+                items += ["Notes", "-" * len("Notes")]
+                items.extend(self.py_notes(self.other_parameters, "Command Specifications", "~"))
+
         else:
             items.extend(custom_notes)
         if custom_functions and (
@@ -3540,9 +3558,9 @@ class XMLCommand(Element):
         docstr = replace_terms(docstr, self._terms)
         return docstr
 
-    def py_notes(self, note_elem_list, section_title):
+    def py_notes(self, note_elem_list, section_title, title_style="-"):
         """Python-formatted notes string."""
-        lines = [section_title, "-" * len(section_title)]
+        lines = [section_title, title_style * len(section_title)]
         if section_title == "Notes" and self._is_paragraph_in_arg_desc:
             if not self.url:  # Check if self.url is valid
                 raise ValueError("The 'url' property is not properly initialized.")
@@ -3908,6 +3926,7 @@ item_needing_links_base_url = {
     "footnote": Footnote,
     "warning": XMLWarning,
     "caution": Caution,
+    "xref": XRef,
 }
 
 item_needing_fcache = {
