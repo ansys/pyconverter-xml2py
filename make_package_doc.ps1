@@ -7,7 +7,7 @@ function Green
 
 deactivate
 cd .\package\
-uv venv .venv --seed
+uv venv .venv --seed --python 3.12
 .\.venv\Scripts\activate
  Write-Output "A new virtual environment has been created within the package folder." | Green
 uv pip install -e .[doc]
