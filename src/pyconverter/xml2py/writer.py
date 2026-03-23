@@ -666,14 +666,19 @@ def write_docs(
         Path to the new document page.
     """
     library_name = get_config_data_value(config_path, "library_name_structured")
-    if library_name[0] == "src":
-        library_name.pop(0)
-    subfolder_values = get_config_data_value(config_path, "subfolders")
-    if subfolder_values:
-        library_name.extend(subfolder_values)
-    library_name = ".".join(library_name)
+    if type(library_name) == list:
+        if library_name[0] == "src":
+            library_name.pop(0)
+        subfolder_values = get_config_data_value(config_path, "subfolders")
+        if subfolder_values:
+            library_name.extend(subfolder_values)
+        library_name = ".".join(library_name)
+    else:
+        raise ValueError("library_name_structured should be a list of strings in the config file.")
 
-    doc_package_path = package_path / "doc" / "source"
+    documentation_subfolder = str(get_config_data_value(config_path, "documentation_subfolder"))
+
+    doc_package_path = package_path / "doc" / "source" / documentation_subfolder
     if not doc_package_path.is_dir():
         doc_package_path.mkdir(parents=True, exist_ok=True)
 
@@ -689,7 +694,10 @@ API documentation
         doc_src_content += f"   {module_name}/index.rst\n"
 
     # Write the main doc file
-    doc_src = doc_package_path / "docs.rst"
+    if documentation_subfolder != "":
+        doc_src = doc_package_path / "index.rst"
+    else:
+        doc_src = doc_package_path / "docs.rst"
     with open(doc_src, "w", encoding="utf-8") as fid:
         fid.write(doc_src_content)
 

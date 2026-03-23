@@ -1,3 +1,5 @@
+# Package settings
+
 project_name: PyConverter-GeneratedCommands # Name of the project
 
 library_name_structured: # Future name of the library
@@ -10,7 +12,16 @@ subfolders:
 
 new_package_name: package
 
+
+####################################################################################
+# Documentation settings
+
 image_folder_path: ../images/_commands
+
+documentation_subfolder: docs
+
+####################################################################################
+# Conversion settings
 
 rules:
   "/": slash
