@@ -1,4 +1,4 @@
-# Copyright (C) 2023 - 2025 ANSYS, Inc. and/or its affiliates.
+# Copyright (C) 2023 - 2026 ANSYS, Inc. and/or its affiliates.
 # SPDX-License-Identifier: MIT
 #
 #
@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 """
-pyconverter.xml2py
+PyConverter.XML2Py
 """
 
 try:
@@ -30,4 +30,4 @@ except ModuleNotFoundError:
     import importlib_metadata
 
 __version__ = importlib_metadata.version(__name__.replace(".", "-"))
-"""pyconverter.xml2py version."""
+"""PyConverter.XML2Py version."""

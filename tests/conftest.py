@@ -1,4 +1,4 @@
-# Copyright (C) 2023 - 2025 ANSYS, Inc. and/or its affiliates.
+# Copyright (C) 2023 - 2026 ANSYS, Inc. and/or its affiliates.
 # SPDX-License-Identifier: MIT
 #
 #
@@ -98,6 +98,69 @@ def terms(load_terms):
 @pytest.fixture
 def version_variables(load_terms):
     return load_terms[1]
+
+
+@pytest.fixture
+def base_class_test_config(tmp_path):
+    """
+    Create a temporary config.yaml file for testing base class inheritance
+    without using the general config.yaml file.
+
+    Returns
+    -------
+    Path
+        Path to the temporary config file with base class rules.
+    """
+    config_content = """
+project_name: PyConverter-TestConfig
+
+library_name_structured:
+  - pyconverter
+  - generatedcommands
+
+base_class:
+  rules:
+    # Specific class gets a special base class (checked first)
+    - pattern: "prep7/Meshing"
+      module: "ansys.mapdl.core._commands.prep"
+      class_name: "PrepBase"
+
+    # Specific module inheritance
+    - pattern: "apdl/*"
+      module: "ansys.mapdl.core._commands.apdl"
+      class_name: "APDLBase"
+
+    # Make all classes inherit from BaseCommandClass (fallback)
+    - pattern: "*"
+      module: "ansys.mapdl.core._commands"
+      class_name: "CommandsBase"
+"""
+    config_file = tmp_path / "test_config.yaml"
+    config_file.write_text(config_content)
+    return config_file
+
+
+@pytest.fixture
+def base_class_empty_config(tmp_path):
+    """
+    Create a temporary config.yaml file with no base class rules
+    for testing the default behavior.
+
+    Returns
+    -------
+    Path
+        Path to the temporary config file without base class rules.
+    """
+    config_content = """
+project_name: PyConverter-TestConfig
+
+library_name_structured:
+  - pyconverter
+  - generatedcommands
+"""
+    config_file = tmp_path / "test_config_no_base.yaml"
+    config_file.write_text(config_content)
+    return config_file
 
 
 @pytest.fixture
