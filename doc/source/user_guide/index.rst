@@ -42,6 +42,24 @@ Python files:
 
 For more information, see :ref:`ref_source_code`.
 
+
+Configuration options
+---------------------
+
+The converter behavior can be customized through the ``config.yaml`` file, which
+allows you to configure:
+
+- Project metadata and package structure
+- Command name mapping and filtering
+- Documentation annotations
+- Class organization and inheritance
+
+For detailed information about all available configuration options, see :ref:`ref_configuration`.
+
+
+Generate documentation
+----------------------
+
 After the converter runs, you can generate Sphinx documentation. This code renders
 the documentation as HTML from Windows:
 
@@ -68,6 +86,7 @@ directory by default. This diagram presents the format of the
     :hidden:
 
     cli
+    configuration
     source_code
     objects
     configurations
