@@ -66,6 +66,7 @@ extensions = [
     "jupyter_sphinx",
     "numpydoc",
     "sphinx_autodoc_typehints",
+    "sphinx_click",
     "sphinx_copybutton",
     "sphinx_design",
     "sphinx.ext.autodoc",
