@@ -27,7 +27,9 @@ from typing import Tuple
 import regex as re
 
 
-def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str], list[str]]:
+def get_docstring_lists(
+    filename: str,
+) -> Tuple[list[str], list[str], list[str], list[str], list[str], list[str], list[str]]:
     """
     Get lists of strings depending on Python file sections.
 
@@ -38,18 +40,16 @@ def get_docstring_lists(filename: str) -> Tuple[list[str], list[str], list[str],
 
     Returns
     -------
-    List[str]
-        List containing the docstring ``Parameters`` section.
-    List[str]
-        List containing the docstring ``Returns`` section.
-    List[str]
-        List containing the docstring ``Notes`` section.
-    List[str]
-        List containing the docstring ``Examples`` section.
-    List[str]
-        List containing the source code.
-    List[str]
-        List containing the library import section.
+    Tuple[List[str], List[str], List[str], List[str], List[str], List[str], List[str]]
+        Tuple containing lists of strings for different sections of the Python file.
+        The order of the lists is as follows:
+        - Arguments list
+        - Parameters section
+        - Returns section
+        - Notes section
+        - Examples section
+        - Source code
+        - Library import section
     """
     lines = None
     with open(filename, "r", encoding="utf-8") as pyfile:
