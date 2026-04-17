@@ -46,7 +46,7 @@ tests = [
     "click==8.3.2",
     "inflect==7.5.0",
     "pygithub==2.9.0",
-    "lxml==5.3.0",
+    "lxml==6.0.2",
     "numpy==2.2.6",
     "parse==1.21.1",
     "pytest==9.0.2",
