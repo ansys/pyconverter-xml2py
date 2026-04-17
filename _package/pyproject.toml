@@ -9,28 +9,28 @@ version = "0.1.dev0"
 description = "Documentation."
 readme = "README.rst"
 requires-python = ">=3.10,<4"
-license = {file = "LICENSE"}
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
-    {name = "ANSYS, Inc.", email = "pyansys.core@ansys.com"},
+    {name = "ANSYS, Inc.", email = "pyansys.core@ansys.com"}
 ]
 maintainers = [
-    {name = "PyAnsys developers", email = "pyansys.maintainers@ansys.com"},
+    {name = "PyAnsys developers", email = "pyansys.maintainers@ansys.com"}
 ]
 
 classifiers = [
     "Development Status :: 4 - Beta",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.13"
 ]
 
 dependencies = [
     "importlib-metadata >=4.0",
     "flit>=3.8.0",
-    "ansys-mapdl-core>=0.66.0",
+    "ansys-mapdl-core>=0.66.0"
 ]
 
 [project.optional-dependencies]
@@ -44,14 +44,14 @@ doc = [
     "pandas==2.3.3",
     "parse==1.21.1",
     "pydata_sphinx_theme==0.16.1",
-    "pypandoc==1.16.2",
-    "pytest-sphinx==0.6.3",
+    "pypandoc==1.17",
+    "pytest-sphinx==0.7.1",
     "pyyaml==6.0.3",
     "sphinx-autobuild==2024.10.3",
     "sphinx-autodoc-typehints==3.2.0",
     "sphinx-copybutton==0.5.2",
     "sphinx-notfound-page==1.1.0",
-    "sphinx-gallery==0.20.0",
+    "sphinx-gallery==0.20.0"
 ]
 [tool.flit.module]
 name = "pyconverter.generatedcommands"

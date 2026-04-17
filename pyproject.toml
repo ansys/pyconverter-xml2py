@@ -9,20 +9,21 @@ version = "0.4.dev0"
 description = "PyConverter-XML2Py converter."
 readme = "README.rst"
 requires-python = ">=3.10,<4"
-license = {file = "LICENSE"}
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
-    {name = "ANSYS, Inc.", email = "pyansys.core@ansys.com"},
+    {name = "ANSYS, Inc.", email = "pyansys.core@ansys.com"}
 ]
 maintainers = [
-    {name = "PyAnsys Core", email = "pyansys.core@ansys.com"},
+    {name = "PyAnsys Core", email = "pyansys.core@ansys.com"}
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13"
 ]
 dependencies = [
     "click>=7.0,<9.0.0",
@@ -36,27 +37,27 @@ dependencies = [
     "pyyaml>=5.1.0",
     "tqdm>=4.64.1",
     "black>=24.2.0",
-    "regex>=2021.4.4",
+    "regex>=2021.4.4"
 ]
 
 [project.optional-dependencies]
 tests = [
     "black>=24.2.0",
-    "click==8.3.1",
+    "click==8.3.2",
     "inflect==7.5.0",
-    "pygithub==2.8.1",
+    "pygithub==2.9.0",
     "lxml==5.3.0",
     "numpy==2.2.6",
-    "parse==1.20.2",
-    "pytest==8.4.2",
+    "parse==1.21.1",
+    "pytest==9.0.2",
     "pytest-cov==7.0.0",
     "pytest-rerunfailures==16.1",
     "pyyaml==6.0.3",
-    "regex==2025.7.34",
+    "regex==2026.3.32"
 ]
 doc = [
     "Sphinx==8.2.3",
-    "ansys-sphinx-theme[autoapi]==1.5.3",
+    "ansys-sphinx-theme[autoapi]==1.7.1",
     "build>= 0.10.0",
     "flit>=3.8.0",
     "inflect==7.5.0",
@@ -64,15 +65,15 @@ doc = [
     "numpy==2.2.6",
     "numpydoc==1.10.0",
     "pandas==2.3.3",
-    "parse==1.20.2",
-    "pypandoc==1.16.2",
-    "pytest-sphinx==0.6.3",
-    "regex==2025.7.34",
+    "parse==1.21.1",
+    "pypandoc==1.17",
+    "pytest-sphinx==0.7.1",
+    "regex==2026.3.32",
     "sphinx-autobuild==2024.10.3",
     "sphinx-autodoc-typehints==3.2.0",
     "sphinx-copybutton==0.5.2",
     "sphinx-notfound-page==1.1.0",
-    "sphinx-gallery==0.19.0",
+    "sphinx-gallery==0.20.0"
 ]
 
 [tool.flit.module]
