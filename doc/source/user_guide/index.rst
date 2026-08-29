@@ -81,12 +81,13 @@ directory by default. This diagram presents the format of the
 
 
 
-
-
-
 .. toctree::
     :maxdepth: 1
+    :hidden:
 
+    cli
     configuration
     source_code
     objects
+    configurations
+    customized_functions
