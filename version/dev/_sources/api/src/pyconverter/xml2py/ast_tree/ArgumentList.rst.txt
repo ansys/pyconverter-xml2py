@@ -1,0 +1,121 @@
+
+
+
+
+
+
+:class:`ArgumentList`
+=====================
+
+
+.. py:class:: src.pyconverter.xml2py.ast_tree.ArgumentList(py_name: str, url: str, terms: dict, list_entry: VarlistEntry, args: List)
+
+
+
+.. py:currentmodule:: ArgumentList
+
+Overview
+--------
+
+.. tab-set::
+
+
+
+   .. tab-item:: Methods
+
+      .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~remove_last_arg`
+            - 
+
+
+   .. tab-item:: Properties
+
+      .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~arguments`
+            - Return a list of Argument objects.
+          * - :py:attr:`~py_name`
+            - 
+          * - :py:attr:`~initial_args`
+            - 
+          * - :py:attr:`~py_arg_names`
+            - 
+          * - :py:attr:`~additional_args`
+            - 
+
+
+
+
+   .. tab-item:: Special methods
+
+      .. list-table::
+          :header-rows: 0
+          :widths: auto
+
+          * - :py:attr:`~__iadd__`
+            - 
+
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import ArgumentList
+
+Property detail
+---------------
+
+.. py:property:: arguments
+   :type: List[Argument]
+
+
+   
+   Return a list of Argument objects.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:property:: py_name
+
+.. py:property:: initial_args
+
+.. py:property:: py_arg_names
+
+.. py:property:: additional_args
+
+
+
+
+Method detail
+-------------
+
+.. py:method:: __iadd__(argument_list)
+
+.. py:method:: remove_last_arg()
+
+
+
+
