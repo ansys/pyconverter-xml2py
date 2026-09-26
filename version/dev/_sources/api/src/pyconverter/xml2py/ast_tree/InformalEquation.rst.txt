@@ -1,0 +1,49 @@
+
+
+
+
+
+
+:class:`InformalEquation`
+=========================
+
+
+.. py:class:: src.pyconverter.xml2py.ast_tree.InformalEquation(element)
+
+   Bases: :py:obj:`Math`
+
+
+   
+   Provides the math element.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+
+Import detail
+-------------
+
+.. code-block:: python
+
+    from src.pyconverter.xml2py.ast_tree import InformalEquation
+
+
+
+
+
